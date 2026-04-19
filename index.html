@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andrea Giardini — Consulente Finanziario</title>
+<meta name="description" content="Andrea Giardini, consulente finanziario. Pianificazione patrimoniale, gestione del risparmio, consulenza personalizzata.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --forest: #1f3329;
+    --forest-deep: #14211b;
+    --forest-soft: #2d4a3c;
+    --sand: #f0e9dc;
+    --sand-warm: #e6dcc8;
+    --cream: #f9f5ed;
+    --gold: #b8945f;
+    --gold-soft: #d4b483;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --line: rgba(31, 51, 41, 0.12);
+    --line-strong: rgba(31, 51, 41, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grain texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    z-index: 1000;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(249, 245, 237, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 100;
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--forest);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .logo span {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--forest);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a:not(.cta)::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--forest);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:not(.cta):hover::after { width: 100%; }
+
+  .cta {
+    background: var(--forest);
+    color: var(--cream) !important;
+    padding: 10px 22px;
+    border-radius: 100px;
+    transition: background 0.2s;
+  }
+
+  .cta:hover { background: var(--forest-deep); }
+
+  .menu-toggle { display: none; background: none; border: none; cursor: pointer; }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 160px 0 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+    margin-bottom: 28px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--forest-soft);
+  }
+
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 6vw, 76px);
+    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--forest-deep);
+    margin-bottom: 32px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--forest-soft);
+  }
+
+  .hero-lead {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary, .btn-ghost {
+    padding: 16px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .btn-primary:hover {
+    background: var(--forest-deep);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--forest);
+    border: 1px solid var(--line-strong);
+  }
+
+  .btn-ghost:hover { background: var(--sand); }
+
+  .hero-portrait {
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--sand-warm), var(--sand));
+    box-shadow: 0 30px 80px -30px rgba(31, 51, 41, 0.35);
+  }
+
+  .hero-portrait::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(184, 148, 95, 0.2), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(31, 51, 41, 0.15), transparent 50%);
+  }
+
+  .portrait-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--forest-soft);
+    text-align: center;
+    padding: 30px;
+  }
+
+  .portrait-placeholder svg {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .portrait-placeholder p {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+  }
+
+  .hero-badge {
+    position: absolute;
+    bottom: -24px;
+    left: -24px;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    padding: 18px 22px;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px -15px rgba(31, 51, 41, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.2);
+  }
+
+  .badge-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--forest);
+  }
+
+  .badge-text small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  /* ===== ABOUT ===== */
+  .about {
+    padding: 120px 0;
+    background: var(--sand);
+    position: relative;
+  }
+
+  .section-header {
+    margin-bottom: 80px;
+    max-width: 720px;
+  }
+
+  .section-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 4.5vw, 54px);
+    line-height: 1.1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--forest-deep);
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--forest-soft);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+  }
+
+  .about-text p:first-of-type::first-letter {
+    font-family: 'Fraunces', serif;
+    font-size: 64px;
+    line-height: 0.85;
+    float: left;
+    margin: 8px 12px 0 0;
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 16px;
+  }
+
+  .stat {
+    padding: 28px;
+    background: var(--cream);
+    border-radius: 4px;
+    border-left: 3px solid var(--gold);
+  }
+
+  .stat-number {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--forest-deep);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ===== CERTIFICATIONS ===== */
+  .certifications {
+    padding: 120px 0;
+    background: var(--cream);
+  }
+
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .cert-card {
+    background: var(--cream);
+    padding: 40px 32px;
+    transition: background 0.3s;
+  }
+
+  .cert-card:hover { background: var(--sand); }
+
+  .cert-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--forest);
+    color: var(--cream);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  .cert-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--forest-deep);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .cert-card p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  /* ===== SERVICES ===== */
+  .services {
+    padding: 120px 0;
+    background: var(--forest-deep);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .services::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(184, 148, 95, 0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .services .section-eyebrow { color: var(--gold-soft); }
+  .services .section-title { color: var(--cream); }
+  .services .section-title em { color: var(--gold-soft); }
+
+  .services-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 40px;
+  }
+
+  .service-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr auto;
+    gap: 40px;
+    align-items: center;
+    padding: 32px 0;
+    border-top: 1px solid rgba(240, 233, 220, 0.15);
+    transition: padding 0.3s;
+    cursor: pointer;
+  }
+
+  .service-row:last-child { border-bottom: 1px solid rgba(240, 233, 220, 0.15); }
+
+  .service-row:hover { padding-left: 16px; }
+
+  .service-num {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--gold-soft);
+    font-style: italic;
+  }
+
+  .service-name {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .service-desc {
+    font-size: 14px;
+    color: rgba(240, 233, 220, 0.65);
+    line-height: 1.5;
+  }
+
+  .service-arrow {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(240, 233, 220, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .service-row:hover .service-arrow {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: rotate(-45deg);
+  }
+
+  /* ===== BLOG ===== */
+  .blog {
+    padding: 120px 0;
+    background: var(--cream);
+  }
+
+  .blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .blog-link {
+    color: var(--forest);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--forest);
+    padding-bottom: 4px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .blog-card {
+    background: var(--cream);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .blog-card:hover { transform: translateY(-4px); }
+
+  .blog-image {
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, var(--forest-soft), var(--forest));
+    border-radius: 4px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blog-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 70%, rgba(184, 148, 95, 0.3), transparent 60%);
+  }
+
+  .blog-card:nth-child(2) .blog-image {
+    background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  }
+
+  .blog-card:nth-child(3) .blog-image {
+    background: linear-gradient(135deg, var(--sand-warm), var(--forest-soft));
+  }
+
+  .blog-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+
+  .blog-meta span:first-child { color: var(--gold); font-weight: 500; }
+
+  .blog-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--forest-deep);
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+
+  .blog-card p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  /* ===== CTA SECTION ===== */
+  .cta-section {
+    padding: 120px 0;
+    background: var(--sand);
+    text-align: center;
+  }
+
+  .cta-section .section-title {
+    margin-bottom: 24px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 540px;
+    margin: 0 auto 40px;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--forest-deep);
+    color: var(--sand);
+    padding: 80px 0 32px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .footer-brand p {
+    font-size: 14px;
+    color: rgba(240, 233, 220, 0.6);
+    line-height: 1.6;
+    max-width: 320px;
+  }
+
+  .footer-col h4 {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 20px;
+  }
+
+  .footer-col ul {
+    list-style: none;
+  }
+
+  .footer-col li {
+    margin-bottom: 10px;
+  }
+
+  .footer-col a {
+    color: var(--sand);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--gold-soft); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(240, 233, 220, 0.15);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: rgba(240, 233, 220, 0.5);
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.6s ease-out 0.1s both; }
+  .hero h1 { animation: fadeUp 0.7s ease-out 0.2s both; }
+  .hero-lead { animation: fadeUp 0.7s ease-out 0.35s both; }
+  .hero-actions { animation: fadeUp 0.7s ease-out 0.5s both; }
+  .hero-portrait { animation: fadeUp 0.8s ease-out 0.3s both; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .hero-grid, .about-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .hero { padding: 120px 0 60px; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .service-row {
+      grid-template-columns: 40px 1fr auto;
+      gap: 20px;
+    }
+    .service-desc { display: none; }
+    .nav-links { display: none; }
+    .menu-toggle { display: block; color: var(--forest); }
+  }
+
+  @media (max-width: 500px) {
+    .container { padding: 0 20px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      Andrea Giardini
+      <span>Consulente Finanziario</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">Chi sono</a></li>
+      <li><a href="#services">Servizi</a></li>
+      <li><a href="#certifications">Certificazioni</a></li>
+      <li><a href="#blog">Blog</a></li>
+      <li><a href="#contact" class="cta">Prenota un incontro</a></li>
+    </ul>
+    <button class="menu-toggle">☰</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Consulenza patrimoniale indipendente</div>
+        <h1>Decisioni di oggi, <em>per il domani</em> che vuoi costruire.</h1>
+        <p class="hero-lead">
+          Affianco persone e famiglie nella pianificazione finanziaria con un metodo basato sull'ascolto, sulla trasparenza e su competenze certificate. Investire bene è prima di tutto investire con consapevolezza.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">
+            Fissa una consulenza gratuita
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </a>
+          <a href="#about" class="btn-ghost">Scopri di più</a>
+        </div>
+      </div>
+      <div style="position: relative;">
+        <div class="hero-portrait">
+          <div class="portrait-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+            <p>Inserisci qui<br>la tua foto</p>
+          </div>
+        </div>
+        <div class="hero-badge">
+          <div class="badge-dot"></div>
+          <div class="badge-text">
+            Disponibile per nuovi clienti
+            <small>Risposta entro 24 ore</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Chi sono</span>
+      <h2 class="section-title">Un metodo costruito sulla <em>fiducia</em>, sulla competenza e sul tempo dedicato.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Mi chiamo Andrea Giardini e da anni accompagno i miei clienti nella costruzione di percorsi finanziari personalizzati. Credo che la consulenza vera nasca dal dialogo: capire chi hai davanti, quali sono i suoi sogni e le sue paure, prima ancora di parlare di prodotti o rendimenti.</p>
+        <p>Lavoro con un approccio globale: dalla pianificazione del patrimonio alla protezione della famiglia, dagli investimenti alla pianificazione previdenziale. Ogni soluzione viene costruita su misura, perché due persone diverse non possono avere lo stesso piano.</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Anni di esperienza nel settore finanziario</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">200+</div>
+          <div class="stat-label">Famiglie e clienti seguiti</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">€50M</div>
+          <div class="stat-label">Patrimonio in consulenza</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">UNI ISO</div>
+          <div class="stat-label">Competenze certificate 22222:2008</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="certifications" id="certifications">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Certificazioni</span>
+      <h2 class="section-title">Trasparenza e competenze <em>verificabili</em>.</h2>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-icon">OCF</div>
+        <h3>Albo unico OCF</h3>
+        <p>Consulente Finanziario abilitato all'offerta fuori sede, iscritto all'Albo unico dei Consulenti Finanziari.</p>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">RUI</div>
+        <h3>Iscrizione IVASS</h3>
+        <p>Intermediario assicurativo iscritto al Registro Unico degli Intermediari (sezione E).</p>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">ISO</div>
+        <h3>UNI ISO 22222</h3>
+        <p>Competenze certificate secondo lo standard internazionale per la pianificazione finanziaria.</p>
+      </div>
+      <div class="cert-card">
+        <div class="cert-icon">EFPA</div>
+        <h3>EFPA Italia</h3>
+        <p>Certificazione europea per la formazione continua del professionista del risparmio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Aree di specializzazione</span>
+      <h2 class="section-title">Cinque aree di lavoro, <em>un'unica visione</em> integrata.</h2>
+    </div>
+    <div class="services-list">
+      <div class="service-row">
+        <div class="service-num">01</div>
+        <div class="service-name">Pianificazione finanziaria</div>
+        <div class="service-desc">Costruisci una strategia di lungo periodo allineata agli obiettivi della tua vita.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-num">02</div>
+        <div class="service-name">Gestione patrimoniale</div>
+        <div class="service-desc">Portafogli costruiti su misura con strumenti diversificati e gestione attiva del rischio.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-num">03</div>
+        <div class="service-name">Check-up finanziario</div>
+        <div class="service-desc">Una fotografia chiara della tua situazione attuale, gratuita e senza impegno.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-num">04</div>
+        <div class="service-name">Protezione e previdenza</div>
+        <div class="service-desc">Soluzioni assicurative e previdenziali per tutelare te e la tua famiglia.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="service-row">
+        <div class="service-num">05</div>
+        <div class="service-name">Consulenza fiscale e successoria</div>
+        <div class="service-desc">Pianificazione patrimoniale ottimizzata in ottica fiscale e di passaggio generazionale.</div>
+        <div class="service-arrow">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="blog" id="blog">
+  <div class="container">
+    <div class="blog-header">
+      <div class="section-header" style="margin-bottom: 0;">
+        <span class="section-eyebrow">Dal blog</span>
+        <h2 class="section-title">Approfondimenti e <em>analisi</em>.</h2>
+      </div>
+      <a href="#" class="blog-link">Vedi tutti gli articoli →</a>
+    </div>
+    <div class="blog-grid">
+      <article class="blog-card">
+        <div class="blog-image"></div>
+        <div class="blog-meta">
+          <span>Mercati</span>
+          <span>5 min di lettura</span>
+        </div>
+        <h3>Politiche monetarie e impatti sui portafogli nel 2026</h3>
+        <p>Cosa aspettarsi dalle prossime decisioni delle banche centrali e come posizionare gli investimenti.</p>
+      </article>
+      <article class="blog-card">
+        <div class="blog-image"></div>
+        <div class="blog-meta">
+          <span>Educazione</span>
+          <span>4 min di lettura</span>
+        </div>
+        <h3>Interesse semplice e composto: la magia del tempo</h3>
+        <p>Perché iniziare presto fa la differenza: una guida pratica con esempi concreti.</p>
+      </article>
+      <article class="blog-card">
+        <div class="blog-image"></div>
+        <div class="blog-meta">
+          <span>Pianificazione</span>
+          <span>6 min di lettura</span>
+        </div>
+        <h3>Costruire un piano finanziario in cinque passi</h3>
+        <p>Il metodo che uso con i miei clienti per definire obiettivi chiari e raggiungibili.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="section-header" style="margin: 0 auto 0;">
+      <span class="section-eyebrow">Iniziamo</span>
+      <h2 class="section-title">Parliamone <em>davanti a un caffè</em>.</h2>
+    </div>
+    <p>Il primo incontro è sempre gratuito e senza impegno. Una chiacchierata per capire se posso esserti utile, dal vivo o in videocall.</p>
+    <a href="mailto:andrea.giardini@example.it" class="btn-primary">
+      Scrivimi una email
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L8 2m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Andrea Giardini</h3>
+        <p>Consulente finanziario indipendente. Affianco persone e famiglie nella pianificazione del proprio futuro economico con metodo, ascolto e competenze certificate.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigazione</h4>
+        <ul>
+          <li><a href="#about">Chi sono</a></li>
+          <li><a href="#services">Servizi</a></li>
+          <li><a href="#certifications">Certificazioni</a></li>
+          <li><a href="#blog">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contatti</h4>
+        <ul>
+          <li><a href="#">+39 XXX XXX XXXX</a></li>
+          <li><a href="#">andrea.giardini@example.it</a></li>
+          <li><a href="#">Via Roma, 00 — Città</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Seguimi</h4>
+        <ul>
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 Andrea Giardini — Tutti i diritti riservati</div>
+      <div><a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a> · <a href="#" style="color: inherit; text-decoration: none;">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
