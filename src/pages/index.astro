@@ -1,0 +1,321 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+import Header from '~/components/widgets/Header.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import Content from '~/components/widgets/Content.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import Features3 from '~/components/widgets/Features3.astro';
+import Steps from '~/components/widgets/Steps.astro';
+import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import { getPermalink } from '~/utils/permalinks';
+
+const metadata = {
+  title: 'Andrea Giardini — Consulente Finanziario',
+};
+---
+
+<Layout metadata={metadata}>
+  <Fragment slot="announcement"></Fragment>
+  <Fragment slot="header">
+    <Header
+      links={[
+        { text: 'Home', href: '#' },
+        { text: 'Chi sono', href: '#about' },
+        { text: 'Percorso', href: '#resume' },
+        { text: 'Servizi', href: '#portfolio' },
+        { text: 'Blog', href: '#blog' },
+      ]}
+      actions={[
+        {
+          text: 'Scrivimi',
+          href: '#contact',
+        },
+      ]}
+      isSticky
+      showToggleTheme
+    />
+  </Fragment>
+
+  <!-- Hero Widget ******************* -->
+
+  <Hero
+    id="hero"
+    title="Andrea Giardini"
+    tagline="Consulente Finanziario"
+    actions={[{ variant: 'primary', text: 'Scrivimi', href: getPermalink('/contact#form') }]}
+  >
+    <Fragment slot="subtitle">
+      Affianco persone e famiglie nella pianificazione finanziaria con un metodo basato sull&apos;ascolto,
+      sulla trasparenza e su competenze certificate. <br /> Investire bene è prima di tutto investire
+      con consapevolezza.
+    </Fragment>
+  </Hero>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    id="about"
+    columns={3}
+    items={[
+      {
+        icon: 'tabler:brand-linkedin',
+        callToAction: {
+          target: '_blank',
+          text: 'LinkedIn',
+          href: '#',
+        },
+      },
+      {
+        icon: 'tabler:brand-whatsapp',
+        callToAction: {
+          target: '_blank',
+          text: 'WhatsApp',
+          href: '#',
+        },
+      },
+      {
+        icon: 'tabler:mail',
+        callToAction: {
+          target: '_blank',
+          text: 'Email',
+          href: '#',
+        },
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=774&q=80',
+      alt: 'Immagine professionale',
+      loading: 'eager',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Chi sono</h2>
+      <p>
+        Benvenuto. Sono un consulente finanziario abilitato, iscritto all&apos;Albo OCF, e accompagno
+        i miei clienti nella costruzione di percorsi finanziari personalizzati.
+      </p>
+      <br />
+      <p>
+        Credo che la consulenza vera nasca dal dialogo: capire chi ho davanti, quali sono i suoi
+        sogni e le sue preoccupazioni, prima ancora di parlare di prodotti o rendimenti.
+      </p>
+      <br />
+      <p>Per saperne di più, seguimi sui miei canali:</p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Steps Widget: Percorso professionale ****************** -->
+
+  <Steps
+    id="resume"
+    title="Percorso professionale"
+    items={[
+      {
+        title:
+          'Consulente Finanziario <br /> <span class="font-normal">Iscritto Albo OCF</span> <br /> <span class="text-sm font-normal">2025 - Presente</span>',
+        description: `Consulente finanziario abilitato all'offerta fuori sede, iscritto all'Albo unico OCF. Accompagno persone e famiglie nella pianificazione patrimoniale, nella gestione del risparmio e nella costruzione di strategie di investimento personalizzate.`,
+        icon: 'tabler:briefcase',
+      },
+    ]}
+    classes={{ container: 'max-w-3xl' }}
+  />
+
+  <!-- Steps Widget: Formazione ****************** -->
+
+  <Steps
+    id="formazione"
+    title="Formazione e certificazioni"
+    items={[
+      {
+        title: `Abilitazione OCF <br /> <span class="font-normal">Organismo di vigilanza e tenuta dell'albo unico dei Consulenti Finanziari</span> <br /> <span class="text-sm font-normal">Superato esame di abilitazione</span>`,
+        icon: 'tabler:certificate',
+      },
+      {
+        title: `Formazione continua <br /> <span class="font-normal">Aggiornamento costante su mercati, normativa e strumenti finanziari</span>`,
+        icon: 'tabler:school',
+      },
+    ]}
+    classes={{ container: 'max-w-3xl' }}
+  />
+
+  <!-- Features3 Widget: Aree di specializzazione ************** -->
+
+  <Features3
+    title="Aree di specializzazione"
+    subtitle="Le competenze che metto al servizio dei miei clienti, con un approccio globale e personalizzato."
+    columns={3}
+    defaultIcon="tabler:point-filled"
+    items={[
+      {
+        title: 'Pianificazione finanziaria',
+        description: 'Costruzione di una strategia di lungo periodo allineata agli obiettivi della tua vita.',
+      },
+      {
+        title: 'Gestione patrimoniale',
+        description: 'Portafogli costruiti su misura, diversificati e con gestione attiva del rischio.',
+      },
+      {
+        title: 'Check-up finanziario',
+        description: 'Una fotografia chiara della tua situazione attuale, gratuita e senza impegno.',
+      },
+      {
+        title: 'Protezione e previdenza',
+        description: 'Soluzioni assicurative e previdenziali per tutelare te e la tua famiglia.',
+      },
+      {
+        title: 'Pianificazione fiscale',
+        description: 'Ottimizzazione patrimoniale in ottica fiscale e di passaggio generazionale.',
+      },
+      {
+        title: 'Educazione finanziaria',
+        description: 'Ti aiuto a capire cosa stai facendo, perché e come prendere decisioni consapevoli.',
+      },
+    ]}
+  />
+
+  <!-- Content Widget: Come lavoro - Fase 1 **************** -->
+
+  <Content
+    id="portfolio"
+    title="Come lavoro"
+    subtitle="Un metodo chiaro, trasparente e costruito intorno a te. Tre passaggi fondamentali per trasformare obiettivi in risultati."
+    isReversed
+    items={[
+      {
+        title: 'Cosa facciamo insieme:',
+        description:
+          'Analizziamo il tuo patrimonio attuale, le tue entrate, uscite, obiettivi di breve e lungo termine. Senza fretta, senza pressioni commerciali.',
+      },
+      {
+        title: 'Cosa ottieni:',
+        description: `Una fotografia chiara e onesta della tua situazione finanziaria, gratuita e senza impegno, che è già di per sé di grande valore.`,
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=928&q=80',
+      alt: 'Ascolto e analisi',
+    }}
+    callToAction={{
+      target: '_blank',
+      text: 'Scopri di più',
+      icon: 'tabler:chevron-right',
+      href: '#',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        Fase 1: <br /><span class="text-2xl">Ascolto e analisi</span>
+      </h3>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget: Come lavoro - Fase 2 **************** -->
+
+  <Content
+    isReversed
+    isAfterContent={true}
+    items={[
+      {
+        title: 'Cosa facciamo insieme:',
+        description:
+          'Costruiamo insieme un piano finanziario personalizzato, con obiettivi realistici, tempi definiti e strumenti coerenti con il tuo profilo di rischio.',
+      },
+      {
+        title: 'Cosa ottieni:',
+        description: `Una strategia scritta, chiara, che puoi capire e condividere. Niente paroloni, niente trappole.`,
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=774&q=80',
+      alt: 'Piano su misura',
+    }}
+    callToAction={{
+      target: '_blank',
+      text: 'Scopri di più',
+      icon: 'tabler:chevron-right',
+      href: '#',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        Fase 2: <br /><span class="text-2xl">Piano su misura</span>
+      </h3>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget: Come lavoro - Fase 3 **************** -->
+
+  <Content
+    isReversed
+    isAfterContent={true}
+    items={[
+      {
+        title: 'Cosa facciamo insieme:',
+        description: `Incontri periodici per verificare i risultati, aggiornare il piano in base alle evoluzioni della tua vita e dei mercati.`,
+      },
+      {
+        title: 'Cosa ottieni:',
+        description: `Un punto di riferimento stabile nel tempo. Non mi limito a vendere prodotti: ti accompagno nel percorso.`,
+      },
+    ]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
+      alt: 'Monitoraggio e revisione',
+    }}
+    callToAction={{
+      target: '_blank',
+      text: 'Scopri di più',
+      icon: 'tabler:chevron-right',
+      href: '#',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        Fase 3: <br /><span class="text-2xl">Monitoraggio e revisione</span>
+      </h3>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- CallToAction Widget *********** -->
+
+  <CallToAction
+    title="Parliamone davanti a un caffè"
+    subtitle="Il primo incontro è sempre gratuito e senza impegno. Una chiacchierata per capire se posso esserti utile."
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Scrivimi',
+        href: '/contact',
+      },
+    ]}
+  />
+
+  <!-- BlogLatestPost Widget **************** -->
+
+  <BlogLatestPosts
+    id="blog"
+    title="Dal blog"
+    information={`Approfondimenti, analisi di mercato ed educazione finanziaria. Contenuti pensati per aiutarti a capire meglio il mondo degli investimenti e prendere decisioni più consapevoli.`}
+  >
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </BlogLatestPosts>
+</Layout>
