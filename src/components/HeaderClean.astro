@@ -12,10 +12,16 @@ import Logo from '~/components/Logo.astro';
   class="sticky top-0 left-0 right-0 z-40 bg-white border-b border-gray-100 shadow-sm"
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="relative flex items-center justify-center md:justify-between h-16 md:h-20 gap-4">
+    <div class="relative flex items-center justify-between h-16 md:h-20 gap-4">
 
       <!-- LOGO -->
       <Logo />
+
+      <!-- NOME CENTRATO (solo mobile) -->
+      <div class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center text-center md:hidden pointer-events-none">
+        <span class="text-sm font-bold tracking-tight text-[var(--aw-color-text-heading)] whitespace-nowrap">Andrea Giardini</span>
+        <span class="text-[9px] font-medium tracking-[0.12em] uppercase text-[var(--aw-color-text-muted)] whitespace-nowrap">Consulente Finanziario</span>
+      </div>
 
       <!-- ============================================= -->
       <!-- NAV DESKTOP (md+)                             -->
@@ -95,7 +101,7 @@ import Logo from '~/components/Logo.astro';
         id="hamburger-btn"
         type="button"
         aria-label="Apri menu"
-        class="md:hidden absolute right-4 p-3 text-[var(--aw-color-primary)] hover:bg-gray-50 rounded-lg transition-colors"
+        class="md:hidden p-3 -mr-3 text-[var(--aw-color-primary)] hover:bg-gray-50 rounded-lg transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="3" y1="6" x2="21" y2="6"/>
