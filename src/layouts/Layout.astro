@@ -38,6 +38,24 @@ const { language, textDirection } = I18N;
 
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
+
+    <!-- Structured Data per Google -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Andrea Giardini",
+      "jobTitle": "Consulente Finanziario",
+      "url": "https://giardiniconsulenza.it",
+      "image": "https://giardiniconsulenza.it/favicon.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://giardiniconsulenza.it/favicon.png"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/andrea-giardini-58923a268",
+        "https://www.instagram.com/andreagiardini.finanza/"
+      ]
+    })} />
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
