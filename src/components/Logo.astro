@@ -5,11 +5,11 @@ import { Image } from 'astro:assets';
 ---
 
 <a
-  class="flex items-center gap-3 shrink-0"
+  class="flex flex-col sm:flex-row items-center gap-1 sm:gap-3 shrink-0"
   href={getHomePermalink()}
   aria-label="Andrea Giardini — Home"
 >
-  <div class="h-14 md:h-16 w-14 md:w-16 rounded-full bg-white flex items-center justify-center overflow-hidden">
+  <div class="h-10 sm:h-14 md:h-16 w-10 sm:w-14 md:w-16 rounded-full bg-white flex items-center justify-center overflow-hidden">
     <Image
       src={logoSrc}
       alt="Logo Giardini Consulenza"
@@ -21,10 +21,10 @@ import { Image } from 'astro:assets';
   <span class="hidden sm:block w-px h-8 bg-gray-300"></span>
 
   <span class="flex flex-col leading-tight items-center sm:items-start text-center sm:text-left">
-    <span class="text-sm md:text-base font-bold tracking-tight text-[var(--aw-color-text-heading)] whitespace-nowrap">
+    <span class="text-[11px] sm:text-sm md:text-base font-bold tracking-tight text-[var(--aw-color-text-heading)] whitespace-nowrap">
       Andrea Giardini
     </span>
-    <span class="text-[10px] md:text-[11px] font-medium tracking-[0.12em] uppercase text-[var(--aw-color-text-muted)] whitespace-nowrap">
+    <span class="text-[9px] sm:text-[10px] md:text-[11px] font-medium tracking-[0.12em] uppercase text-[var(--aw-color-text-muted)] whitespace-nowrap">
       Consulente Finanziario
     </span>
   </span>
