@@ -1,0 +1,117 @@
+﻿---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Cookie Policy — Andrea Giardini Consulente Finanziario',
+  description: 'Informativa sui cookie utilizzati dal sito giardiniconsulenza.it ai sensi del D.Lgs. 196/2003 e del Regolamento UE 2016/679.',
+};
+
+const lastUpdate = '30 aprile 2026';
+---
+
+<Layout metadata={metadata}>
+  <section class="bg-white py-12 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Intestazione -->
+      <div class="mb-10 pb-8 border-b border-gray-200">
+        <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-3">Documento legale</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">
+          Cookie Policy
+        </h1>
+        <p class="text-sm text-[var(--aw-color-text-muted)]">Ultimo aggiornamento: {lastUpdate}</p>
+      </div>
+
+      <!-- Corpo -->
+      <div class="prose prose-slate max-w-none text-[var(--aw-color-text-default)] text-base leading-relaxed space-y-8">
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">1. Cosa sono i cookie</h2>
+          <p>
+            I cookie sono piccoli file di testo che i siti web visitati dall'utente inviano e registrano sul dispositivo in uso (computer, tablet, smartphone). Permettono al sito di ricordare le preferenze dell'utente e di migliorare l'esperienza di navigazione. I cookie non contengono informazioni personali direttamente identificabili.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">2. Tipologie di cookie utilizzati</h2>
+
+          <h3 class="text-base font-bold text-[var(--aw-color-text-heading)] font-heading mt-5 mb-2">2.1 Cookie tecnici (necessari)</h3>
+          <p>
+            Questi cookie sono indispensabili per il corretto funzionamento del sito. Consentono la navigazione e l'utilizzo delle funzionalità di base, come la gestione della sessione nell'area clienti. Non richiedono il consenso dell'utente ai sensi dell'art. 122, comma 1, del D.Lgs. 196/2003.
+          </p>
+          <div class="mt-3 overflow-x-auto">
+            <table class="w-full text-sm border border-gray-200 rounded-sm">
+              <thead class="bg-[rgb(238_247_246)]">
+                <tr>
+                  <th class="text-left px-4 py-2 font-semibold text-[var(--aw-color-text-heading)]">Nome</th>
+                  <th class="text-left px-4 py-2 font-semibold text-[var(--aw-color-text-heading)]">Scopo</th>
+                  <th class="text-left px-4 py-2 font-semibold text-[var(--aw-color-text-heading)]">Durata</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr>
+                  <td class="px-4 py-2 font-mono text-xs">session</td>
+                  <td class="px-4 py-2">Gestione sessione utente nell'area clienti</td>
+                  <td class="px-4 py-2">Sessione</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 font-mono text-xs">cookie_consent</td>
+                  <td class="px-4 py-2">Memorizza le preferenze sui cookie</td>
+                  <td class="px-4 py-2">12 mesi</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="text-base font-bold text-[var(--aw-color-text-heading)] font-heading mt-6 mb-2">2.2 Cookie analitici di terze parti</h3>
+          <p>
+            Il sito non utilizza attualmente cookie analitici di terze parti (es. Google Analytics). Qualora venissero introdotti in futuro, questa pagina sarà aggiornata e sarà richiesto il consenso preventivo dell'utente.
+          </p>
+
+          <h3 class="text-base font-bold text-[var(--aw-color-text-heading)] font-heading mt-6 mb-2">2.3 Cookie di profilazione e marketing</h3>
+          <p>
+            Il sito non utilizza cookie di profilazione o di marketing.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">3. Come gestire i cookie</h2>
+          <p>
+            L'utente può controllare e/o eliminare i cookie in qualsiasi momento tramite le impostazioni del proprio browser. Di seguito i link alle guide dei browser più comuni:
+          </p>
+          <ul class="list-disc pl-6 mt-3 space-y-1">
+            <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" class="text-[var(--aw-color-primary)] hover:underline">Google Chrome</a></li>
+            <li><a href="https://support.mozilla.org/it/kb/Gestione%20dei%20cookie" target="_blank" rel="noopener noreferrer" class="text-[var(--aw-color-primary)] hover:underline">Mozilla Firefox</a></li>
+            <li><a href="https://support.apple.com/it-it/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" class="text-[var(--aw-color-primary)] hover:underline">Apple Safari</a></li>
+            <li><a href="https://support.microsoft.com/it-it/microsoft-edge/eliminare-i-cookie-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" class="text-[var(--aw-color-primary)] hover:underline">Microsoft Edge</a></li>
+          </ul>
+          <p class="mt-4 text-sm text-[var(--aw-color-text-muted)]">
+            Nota: la disabilitazione dei cookie tecnici potrebbe compromettere il corretto funzionamento di alcune funzionalità del sito.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">4. Modifiche alla Cookie Policy</h2>
+          <p>
+            Il titolare si riserva il diritto di modificare la presente Cookie Policy in qualsiasi momento, anche in relazione all'introduzione di nuovi strumenti di analisi o tracciamento. Le modifiche saranno pubblicate su questa pagina con indicazione della data di aggiornamento.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">5. Contatti</h2>
+          <p>
+            Per qualsiasi richiesta relativa ai cookie o al trattamento dei dati personali, scrivere a <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] hover:underline">andrea@giardiniconsulenza.it</a>.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Link correlati -->
+      <div class="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-4 text-sm">
+        <a href="/privacy" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Privacy Policy →</a>
+        <a href="/note-legali" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Note legali →</a>
+      </div>
+
+    </div>
+  </section>
+</Layout>

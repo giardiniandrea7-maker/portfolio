@@ -1,0 +1,254 @@
+﻿---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Area Clienti — Andrea Giardini | Consulente Finanziario',
+  description:
+    "L'area riservata ai clienti di Andrea Giardini: contenuti esclusivi, newsletter, assistenza dedicata e documenti personali.",
+};
+
+// 5 benefit dell'area clienti
+const benefits = [
+  {
+    icon: 'news',
+    title: 'News esclusive',
+    description:
+      'Aggiornamenti selezionati sui mercati, approfondimenti editoriali e commenti riservati ai soli clienti.',
+  },
+  {
+    icon: 'help',
+    title: 'Domande e Risposte',
+    description:
+      'Una raccolta di FAQ evolute e casi reali per chiarire ogni dubbio sulla gestione del tuo patrimonio.',
+  },
+  {
+    icon: 'mail',
+    title: 'Newsletter Pro',
+    description:
+      'Una newsletter periodica con analisi macroeconomiche, trend di mercato e spunti operativi dedicati.',
+  },
+  {
+    icon: 'star',
+    title: 'Contenuti Personalizzati',
+    description:
+      'Materiali, report e documenti preparati su misura per il tuo profilo e i tuoi obiettivi finanziari.',
+  },
+  {
+    icon: 'headset',
+    title: 'Assistenza Online',
+    description:
+      'Canale diretto per richieste operative, chiarimenti e supporto continuo nelle decisioni di investimento.',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+
+  <!-- =========================================================
+       1. HERO — area riservata con 2 CTA
+       ========================================================= -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <!-- Icona lucchetto -->
+      <div class="inline-flex w-20 h-20 md:w-24 md:h-24 rounded-full bg-[var(--aw-color-primary)]/10 items-center justify-center mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.1] font-heading">
+        Area Clienti
+      </h1>
+
+      <p class="text-lg md:text-xl text-[var(--aw-color-text-default)] leading-relaxed max-w-2xl mx-auto mb-10">
+        Uno spazio riservato a chi ha scelto di seguire un percorso di consulenza, con <strong class="text-[var(--aw-color-primary)]">contenuti esclusivi e assistenza dedicata</strong>.
+      </p>
+
+      <!-- 2 CTA: Accedi + Registrati -->
+      <div class="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+        <a
+          href="/login"
+          class="flex-1 px-8 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-base md:text-lg font-bold rounded-sm transition-all hover:shadow-xl hover:-translate-y-0.5 font-heading"
+        >
+          Accedi
+        </a>
+        <a
+          href="/registrazione"
+          class="flex-1 px-8 py-4 bg-transparent border-2 border-[var(--aw-color-primary)] hover:bg-[var(--aw-color-primary)] hover:text-white text-[var(--aw-color-primary)] text-base md:text-lg font-bold rounded-sm transition-all font-heading"
+        >
+          Registrati
+        </a>
+      </div>
+
+      <!-- Badge riservato -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[var(--aw-color-accent)]/30 rounded-full mt-8">
+        <span class="w-2 h-2 rounded-full bg-[var(--aw-color-accent)]"></span>
+        <span class="text-xs font-bold tracking-[0.2em] uppercase text-[var(--aw-color-primary)]">Riservato ai clienti</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       2. I 5 BENEFIT DELL'AREA CLIENTI
+       ========================================================= -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="max-w-3xl mx-auto text-center mb-14">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-tight font-heading">
+          Cosa trovi nell'area riservata
+        </h2>
+        <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+          I miei clienti hanno accesso a un insieme di strumenti e contenuti pensati per <strong>supportarli nel loro percorso finanziario</strong>, oltre la singola consulenza.
+        </p>
+      </div>
+
+      <!-- Grid 5 card (3+2) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {benefits.map((b) => (
+          <div class="flex flex-col items-start p-7 md:p-8 bg-[rgb(238_247_246)] rounded-md hover:shadow-lg transition-shadow">
+            <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center mb-5 shadow-sm">
+              {b.icon === 'news' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
+                  <path d="M18 14h-8"/>
+                  <path d="M15 18h-5"/>
+                  <path d="M10 6h8v4h-8V6Z"/>
+                </svg>
+              )}
+              {b.icon === 'help' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              )}
+              {b.icon === 'mail' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              )}
+              {b.icon === 'star' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              )}
+              {b.icon === 'headset' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+                  <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                </svg>
+              )}
+            </div>
+
+            <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-3 leading-tight font-heading">
+              {b.title}
+            </h3>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+              {b.description}
+            </p>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       3. COME FUNZIONA L'ACCESSO (3 step)
+       ========================================================= -->
+  <section class="bg-[var(--aw-color-text-heading)] text-white py-16 md:py-24">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-14 leading-tight font-heading">
+        Come funziona l'accesso
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-8 md:gap-10">
+
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="inline-flex w-16 h-16 rounded-full bg-[var(--aw-color-accent)]/20 items-center justify-center mb-5 border-2 border-[var(--aw-color-accent)]/40">
+            <span class="text-xl font-bold text-[var(--aw-color-accent)] font-heading">1</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold mb-3 font-heading">
+            Registrati
+          </h3>
+          <p class="text-sm md:text-base text-white/75 leading-relaxed">
+            Compila il modulo di registrazione con i tuoi dati e conferma l'indirizzo email.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="inline-flex w-16 h-16 rounded-full bg-[var(--aw-color-accent)]/20 items-center justify-center mb-5 border-2 border-[var(--aw-color-accent)]/40">
+            <span class="text-xl font-bold text-[var(--aw-color-accent)] font-heading">2</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold mb-3 font-heading">
+            Verifica manuale
+          </h3>
+          <p class="text-sm md:text-base text-white/75 leading-relaxed">
+            Verifico personalmente la tua identità e, se sei un cliente, attivo il tuo account.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="inline-flex w-16 h-16 rounded-full bg-[var(--aw-color-accent)]/20 items-center justify-center mb-5 border-2 border-[var(--aw-color-accent)]/40">
+            <span class="text-xl font-bold text-[var(--aw-color-accent)] font-heading">3</span>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold mb-3 font-heading">
+            Accedi
+          </h3>
+          <p class="text-sm md:text-base text-white/75 leading-relaxed">
+            Ricevi la conferma di attivazione e accedi con le credenziali ai contenuti riservati.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Nota attivazione manuale -->
+      <p class="text-center text-sm text-white/60 italic mt-12 max-w-2xl mx-auto">
+        L'accesso all'area riservata è attivato solo dopo verifica manuale dell'identità, per garantire la riservatezza dei contenuti ai soli clienti.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       4. NON SEI ANCORA CLIENTE?
+       ========================================================= -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-tight font-heading">
+        Non sei ancora cliente?
+      </h2>
+
+      <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10 max-w-2xl mx-auto">
+        Il percorso inizia con una <strong class="text-[var(--aw-color-primary)]">diagnosi di portafoglio gratuita</strong>, senza impegno. Valutiamo insieme la tua situazione e, se c'è affinità di metodo, continuiamo il lavoro insieme.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/richiedi-diagnosi"
+          class="px-10 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-lg font-bold rounded-sm transition-all hover:shadow-xl hover:-translate-y-0.5 font-heading"
+        >
+          Richiedi la diagnosi
+        </a>
+        <a
+          href="/contatti"
+          class="px-10 py-4 bg-transparent border-2 border-[var(--aw-color-primary)] hover:bg-[var(--aw-color-primary)] hover:text-white text-[var(--aw-color-primary)] text-lg font-bold rounded-sm transition-all font-heading"
+        >
+          Contattami
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

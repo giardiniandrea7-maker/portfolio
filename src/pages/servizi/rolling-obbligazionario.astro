@@ -1,0 +1,99 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceLayout from '~/components/ServiceLayout.astro';
+
+const metadata = {
+  title: 'Rolling Obbligazionario — Liquidità aziendale remunerata | Andrea Giardini',
+  description:
+    'Il servizio che permette di rivalutare la cassa aziendale senza vincolarla. Remunerazione della liquidità con disponibilità costante.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <ServiceLayout
+    heroTitle="Rolling Obbligazionario"
+    heroParagraphs={[
+      `Vuoi <strong class="text-[var(--aw-color-primary)]">valorizzare la liquidità della tua azienda</strong> senza precluderti la possibilità di utilizzarla per investimenti e spese sull'attività? Il Rolling Obbligazionario è il servizio che permette che <strong>rivalutare la cassa aziendale senza vincolarla</strong>.`,
+    ]}
+    heroCtaText="Richiedila Ora!"
+    heroCtaHref="#form-richiesta"
+    heroVideoLabel="Rolling Obbligazionario"
+
+    showExample={false}
+
+    showProblemsSection={true}
+    problemsTitle="Liberati dalle proposte che non vanno bene per la tua cassa aziendale"
+    problemsParagraphs={[
+      `Lasciare la liquidità ferma sul conto rappresenta <strong>un'inefficienza per via dei mancati guadagni</strong> cui un imprenditore rinuncia.`,
+      `Tuttavia le <strong>opzioni tradizionali</strong> spesso proposte presentano vincoli e rischi che possono <strong>compromettere l'equilibrio finanziario dell'azienda</strong>.`,
+      `Quindi come remunerare la propria cassa pur mantenendola sempre disponibile?`,
+    ]}
+    problemsCards={[
+      {
+        icon: 'banknote',
+        title: 'Fondi di Investimento',
+        description: 'Costi elevati e rendimenti incerti',
+      },
+      {
+        icon: 'document',
+        title: 'Polizze Assicurative',
+        description: 'Rendimento contenuto e smobilizzo lungo',
+      },
+      {
+        icon: 'wallet',
+        title: 'Conti deposito',
+        description: 'Tassazione eccessiva e smobilizzo lungo',
+      },
+    ]}
+
+    showTimelineSection={true}
+    timelineTitle="Liquidità remunerata e disponibile"
+    timelineParagraphs={[
+      `Comprese le necessità di una <strong>sana gestione della propria tesoreria</strong>, abbiamo strutturato il servizio di rolling obbligazionario.`,
+      `Una gestione della liquidità in titoli obbligazionari di diversa durata per permettere ad una società di far fronte alle spese di breve, medio e lungo termine senza precludersi le <strong>opportunità di remunerare il proprio denaro</strong>.`,
+    ]}
+
+    showBenefitsSection={true}
+    benefitsTitle="I vantaggi"
+    benefitsItems={[
+      `Il rolling obbligazionario permette la <strong>remunerazione della cassa</strong> che, se elevata, può permettere di sostenere importanti investimenti sull'attività altrimenti non previsti.`,
+      `Il costo della parcella di consulenza e qualsiasi spesa accessoria legata agli strumenti finanziari sono <strong>deducibili</strong>.`,
+      `È possibile, e saggio, pianificare il servizio di rolling avvalendosi di strumenti che prevedono <strong>tassazione agevolata</strong> sulle plusvalenze.`,
+      `La cassa aziendale è utilizzabile in qualsiasi momento <strong>senza vincoli</strong> tradizionali imposti dalle forme più classiche di rivalutazione della liquidità.`,
+    ]}
+
+    detailTitle=""
+    detailIntro={[]}
+    advantages={[]}
+    analysisItems={[]}
+    detailOutro={[]}
+
+    faqTitle="Risolvi i tuoi dubbi"
+    faqParagraphs={[
+      `Perché effettuare l'analisi gratuita? Quali sono i vantaggi? Cosa si rischia? Quanto tempo bisogna attendere per un riscontro?`,
+      `Rispondo alle domande più comuni con un semplice video a nome di tutto lo studio, che si impegnerà nel restituirti un output completo, chiaro e risolutivo.`,
+    ]}
+    faqVideoLabel="Rispondo alle domande sul rolling obbligazionario"
+
+    showBanner={false}
+    showReceive={false}
+
+    showSimpleReceive={true}
+    simpleReceiveTitle="Come richiedere il servizio"
+    simpleReceiveParagraphs={[
+      `Per ricevere il servizio di rolling obbligazionario o pianificare una soluzione valida per la tua cassa aziendale compila la form qui sotto.`,
+      `Non appena ricevuta la tua richiesta di contatto il nostro team prenderà visione della tua richiesta per darti riscontro entro <strong class="text-[var(--aw-color-primary)]">4 giornate lavorative</strong>.`,
+    ]}
+
+    showForm={true}
+    formMode="business"
+    formTitle="Implementa il Rolling Obbligazionario per la tua azienda."
+    formSubtitle={[
+      `Compila la form e carica eventuali documenti. È gratis e senza impegno.`,
+    ]}
+    showFileUpload={true}
+    showInvestmentDate={false}
+  />
+
+</Layout>

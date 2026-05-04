@@ -1,0 +1,30 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import HeaderClean from '~/components/HeaderClean.astro';
+import Footer from '~/components/widgets/Footer.astro';
+import TopBar from '~/components/TopBar.astro';
+import DiagnosiPopup from '~/components/DiagnosiPopup.astro';
+
+import { footerData } from '~/navigation';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <TopBar />
+  <HeaderClean />
+  <main>
+    <slot />
+  </main>
+  <slot name="footer">
+    <Footer {...footerData} />
+  </slot>
+
+  <DiagnosiPopup />
+</Layout>

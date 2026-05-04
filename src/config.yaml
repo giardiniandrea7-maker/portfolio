@@ -1,0 +1,72 @@
+site:
+  name: 'Andrea Giardini — Consulente Finanziario'
+  site: 'https://giardiniconsulenza.it'
+  base: '/'
+  trailingSlash: false
+
+  googleSiteVerificationId: false
+
+# Default SEO metadata
+metadata:
+  title:
+    default: Andrea Giardini — Consulente Finanziario
+    template: '%s — Andrea Giardini'
+  description: "Consulente finanziario indipendente. Affianco persone e famiglie nella pianificazione del patrimonio, negli investimenti e nella protezione del futuro, con metodo, ascolto e competenze certificate."
+  robots:
+    index: true
+    follow: true
+  openGraph:
+    site_name: Andrea Giardini — Consulente Finanziario
+    images:
+      - url: '~/assets/images/default.png'
+        width: 1200
+        height: 628
+    type: website
+  twitter:
+    handle: ''
+    site: ''
+    cardType: summary_large_image
+
+i18n:
+  language: it
+  textDirection: ltr
+
+apps:
+  blog:
+    isEnabled: true
+    postsPerPage: 6
+
+    post:
+      isEnabled: true
+      permalink: '/blog/%slug%'
+      robots:
+        index: true
+
+    list:
+      isEnabled: true
+      pathname: 'blog'
+      robots:
+        index: true
+
+    category:
+      isEnabled: true
+      pathname: 'categoria'
+      robots:
+        index: true
+
+    tag:
+      isEnabled: true
+      pathname: 'tag'
+      robots:
+        index: false
+
+    isRelatedPostsEnabled: true
+    relatedPostsCount: 4
+
+analytics:
+  vendors:
+    googleAnalytics:
+      id: null # or "G-XXXXXXXXXX"
+
+ui:
+  theme: 'light:only' # Possible values: "system", "light", "dark", "light:only", "dark:only"

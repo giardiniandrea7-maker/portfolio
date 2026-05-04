@@ -1,0 +1,125 @@
+﻿---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Note Legali — Andrea Giardini Consulente Finanziario',
+  description: 'Note legali, disclaimer e informazioni sull\'attività professionale di Andrea Giardini, consulente finanziario iscritto all\'albo OCF.',
+};
+
+const lastUpdate = '30 aprile 2026';
+---
+
+<Layout metadata={metadata}>
+  <section class="bg-white py-12 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Intestazione -->
+      <div class="mb-10 pb-8 border-b border-gray-200">
+        <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-3">Documento legale</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">
+          Note Legali
+        </h1>
+        <p class="text-sm text-[var(--aw-color-text-muted)]">Ultimo aggiornamento: {lastUpdate}</p>
+      </div>
+
+      <!-- Corpo -->
+      <div class="prose prose-slate max-w-none text-[var(--aw-color-text-default)] text-base leading-relaxed space-y-8">
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">1. Titolare del sito</h2>
+          <div class="p-4 bg-[rgb(238_247_246)] rounded-sm border-l-4 border-[var(--aw-color-accent)] text-sm space-y-1">
+            <p><strong>Andrea Giardini</strong> — Consulente Finanziario abilitato all'offerta fuori sede</p>
+            <p>P.IVA: <strong>[P.IVA da inserire]</strong></p>
+            <p>Indirizzo: <strong>[Indirizzo da inserire]</strong></p>
+            <p>Email: <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] hover:underline">andrea@giardiniconsulenza.it</a></p>
+            <p>Telefono: <a href="tel:+393515456845" class="text-[var(--aw-color-primary)] hover:underline">+39 351 545 6845</a></p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">2. Abilitazione professionale</h2>
+          <p>
+            Andrea Giardini è <strong>consulente finanziario abilitato all'offerta fuori sede</strong>, iscritto all'Albo unico dei Consulenti Finanziari tenuto dall'Organismo di vigilanza e tenuta dell'albo unico dei Consulenti Finanziari (<strong>OCF</strong>), con delibera n. <strong>2965</strong> del <strong>23 aprile 2026</strong>.
+          </p>
+          <p class="mt-3">
+            Opera in qualità di agente collegato di <strong>[Nome Banca] S.p.A.</strong>, intermediario autorizzato ai sensi del D.Lgs. 58/1998 (TUF).
+          </p>
+          <p class="mt-3">
+            È possibile verificare l'iscrizione all'albo sul portale ufficiale OCF:
+          </p>
+          <a
+            href="https://www.organismocf.it/portal/web/portale-ocf/ricerca-nelle-sezioni-dell-albo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-3 text-sm font-semibold text-[var(--aw-color-primary)] hover:underline"
+          >
+            Verifica su organismocf.it
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">3. Natura dei contenuti del sito</h2>
+          <p>
+            I contenuti pubblicati su <strong>giardiniconsulenza.it</strong> — articoli, video, podcast, guide, calcolatori e qualsiasi altro materiale — hanno esclusivamente finalità <strong>informative ed educative</strong>.
+          </p>
+          <p class="mt-3">
+            Tali contenuti <strong>non costituiscono</strong>:
+          </p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li>raccomandazioni personalizzate di investimento;</li>
+            <li>offerta o sollecitazione all'acquisto o alla vendita di strumenti finanziari;</li>
+            <li>consulenza fiscale, legale o successoria;</li>
+            <li>ricerca in materia di investimenti ai sensi della normativa MiFID II.</li>
+          </ul>
+          <p class="mt-3">
+            Per ricevere una consulenza personalizzata adeguata al proprio profilo di rischio e ai propri obiettivi finanziari, è necessario contattare direttamente il professionista e sottoscrivere un apposito contratto di consulenza.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">4. Disclaimer sui rendimenti</h2>
+          <p>
+            Le eventuali performance storiche, i rendimenti passati e i dati storici citati nel sito hanno esclusivamente valore illustrativo. <strong>I rendimenti passati non sono indicativi di quelli futuri</strong> e non vi è alcuna garanzia di ottenere risultati analoghi.
+          </p>
+          <p class="mt-3">
+            Ogni investimento comporta rischi, inclusa la possibile perdita del capitale investito. Prima di effettuare qualsiasi operazione finanziaria è necessario leggere la documentazione ufficiale (KID, Prospetto, Scheda prodotto) e valutare attentamente il proprio profilo di rischio.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">5. Proprietà intellettuale</h2>
+          <p>
+            Tutti i contenuti presenti su questo sito — testi, immagini, loghi, grafica, video — sono di proprietà di Andrea Giardini o dei rispettivi titolari e sono protetti dalle leggi sul diritto d'autore. È vietata la riproduzione, anche parziale, senza previa autorizzazione scritta.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">6. Limitazione di responsabilità</h2>
+          <p>
+            Il titolare del sito declina ogni responsabilità per danni diretti o indiretti derivanti dall'utilizzo delle informazioni contenute nel sito, da eventuali interruzioni del servizio o da errori nei contenuti. I link a siti di terze parti sono forniti a titolo informativo; il titolare non è responsabile dei contenuti di tali siti.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">7. Legge applicabile e foro competente</h2>
+          <p>
+            Le presenti Note Legali sono regolate dalla legge italiana. Per qualsiasi controversia relativa al sito o ai suoi contenuti, è competente in via esclusiva il Foro di <strong>[Città da inserire]</strong>.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Link correlati -->
+      <div class="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-4 text-sm">
+        <a href="/privacy" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Privacy Policy →</a>
+        <a href="/cookie-policy" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Cookie Policy →</a>
+      </div>
+
+    </div>
+  </section>
+</Layout>

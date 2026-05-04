@@ -1,0 +1,85 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceLayout from '~/components/ServiceLayout.astro';
+
+const metadata = {
+  title: 'Pianificazione Finanziaria — Analisi dei bisogni | Andrea Giardini',
+  description:
+    'La pianificazione finanziaria è il processo in cui analizzo i tuoi bisogni, quelli della tua famiglia e le tue aspettative di vita nel modo più oggettivo possibile.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <ServiceLayout
+    heroTitle="Pianificazione finanziaria"
+    heroParagraphs={[
+      `È quel processo in cui analizzo i tuoi bisogni, inclusi quelli della tua famiglia, e le tue aspettative di vita nel modo più oggettivo possibile. <strong class="text-[var(--aw-color-primary)]">Analizzeremo insieme la tua situazione e valuteremo quali siano gli obiettivi e le migliori scelte economiche per il futuro tuo e della tua famiglia.</strong>`,
+    ]}
+    heroCtaText="Prendi un appuntamento!"
+    heroCtaHref="#come-ricevere"
+    heroVideoLabel="Pianificazione Finanziaria"
+
+    showExample={false}
+
+    showRiskSection={true}
+    riskTitle="Non pianificare significa rischiare"
+    riskParagraphs={[
+      `In ogni ambito della propria vita è <strong>necessario essere adeguatamente preparati</strong>. Una <strong class="text-[var(--aw-color-primary)]">pianificazione finanziaria</strong> ci permette di raggiungere i nostri <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> e ci protegge da situazioni di difficoltà finanziarie.`,
+    ]}
+    riskBlocks={['Risk Management', 'Acquisto Casa', 'Obiettivi di Vita', 'Pensione']}
+
+    showStepsSection={true}
+    stepsItems={[
+      { number: '1', title: 'Analisi Obiettivi', icon: 'target' },
+      { number: '2', title: 'Esame del budgeting', icon: 'books' },
+      { number: '3', title: 'Valutazione profilo di rischio', icon: 'shield' },
+      { number: '4', title: 'Soluzioni di investimento', icon: 'chart' },
+      { number: '5', title: 'Monitoraggio', icon: 'search' },
+    ]}
+
+    detailTitle="Più nel dettaglio"
+    detailIntro={[
+      `Tra gli obiettivi più classici trovo:`,
+    ]}
+    advantagesTitle=""
+    advantages={[
+      `La gestione del <strong class="text-[var(--aw-color-primary)]">rischio</strong> per le varie attività con l'analisi degli <strong class="text-[var(--aw-color-primary)]">investimenti</strong> o degli indebitamenti (prestiti, mutui);`,
+      `La possibile creazione di un capitale da usare per l'istruzione dei tuoi figli;`,
+      `La valutazione di come gestire il denaro ad esempio per l'acquisto di una casa (sia per viverci sia per investimento);`,
+      `La <strong class="text-[var(--aw-color-primary)]">previdenza complementare</strong> per la tua pensione.`,
+    ]}
+    analysisItems={[]}
+    detailOutro={[
+      `Raggiungerli è complesso e, poiché ti riguarda direttamente, io posso aiutarti in questo, <strong class="text-[var(--aw-color-primary)]">fornendoti una valutazione oggettiva e professionale</strong> della tua situazione e definendo assieme a te quali siano gli obiettivi e le migliori scelte economiche per il futuro tuo e della tua famiglia.`,
+    ]}
+
+    faqTitle="Risolvi i tuoi dubbi"
+    faqParagraphs={[
+      `In cosa consiste la pianificazione? Perché effettuare una pianificazione? Quali obiettivi si possono raggiungere grazie ad una corretta gestione delle proprie risorse?`,
+      `Rispondo alle domande più comuni con un semplice video a nome di tutto lo studio, che si impegnerà nel restituirti un output completo, chiaro e risolutivo.`,
+    ]}
+    faqVideoLabel="Rispondo alle domande sulla pianificazione finanziaria"
+
+    bannerTitle="Prendi un appuntamento"
+    bannerSubtitle={`il primo incontro è <strong class="text-[var(--aw-color-primary)]">gratuito</strong> e <strong class="text-[var(--aw-color-primary)]">senza impegno</strong>`}
+
+    receiveTitle="Come richiedere la pianificazione"
+    receiveParagraphs={[
+      `Per avviare un percorso di pianificazione finanziaria, compila la form qui sotto, manda una mail a <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] underline font-semibold">andrea@giardiniconsulenza.it</a> o manda un messaggio WhatsApp al numero <strong class="text-[var(--aw-color-primary)]">+39 351 545 6845</strong>.`,
+      `Nel primo incontro (in presenza o da remoto) ci conosciamo e capiamo se c'è affinità di <strong class="text-[var(--aw-color-primary)]">metodo</strong>. Se decidiamo di procedere, avvio l'analisi della tua situazione e preparo una prima bozza di piano <strong class="text-[var(--aw-color-primary)]">personalizzato</strong> da discutere insieme.`,
+      `Non servono documenti particolari all'inizio — bastano una panoramica generale della tua situazione e la voglia di metterti in gioco sul serio.`,
+    ]}
+    receiveCtaText="Istruzioni per la compilazione della richiesta"
+
+    showForm={true}
+    formTitle="Modulo di richiesta"
+    formSubtitle={[
+      `Compila la form per prenotare il primo incontro <strong class="text-[var(--aw-color-primary)]">gratuito</strong> e <strong class="text-[var(--aw-color-primary)]">senza impegno</strong>.`,
+      `Se vuoi, puoi già allegare documenti utili per un'analisi più approfondita.`,
+    ]}
+    showFileUpload={true}
+    showInvestmentDate={false}
+  />
+
+</Layout>

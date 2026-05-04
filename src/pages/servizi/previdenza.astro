@@ -1,0 +1,85 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceLayout from '~/components/ServiceLayout.astro';
+
+const metadata = {
+  title: 'Previdenza Complementare — Costruisci la tua pensione | Andrea Giardini',
+  description:
+    'La previdenza complementare consiste nell\'accantonare denaro in modo costante per migliorare le condizioni economiche al momento della pensione.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <ServiceLayout
+    heroTitle="Previdenza complementare"
+    heroParagraphs={[
+      `La previdenza complementare consiste nell'accantonare del denaro in modo più o meno costante e non obbligatorio con il fine di migliorare le condizioni economiche al momento della pensione. La finalità è quella di consentire all'aderente di mantenere il suo tenore di vita quando andrà in pensione. Esistono molte tipologie di fondi pensione — valutarne la qualità, i costi e la coerenza con i propri obiettivi è parte integrante di una pianificazione finanziaria seria.`,
+    ]}
+    heroCtaText="Prendi un appuntamento!"
+    heroCtaHref="#form-richiesta"
+    heroVideoLabel="Previdenza Complementare"
+
+    showExample={false}
+
+    showPensionSection={true}
+    pensionTitle="La pensione deve essere un traguardo, non un salto nel vuoto"
+    pensionParagraphs={[
+      `Il <strong>reddito</strong> che oggi ti permette di mantenere un determinato tenore di vita <strong>non durerà per sempre</strong>. Ciò che ciascun lavoratore si augura è che al termine del periodo contributivo arrivi una meritata e soprattutto adeguata pensione.`,
+      `La <strong>situazione italiana</strong> tuttavia non è delle più prospere e questo <strong>minaccia</strong> la nostra <strong>terza età</strong>, che invece che essere un periodo di tranquillità si può trasformare nell'inizio di una fase di profonda incertezza e difficoltà.`,
+      `Provvedere ad una forma di <strong>previdenza privata</strong> diventa uno step necessario per tutelare il nostro <strong>tenore di vita</strong>.`,
+    ]}
+
+    showSimulatorBanner={true}
+    simulatorTitle="Puoi simulare la tua situazione"
+    simulatorLinkText="calcolatore della previdenza complementare"
+    simulatorLinkHref="#"
+    simulatorSuffix="per conoscere le tue potenzialità"
+
+    detailTitle="Come funziona"
+    detailIntro={[
+      `<strong>La previdenza complementare</strong> consiste nell'accantonamento di denaro in modo più o meno costante e non obbligatorio con il fine di migliorare le proprie condizioni economiche al momento della pensione e <strong>assicurarsi il tenore di vita</strong> costruito durante il proprio percorso lavorativo.`,
+      `Al momento della pensione permetterà all'individuo di integrare la pensione pubblica con il <strong>montante costruito nel tempo</strong>.`,
+      `Il mio obiettivo è aiutarti a costruire un montante che sia frutto di una <strong>soluzione</strong> più efficiente possibile, permettendoti di ottenere:`,
+    ]}
+    advantagesTitle=""
+    advantages={[
+      `vantaggi fiscali, ove possibile, grazie alla previdenza complementare;`,
+      `ottimizzazione dei costi sugli strumenti;`,
+      `crescita coerente con il tuo profilo di rischio ed esigenze di vita;`,
+      `efficientamento della fase di erogazione delle somme accumulate.`,
+    ]}
+    analysisItems={[]}
+    detailOutro={[]}
+
+    showSolutionsSection={true}
+    solutionsTitle="Ma quali soluzioni per te?"
+    solutionsParagraphs={[
+      `Le <strong>risposte a queste domande</strong> dipendono dalla situazione di ciascun individuo e non è possibile rispondere in maniera unitaria per tutti.`,
+      `Al fine di trarre il massimo vantaggio dalle forme di previdenza complementare è necessario conoscere la tua situazione.`,
+    ]}
+    solutionsLinkText="Clicca qui per comunicarmi la tua situazione"
+    solutionsLinkHref="#form-richiesta"
+    solutionsSlogan="Meglio un piano d'accumulo?"
+
+    faqTitle="Risolvi i tuoi dubbi"
+    faqParagraphs={[
+      `Perché la pensione degli italiani è a rischio? Quali soluzioni si possono adottare? Come funziona il servizio? Quali vantaggi vengono spesso trascurati?`,
+      `Rispondo alle domande più comuni con un semplice video a nome di tutto lo studio, che si impegnerà nel restituirti un output completo, chiaro e risolutivo.`,
+    ]}
+    faqVideoLabel="Rispondo alle domande sulla previdenza complementare"
+
+    showBanner={false}
+    showReceive={false}
+
+    showForm={true}
+    formTitle="Modulo di richiesta"
+    formSubtitle={[
+      `Compila la form per una valutazione personalizzata della tua situazione previdenziale.`,
+      `Se già iscritto a un fondo pensione, puoi allegare un estratto conto o la scheda del prodotto.`,
+    ]}
+    showFileUpload={true}
+    showInvestmentDate={false}
+  />
+
+</Layout>
