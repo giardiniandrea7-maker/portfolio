@@ -56,11 +56,42 @@ const { language, textDirection } = I18N;
         "https://www.youtube.com/@AlphaGiardini"
       ]
     })} />
+
+    <!-- Calendly assets (popup + badge widget) -->
+    <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
     <slot />
 
     <BasicScripts />
+
+    <!-- Calendly badge widget (bottone fluttuante "Prenota una call") -->
+    <script is:inline>
+      (function () {
+        function initBadge() {
+          if (document.querySelector('.calendly-badge-widget')) return;
+          if (window.Calendly && typeof window.Calendly.initBadgeWidget === 'function') {
+            window.Calendly.initBadgeWidget({
+              url: 'https://calendly.com/giardiniandrea',
+              text: 'Prenota una call',
+              color: '#166963',
+              textColor: '#ffffff',
+              branding: false
+            });
+          } else {
+            setTimeout(initBadge, 250);
+          }
+        }
+        // Init dopo il primo render e dopo ogni navigazione (Astro View Transitions)
+        document.addEventListener('astro:page-load', initBadge);
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+          initBadge();
+        } else {
+          document.addEventListener('DOMContentLoaded', initBadge);
+        }
+      })();
+    </script>
   </body>
 </html>
