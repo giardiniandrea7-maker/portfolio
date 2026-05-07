@@ -14,19 +14,25 @@ function initServiceForm() {
     result.classList.add('hidden');
 
     const fd = new FormData(form);
+    const jsonBody: Record<string, string> = {};
     const fileNames: string[] = [];
     for (const [key, val] of [...fd.entries()]) {
       if (val instanceof File) {
         if (val.size > 0) fileNames.push(val.name);
-        fd.delete(key);
+      } else {
+        jsonBody[key] = val as string;
       }
     }
     if (fileNames.length > 0) {
-      fd.append('allegati_indicati', fileNames.join(', '));
+      jsonBody['allegati_indicati'] = fileNames.join(', ');
     }
 
     try {
-      const res = await fetch(WEB3FORMS_URL, { method: 'POST', body: fd });
+      const res = await fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jsonBody),
+      });
       const data = await res.json();
 
       if (data.success) {
