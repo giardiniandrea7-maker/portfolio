@@ -1115,6 +1115,20 @@ const metadata = {
     const totaleVersato = versamentoAnnuo * anniRimanenti;
     const totaleTFR = tfrAnnuo * anniRimanenti;
 
+    // yMax di riferimento per il grafico: massimo possibile con slider al massimo
+    // (versamento 800€/mese, rendimento 6%, fino a 71 anni). Così muovendo gli slider
+    // la curva cresce/cala in modo visibile invece di auto-scalarsi sempre al 100%.
+    const VERSAMENTO_MAX_REF = 800 * 12;
+    const RENDIMENTO_MAX_REF = 0.06;
+    const ETA_PENSIONE_MAX_REF = 71;
+    const anniRimanentiMax = Math.max(1, ETA_PENSIONE_MAX_REF - state.eta);
+    const contribMaxAnnuo = VERSAMENTO_MAX_REF + tfrAnnuo;
+    let yMaxRef = state.fpEsistente;
+    for (let i = 1; i <= anniRimanentiMax; i++) {
+      yMaxRef = yMaxRef * (1 + RENDIMENTO_MAX_REF) + contribMaxAnnuo * (1 + RENDIMENTO_MAX_REF / 2);
+    }
+    yMaxRef = Math.max(yMaxRef, montanteFinale * 1.05);
+
     let aliqMarginale = 0;
     if (state.tipo !== 'autonomo_forfettario') {
       const baseImpFiscale = state.tipo === 'dipendente'
@@ -1141,6 +1155,7 @@ const metadata = {
       aliqMarginale,
       seriemont,
       seriemontBaseline,
+      yMaxRef,
       RAL
     };
   }
@@ -1168,7 +1183,7 @@ const metadata = {
     renderResults(r);
     document.getElementById('scenarioControls').style.display = 'block';
     document.getElementById('chartSection').style.display = 'block';
-    disegnaChart(r.seriemont, r.seriemontBaseline);
+    disegnaChart(r.seriemont, r.seriemontBaseline, r.yMaxRef);
 
     setTimeout(() => {
       document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1221,7 +1236,7 @@ const metadata = {
     return el;
   }
 
-  function disegnaChart(seriemont, seriemontBaseline) {
+  function disegnaChart(seriemont, seriemontBaseline, yMaxRef) {
     const svg = document.getElementById('chartMontante');
     svg.innerHTML = '';
     const W = 800, H = 340;
@@ -1230,8 +1245,9 @@ const metadata = {
     const h = H - m.top - m.bottom;
     const xMin = seriemont[0].eta;
     const xMax = seriemont[seriemont.length - 1].eta;
-    const yMaxRaw = seriemont[seriemont.length - 1].valore * 1.08 || 100000;
-    const yMax = Math.max(yMaxRaw, (seriemontBaseline ? seriemontBaseline[seriemontBaseline.length - 1].valore * 1.08 : 0));
+    // yMax fisso di riferimento (max possibile con slider al massimo per l'età/RAL correnti):
+    // così aumentando versamento o rendimento la curva e il gap crescono visivamente.
+    const yMax = yMaxRef || (seriemont[seriemont.length - 1].valore * 1.08) || 100000;
     const x = eta => m.left + ((eta - xMin) / Math.max(1, xMax - xMin)) * w;
     const y = val => m.top + h - (val / yMax) * h;
 
@@ -1368,7 +1384,7 @@ const metadata = {
       const r = calcolaScenario();
       if (r.error) return;
       renderResults(r);
-      disegnaChart(r.seriemont, r.seriemontBaseline);
+      disegnaChart(r.seriemont, r.seriemontBaseline, r.yMaxRef);
     }, 80);
   }
 
