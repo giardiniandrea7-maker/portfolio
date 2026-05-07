@@ -9,6 +9,10 @@ const metadata = {
 
 <Layout metadata={metadata}>
 
+<!-- Calendly Popup Widget assets -->
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
 <div class="calc-wrapper">
 
   <!-- HEADER -->
@@ -274,7 +278,7 @@ const metadata = {
     <h2>Rivolgiti ad un professionista</h2>
     <p>Posso valutare insieme a te l'efficienza del tuo fondo pensione, se ne hai uno, oppure crearne uno ad hoc. Inoltre conoscerai i vantaggi reali di cui puoi beneficiare da oggi al momento della tua pensione.</p>
     <div class="cta-buttons">
-      <a href="https://calendly.com/giardiniandrea" target="_blank" rel="noopener" class="btn btn-cta">📅 Prenota call gratuita</a>
+      <a href="https://calendly.com/giardiniandrea" id="btnCalendly" class="btn btn-cta">📅 Prenota call gratuita</a>
       <a href="#contactForm" class="btn btn-secondary">✉️ Contattami</a>
     </div>
   </section>
@@ -1423,6 +1427,23 @@ const metadata = {
     if (num >= 1000) return Math.round(num / 1000) + 'k €';
     return Math.round(num) + ' €';
   }
+
+  // ============================================================
+  // BOTTONE CALENDLY → popup widget (resta sulla pagina)
+  // ============================================================
+  (function initCalendlyPopup() {
+    const btn = document.getElementById('btnCalendly');
+    if (!btn) return;
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.Calendly && typeof window.Calendly.initPopupWidget === 'function') {
+        window.Calendly.initPopupWidget({ url: 'https://calendly.com/giardiniandrea' });
+      } else {
+        // Fallback: se l'asset Calendly non si è caricato, apre in nuova scheda
+        window.open('https://calendly.com/giardiniandrea', '_blank', 'noopener');
+      }
+    });
+  })();
 
   // ============================================================
   // FORM CONTATTI → Web3Forms (andrea@giardiniconsulenza.it)
