@@ -1111,7 +1111,11 @@ const {
           </div>
         )}
 
-        <form class="space-y-6" action="#" method="POST" enctype="multipart/form-data">
+        <form id="service-form" class="space-y-6" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="access_key" value="0d00a04d-f883-4684-ba20-f0f134c63d36" />
+          <input type="hidden" name="subject" value="Nuova richiesta servizio da giardiniconsulenza.it" />
+          <input type="hidden" name="from_name" value="giardiniconsulenza.it" />
+          <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
 
           <!-- Nome -->
           <div>
@@ -1333,11 +1337,13 @@ const {
 
           <!-- Submit -->
           <div class="pt-4 flex justify-end">
-            <button type="submit"
+            <button type="submit" id="service-submit"
               class="px-10 py-3.5 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold rounded-sm transition-colors shadow-md hover:shadow-lg">
               Invia
             </button>
           </div>
+
+          <div id="service-result" class="hidden rounded-sm p-4 text-sm font-semibold text-center"></div>
         </form>
       </div>
 
@@ -1346,6 +1352,7 @@ const {
 )}
 
 <script>
+  import '~/utils/web3forms';
   // Contatore caratteri messaggio
   const textarea = document.querySelector('#svc-message') as HTMLTextAreaElement | null;
   const counter = textarea?.parentElement?.querySelector('.text-xs.text-right') as HTMLElement | null;

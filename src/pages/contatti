@@ -115,10 +115,16 @@ const metadata = {
             </p>
 
             <form
-              action="https://formspree.io/f/YOUR_FORM_ID"
+              id="contact-form"
+              action="https://api.web3forms.com/submit"
               method="POST"
               class="space-y-5"
             >
+              <input type="hidden" name="access_key" value="0d00a04d-f883-4684-ba20-f0f134c63d36" />
+              <input type="hidden" name="subject" value="Nuovo messaggio da giardiniconsulenza.it — Contatti" />
+              <input type="hidden" name="from_name" value="giardiniconsulenza.it" />
+              <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
               <div>
                 <label for="name" class="block text-sm font-semibold text-[var(--aw-color-text-default)] mb-2">
                   Nome e cognome <span class="text-red-500">*</span>
@@ -174,10 +180,11 @@ const metadata = {
                 </label>
               </div>
 
-              <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+              <div id="contact-result" class="hidden rounded-sm p-4 text-sm font-semibold text-center"></div>
 
               <button
                 type="submit"
+                id="contact-submit"
                 class="w-full bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold py-4 px-6 rounded-sm transition-all hover:shadow-lg flex items-center justify-center gap-2"
               >
                 Invia messaggio
@@ -191,6 +198,10 @@ const metadata = {
                 I tuoi dati sono al sicuro e usati solo per ricontattarti.
               </p>
             </form>
+
+            <script>
+  import '~/utils/web3forms';
+</script>
           </div>
         </div>
 
