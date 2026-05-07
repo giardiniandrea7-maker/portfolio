@@ -2,978 +2,1181 @@
 import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
-  title: 'Calcolatore Gap Previdenziale | Andrea Giardini',
-  description: 'Scopri quanto prenderai di pensione e calcola il tuo gap previdenziale. Simulatore gratuito con scenari personalizzabili.',
+  title: 'Stimatore Pensione Integrativa | Andrea Giardini',
+  description: 'Stima il tuo risparmio fiscale e la tua pensione integrativa. Simulatore gratuito con scenari personalizzabili e grafico di crescita del montante.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <section class="calc-page py-8 md:py-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="calc-container">
 
+<div class="calc-wrapper">
+
+  <!-- HEADER -->
   <header class="calc-header">
-    <h1>Quanto prenderai davvero di pensione?</h1>
-    <p>Stima il tuo gap previdenziale, poi gioca con gli scenari per trovare la tua strategia ottimale.</p>
+    <h1>Stimatore per la tua pensione integrativa</h1>
+    <p>Per comprendere quali potrebbero essere i vantaggi e i risultati di un investimento previdenziale, ti metto a disposizione questo calcolatore. Stima il tuo risparmio fiscale e la tua pensione integrativa. I risultati sono spiegati come se mi avessi chiesto una consulenza: chiara, gratuita e con riscontro immediato.</p>
   </header>
 
-  <div class="steps">
-    <div class="step active" data-step="1"><div class="step-num">1</div><span>I tuoi dati</span></div>
-    <div class="step-divider"></div>
-    <div class="step" data-step="2"><div class="step-num">2</div><span>Lavoro</span></div>
-    <div class="step-divider"></div>
-    <div class="step" data-step="3"><div class="step-num">3</div><span>Reddito</span></div>
-    <div class="step-divider"></div>
-    <div class="step" data-step="4"><div class="step-num">4</div><span>Dashboard</span></div>
-  </div>
+  <!-- ============== MAIN GRID: 3 colonne (form + 2 disclaimer laterali) ============== -->
+  <div class="main-grid">
 
-  <div class="calc-body">
+    <!-- COLONNA SX: Disclaimer Rendimenti -->
+    <aside class="side-disclaimer">
+      <h4>Disclaimer 1 — Rendimenti</h4>
+      <p>Il calcolatore stima il <strong>capitale che potresti accumulare</strong> negli anni qualora versassi con costanza un contributo volontario e/o destinassi il TFR a una forma di previdenza complementare, applicando un rendimento medio atteso in linea con i rendimenti storici dei comparti di previdenza integrativa.</p>
+      <p><strong>I rendimenti passati non sono garanzia di rendimenti futuri:</strong> il rendimento medio annuo stimato non deve essere considerato un rendimento certo. Il rendimento effettivo potrebbe presentare oscillazioni anche significative in funzione delle condizioni di mercato.</p>
+    </aside>
 
-    <!-- STEP 1 -->
-    <section class="form-section active" id="section-1">
-      <h2 class="section-title">Iniziamo dai tuoi dati</h2>
-      <p class="section-subtitle">Pochi dati anagrafici per impostare il calcolo.</p>
-      <div class="form-grid">
+    <!-- COLONNA CENTRO: Form -->
+    <div class="form-container">
+
+      <div class="form-group">
+        <label for="eta">Quanti anni hai?</label>
+        <input type="number" id="eta" min="20" max="70" value="40">
+      </div>
+
+      <div class="form-group">
+        <label for="etaPensione">Quando andrai in pensione? (anni)</label>
+        <input type="number" id="etaPensione" min="62" max="71" value="67">
+      </div>
+
+      <div class="form-group">
+        <label for="versamentoMensile">Quanto vuoi versare mensilmente? (€)</label>
+        <input type="number" id="versamentoMensile" min="0" max="2000" value="300">
+      </div>
+
+      <div class="form-group">
+        <label>Hai già un fondo pensione attivo?</label>
+        <div class="radio-inline">
+          <label><input type="radio" name="haFP" value="no" checked onchange="aggiornaFP()"> No</label>
+          <label><input type="radio" name="haFP" value="si" onchange="aggiornaFP()"> Sì</label>
+        </div>
+      </div>
+
+      <div class="conditional" id="campoFPesistente">
         <div class="form-group">
-          <label for="eta">La tua età attuale</label>
-          <input type="number" id="eta" min="20" max="70" placeholder="Es. 40" value="40">
+          <label for="fpEsistente">Quanto hai già versato nel tuo attuale fondo pensione? (€)</label>
+          <input type="number" id="fpEsistente" min="0" value="0">
         </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tipo">Qual è la tua posizione lavorativa?</label>
+        <select id="tipo" onchange="aggiornaTipo()">
+          <option value="dipendente" selected>Dipendente</option>
+          <option value="autonomo_ordinario">P.IVA — Regime Ordinario</option>
+          <option value="autonomo_forfettario">P.IVA — Regime Forfettario</option>
+        </select>
+      </div>
+
+      <!-- DIPENDENTE -->
+      <div class="conditional active" data-tipo="dipendente">
         <div class="form-group">
-          <label for="etaPensione">A che età vorresti andare in pensione?</label>
-          <input type="number" id="etaPensione" min="62" max="71" placeholder="Es. 67" value="67">
-          <span class="label-hint">Pensione di vecchiaia: 67 anni. Potrai modificarla negli scenari.</span>
+          <label>Conosci la tua Retribuzione Annua Lorda (RAL)?</label>
+          <div class="radio-inline">
+            <label><input type="radio" name="conosceRAL" value="si" checked onchange="aggiornaConosceRAL()"> Sì</label>
+            <label><input type="radio" name="conosceRAL" value="no" onchange="aggiornaConosceRAL()"> No</label>
+          </div>
         </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="goToStep(2)">Avanti →</button>
-      </div>
-    </section>
 
-    <!-- STEP 2 -->
-    <section class="form-section" id="section-2">
-      <h2 class="section-title">Qual è la tua posizione lavorativa?</h2>
-      <p class="section-subtitle">Le aliquote contributive e il regime fiscale variano in modo sostanziale.</p>
-      <div class="form-group full-width" style="margin-bottom: 15px;">
-        <div class="radio-group">
-          <label class="radio-card">
-            <input type="radio" name="tipo" value="dipendente" checked onchange="aggiornaCampiCondizionali()">
-            <div class="radio-card-label">
-              <span class="icon">👔</span>
-              <div class="title">Dipendente</div>
-              <div class="desc">Aliquota INPS 33%</div>
-            </div>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="tipo" value="autonomo_ordinario" onchange="aggiornaCampiCondizionali()">
-            <div class="radio-card-label">
-              <span class="icon">💼</span>
-              <div class="title">P.IVA Ordinario</div>
-              <div class="desc">Gestione separata 26,07%</div>
-            </div>
-          </label>
-          <label class="radio-card">
-            <input type="radio" name="tipo" value="autonomo_forfettario" onchange="aggiornaCampiCondizionali()">
-            <div class="radio-card-label">
-              <span class="icon">📋</span>
-              <div class="title">P.IVA Forfettario</div>
-              <div class="desc">Aliquota su reddito imponibile</div>
-            </div>
-          </label>
-        </div>
-      </div>
-      <div class="info-box" id="tipoInfoBox">
-        <strong>Dipendente:</strong> Il datore di lavoro versa il 33% del tuo RAL all'INPS (di cui ~9,19% a tuo carico, il resto a carico del datore). Il TFR ti permette di accantonare ulteriori risorse, che puoi tenere in azienda o destinare a un fondo pensione.
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(1)">← Indietro</button>
-        <button class="btn btn-primary" onclick="goToStep(3)">Avanti →</button>
-      </div>
-    </section>
-
-    <!-- STEP 3 -->
-    <section class="form-section" id="section-3">
-      <h2 class="section-title">Il tuo reddito attuale</h2>
-      <p class="section-subtitle">Più i dati sono accurati, più la stima sarà realistica.</p>
-
-      <div class="conditional-field active" data-tipo="dipendente">
-        <div class="form-grid">
+        <div class="conditional active" id="campoRAL">
           <div class="form-group">
-            <label for="redditoLordo">RAL — Reddito Annuo Lordo (€)</label>
-            <input type="number" id="redditoLordo" min="0" placeholder="Es. 35000" value="35000">
-            <span class="label-hint">Lo trovi sul CUD/CU o sull'ultima busta paga (×13 o ×14)</span>
+            <label for="redditoLordo">Inserisci la tua RAL (€)</label>
+            <input type="number" id="redditoLordo" min="0" value="35000">
           </div>
-          <div class="form-group">
-            <label for="anniContributiDip">Anni di contributi già versati</label>
-            <input type="number" id="anniContributiDip" min="0" max="50" placeholder="Es. 15" value="15">
-            <span class="label-hint">Anni di lavoro effettivi finora</span>
-          </div>
-        </div>
-        <div class="toggle-row" onclick="toggleTFR()">
-          <input type="checkbox" id="includeTFR" class="toggle-checkbox" checked onclick="event.stopPropagation()">
-          <label onclick="event.stopPropagation()"><strong>Includi il TFR</strong> nei calcoli — circa il 6,91% del RAL annuo</label>
-        </div>
-      </div>
-
-      <div class="conditional-field" data-tipo="autonomo_ordinario">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="redditoOrdinario">Reddito netto annuo (€)</label>
-            <input type="number" id="redditoOrdinario" min="0" placeholder="Es. 40000" value="40000">
-            <span class="label-hint">Reddito imponibile dichiarato (al netto di costi/spese deducibili)</span>
-          </div>
-          <div class="form-group">
-            <label for="anniContributiOrd">Anni di contributi già versati</label>
-            <input type="number" id="anniContributiOrd" min="0" max="50" placeholder="Es. 10" value="10">
-            <span class="label-hint">Anni di attività con versamenti INPS gestione separata</span>
-          </div>
-        </div>
-        <div class="info-box ochre">
-          <strong>Nota:</strong> Per la gestione separata l'aliquota è del <strong>26,07%</strong> (2026) sul reddito imponibile, fino al massimale annuo previsto.
-        </div>
-      </div>
-
-      <div class="conditional-field" data-tipo="autonomo_forfettario">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="fatturatoForfettario">Fatturato annuo (€)</label>
-            <input type="number" id="fatturatoForfettario" min="0" max="85000" placeholder="Es. 50000" value="50000">
-            <span class="label-hint">Limite massimo regime forfettario: € 85.000</span>
-          </div>
-          <div class="form-group">
-            <label for="coefficienteRedditivita">Coefficiente di redditività</label>
-            <select id="coefficienteRedditivita">
-              <option value="0.40">40% — Commercio al dettaglio</option>
-              <option value="0.54">54% — Commercio ingrosso</option>
-              <option value="0.62">62% — Industrie alimentari</option>
-              <option value="0.67">67% — Servizi alloggio/ristorazione</option>
-              <option value="0.78" selected>78% — Servizi professionali (consulenti, freelance)</option>
-              <option value="0.86">86% — Costruzioni e attività immobiliari</option>
-            </select>
-            <span class="label-hint">Si applica al fatturato per ottenere il reddito imponibile</span>
-          </div>
-          <div class="form-group">
-            <label for="anniContributiForf">Anni di contributi già versati</label>
-            <input type="number" id="anniContributiForf" min="0" max="50" placeholder="Es. 5" value="5">
-            <span class="label-hint">Anni di attività con P.IVA</span>
-          </div>
-        </div>
-        <div class="info-box ochre">
-          <strong>Nota importante:</strong> In regime forfettario i contributi si calcolano sul <strong>reddito imponibile</strong> (fatturato × coefficiente di redditività), non sull'intero fatturato. La tassazione è 5% (primi 5 anni nuove attività) o 15% sostitutiva. <strong>Il reddito previdenziale è generalmente più basso, e di conseguenza anche la pensione futura.</strong>
-        </div>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="goToStep(2)">← Indietro</button>
-        <button class="btn btn-primary" onclick="vaiAllaDashboard()">Vai alla dashboard →</button>
-      </div>
-    </section>
-
-    <!-- STEP 4 -->
-    <section class="form-section" id="section-4">
-
-      <div class="fiscal-card" id="fiscalCard">
-        <span class="icon">💰</span>
-        <div class="text">
-          <div class="label">Risparmio fiscale annuo dal fondo pensione</div>
-          <div class="value" id="fiscalValue">€ 0</div>
-          <div class="desc" id="fiscalDesc">Deducibilità IRPEF dei contributi al fondo pensione (max € 5.164,57/anno)</div>
-        </div>
-      </div>
-
-      <div class="dashboard">
-        <div class="dash-card gauge-card">
-          <div class="dash-card-title">Tasso di sostituzione</div>
-          <div class="dash-card-subtitle">Quanto del tuo reddito netto attuale conserveresti</div>
-          <div class="gauge-wrapper">
-            <svg class="gauge-svg" id="gaugeSvg" viewBox="0 0 280 180"></svg>
-          </div>
-          <div class="gauge-status" id="gaugeStatus">—</div>
-          <div class="gauge-explanation" id="gaugeExplanation">Calcolo in corso...</div>
         </div>
 
-        <div class="dash-card kpi-card">
-          <div>
-            <div class="dash-card-title">I tuoi numeri</div>
-            <div class="dash-card-subtitle">Stime mensili (valori netti)</div>
+        <div class="conditional" id="campoNettoStipendio">
+          <div class="info-callout">
+            Se non conosci la tua RAL puoi inserire lo stipendio netto mensile. La stima sarà meno precisa, ma utile per comprendere l'ordine di grandezza dei tuoi vantaggi.
           </div>
-          <div class="kpi-grid">
-            <div class="kpi-row"><span class="label">Reddito netto attuale</span><span class="value" id="kpiStipendio">€ 0</span></div>
-            <div class="kpi-row"><span class="label">Pensione INPS (netta)</span><span class="value" id="kpiPensione">€ 0</span></div>
-            <div class="kpi-row"><span class="label">+ Rendita Fondo Pensione</span><span class="value highlight" id="kpiFP">€ 0</span></div>
-            <div class="kpi-row"><span class="label">Gap mensile residuo</span><span class="value warn" id="kpiGap">€ 0</span></div>
+          <div class="form-group" style="margin-top: 12px;">
+            <label for="stipendioNetto">Stipendio netto mensile (€)</label>
+            <input type="number" id="stipendioNetto" min="0" value="1900">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Vuoi versare anche il tuo TFR?</label>
+          <div class="radio-inline">
+            <label><input type="radio" name="versaTFR" value="si" checked onchange="aggiornaTFR()"> Sì</label>
+            <label><input type="radio" name="versaTFR" value="no" onchange="aggiornaTFR()"> No</label>
+          </div>
+          <div class="info-callout" id="infoTFR">
+            Il tuo TFR sarà calcolato a partire dalla tua RAL (circa 6,91% annuo) e verrà aggiunto ai tuoi versamenti annuali, con notevoli vantaggi fiscali sulla tassazione a fine carriera.
           </div>
         </div>
       </div>
 
-      <div class="dash-card dashboard-full" style="margin-bottom: 25px;">
-        <div class="dash-card-title">Crescita del tuo capitale previdenziale</div>
-        <div class="dash-card-subtitle">Passa il mouse sul grafico per esplorare anno per anno</div>
-        <div class="chart-wrapper" id="chartWrapper">
-          <svg class="chart-svg" id="chartMontante" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid meet"></svg>
-          <div class="chart-tooltip" id="chartTooltip"></div>
-        </div>
-        <div class="legend">
-          <div class="legend-item"><span class="legend-swatch" style="background: var(--sage);"></span>Solo INPS</div>
-          <div class="legend-item"><span class="legend-swatch dashed"></span>INPS + Fondo Pensione</div>
-        </div>
-      </div>
-
-      <div class="scenario-panel">
-        <h3>🎚️ Esplora i tuoi scenari</h3>
-        <p class="scenario-panel-sub">Muovi gli slider e osserva come cambia il tuo futuro previdenziale in tempo reale.</p>
-        <div class="sliders-grid">
-          <div class="slider-block">
-            <label><span>💰 Versamento mensile fondo pensione</span><span class="slider-value" id="valContributo">€ 200</span></label>
-            <input type="range" class="custom-slider" id="sliderContributo" min="0" max="500" step="25" value="200">
-            <div class="slider-meta"><span>€ 0</span><span>€ 500/mese</span></div>
-          </div>
-          <div class="slider-block">
-            <label><span>📅 Età di pensionamento</span><span class="slider-value" id="valEta">67 anni</span></label>
-            <input type="range" class="custom-slider" id="sliderEtaPens" min="62" max="71" step="1" value="67">
-            <div class="slider-meta"><span>62 anni</span><span>71 anni</span></div>
-          </div>
-          <div class="slider-block">
-            <label><span>📈 Rendimento atteso fondo pensione</span><span class="slider-value" id="valRendimento">4,0%</span></label>
-            <input type="range" class="custom-slider" id="sliderRendimento" min="20" max="60" step="5" value="40">
-            <div class="slider-meta"><span>2% (prudente)</span><span>6% (dinamico)</span></div>
+      <!-- AUTONOMO ORDINARIO -->
+      <div class="conditional" data-tipo="autonomo_ordinario">
+        <div class="form-group">
+          <label for="redditoOrdinario">Reddito netto annuo (€)</label>
+          <input type="number" id="redditoOrdinario" min="0" value="40000">
+          <div class="info-callout" style="margin-top: 10px;">
+            Inserisci il reddito imponibile dichiarato. Per la gestione separata l'aliquota contributiva è del <strong>26,07%</strong> (2026) sul reddito imponibile.
           </div>
         </div>
       </div>
 
-      <div class="methodology" id="methodology">
-        <div class="methodology-header" onclick="toggleMethodology()">
-          <h4>📐 Come funziona il calcolatore</h4>
-          <span class="methodology-icon">▼</span>
+      <!-- AUTONOMO FORFETTARIO -->
+      <div class="conditional" data-tipo="autonomo_forfettario">
+        <div class="form-group">
+          <label for="fatturatoForf">Fatturato annuo (€)</label>
+          <input type="number" id="fatturatoForf" min="0" max="85000" value="50000">
         </div>
-        <div class="methodology-content">
-          <div class="methodology-inner">
-            <p><strong>Metodo di calcolo</strong> — Il calcolatore stima la pensione applicando il <strong>sistema contributivo</strong> previsto dalla L. 335/1995, con i coefficienti di trasformazione INPS aggiornati al biennio 2025-2026 (DM 20/11/2024).</p>
-            <p style="margin-top: 12px;"><strong>Step del calcolo:</strong></p>
-            <ul>
-              <li><strong>Montante contributivo</strong> = somma dei contributi annui (reddito × aliquota), capitalizzata anno per anno alla rivalutazione del PIL nominale (~1,5% medio storico)</li>
-              <li><strong>Pensione lorda annua</strong> = Montante × Coefficiente di trasformazione (es. 5,608% a 67 anni)</li>
-              <li><strong>Pensione netta</strong> = lorda − IRPEF stimata su scaglioni 2026 + addizionali medie</li>
-              <li><strong>Tasso di sostituzione</strong> = Pensione netta / Reddito netto attuale</li>
-            </ul>
-            <p style="margin-top: 12px;"><strong>Aliquote contributive applicate:</strong></p>
-            <ul>
-              <li><strong>Dipendente:</strong> 33% del RAL (totale tra quota datore e lavoratore)</li>
-              <li><strong>Autonomo ordinario (gestione separata):</strong> 26,07% del reddito imponibile (2026)</li>
-              <li><strong>Autonomo forfettario:</strong> 26,07% sul reddito imponibile = fatturato × coefficiente di redditività</li>
-            </ul>
-            <p style="margin-top: 12px;"><strong>Fondo pensione:</strong> i versamenti vengono capitalizzati al rendimento scelto (default 4% annuo), e generano deducibilità IRPEF fino al limite di legge di € 5.164,57/anno (non applicabile al regime forfettario). Il TFR (per dipendenti) viene incluso al 6,91% del RAL.</p>
-            <p style="margin-top: 12px; color: var(--gray-text); font-style: italic;">Tutte le stime sono indicative e basate su ipotesi semplificate. Per una valutazione precisa è necessaria una consulenza professionale.</p>
+
+        <div class="form-group">
+          <label for="coefRedditivita">Coefficiente di redditività</label>
+          <select id="coefRedditivita">
+            <option value="0.40">40% — Commercio al dettaglio</option>
+            <option value="0.54">54% — Commercio ingrosso</option>
+            <option value="0.62">62% — Industrie alimentari</option>
+            <option value="0.67">67% — Servizi alloggio/ristorazione</option>
+            <option value="0.78" selected>78% — Servizi professionali (consulenti, freelance)</option>
+            <option value="0.86">86% — Costruzioni e attività immobiliari</option>
+          </select>
+          <div class="info-callout" style="margin-top: 10px;">
+            <strong>Importante:</strong> in regime forfettario i contributi si calcolano sul reddito imponibile (fatturato × coefficiente). Non è prevista deducibilità IRPEF dei versamenti al fondo pensione (regime sostitutivo). Pianificare la previdenza complementare resta comunque essenziale.
           </div>
         </div>
       </div>
 
-      <div class="cta-section">
-        <h3>Vuoi una strategia su misura?</h3>
-        <p>Posso prepararti un piano previdenziale personalizzato considerando i vantaggi fiscali della deducibilità, il TFR, il regime fiscale e la tua situazione specifica.</p>
-        <div class="cta-buttons">
-          <a href="#" class="btn btn-cta" id="ctaCalendly" target="_blank">📅 Prenota call gratuita</a>
-          <button class="btn btn-secondary" onclick="apriModalPDF()">📄 Ricevi report PDF</button>
-          <a href="#" class="btn btn-secondary" id="ctaContatti">✉️ Form di contatto</a>
+      <div class="form-group">
+        <label for="anniContributi">Anni di contributi già versati</label>
+        <input type="number" id="anniContributi" min="0" max="50" value="15">
+      </div>
+
+      <div class="form-group">
+        <label>Rendimento medio annuo (%)</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="rendimentoCustom" checked onchange="aggiornaRendimentoCustom()">
+          <label for="rendimentoCustom">Voglio inserire un rendimento personalizzato</label>
+        </div>
+        <div class="conditional active" id="campoRendimento" style="margin-top: 10px;">
+          <input type="number" id="rendimentoValue" min="1" max="8" step="0.1" value="3.5">
+          <div class="info-callout" style="margin-top: 10px;">
+            Il rendimento medio storico dei comparti azionari di previdenza integrativa si aggira intorno al <strong>4-5%</strong> annuo, mentre i comparti bilanciati offrono rendimenti più contenuti (2-3%). Scegli un valore realistico in base al profilo di rischio che vuoi simulare.
+          </div>
         </div>
       </div>
 
-      <div class="disclaimer">
-        <strong>Nota informativa:</strong> Questa simulazione è basata su ipotesi semplificate e fornisce un ordine di grandezza puramente indicativo. Il calcolo reale dipende da molti fattori (sistema misto retributivo/contributivo, periodi di disoccupazione, riscatti, evoluzioni normative, addizionali fiscali specifiche). I valori NON costituiscono consulenza finanziaria né previdenziale e non sono vincolanti. Per una valutazione precisa è necessaria una consulenza professionale.
+      <div style="margin-top: 30px;">
+        <button class="btn btn-primary" style="width: 100%;" onclick="calcolaERender()">📊 Calcola la mia pensione integrativa</button>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="ricomincia()">↻ Nuova simulazione</button>
-      </div>
+    </div>
 
-    </section>
+    <!-- COLONNA DX: Disclaimer Comparto -->
+    <aside class="side-disclaimer">
+      <h4>Disclaimer 2 — Il comparto non è tutto</h4>
+      <p>Si deve guardare l'<strong>efficienza</strong> nel fondo pensione. I rendimenti medi passati di ogni fondo pensione sono stati aggregati per comparto, senza fare distinzione tra le singole forme di previdenza complementare.</p>
+      <p>A parità di comparto ci sono fondi pensione efficienti, che sovraperformano la media dei rendimenti fatti registrare dal comparto di riferimento, e fondi pensione inefficienti che sottoperformano sistematicamente la media.</p>
+      <p>Una scelta ben ponderata della forma di previdenza complementare <strong>non si limita al solo comparto</strong>, ma necessita di un'analisi del fondo pensione per comprendere se i costi e una gestione inefficace rendano il singolo fondo inefficiente.</p>
+    </aside>
+
   </div>
-</div>
 
-<div class="modal-overlay" id="modalPDF">
-  <div class="modal">
-    <h3>Ricevi il tuo report personalizzato</h3>
-    <p>Lasciami la tua email e ti invierò un PDF con la tua simulazione completa.</p>
-    <div class="form-group" style="margin-bottom: 15px;">
-      <label for="emailReport">La tua email</label>
-      <input type="email" id="emailReport" placeholder="nome@esempio.it">
-    </div>
-    <div class="form-group" style="margin-bottom: 20px;">
-      <label for="nomeReport">Il tuo nome</label>
-      <input type="text" id="nomeReport" placeholder="Mario">
-    </div>
-    <button class="btn btn-primary" style="width: 100%;" onclick="inviaRichiesta()">Invia richiesta</button>
-    <div style="text-align: center;">
-      <button class="modal-close" onclick="chiudiModalPDF()">Annulla</button>
-    </div>
-  </div>
-</div>
+  <!-- ============== RISULTATI ============== -->
+  <section class="results-section" id="resultsSection">
+    <h2>Risultati</h2>
+    <div id="resultsContent">
+      <p class="placeholder-message">Compila il form qui sopra e premi <strong>"Calcola"</strong> per visualizzare la tua simulazione personalizzata.</p>
     </div>
   </section>
-</Layout>
 
-<style is:inline>
+  <!-- Slider scenari (visibili solo dopo calcolo) -->
+  <div class="scenario-controls" id="scenarioControls" style="display: none;">
+    <h3>🎚️ Modifica gli scenari</h3>
+    <p class="sub">Sposta gli slider per vedere come cambiano i risultati in tempo reale.</p>
+    <div class="sliders-grid">
+      <div class="slider-block">
+        <label><span>💰 Versamento mensile</span><span class="slider-value" id="valContributo">€ 300</span></label>
+        <input type="range" class="custom-slider" id="sliderContributo" min="0" max="800" step="25" value="300">
+        <div class="slider-meta"><span>€ 0</span><span>€ 800</span></div>
+      </div>
+      <div class="slider-block">
+        <label><span>📅 Età di pensionamento</span><span class="slider-value" id="valEta">67 anni</span></label>
+        <input type="range" class="custom-slider" id="sliderEtaPens" min="62" max="71" step="1" value="67">
+        <div class="slider-meta"><span>62</span><span>71</span></div>
+      </div>
+      <div class="slider-block">
+        <label><span>📈 Rendimento atteso</span><span class="slider-value" id="valRendimento">3,5%</span></label>
+        <input type="range" class="custom-slider" id="sliderRendimento" min="15" max="60" step="5" value="35">
+        <div class="slider-meta"><span>1,5%</span><span>6%</span></div>
+      </div>
+    </div>
+  </div>
 
-  :root {
+  <!-- Grafico montante -->
+  <div class="chart-section" id="chartSection" style="display: none;">
+    <h3>Crescita del montante nel tempo</h3>
+    <p class="sub">Come si compone il tuo capitale previdenziale anno dopo anno</p>
+    <svg class="chart-svg" id="chartMontante" viewBox="0 0 800 320" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ============== COME FUNZIONA IL CALCOLATORE ============== -->
+  <section class="how-it-works">
+    <h2>Come funziona il calcolatore?</h2>
+
+    <p>L'obiettivo principale del calcolatore è stimare due valori:</p>
+    <ol>
+      <li>il tuo <strong>risparmio fiscale annuo</strong> derivante dalla deducibilità dei contributi al fondo pensione,</li>
+      <li>il <strong>montante che avrai accumulato</strong> alla data di pensionamento.</li>
+    </ol>
+
+    <p>Questi valori sono stimati a partire dai seguenti dati:</p>
+    <ul>
+      <li>la tua <em>Età</em>,</li>
+      <li>la tua <em>Età di Pensionamento</em>,</li>
+      <li>la tua <em>posizione lavorativa</em>,</li>
+      <li>il tuo <em>Reddito Lordo</em> o il tuo <em>Reddito Netto</em>,</li>
+      <li>i tuoi <em>Versamenti Mensili</em>.</li>
+    </ul>
+
+    <h3>Calcolo del capitale finale</h3>
+    <p>Innanzitutto viene calcolato il numero di <em>Anni</em> che ti mancano <strong>alla pensione</strong>, come differenza tra la tua <em>Età di Pensionamento</em> e la tua <em>Età</em>. In funzione di questo valore ti viene consigliato un comparto di investimento più o meno rischioso; nel calcolo della redditività verrà considerato il <em>Rendimento Medio</em> di questo comparto negli ultimi 20 anni.</p>
+
+    <p>Puoi anche decidere di inserire un <em>Rendimento Personalizzato</em>. Se hai già dei risparmi accantonati in un fondo pensione essi verranno considerati come <em>Investimento Iniziale</em>. Se sei un dipendente puoi anche decidere se versare o meno il tuo <em>TFR</em>. Se decidi di versarlo sarà calcolato in automatico dividendo per 13,5 il tuo <em>Reddito Lordo</em>.</p>
+
+    <p>Con questi dati, utilizzando la stessa formula del <a href="#" style="color: var(--sage-dark); font-weight: 600;">calcolatore di interesse composto</a>, calcoliamo l'ammontare finale ricavato dai tuoi investimenti. Potrai decidere come gestire questo capitale alla data del tuo pensionamento, in funzione della tipologia di fondo pensione.</p>
+
+    <h3>Calcolo delle deduzioni fiscali</h3>
+    <p>Puoi dedurre i tuoi versamenti dalla tassazione fino al valore massimo di <strong>5.164,57 €/anno</strong>, corrispondenti a circa <strong>431 €/mese</strong>. L'<em>Aliquota</em> utile per questo calcolo è stimata a partire dal tuo <em>Reddito Lordo</em>. Il valore deducibile sarà quindi pari ai tuoi <em>Versamenti Annuali</em>, ottenuti moltiplicando per 12 i tuoi <em>Versamenti Mensili</em>, moltiplicati per l'aliquota. Se i tuoi versamenti sono superiori a 5165€/anno sarà invece questo il valore utilizzato nel calcolo.</p>
+
+    <p style="font-size: 0.93rem; background: #FAF4EA; border-left: 3px solid var(--ochre); padding: 12px 16px; border-radius: 4px;"><strong>Nota per i forfettari:</strong> nel regime forfettario non è prevista deducibilità IRPEF dei contributi al fondo pensione (regime di imposta sostitutiva). Il calcolatore tiene conto di questa particolarità e mostra il risparmio fiscale come "non applicabile".</p>
+
+    <h3>Stima del reddito lordo a partire da quello netto</h3>
+    <p>Se non conosci il tuo stipendio lordo puoi scegliere di stimarlo a partire dal tuo stipendio netto. Questa stima non è molto precisa, ma considerando la natura di questo calcolatore — che vuole solo mostrare le potenzialità di questo strumento finanziario — non è un grave problema. La stima viene fatta in maniera molto semplice utilizzando i vari scaglioni IRPEF come riferimento.</p>
+
+    <h3>Aliquote contributive applicate</h3>
+    <ul>
+      <li><strong>Dipendente:</strong> 33% del RAL (totale tra quota datore e lavoratore)</li>
+      <li><strong>Autonomo ordinario (gestione separata):</strong> 26,07% del reddito imponibile (2026)</li>
+      <li><strong>Autonomo forfettario:</strong> 26,07% sul reddito imponibile, calcolato come fatturato × coefficiente di redditività</li>
+    </ul>
+
+    <h3>Coefficienti di trasformazione</h3>
+    <p>Per stimare la pensione INPS viene utilizzato il sistema contributivo con i <strong>coefficienti di trasformazione INPS aggiornati al biennio 2025-2026</strong> (DM 20 novembre 2024). Il coefficiente varia in base all'età di pensionamento: 4,757% a 62 anni, 5,608% a 67 anni (vecchiaia), fino a 6,655% a 71 anni.</p>
+
+  </section>
+
+  <!-- ============== CTA: RIVOLGITI A UN PROFESSIONISTA ============== -->
+  <section class="cta-section">
+    <div class="eyebrow">Vuoi raggiungere questi risultati?</div>
+    <h2>Rivolgiti ad un professionista</h2>
+    <p>Posso valutare insieme a te l'efficienza del tuo fondo pensione, se ne hai uno, oppure crearne uno ad hoc. Inoltre conoscerai i vantaggi reali di cui puoi beneficiare da oggi al momento della tua pensione.</p>
+    <div class="cta-buttons">
+      <a href="/contatti" class="btn btn-cta">📅 Prenota call gratuita</a>
+      <a href="#contactForm" class="btn btn-secondary">✉️ Contattami</a>
+    </div>
+  </section>
+
+  <!-- ============== FORM CONTATTI ============== -->
+  <div class="contact-form" id="contactForm">
+    <h3>Mettiti in contatto</h3>
+    <div class="form-group">
+      <label for="ctcNome">Nome e Cognome <span style="color: var(--ochre-dark);">(*)</span></label>
+      <input type="text" id="ctcNome">
+    </div>
+    <div class="form-group">
+      <label for="ctcEmail">Email <span style="color: var(--ochre-dark);">(*)</span></label>
+      <input type="email" id="ctcEmail">
+    </div>
+    <div class="form-group">
+      <label for="ctcTel">Telefono <span style="color: var(--ochre-dark);">(*)</span></label>
+      <input type="text" id="ctcTel">
+    </div>
+    <div class="form-group">
+      <label for="ctcMsg">Messaggio <span style="color: var(--ochre-dark);">(*)</span></label>
+      <textarea id="ctcMsg" rows="4"></textarea>
+    </div>
+    <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="inviaContatto()">Invia</button>
+  </div>
+
+  <!-- DISCLAIMER FINALE -->
+  <div class="final-disclaimer">
+    <strong>Nota informativa:</strong> Le informazioni contenute nel presente sito Internet sono curate dal consulente di riferimento, come Consulente Finanziario abilitato all'offerta fuori sede. Queste informazioni non costituiscono in alcun modo raccomandazioni personalizzate rispetto alle caratteristiche del singolo lettore e potrebbero non essere adeguate rispetto alle conoscenze, alle sue esperienze, alla sua situazione finanziaria ed ai suoi obiettivi di investimento. Le informazioni contenute nel presente sito Internet sono da intendersi a scopo puramente informativo. Per una valutazione precisa è necessaria una consulenza personalizzata.
+  </div>
+
+</div>
+
+<style is:global>
+  .calc-wrapper {
     --sage: #4A5D4F; --sage-light: #6B7F70; --sage-dark: #3A4A3F;
     --ochre: #D4A574; --ochre-light: #E0BC8F; --ochre-dark: #B8895A;
     --ivory: #F5F1E8; --ivory-warm: #FAF7EF;
     --charcoal: #2C2C2A;
-    --emerald: #00A652; --emerald-light: #2BC677;
+    --emerald: #00A652;
     --gray-soft: #E8E4DA; --gray-text: #6B6B68;
-    --red-warn: #C75D5D;
-    --shadow-soft: 0 4px 20px rgba(44, 44, 42, 0.08);
-    --shadow-medium: 0 8px 30px rgba(44, 44, 42, 0.12);
-    --radius: 12px; --radius-lg: 16px;
+    --shadow-soft: 0 4px 20px rgba(44, 44, 42, 0.06);
+    --radius: 8px;
+    font-family: 'Manrope', -apple-system, sans-serif;
+    color: var(--charcoal);
+    line-height: 1.65;
+    font-size: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--ivory); color: var(--charcoal); line-height: 1.6; padding: 20px; min-height: 100vh; }
-  .calc-container { max-width: 1100px; margin: 0 auto; background: #FFFFFF; border-radius: var(--radius-lg); box-shadow: var(--shadow-medium); overflow: hidden; }
+  .calc-wrapper * { box-sizing: border-box; }
 
-  .calc-header { background: linear-gradient(135deg, var(--sage) 0%, var(--sage-dark) 100%); color: var(--ivory); padding: 40px 40px 35px; text-align: center; position: relative; }
-  .calc-header::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: var(--ochre); border-radius: 2px; }
-  .calc-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 600; margin-bottom: 12px; letter-spacing: -0.02em; }
-  .calc-header p { font-size: clamp(0.95rem, 1.8vw, 1.05rem); opacity: 0.92; max-width: 600px; margin: 0 auto; font-weight: 300; }
-
-  .steps { display: flex; justify-content: center; padding: 25px 20px 0; gap: 8px; flex-wrap: wrap; }
-  .step { display: flex; align-items: center; gap: 8px; color: var(--gray-text); font-size: 0.85rem; font-weight: 500; }
-  .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--gray-soft); color: var(--gray-text); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease; }
-  .step.active .step-num { background: var(--sage); color: var(--ivory); }
-  .step.completed .step-num { background: var(--emerald); color: white; }
-  .step.active { color: var(--charcoal); }
-  .step-divider { width: 30px; height: 1px; background: var(--gray-soft); }
-
-  .calc-body { padding: 35px 40px 40px; }
-  .form-section { display: none; animation: fadeIn 0.5s ease; }
-  .form-section.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--sage-dark); margin-bottom: 8px; font-weight: 600; }
-  .section-subtitle { color: var(--gray-text); margin-bottom: 25px; font-size: 0.95rem; }
-
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-  .form-group { display: flex; flex-direction: column; }
-  .form-group.full-width { grid-column: 1 / -1; }
-  label { font-weight: 500; color: var(--charcoal); margin-bottom: 8px; font-size: 0.9rem; }
-  .label-hint { font-size: 0.75rem; color: var(--gray-text); font-weight: 400; margin-top: 4px; }
-
-  input[type="number"], input[type="text"], input[type="email"], select { padding: 13px 15px; border: 1.5px solid var(--gray-soft); border-radius: 8px; font-family: 'Manrope', sans-serif; font-size: 1rem; color: var(--charcoal); background: var(--ivory-warm); transition: all 0.2s ease; }
-  input:focus, select:focus { outline: none; border-color: var(--sage); background: white; box-shadow: 0 0 0 3px rgba(74, 93, 79, 0.1); }
-
-  .radio-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-  .radio-card { position: relative; cursor: pointer; }
-  .radio-card input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-  .radio-card-label { display: block; padding: 16px 14px; border: 1.5px solid var(--gray-soft); border-radius: 8px; background: var(--ivory-warm); transition: all 0.2s ease; text-align: center; height: 100%; }
-  .radio-card-label .icon { font-size: 1.6rem; margin-bottom: 6px; display: block; }
-  .radio-card-label .title { font-weight: 600; color: var(--charcoal); margin-bottom: 3px; font-size: 0.92rem; }
-  .radio-card-label .desc { font-size: 0.75rem; color: var(--gray-text); line-height: 1.3; }
-  .radio-card input[type="radio"]:checked + .radio-card-label { border-color: var(--sage); background: white; box-shadow: var(--shadow-soft); }
-  .radio-card input[type="radio"]:checked + .radio-card-label .title { color: var(--sage-dark); }
-
-  .conditional-field { display: none; animation: fadeIn 0.3s ease; }
-  .conditional-field.active { display: block; }
-
-  .info-box { padding: 12px 15px; background: #EEF4F0; border-left: 3px solid var(--sage); border-radius: 6px; font-size: 0.85rem; color: var(--charcoal); margin-top: 8px; line-height: 1.5; }
-  .info-box.ochre { background: #FAF4EA; border-left-color: var(--ochre); }
-
-  .toggle-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--ivory-warm); border-radius: 8px; border: 1.5px solid var(--gray-soft); cursor: pointer; transition: all 0.2s ease; margin-top: 10px; }
-  .toggle-row:hover { border-color: var(--sage-light); }
-  .toggle-checkbox { width: 20px; height: 20px; accent-color: var(--sage); cursor: pointer; }
-  .toggle-row label { margin-bottom: 0; cursor: pointer; flex: 1; font-weight: 400; }
-
-  .btn-row { display: flex; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
-  .btn { padding: 14px 28px; border: none; border-radius: 8px; font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-  .btn-primary { background: var(--sage); color: var(--ivory); flex: 1; min-width: 160px; }
-  .btn-primary:hover { background: var(--sage-dark); transform: translateY(-1px); box-shadow: var(--shadow-soft); }
-  .btn-secondary { background: transparent; color: var(--sage); border: 1.5px solid var(--sage); }
-  .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
-  .btn-cta { background: var(--ochre); color: var(--charcoal); }
-  .btn-cta:hover { background: var(--ochre-light); transform: translateY(-1px); box-shadow: var(--shadow-soft); }
-
-  .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-  .dashboard-full { grid-column: 1 / -1; }
-  .dash-card { background: white; padding: 24px; border-radius: var(--radius); border: 1px solid var(--gray-soft); transition: box-shadow 0.3s ease; }
-  .dash-card:hover { box-shadow: var(--shadow-soft); }
-  .dash-card-title { font-family: 'Playfair Display', serif; color: var(--sage-dark); font-size: 1.15rem; margin-bottom: 4px; font-weight: 600; }
-  .dash-card-subtitle { color: var(--gray-text); font-size: 0.85rem; margin-bottom: 18px; }
-
-  .gauge-card { text-align: center; background: linear-gradient(180deg, white 0%, var(--ivory-warm) 100%); }
-  .gauge-wrapper { position: relative; width: 100%; max-width: 280px; margin: 0 auto; }
-  .gauge-svg { width: 100%; height: auto; overflow: visible; }
-  .gauge-value { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; }
-  .gauge-label { font: 500 11px 'Manrope', sans-serif; fill: var(--gray-text); text-transform: uppercase; letter-spacing: 0.1em; }
-  .gauge-status { margin-top: 8px; font-weight: 600; font-size: 0.95rem; transition: color 0.4s ease; }
-  .gauge-explanation { margin-top: 12px; color: var(--gray-text); font-size: 0.85rem; line-height: 1.5; }
-
-  .kpi-card { display: flex; flex-direction: column; justify-content: space-between; }
-  .kpi-grid { display: grid; grid-template-columns: 1fr; gap: 0; }
-  .kpi-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--gray-soft); }
-  .kpi-row:last-child { border-bottom: none; }
-  .kpi-row .label { color: var(--gray-text); font-size: 0.88rem; }
-  .kpi-row .value { font-family: 'Playfair Display', serif; font-weight: 600; color: var(--charcoal); font-size: 1.15rem; transition: color 0.3s ease; }
-  .kpi-row .value.highlight { color: var(--emerald); }
-  .kpi-row .value.warn { color: var(--ochre-dark); }
-
-  .fiscal-card { background: linear-gradient(135deg, #FAF4EA, #F5EBD8); padding: 20px 22px; border-radius: var(--radius); margin-bottom: 25px; border-left: 4px solid var(--ochre); display: flex; align-items: center; gap: 18px; }
-  .fiscal-card .icon { font-size: 2rem; flex-shrink: 0; }
-  .fiscal-card .text { flex: 1; }
-  .fiscal-card .label { font-size: 0.85rem; color: var(--gray-text); margin-bottom: 2px; }
-  .fiscal-card .value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ochre-dark); line-height: 1.1; }
-  .fiscal-card .desc { font-size: 0.85rem; color: var(--charcoal); margin-top: 4px; }
-
-  .chart-wrapper { width: 100%; overflow: visible; position: relative; }
-  .chart-svg { width: 100%; height: auto; display: block; }
-  .axis-line { stroke: var(--gray-soft); stroke-width: 1; }
-  .grid-line { stroke: var(--gray-soft); stroke-width: 1; stroke-dasharray: 3 4; opacity: 0.6; }
-  .axis-text { font: 11px 'Manrope', sans-serif; fill: var(--gray-text); }
-  .axis-text-bold { font: 600 12px 'Manrope', sans-serif; fill: var(--charcoal); }
-  .crosshair-line { stroke: var(--charcoal); stroke-width: 1; stroke-dasharray: 4 4; opacity: 0; transition: opacity 0.15s ease; pointer-events: none; }
-  .crosshair-line.active { opacity: 0.4; }
-  .hover-dot { opacity: 0; transition: opacity 0.15s ease; pointer-events: none; }
-  .hover-dot.active { opacity: 1; }
-  .chart-tooltip { position: absolute; background: var(--charcoal); color: var(--ivory); padding: 10px 14px; border-radius: 6px; font-size: 0.82rem; pointer-events: none; opacity: 0; transition: opacity 0.15s ease; box-shadow: var(--shadow-medium); z-index: 10; white-space: nowrap; transform: translate(-50%, -120%); }
-  .chart-tooltip.active { opacity: 1; }
-  .tooltip-row { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
-  .tooltip-swatch { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 0.82rem; color: var(--gray-text); justify-content: center; }
-  .legend-item { display: flex; align-items: center; gap: 8px; }
-  .legend-swatch { width: 18px; height: 3px; border-radius: 2px; }
-  .legend-swatch.dashed { background: repeating-linear-gradient(to right, var(--emerald) 0 5px, transparent 5px 9px); }
-
-  .scenario-panel { background: linear-gradient(135deg, var(--sage-dark), var(--sage)); color: var(--ivory); padding: 28px 28px 24px; border-radius: var(--radius); margin-bottom: 25px; position: relative; overflow: hidden; }
-  .scenario-panel::before { content: ''; position: absolute; top: -80px; right: -80px; width: 200px; height: 200px; background: var(--ochre); opacity: 0.08; border-radius: 50%; }
-  .scenario-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 5px; position: relative; color: var(--ivory); }
-  .scenario-panel-sub { opacity: 0.85; font-size: 0.9rem; margin-bottom: 22px; font-weight: 300; position: relative; }
-  .sliders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; position: relative; }
-  .slider-block label { display: flex; justify-content: space-between; align-items: baseline; color: var(--ivory); margin-bottom: 12px; font-weight: 500; font-size: 0.92rem; }
-  .slider-value { font-family: 'Playfair Display', serif; font-weight: 600; color: var(--ochre); font-size: 1.1rem; }
-  .custom-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; background: rgba(245, 241, 232, 0.2); border-radius: 3px; outline: none; }
-  .custom-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; background: var(--ochre); border: 3px solid var(--ivory); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); transition: transform 0.15s ease; }
-  .custom-slider::-webkit-slider-thumb:hover, .custom-slider::-webkit-slider-thumb:active { transform: scale(1.15); }
-  .custom-slider::-moz-range-thumb { width: 22px; height: 22px; background: var(--ochre); border: 3px solid var(--ivory); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
-  .slider-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.72rem; opacity: 0.6; }
-
-  .methodology { background: var(--ivory-warm); border-radius: var(--radius); margin-bottom: 25px; border: 1px solid var(--gray-soft); overflow: hidden; }
-  .methodology-header { padding: 16px 22px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
-  .methodology-header:hover { background: var(--gray-soft); }
-  .methodology-header h4 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--sage-dark); font-weight: 600; }
-  .methodology-icon { transition: transform 0.3s ease; color: var(--sage); font-size: 1.2rem; }
-  .methodology.open .methodology-icon { transform: rotate(180deg); }
-  .methodology-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-  .methodology.open .methodology-content { max-height: 1000px; }
-  .methodology-inner { padding: 0 22px 20px; font-size: 0.88rem; color: var(--charcoal); line-height: 1.6; }
-  .methodology-inner strong { color: var(--sage-dark); }
-  .methodology-inner ul { margin: 8px 0 8px 20px; color: var(--gray-text); }
-  .methodology-inner li { margin-bottom: 4px; }
-
-  .cta-section { background: var(--ivory-warm); padding: 30px; border-radius: var(--radius); text-align: center; border: 1px solid var(--gray-soft); margin-top: 25px; }
-  .cta-section h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--sage-dark); margin-bottom: 10px; }
-  .cta-section p { color: var(--gray-text); margin-bottom: 22px; max-width: 500px; margin-left: auto; margin-right: auto; }
-  .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-
-  .disclaimer { margin-top: 25px; padding: 16px 20px; background: var(--ivory-warm); border-left: 3px solid var(--ochre); border-radius: 6px; font-size: 0.82rem; color: var(--gray-text); line-height: 1.5; }
-  .disclaimer strong { color: var(--charcoal); }
-
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 44, 42, 0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.active { display: flex; }
-  .modal { background: white; border-radius: var(--radius); padding: 35px; max-width: 450px; width: 100%; box-shadow: var(--shadow-medium); }
-  .modal h3 { font-family: 'Playfair Display', serif; color: var(--sage-dark); margin-bottom: 10px; font-size: 1.4rem; }
-  .modal p { color: var(--gray-text); margin-bottom: 20px; font-size: 0.95rem; }
-  .modal-close { background: transparent; color: var(--gray-text); border: none; font-size: 0.9rem; cursor: pointer; margin-top: 12px; text-decoration: underline; }
-
-  @media (max-width: 800px) { .dashboard { grid-template-columns: 1fr; } }
-  @media (max-width: 600px) {
-    body { padding: 0; }
-    .calc-container { border-radius: 0; }
-    .calc-header { padding: 30px 20px; }
-    .calc-body { padding: 25px 18px 30px; }
-    .step-divider { width: 15px; }
-    .step span:not(.step-num) { display: none; }
-    .btn { width: 100%; }
-    .btn-row { flex-direction: column-reverse; }
-    .scenario-panel { padding: 22px 20px 20px; }
-    .dash-card { padding: 20px; }
-    .fiscal-card { flex-direction: column; text-align: center; gap: 12px; }
+  /* ============== HEADER ============== */
+  .calc-wrapper .calc-header {
+    text-align: center;
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--gray-soft);
   }
 
-  .calc-page body, .calc-page { padding: 0; background: transparent; min-height: auto; }
+  .calc-wrapper .calc-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+    color: var(--sage-dark);
+    font-weight: 600;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .calc-wrapper .calc-header p {
+    color: var(--gray-text);
+    font-size: 0.97rem;
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ============== 3 COLONNE (form + side-disclaimer) ============== */
+  .calc-wrapper .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  .calc-wrapper .side-disclaimer {
+    background: var(--ivory-warm);
+    border: 1px solid var(--gray-soft);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    font-size: 0.82rem;
+    color: var(--charcoal);
+    line-height: 1.6;
+    height: fit-content;
+  }
+
+  .calc-wrapper .side-disclaimer h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    color: var(--sage-dark);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .calc-wrapper .side-disclaimer p {
+    margin-bottom: 10px;
+    color: var(--gray-text);
+  }
+
+  .calc-wrapper .side-disclaimer strong {
+    color: var(--charcoal);
+    font-weight: 600;
+  }
+
+  /* ============== FORM ============== */
+  .calc-wrapper .form-container {
+    padding: 0 8px;
+  }
+
+  .calc-wrapper .form-group {
+    margin-bottom: 22px;
+  }
+
+  .calc-wrapper label {
+    display: block;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 8px;
+    font-size: 0.93rem;
+  }
+
+  .calc-wrapper input[type="number"],
+  .calc-wrapper input[type="text"],
+  .calc-wrapper input[type="email"],
+  .calc-wrapper select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--gray-soft);
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.97rem;
+    color: var(--charcoal);
+    background: white;
+    transition: border-color 0.2s ease;
+  }
+
+  .calc-wrapper input:focus,
+  .calc-wrapper select:focus {
+    outline: none;
+    border-color: var(--sage);
+  }
+
+  /* ============== RADIO INLINE (Sì/No) ============== */
+  .calc-wrapper .radio-inline {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-top: 5px;
+  }
+
+  .calc-wrapper .radio-inline label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 0.95rem;
+  }
+
+  .calc-wrapper .radio-inline input[type="radio"] {
+    accent-color: var(--sage);
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ============== INFO BOX (callouts) ============== */
+  .calc-wrapper .info-callout {
+    background: #E8F0EC;
+    border: 1px solid #C7DACD;
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.87rem;
+    color: var(--charcoal);
+    margin-top: 10px;
+    line-height: 1.55;
+  }
+
+  .calc-wrapper .info-callout a {
+    color: var(--sage-dark);
+    font-weight: 600;
+  }
+
+  /* ============== CONDITIONAL FIELDS ============== */
+  .calc-wrapper .conditional {
+    display: none;
+  }
+  .calc-wrapper .conditional.active {
+    display: block;
+  }
+
+  .calc-wrapper .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .calc-wrapper .checkbox-row input[type="checkbox"] {
+    accent-color: var(--sage);
+    width: 17px;
+    height: 17px;
+  }
+  .calc-wrapper .checkbox-row label {
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 0.93rem;
+  }
+
+  /* ============== SECTION SEPARATOR ============== */
+  .calc-wrapper .section-divider {
+    margin: 40px 0;
+    height: 1px;
+    background: var(--gray-soft);
+  }
+
+  /* ============== RISULTATI ============== */
+  .calc-wrapper .results-section {
+    background: var(--ivory-warm);
+    border-radius: var(--radius);
+    padding: 40px 45px;
+    margin-bottom: 45px;
+    position: relative;
+  }
+
+  .calc-wrapper .results-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    color: var(--sage-dark);
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+  }
+
+  .calc-wrapper .results-section p {
+    color: var(--charcoal);
+    font-size: 1.02rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .calc-wrapper .results-section strong {
+    color: var(--sage-dark);
+    font-weight: 700;
+  }
+
+  .calc-wrapper .results-section .number {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--sage-dark);
+    font-size: 1.08em;
+  }
+
+  .calc-wrapper .placeholder-message {
+    text-align: center;
+    color: var(--gray-text);
+    font-style: italic;
+    padding: 30px 0;
+  }
+
+  /* ============== SLIDERS ============== */
+  .calc-wrapper .scenario-controls {
+    background: linear-gradient(135deg, var(--sage-dark), var(--sage));
+    color: var(--ivory);
+    padding: 28px 30px;
+    border-radius: var(--radius);
+    margin-top: 30px;
+  }
+
+  .calc-wrapper .scenario-controls h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    color: var(--ivory);
+    font-weight: 600;
+  }
+
+  .calc-wrapper .scenario-controls .sub {
+    opacity: 0.85;
+    font-size: 0.88rem;
+    margin-bottom: 22px;
+    font-weight: 300;
+  }
+
+  .calc-wrapper .sliders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+  }
+
+  .calc-wrapper .slider-block label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--ivory);
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 0.88rem;
+  }
+
+  .calc-wrapper .slider-value {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--ochre);
+    font-size: 1.05rem;
+  }
+
+  .calc-wrapper .custom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background: rgba(245, 241, 232, 0.2);
+    border-radius: 3px;
+    outline: none;
+  }
+
+  .calc-wrapper .custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--ochre);
+    border: 2px solid var(--ivory);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .calc-wrapper .custom-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--ochre);
+    border: 2px solid var(--ivory);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+
+  .calc-wrapper .slider-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  /* ============== CHART ============== */
+  .calc-wrapper .chart-section {
+    background: white;
+    border: 1px solid var(--gray-soft);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    margin: 30px 0;
+  }
+
+  .calc-wrapper .chart-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--sage-dark);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .calc-wrapper .chart-section .sub {
+    color: var(--gray-text);
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+
+  .calc-wrapper .chart-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .calc-wrapper .axis-line { stroke: var(--gray-soft); }
+  .calc-wrapper .grid-line { stroke: var(--gray-soft); stroke-dasharray: 3 4; opacity: 0.6; }
+  .calc-wrapper .axis-text { font: 11px 'Manrope', sans-serif; fill: var(--gray-text); }
+  .calc-wrapper .axis-text-bold { font: 600 11px 'Manrope', sans-serif; fill: var(--charcoal); }
+
+  /* ============== SEZIONE "COME FUNZIONA" ============== */
+  .calc-wrapper .how-it-works {
+    margin-bottom: 50px;
+  }
+
+  .calc-wrapper .how-it-works h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--charcoal);
+    font-weight: 600;
+    margin-bottom: 22px;
+    letter-spacing: -0.01em;
+  }
+
+  .calc-wrapper .how-it-works h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.18rem;
+    color: var(--charcoal);
+    font-weight: 600;
+    margin-top: 25px;
+    margin-bottom: 12px;
+  }
+
+  .calc-wrapper .how-it-works p {
+    color: var(--charcoal);
+    margin-bottom: 14px;
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+
+  .calc-wrapper .how-it-works ol,
+  .calc-wrapper .how-it-works ul {
+    margin: 12px 0 18px 22px;
+    color: var(--charcoal);
+  }
+
+  .calc-wrapper .how-it-works li {
+    margin-bottom: 8px;
+    line-height: 1.65;
+    font-size: 0.97rem;
+  }
+
+  .calc-wrapper .how-it-works strong {
+    color: var(--sage-dark);
+    font-weight: 600;
+  }
+
+  .calc-wrapper .how-it-works em {
+    font-style: italic;
+    color: var(--ochre-dark);
+    font-weight: 500;
+  }
+
+  /* ============== CTA FINALE ============== */
+  .calc-wrapper .cta-section {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 35px 25px;
+  }
+
+  .calc-wrapper .cta-section .eyebrow {
+    color: var(--ochre-dark);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .calc-wrapper .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.85rem;
+    color: var(--sage-dark);
+    margin-bottom: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .calc-wrapper .cta-section p {
+    color: var(--gray-text);
+    max-width: 620px;
+    margin: 0 auto 25px;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+
+  .calc-wrapper .cta-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .calc-wrapper .btn {
+    padding: 13px 28px;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 0.93rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .calc-wrapper .btn-primary {
+    background: var(--sage);
+    color: var(--ivory);
+  }
+  .calc-wrapper .btn-primary:hover {
+    background: var(--sage-dark);
+  }
+
+  .calc-wrapper .btn-cta {
+    background: var(--ochre);
+    color: var(--charcoal);
+  }
+  .calc-wrapper .btn-cta:hover {
+    background: var(--ochre-light);
+  }
+
+  .calc-wrapper .btn-secondary {
+    background: transparent;
+    color: var(--sage);
+    border: 1.5px solid var(--sage);
+  }
+  .calc-wrapper .btn-secondary:hover {
+    background: var(--sage);
+    color: var(--ivory);
+  }
+
+  /* ============== FORM CONTATTI ============== */
+  .calc-wrapper .contact-form {
+    background: white;
+    border: 1px solid var(--gray-soft);
+    border-radius: var(--radius);
+    padding: 35px 40px;
+    max-width: 580px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .calc-wrapper .contact-form h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--sage-dark);
+    text-align: center;
+    margin-bottom: 22px;
+    font-weight: 600;
+  }
+
+  .calc-wrapper .contact-form .form-group {
+    margin-bottom: 16px;
+  }
+
+  .calc-wrapper .contact-form textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--gray-soft);
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.95rem;
+    background: white;
+    resize: vertical;
+    min-height: 90px;
+  }
+  .calc-wrapper .contact-form textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+  }
+
+  /* ============== DISCLAIMER FINALE ============== */
+  .calc-wrapper .final-disclaimer {
+    margin-top: 40px;
+    padding: 18px 22px;
+    background: var(--ivory-warm);
+    border-left: 3px solid var(--ochre);
+    border-radius: 4px;
+    font-size: 0.82rem;
+    color: var(--gray-text);
+    line-height: 1.6;
+  }
+
+  .calc-wrapper .final-disclaimer strong {
+    color: var(--charcoal);
+  }
+
+  /* ============== RESPONSIVE ============== */
+  @media (max-width: 900px) {
+    .calc-wrapper .main-grid {
+      grid-template-columns: 1fr;
+    }
+    .calc-wrapper .side-disclaimer {
+      order: 3;
+    }
+    .calc-wrapper .results-section {
+      padding: 30px 25px;
+    }
+    .calc-wrapper {
+      padding: 25px 16px 40px;
+    }
+    .calc-wrapper .form-container {
+      padding: 0;
+    }
+    .calc-wrapper .contact-form {
+      padding: 25px 22px;
+    }
+    .calc-wrapper .btn { width: 100%; }
+  }
 </style>
 
 <script is:inline>
-
   // ============================================================
-  // CONFIG
-  // ============================================================
-  const CONFIG = {
-    calendlyUrl: '/contatti',
-    contattiUrl: '/contatti',
-    emailDestinazione: 'andrea@giardiniconsulenza.it'
-  };
-  document.getElementById('ctaCalendly').href = CONFIG.calendlyUrl;
-  document.getElementById('ctaContatti').href = CONFIG.contattiUrl;
-
-  // ============================================================
-  // PARAMETRI INPS 2025-2026
+  // PARAMETRI INPS / FISCALI
   // ============================================================
   const COEFFICIENTI = {
-    57: 0.04204, 58: 0.04304, 59: 0.04408, 60: 0.04518, 61: 0.04634,
     62: 0.04757, 63: 0.04887, 64: 0.05025, 65: 0.05172, 66: 0.05384,
     67: 0.05608, 68: 0.05845, 69: 0.06096, 70: 0.06363, 71: 0.06655
   };
+
   const ALIQUOTE = { dipendente: 0.33, autonomo_ordinario: 0.2607, autonomo_forfettario: 0.2607 };
+
   const IRPEF_SCAGLIONI = [
     { limite: 28000, aliquota: 0.23 },
     { limite: 50000, aliquota: 0.35 },
     { limite: Infinity, aliquota: 0.43 }
   ];
-  const DETRAZIONE_LAVORO_DIP = 1955;
-  const DETRAZIONE_LAVORO_AUT = 1265;
-  const NO_TAX_AREA_DIP = 8500;
-  const NO_TAX_AREA_AUT = 5500;
-  const MAX_DEDUCIBILITA_FP = 5164.57;
-  const TFR_PERCENT = 0.0691;
-  const TASSO_RIVALUTAZIONE = 0.01;   // Rivalutazione PIL nominale (calibrata su benchmark RGS-MEF)
-  const CRESCITA_REDDITO = 0.02;       // Crescita reddito reale + inflazione (calibrata)
 
-  const TIPO_INFO = {
-    dipendente: "<strong>Dipendente:</strong> Il datore di lavoro versa il 33% del tuo RAL all'INPS (di cui ~9,19% a tuo carico, il resto a carico del datore). Il TFR ti permette di accantonare ulteriori risorse, che puoi tenere in azienda o destinare a un fondo pensione.",
-    autonomo_ordinario: "<strong>P.IVA Regime Ordinario:</strong> Versi il 26,07% (gestione separata, 2026) sul tuo reddito imponibile dichiarato. Le contribuzioni sono interamente a tuo carico, ma puoi rivalerti del 4% sul cliente se ne hai concordato l'addebito.",
-    autonomo_forfettario: "<strong>P.IVA Regime Forfettario:</strong> Versi i contributi sul reddito imponibile (fatturato × coefficiente di redditività), non sull'intero fatturato. Questo riduce il carico contributivo nel breve, ma <strong>impatta significativamente sulla pensione futura</strong>. Pianificare la previdenza complementare è ancora più importante."
-  };
+  const MAX_DEDUCIBILITA = 5164.57;
+  const TFR_PERCENT = 0.0691;
+  const TASSO_RIVALUTAZIONE = 0.01;
+  const CRESCITA_REDDITO = 0.02;
+  const INFLAZIONE = 0.015;
 
   // ============================================================
-  // STATE
+  // STATO
   // ============================================================
   const state = {
-    eta: 40, etaPensione: 67, etaPensioneScenario: 67,
+    eta: 40, etaPensione: 67,
+    versamentoMensile: 300,
+    haFP: 'no', fpEsistente: 0,
     tipo: 'dipendente',
+    conosceRAL: 'si',
     redditoLordo: 35000,
+    stipendioNetto: 1900,
     redditoOrdinario: 40000,
-    fatturatoForfettario: 50000,
-    coefficienteRedditivita: 0.78,
+    fatturatoForf: 50000,
+    coefRedditivita: 0.78,
+    versaTFR: 'si',
+    rendimentoCustom: true,
+    rendimento: 0.035,
     anniContributi: 15,
-    includeTFR: true,
-    contributoFP: 200,
-    rendimentoFP: 0.04
+    calcolato: false
   };
 
   // ============================================================
-  // UI
+  // UI HANDLERS
   // ============================================================
-  function aggiornaCampiCondizionali() {
-    const tipo = document.querySelector('input[name="tipo"]:checked').value;
-    state.tipo = tipo;
-    document.querySelectorAll('.conditional-field').forEach(f => {
-      f.classList.toggle('active', f.dataset.tipo === tipo);
+  function aggiornaTipo() {
+    state.tipo = document.getElementById('tipo').value;
+    document.querySelectorAll('[data-tipo]').forEach(el => {
+      el.classList.toggle('active', el.dataset.tipo === state.tipo);
     });
-    document.getElementById('tipoInfoBox').innerHTML = TIPO_INFO[tipo];
   }
 
-  function toggleTFR() {
-    const cb = document.getElementById('includeTFR');
-    cb.checked = !cb.checked;
-    state.includeTFR = cb.checked;
+  function aggiornaConosceRAL() {
+    state.conosceRAL = document.querySelector('input[name="conosceRAL"]:checked').value;
+    document.getElementById('campoRAL').classList.toggle('active', state.conosceRAL === 'si');
+    document.getElementById('campoNettoStipendio').classList.toggle('active', state.conosceRAL === 'no');
   }
 
-  document.getElementById('includeTFR').addEventListener('change', e => {
-    state.includeTFR = e.target.checked;
-  });
-
-  function goToStep(n) {
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('section-' + n).classList.add('active');
-    document.querySelectorAll('.step').forEach((s, i) => {
-      s.classList.remove('active', 'completed');
-      if (i + 1 < n) s.classList.add('completed');
-      if (i + 1 === n) s.classList.add('active');
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  function aggiornaTFR() {
+    state.versaTFR = document.querySelector('input[name="versaTFR"]:checked').value;
+    document.getElementById('infoTFR').style.display = state.versaTFR === 'si' ? 'block' : 'none';
   }
 
-  function ricomincia() { goToStep(1); }
+  function aggiornaFP() {
+    state.haFP = document.querySelector('input[name="haFP"]:checked').value;
+    document.getElementById('campoFPesistente').classList.toggle('active', state.haFP === 'si');
+  }
 
-  function vaiAllaDashboard() {
-    state.eta = parseInt(document.getElementById('eta').value);
-    state.etaPensione = parseInt(document.getElementById('etaPensione').value);
-    state.etaPensioneScenario = state.etaPensione;
-    state.tipo = document.querySelector('input[name="tipo"]:checked').value;
-
-    if (state.tipo === 'dipendente') {
-      state.redditoLordo = parseFloat(document.getElementById('redditoLordo').value);
-      state.anniContributi = parseInt(document.getElementById('anniContributiDip').value);
-      state.includeTFR = document.getElementById('includeTFR').checked;
-    } else if (state.tipo === 'autonomo_ordinario') {
-      state.redditoOrdinario = parseFloat(document.getElementById('redditoOrdinario').value);
-      state.anniContributi = parseInt(document.getElementById('anniContributiOrd').value);
-      state.includeTFR = false;
-    } else {
-      state.fatturatoForfettario = parseFloat(document.getElementById('fatturatoForfettario').value);
-      state.coefficienteRedditivita = parseFloat(document.getElementById('coefficienteRedditivita').value);
-      state.anniContributi = parseInt(document.getElementById('anniContributiForf').value);
-      state.includeTFR = false;
-    }
-
-    if (!state.eta || !state.etaPensione || isNaN(state.anniContributi)) {
-      alert('Per favore, compila tutti i campi.');
-      return;
-    }
-    if (state.etaPensione <= state.eta) {
-      alert("L'età della pensione deve essere maggiore dell'età attuale.");
-      return;
-    }
-
-    document.getElementById('sliderEtaPens').value = state.etaPensione;
-    document.getElementById('valEta').textContent = state.etaPensione + ' anni';
-
-    goToStep(4);
-    setTimeout(() => aggiornaDashboard(true), 100);
+  function aggiornaRendimentoCustom() {
+    state.rendimentoCustom = document.getElementById('rendimentoCustom').checked;
+    document.getElementById('campoRendimento').classList.toggle('active', state.rendimentoCustom);
   }
 
   // ============================================================
-  // IRPEF
+  // CALCOLO IRPEF
   // ============================================================
-  function calcolaIRPEF(redditoLordo, isDipendente = true) {
-    if (redditoLordo <= 0) return 0;
-    const noTax = isDipendente ? NO_TAX_AREA_DIP : NO_TAX_AREA_AUT;
-    if (redditoLordo <= noTax) return 0;
-
-    let irpefLorda = 0;
-    let prevLimite = 0;
-    for (const scag of IRPEF_SCAGLIONI) {
-      if (redditoLordo > scag.limite) {
-        irpefLorda += (scag.limite - prevLimite) * scag.aliquota;
-        prevLimite = scag.limite;
+  function calcolaIRPEF(redditoLordo) {
+    if (redditoLordo <= 8500) return 0;
+    let irpef = 0, prev = 0;
+    for (const sc of IRPEF_SCAGLIONI) {
+      if (redditoLordo > sc.limite) {
+        irpef += (sc.limite - prev) * sc.aliquota;
+        prev = sc.limite;
       } else {
-        irpefLorda += (redditoLordo - prevLimite) * scag.aliquota;
+        irpef += (redditoLordo - prev) * sc.aliquota;
         break;
       }
     }
-
-    let detrazione = isDipendente ? DETRAZIONE_LAVORO_DIP : DETRAZIONE_LAVORO_AUT;
-    if (redditoLordo > 28000) {
-      const fattore = Math.max(0, (50000 - redditoLordo) / 22000);
-      detrazione *= fattore;
-    }
-    if (redditoLordo > 50000) detrazione = 0;
-
-    return Math.max(0, irpefLorda - detrazione);
+    let detr = 1955;
+    if (redditoLordo > 28000) detr *= Math.max(0, (50000 - redditoLordo) / 22000);
+    if (redditoLordo > 50000) detr = 0;
+    return Math.max(0, irpef - detr);
   }
 
-  function calcolaRedditoNettoMensile() {
-    if (state.tipo === 'dipendente') {
-      const ral = state.redditoLordo;
-      const contributiLav = ral * 0.0919;
-      const imponibile = ral - contributiLav;
-      const irpef = calcolaIRPEF(imponibile, true);
+  function aliquotaMarginale(redditoLordo) {
+    if (redditoLordo > 50000) return 0.43;
+    if (redditoLordo > 28000) return 0.35;
+    return 0.23;
+  }
+
+  function stimaRALDaNetto(nettoMens) {
+    const nettoAnno = nettoMens * 13;
+    let ralStimato = nettoAnno / 0.7;
+    for (let i = 0; i < 5; i++) {
+      const contribLav = ralStimato * 0.0919;
+      const imponibile = ralStimato - contribLav;
+      const irpef = calcolaIRPEF(imponibile);
       const add = imponibile * 0.018;
-      return (imponibile - irpef - add) / 12;
+      const nettoCalc = imponibile - irpef - add;
+      const fattore = nettoAnno / nettoCalc;
+      ralStimato *= fattore;
     }
-    else if (state.tipo === 'autonomo_ordinario') {
-      const r = state.redditoOrdinario;
-      const contr = r * 0.2607;
-      const imp = r - contr;
-      const irpef = calcolaIRPEF(imp, false);
-      const add = imp * 0.018;
-      return (imp - irpef - add) / 12;
-    }
-    else {
-      // Forfettario
-      const fatt = state.fatturatoForfettario;
-      const redditoImp = fatt * state.coefficienteRedditivita;
-      const contr = redditoImp * 0.2607;
-      const baseImp = redditoImp - contr;
-      const imposta = baseImp * 0.15;
-      // Netto = fatturato - contributi - imposta sostitutiva
-      return (fatt - contr - imposta) / 12;
-    }
-  }
-
-  function getRedditoPrevidenziale() {
-    if (state.tipo === 'dipendente') return state.redditoLordo;
-    if (state.tipo === 'autonomo_ordinario') return state.redditoOrdinario;
-    return state.fatturatoForfettario * state.coefficienteRedditivita;
+    return ralStimato;
   }
 
   // ============================================================
   // CALCOLO PRINCIPALE
   // ============================================================
   function calcolaScenario() {
-    const aliquota = ALIQUOTE[state.tipo];
-    const redditoBase = getRedditoPrevidenziale();
-    const anniRimanenti = state.etaPensioneScenario - state.eta;
-
-    let montPregresso = 0;
-    for (let i = 0; i < state.anniContributi; i++) {
-      const annoIndietro = state.anniContributi - i;
-      const redditoStorico = redditoBase / Math.pow(1 + CRESCITA_REDDITO, annoIndietro);
-      const contr = redditoStorico * aliquota;
-      montPregresso += contr * Math.pow(1 + TASSO_RIVALUTAZIONE, annoIndietro);
+    state.eta = parseInt(document.getElementById('eta').value) || 40;
+    state.etaPensione = parseInt(document.getElementById('etaPensione').value) || 67;
+    state.versamentoMensile = parseFloat(document.getElementById('versamentoMensile').value) || 0;
+    state.tipo = document.getElementById('tipo').value;
+    state.haFP = document.querySelector('input[name="haFP"]:checked').value;
+    state.fpEsistente = state.haFP === 'si' ? (parseFloat(document.getElementById('fpEsistente').value) || 0) : 0;
+    state.anniContributi = parseInt(document.getElementById('anniContributi').value) || 0;
+    state.rendimentoCustom = document.getElementById('rendimentoCustom').checked;
+    if (state.rendimentoCustom) {
+      state.rendimento = parseFloat(document.getElementById('rendimentoValue').value) / 100;
+    } else {
+      const anniRim = state.etaPensione - state.eta;
+      state.rendimento = anniRim > 20 ? 0.045 : (anniRim > 10 ? 0.03 : 0.02);
     }
 
-    const serieINPS = [];
-    let montINPS = montPregresso;
-    serieINPS.push({ eta: state.eta, valore: montINPS });
-
-    for (let i = 1; i <= anniRimanenti; i++) {
-      const reddFut = redditoBase * Math.pow(1 + CRESCITA_REDDITO, i - 1);
-      const contrAnnuo = reddFut * aliquota;
-      montINPS = montINPS * (1 + TASSO_RIVALUTAZIONE) + contrAnnuo;
-      serieINPS.push({ eta: state.eta + i, valore: montINPS });
-    }
-
-    let fpAccum = 0;
-    const serieFPpuro = [{ eta: state.eta, valore: 0 }];
-    for (let i = 1; i <= anniRimanenti; i++) {
-      const cAnn = state.contributoFP * 12;
-      fpAccum = fpAccum * (1 + state.rendimentoFP) + cAnn * (1 + state.rendimentoFP / 2);
-      serieFPpuro.push({ eta: state.eta + i, valore: fpAccum });
-    }
-
-    let tfrAccum = 0;
-    const serieTFR = [{ eta: state.eta, valore: 0 }];
-    if (state.tipo === 'dipendente' && state.includeTFR) {
-      for (let i = 1; i <= anniRimanenti; i++) {
-        const reddFut = redditoBase * Math.pow(1 + CRESCITA_REDDITO, i - 1);
-        const tfrA = reddFut * TFR_PERCENT;
-        tfrAccum = tfrAccum * (1 + TASSO_RIVALUTAZIONE) + tfrA;
-        serieTFR.push({ eta: state.eta + i, valore: tfrAccum });
+    let RAL = 0;
+    if (state.tipo === 'dipendente') {
+      state.conosceRAL = document.querySelector('input[name="conosceRAL"]:checked').value;
+      if (state.conosceRAL === 'si') {
+        state.redditoLordo = parseFloat(document.getElementById('redditoLordo').value) || 0;
+        RAL = state.redditoLordo;
+      } else {
+        state.stipendioNetto = parseFloat(document.getElementById('stipendioNetto').value) || 0;
+        RAL = stimaRALDaNetto(state.stipendioNetto);
+        state.redditoLordo = RAL;
       }
+      state.versaTFR = document.querySelector('input[name="versaTFR"]:checked').value;
+    } else if (state.tipo === 'autonomo_ordinario') {
+      state.redditoOrdinario = parseFloat(document.getElementById('redditoOrdinario').value) || 0;
+      RAL = state.redditoOrdinario;
+      state.versaTFR = 'no';
     } else {
-      for (let i = 1; i <= anniRimanenti; i++) serieTFR.push({ eta: state.eta + i, valore: 0 });
+      state.fatturatoForf = parseFloat(document.getElementById('fatturatoForf').value) || 0;
+      state.coefRedditivita = parseFloat(document.getElementById('coefRedditivita').value);
+      RAL = state.fatturatoForf * state.coefRedditivita;
+      state.versaTFR = 'no';
     }
 
-    const serieFP = [];
-    for (let i = 0; i <= anniRimanenti; i++) {
-      serieFP.push({
-        eta: serieINPS[i].eta,
-        valore: serieINPS[i].valore + serieFPpuro[i].valore + serieTFR[i].valore
-      });
+    if (state.eta >= state.etaPensione) {
+      return { error: "L'età di pensionamento deve essere maggiore dell'età attuale." };
     }
 
-    const montINPSfin = serieINPS[serieINPS.length - 1].valore;
-    const fpFin = serieFPpuro[serieFPpuro.length - 1].valore;
-    const tfrFin = serieTFR[serieTFR.length - 1].valore;
-    const coef = COEFFICIENTI[state.etaPensioneScenario] || COEFFICIENTI[67];
+    const anniRimanenti = state.etaPensione - state.eta;
+    const versamentoAnnuo = state.versamentoMensile * 12;
+    const r = state.rendimento;
 
-    const pensAnnuaLorda = montINPSfin * coef;
-    const pensMensLorda = pensAnnuaLorda / 13;
+    let compartoConsigliato;
+    if (anniRimanenti > 25) compartoConsigliato = 'Azionario';
+    else if (anniRimanenti > 15) compartoConsigliato = 'Bilanciato Dinamico';
+    else if (anniRimanenti > 7) compartoConsigliato = 'Bilanciato';
+    else compartoConsigliato = 'Garantito / Obbligazionario';
 
-    const irpefPens = calcolaIRPEF(pensAnnuaLorda, true);
-    const addPens = pensAnnuaLorda * 0.018;
-    const pensAnnuaNetta = Math.max(0, pensAnnuaLorda - irpefPens - addPens);
-    const pensMensNetta = pensAnnuaNetta / 13;
-
-    const totIntegrativo = fpFin + tfrFin;
-    const renditaFPanLorda = totIntegrativo * coef;
-    const aliqFP = (state.anniContributi + anniRimanenti) > 35 ? 0.09 : 0.13;
-    const renditaFPanNetta = renditaFPanLorda * (1 - aliqFP);
-    const renditaFPmensNetta = renditaFPanNetta / 13;
-
-    // Deflazionamento "a moneta costante": riportiamo i valori futuri al potere d'acquisto di oggi
-    // Il reddito finale e la pensione finale vanno divisi per (1+inflazione)^anniRimanenti
-    // Ipotesi inflazione = 1.5% (target BCE medio termine)
-    const INFLAZIONE = 0.015;
-    const fattoreDeflazione = Math.pow(1 + INFLAZIONE, anniRimanenti);
-
-    const pensMensNettaReale = pensMensNetta / fattoreDeflazione;
-    const renditaFPmensNettaReale = renditaFPmensNetta / fattoreDeflazione;
-
-    const stipNettoMens = calcolaRedditoNettoMensile();
-
-    const tasso = stipNettoMens > 0 ? pensMensNettaReale / stipNettoMens * 100 : 0;
-    const tassoFP = stipNettoMens > 0 ? (pensMensNettaReale + renditaFPmensNettaReale) / stipNettoMens * 100 : 0;
-    const gapMens = Math.max(0, stipNettoMens - pensMensNettaReale);
-    const gapResiduo = Math.max(0, stipNettoMens - pensMensNettaReale - renditaFPmensNettaReale);
-
-    // Risparmio fiscale
-    const versamentiFPanno = state.contributoFP * 12;
-    const deducibile = Math.min(versamentiFPanno, MAX_DEDUCIBILITA_FP);
-    let aliqMarg;
-    if (state.tipo === 'autonomo_forfettario') {
-      aliqMarg = 0;
-    } else {
-      const reddImpFisc = state.tipo === 'dipendente'
-        ? state.redditoLordo - (state.redditoLordo * 0.0919)
-        : state.redditoOrdinario - (state.redditoOrdinario * 0.2607);
-      if (reddImpFisc > 50000) aliqMarg = 0.43;
-      else if (reddImpFisc > 28000) aliqMarg = 0.35;
-      else aliqMarg = 0.23;
+    let tfrAnnuo = 0;
+    if (state.tipo === 'dipendente' && state.versaTFR === 'si') {
+      tfrAnnuo = RAL * TFR_PERCENT;
     }
-    const risparmioFisc = deducibile * aliqMarg;
+
+    const rMens = Math.pow(1 + r, 1/12) - 1;
+    let montante = state.fpEsistente;
+    const seriemont = [{ anno: 0, eta: state.eta, valore: montante }];
+
+    for (let i = 1; i <= anniRimanenti; i++) {
+      montante = montante * (1 + r);
+      const contribAnnuo = versamentoAnnuo + tfrAnnuo;
+      montante += contribAnnuo * (1 + r / 2);
+      seriemont.push({ anno: i, eta: state.eta + i, valore: montante });
+    }
+
+    const montanteFinale = montante;
+    const totaleVersato = versamentoAnnuo * anniRimanenti;
+    const totaleTFR = tfrAnnuo * anniRimanenti;
+
+    let aliqMarginale = 0;
+    if (state.tipo !== 'autonomo_forfettario') {
+      const baseImpFiscale = state.tipo === 'dipendente'
+        ? RAL - (RAL * 0.0919)
+        : RAL - (RAL * 0.2607);
+      aliqMarginale = aliquotaMarginale(baseImpFiscale);
+    }
+    const versDeducibile = Math.min(versamentoAnnuo, MAX_DEDUCIBILITA);
+    const risparmioFiscaleAnnuo = versDeducibile * aliqMarginale;
+    const risparmioFiscaleTotale = risparmioFiscaleAnnuo * anniRimanenti;
 
     return {
-      serieINPS, serieFP,
-      pensMensNetta: pensMensNettaReale,        // a moneta costante (per i KPI)
-      renditaFPmensNetta: renditaFPmensNettaReale,  // a moneta costante
-      pensMensNettaNominale: pensMensNetta,     // nominale (per riferimento)
-      stipNettoMens,
-      tasso, tassoFP,
-      gapMens, gapResiduo,
       anniRimanenti,
-      risparmioFisc, versamentiFPanno
+      compartoConsigliato,
+      rendimentoMostrato: r * 100,
+      versamentoAnnuo,
+      tfrAnnuo,
+      montanteFinale,
+      totaleVersato,
+      totaleTFR,
+      totaleInteresse: montanteFinale - state.fpEsistente - totaleVersato - totaleTFR,
+      risparmioFiscaleAnnuo,
+      risparmioFiscaleTotale,
+      aliqMarginale,
+      seriemont,
+      RAL
     };
   }
 
-  function aggiornaDashboard(animate = false) {
+  // ============================================================
+  // RENDER RISULTATI
+  // ============================================================
+  function calcolaERender() {
     const r = calcolaScenario();
-    state.lastResult = r;
 
-    document.getElementById('kpiStipendio').textContent = formatEuro(r.stipNettoMens);
-    document.getElementById('kpiPensione').textContent = formatEuro(r.pensMensNetta);
-    document.getElementById('kpiFP').textContent = '+ ' + formatEuro(r.renditaFPmensNetta);
-    document.getElementById('kpiGap').textContent = formatEuro(r.gapResiduo);
+    if (r.error) {
+      document.getElementById('resultsContent').innerHTML = `<p style="color: #C75D5D; text-align: center;"><strong>⚠️ ${r.error}</strong></p>`;
+      return;
+    }
 
-    const fc = document.getElementById('fiscalCard');
-    if (state.tipo === 'autonomo_forfettario') {
-      document.getElementById('fiscalValue').textContent = '— non applicabile';
-      document.getElementById('fiscalDesc').textContent = 'In regime forfettario non è prevista deducibilità fiscale dei contributi al fondo pensione (regime sostitutivo).';
-      fc.style.opacity = '0.7';
+    state.calcolato = true;
+
+    document.getElementById('sliderContributo').value = state.versamentoMensile;
+    document.getElementById('valContributo').textContent = '€ ' + state.versamentoMensile;
+    document.getElementById('sliderEtaPens').value = state.etaPensione;
+    document.getElementById('valEta').textContent = state.etaPensione + ' anni';
+    document.getElementById('sliderRendimento').value = Math.round(state.rendimento * 1000);
+    document.getElementById('valRendimento').textContent = (state.rendimento * 100).toFixed(1).replace('.', ',') + '%';
+
+    renderResults(r);
+    document.getElementById('scenarioControls').style.display = 'block';
+    document.getElementById('chartSection').style.display = 'block';
+    disegnaChart(r.seriemont);
+
+    setTimeout(() => {
+      document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  }
+
+  function renderResults(r) {
+    const isForf = state.tipo === 'autonomo_forfettario';
+    const tfrText = (state.tipo === 'dipendente' && state.versaTFR === 'si')
+      ? ` Includendo il versamento del TFR (circa <span class="number">${formatEuro(r.tfrAnnuo)}/anno</span>),` : '';
+
+    let fiscalSentence;
+    if (isForf) {
+      fiscalSentence = `<p>⚠️ <strong>In regime forfettario non è prevista deducibilità fiscale dei contributi al fondo pensione</strong> (a causa del regime di imposta sostitutiva). Resta comunque importantissimo costruire una previdenza integrativa, dato che i contributi versati sono calcolati su un imponibile ridotto e la pensione INPS sarà di conseguenza più bassa.</p>`;
     } else {
-      document.getElementById('fiscalValue').textContent = formatEuro(r.risparmioFisc);
-      document.getElementById('fiscalDesc').textContent = `Versando € ${state.contributoFP}/mese (€ ${formatNum(r.versamentiFPanno)}/anno) recuperi questa cifra in dichiarazione dei redditi.`;
-      fc.style.opacity = '1';
+      fiscalSentence = `<p>Con i versamenti volontari effettuati avrai un <strong>risparmio fiscale annuo</strong> di <span class="number">${formatEuro(r.risparmioFiscaleAnnuo)}</span>/anno. Nel corso degli anni, ipotizzando tu rimanga nel medesimo scaglione reddituale IRPEF, risparmierai <span class="number">${formatEuroDec(r.risparmioFiscaleTotale)}</span> di imposte.</p>`;
     }
 
-    disegnaGauge(r.tassoFP, animate);
-    disegnaChart(r.serieINPS, r.serieFP, animate);
-  }
-
-  // ============================================================
-  // GAUGE
-  // ============================================================
-  function disegnaGauge(percentuale, animate = false) {
-    const svg = document.getElementById('gaugeSvg');
-    svg.innerHTML = '';
-    const cx = 140, cy = 140, rOuter = 110, rInner = 88;
-    const pct = Math.max(0, Math.min(100, percentuale));
-    const valueAngle = 180 + (pct / 100) * 180;
-
-    const bgPath = describeArc(cx, cy, rOuter, 180, 360);
-    const bgArc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    bgArc.setAttribute('d', bgPath);
-    bgArc.setAttribute('fill', 'none');
-    bgArc.setAttribute('stroke', '#E8E4DA');
-    bgArc.setAttribute('stroke-width', 18);
-    bgArc.setAttribute('stroke-linecap', 'round');
-    svg.appendChild(bgArc);
-
-    let fillColor;
-    if (pct < 40) fillColor = '#C75D5D';
-    else if (pct < 60) fillColor = '#D4A574';
-    else if (pct < 80) fillColor = '#6B7F70';
-    else fillColor = '#00A652';
-
-    const fgPath = describeArc(cx, cy, rOuter, 180, valueAngle);
-    const fgArc = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    fgArc.setAttribute('d', fgPath);
-    fgArc.setAttribute('fill', 'none');
-    fgArc.setAttribute('stroke', fillColor);
-    fgArc.setAttribute('stroke-width', 18);
-    fgArc.setAttribute('stroke-linecap', 'round');
-    fgArc.style.transition = 'stroke 0.4s ease';
-    svg.appendChild(fgArc);
-
-    if (animate) {
-      const totalLength = (Math.PI * rOuter);
-      fgArc.style.strokeDasharray = totalLength;
-      fgArc.style.strokeDashoffset = totalLength;
-      fgArc.getBoundingClientRect();
-      fgArc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s ease';
-      const tgt = totalLength * (1 - pct / 100);
-      requestAnimationFrame(() => { fgArc.style.strokeDashoffset = tgt; });
+    let fpEsistenteText = '';
+    if (state.haFP === 'si' && state.fpEsistente > 0) {
+      fpEsistenteText = ` Considerando un capitale iniziale di <span class="number">${formatEuro(state.fpEsistente)}</span> già versato nel tuo fondo,`;
     }
 
-    [0, 25, 50, 75, 100].forEach(t => {
-      const angle = 180 + (t / 100) * 180;
-      const rad = (angle * Math.PI) / 180;
-      const x1 = cx + (rInner - 12) * Math.cos(rad);
-      const y1 = cy + (rInner - 12) * Math.sin(rad);
-      const x2 = cx + (rInner - 4) * Math.cos(rad);
-      const y2 = cy + (rInner - 4) * Math.sin(rad);
-      const tl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      tl.setAttribute('x1', x1); tl.setAttribute('y1', y1);
-      tl.setAttribute('x2', x2); tl.setAttribute('y2', y2);
-      tl.setAttribute('stroke', '#6B6B68');
-      tl.setAttribute('stroke-width', 1.5);
-      svg.appendChild(tl);
+    document.getElementById('resultsContent').innerHTML = `
+      <p>Andrai in pensione tra <span class="number">${r.anniRimanenti}</span> anni. Considerando questo lasso di tempo il comparto d'investimento consigliato è il comparto <strong>${r.compartoConsigliato}</strong>.</p>
 
-      const lblX = cx + (rInner - 22) * Math.cos(rad);
-      const lblY = cy + (rInner - 22) * Math.sin(rad) + 3;
-      const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      lbl.setAttribute('x', lblX); lbl.setAttribute('y', lblY);
-      lbl.setAttribute('class', 'gauge-label');
-      lbl.setAttribute('text-anchor', 'middle');
-      lbl.textContent = t + '%';
-      svg.appendChild(lbl);
-    });
+      <p>Il rendimento medio annuo considerato per questo comparto è del <strong>${r.rendimentoMostrato.toFixed(2).replace('.', ',')}%</strong>${state.rendimentoCustom ? ' (rendimento personalizzato da te scelto)' : ' (basato sui rendimenti storici medi del comparto)'}.</p>
 
-    const cv = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    cv.setAttribute('x', cx); cv.setAttribute('y', cy + 5);
-    cv.setAttribute('class', 'gauge-value');
-    cv.setAttribute('text-anchor', 'middle');
-    cv.setAttribute('fill', fillColor);
-    cv.textContent = Math.round(pct) + '%';
-    svg.appendChild(cv);
+      ${fiscalSentence}
 
-    const sl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    sl.setAttribute('x', cx); sl.setAttribute('y', cy + 30);
-    sl.setAttribute('class', 'gauge-label');
-    sl.setAttribute('text-anchor', 'middle');
-    sl.textContent = 'del tuo reddito netto';
-    svg.appendChild(sl);
+      <p>Versando <span class="number">${formatEuro(state.versamentoMensile)}</span>/mese (pari a <span class="number">${formatEuro(r.versamentoAnnuo)}</span>/anno),${fpEsistenteText}${tfrText} il <strong>montante lordo finale</strong> stimato alla data del tuo pensionamento corrisponde a <span class="number" style="font-size: 1.3em; color: var(--ochre-dark);">${formatEuroDec(r.montanteFinale)}</span>.</p>
 
-    const sEl = document.getElementById('gaugeStatus');
-    const eEl = document.getElementById('gaugeExplanation');
-    let status, expl;
-    if (pct < 40) {
-      status = '🔴 Situazione critica';
-      expl = 'Con questo tasso di sostituzione, il tenore di vita subirebbe un calo molto significativo. È essenziale agire ora.';
-    } else if (pct < 60) {
-      status = '🟡 Margine di miglioramento';
-      expl = 'Il gap è importante. Una pianificazione previdenziale ben fatta può cambiare radicalmente lo scenario.';
-    } else if (pct < 80) {
-      status = '🟢 Situazione discreta';
-      expl = "Sei in una posizione ragionevole, ma c'è ancora spazio per ottimizzare la strategia.";
-    } else if (pct < 100) {
-      status = '🟢 Situazione solida';
-      expl = "Stai già lavorando bene. Possiamo concentrarci sull'efficienza fiscale e la diversificazione.";
-    } else {
-      status = '🟢 Pianificazione molto efficace';
-      expl = "Il piano combinato (INPS + FP + TFR) raggiunge o supera il tuo reddito attuale a moneta costante. Questo è possibile soprattutto se hai molti anni di contribuzione davanti e versamenti consistenti — è la potenza dell'interesse composto.";
-    }
-    sEl.textContent = status;
-    sEl.style.color = fillColor;
-    eEl.textContent = expl;
-  }
-
-  function describeArc(cx, cy, r, sa, ea) {
-    const s = polarToCartesian(cx, cy, r, ea);
-    const e = polarToCartesian(cx, cy, r, sa);
-    const laf = ea - sa <= 180 ? '0' : '1';
-    return ['M', s.x, s.y, 'A', r, r, 0, laf, 0, e.x, e.y].join(' ');
-  }
-  function polarToCartesian(cx, cy, r, ang) {
-    const rad = (ang * Math.PI) / 180;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+      <p style="font-size: 0.92rem; color: var(--gray-text); padding: 12px 16px; background: white; border-radius: 6px; border-left: 3px solid var(--sage); margin-top: 18px;">
+        <strong>Composizione del montante:</strong>
+        ${state.fpEsistente > 0 ? `capitale iniziale ${formatEuro(state.fpEsistente)} + ` : ''}
+        versamenti totali ${formatEuro(r.totaleVersato)}
+        ${r.totaleTFR > 0 ? ` + TFR accumulato ${formatEuro(r.totaleTFR)}` : ''}
+        + interessi maturati <strong>${formatEuro(r.totaleInteresse)}</strong>.
+      </p>
+    `;
   }
 
   // ============================================================
   // CHART
   // ============================================================
-  let chartData = null;
-
-  function disegnaChart(serieINPS, serieFP, animate = false) {
+  function disegnaChart(seriemont) {
     const svg = document.getElementById('chartMontante');
     svg.innerHTML = '';
-    const W = 800, H = 380;
-    const m = { top: 30, right: 30, bottom: 50, left: 75 };
+    const W = 800, H = 320;
+    const m = { top: 25, right: 30, bottom: 45, left: 75 };
     const w = W - m.left - m.right;
     const h = H - m.top - m.bottom;
-    const xMin = serieINPS[0].eta;
-    const xMax = serieINPS[serieINPS.length - 1].eta;
-    const yMax = Math.max(serieFP[serieFP.length - 1].valore, serieINPS[serieINPS.length - 1].valore) * 1.12 || 100000;
-    const x = eta => m.left + ((eta - xMin) / Math.max(1, (xMax - xMin))) * w;
+    const xMin = seriemont[0].eta;
+    const xMax = seriemont[seriemont.length - 1].eta;
+    const yMax = seriemont[seriemont.length - 1].valore * 1.1 || 100000;
+    const x = eta => m.left + ((eta - xMin) / Math.max(1, xMax - xMin)) * w;
     const y = val => m.top + h - (val / yMax) * h;
-    chartData = { x, y, serieINPS, serieFP, m, w, h, xMin, xMax, W, H };
 
     for (let i = 0; i <= 4; i++) {
       const val = (yMax / 4) * i;
@@ -982,10 +1185,11 @@ const metadata = {
       gl.setAttribute('class', 'grid-line');
       gl.setAttribute('x1', m.left); gl.setAttribute('x2', m.left + w);
       gl.setAttribute('y1', yPos); gl.setAttribute('y2', yPos);
+      gl.setAttribute('stroke-width', 1);
       svg.appendChild(gl);
       const lb = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       lb.setAttribute('class', 'axis-text');
-      lb.setAttribute('x', m.left - 12); lb.setAttribute('y', yPos + 4);
+      lb.setAttribute('x', m.left - 10); lb.setAttribute('y', yPos + 4);
       lb.setAttribute('text-anchor', 'end');
       lb.textContent = formatEuroShort(val);
       svg.appendChild(lb);
@@ -995,6 +1199,7 @@ const metadata = {
     ax.setAttribute('class', 'axis-line');
     ax.setAttribute('x1', m.left); ax.setAttribute('x2', m.left + w);
     ax.setAttribute('y1', m.top + h); ax.setAttribute('y2', m.top + h);
+    ax.setAttribute('stroke-width', 1);
     svg.appendChild(ax);
 
     const numAnni = xMax - xMin;
@@ -1002,271 +1207,125 @@ const metadata = {
     for (let etaTick = xMin; etaTick <= xMax; etaTick += stepTick) {
       const tl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       tl.setAttribute('class', 'axis-text');
-      tl.setAttribute('x', x(etaTick)); tl.setAttribute('y', m.top + h + 22);
+      tl.setAttribute('x', x(etaTick)); tl.setAttribute('y', m.top + h + 18);
       tl.setAttribute('text-anchor', 'middle');
       tl.textContent = etaTick;
-      svg.appendChild(tl);
-    }
-    if ((xMax - xMin) % stepTick !== 0) {
-      const tl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      tl.setAttribute('class', 'axis-text');
-      tl.setAttribute('x', x(xMax)); tl.setAttribute('y', m.top + h + 22);
-      tl.setAttribute('text-anchor', 'middle');
-      tl.textContent = xMax;
       svg.appendChild(tl);
     }
 
     const xal = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     xal.setAttribute('class', 'axis-text');
-    xal.setAttribute('x', m.left + w / 2); xal.setAttribute('y', H - 10);
+    xal.setAttribute('x', m.left + w / 2); xal.setAttribute('y', H - 8);
     xal.setAttribute('text-anchor', 'middle');
     xal.textContent = 'Età';
     svg.appendChild(xal);
 
-    let pathINPS = '';
-    serieINPS.forEach((p, i) => { pathINPS += (i === 0 ? 'M' : 'L') + x(p.eta) + ',' + y(p.valore) + ' '; });
-    const areaINPSp = pathINPS + 'L' + x(xMax) + ',' + y(0) + ' L' + x(xMin) + ',' + y(0) + ' Z';
+    let path = '';
+    seriemont.forEach((p, i) => {
+      path += (i === 0 ? 'M' : 'L') + x(p.eta) + ',' + y(p.valore) + ' ';
+    });
+    const area = path + 'L' + x(xMax) + ',' + y(0) + ' L' + x(xMin) + ',' + y(0) + ' Z';
     const a1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    a1.setAttribute('d', areaINPSp);
+    a1.setAttribute('d', area);
     a1.setAttribute('fill', 'var(--sage)');
     a1.setAttribute('fill-opacity', '0.18');
     svg.appendChild(a1);
+
     const l1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    l1.setAttribute('d', pathINPS);
+    l1.setAttribute('d', path);
     l1.setAttribute('fill', 'none');
     l1.setAttribute('stroke', 'var(--sage)');
     l1.setAttribute('stroke-width', '2.5');
     l1.setAttribute('stroke-linejoin', 'round');
     svg.appendChild(l1);
 
-    let pathFP = '';
-    serieFP.forEach((p, i) => { pathFP += (i === 0 ? 'M' : 'L') + x(p.eta) + ',' + y(p.valore) + ' '; });
-    let revINPS = '';
-    for (let i = serieINPS.length - 1; i >= 0; i--) {
-      revINPS += 'L' + x(serieINPS[i].eta) + ',' + y(serieINPS[i].valore) + ' ';
-    }
-    const aFPd = pathFP + revINPS + 'Z';
-    const a2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    a2.setAttribute('d', aFPd);
-    a2.setAttribute('fill', 'var(--emerald)');
-    a2.setAttribute('fill-opacity', '0.12');
-    svg.appendChild(a2);
+    const len = l1.getTotalLength();
+    l1.style.strokeDasharray = len;
+    l1.style.strokeDashoffset = len;
+    l1.getBoundingClientRect();
+    l1.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.4, 0, 0.2, 1)';
+    requestAnimationFrame(() => { l1.style.strokeDashoffset = '0'; });
 
-    const l2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    l2.setAttribute('d', pathFP);
-    l2.setAttribute('fill', 'none');
-    l2.setAttribute('stroke', 'var(--emerald)');
-    l2.setAttribute('stroke-width', '2.5');
-    l2.setAttribute('stroke-dasharray', '6 4');
-    l2.setAttribute('stroke-linejoin', 'round');
-    svg.appendChild(l2);
+    const finalP = seriemont[seriemont.length - 1];
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('cx', x(finalP.eta));
+    dot.setAttribute('cy', y(finalP.valore));
+    dot.setAttribute('r', 5);
+    dot.setAttribute('fill', 'white');
+    dot.setAttribute('stroke', 'var(--sage)');
+    dot.setAttribute('stroke-width', 2.5);
+    svg.appendChild(dot);
 
-    if (animate) {
-      [l1, l2].forEach(line => {
-        const len = line.getTotalLength();
-        line.style.strokeDasharray = len;
-        line.style.strokeDashoffset = len;
-        line.getBoundingClientRect();
-        line.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
-        requestAnimationFrame(() => { line.style.strokeDashoffset = '0'; });
-      });
-      setTimeout(() => {
-        l2.style.transition = '';
-        l2.setAttribute('stroke-dasharray', '6 4');
-        l1.style.transition = '';
-        l1.style.strokeDasharray = '';
-      }, 1600);
-    }
-
-    const fI = serieINPS[serieINPS.length - 1];
-    const fF = serieFP[serieFP.length - 1];
-
-    const dI = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dI.setAttribute('cx', x(fI.eta)); dI.setAttribute('cy', y(fI.valore));
-    dI.setAttribute('r', 5.5);
-    dI.setAttribute('fill', 'white');
-    dI.setAttribute('stroke', '#4A5D4F');
-    dI.setAttribute('stroke-width', 2.5);
-    svg.appendChild(dI);
-
-    const lI = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    lI.setAttribute('class', 'axis-text-bold');
-    lI.setAttribute('x', x(fI.eta) - 8); lI.setAttribute('y', y(fI.valore) + 18);
-    lI.setAttribute('text-anchor', 'end');
-    lI.setAttribute('fill', '#4A5D4F');
-    lI.textContent = formatEuroShort(fI.valore);
-    svg.appendChild(lI);
-
-    if (fF.valore > fI.valore + 1000) {
-      const dF = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      dF.setAttribute('cx', x(fF.eta)); dF.setAttribute('cy', y(fF.valore));
-      dF.setAttribute('r', 5.5);
-      dF.setAttribute('fill', 'white');
-      dF.setAttribute('stroke', '#00A652');
-      dF.setAttribute('stroke-width', 2.5);
-      svg.appendChild(dF);
-
-      const lF = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      lF.setAttribute('class', 'axis-text-bold');
-      lF.setAttribute('x', x(fF.eta) - 8); lF.setAttribute('y', y(fF.valore) - 12);
-      lF.setAttribute('text-anchor', 'end');
-      lF.setAttribute('fill', '#00A652');
-      lF.textContent = formatEuroShort(fF.valore);
-      svg.appendChild(lF);
-    }
-
-    const cl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    cl.setAttribute('class', 'crosshair-line');
-    cl.setAttribute('id', 'crossLine');
-    cl.setAttribute('y1', m.top); cl.setAttribute('y2', m.top + h);
-    svg.appendChild(cl);
-
-    const dhI = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dhI.setAttribute('class', 'hover-dot');
-    dhI.setAttribute('id', 'dotHoverINPS');
-    dhI.setAttribute('r', 5);
-    dhI.setAttribute('fill', '#4A5D4F');
-    dhI.setAttribute('stroke', 'white');
-    dhI.setAttribute('stroke-width', 2);
-    svg.appendChild(dhI);
-
-    const dhF = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dhF.setAttribute('class', 'hover-dot');
-    dhF.setAttribute('id', 'dotHoverFP');
-    dhF.setAttribute('r', 5);
-    dhF.setAttribute('fill', '#00A652');
-    dhF.setAttribute('stroke', 'white');
-    dhF.setAttribute('stroke-width', 2);
-    svg.appendChild(dhF);
-
-    const ov = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    ov.setAttribute('x', m.left); ov.setAttribute('y', m.top);
-    ov.setAttribute('width', w); ov.setAttribute('height', h);
-    ov.setAttribute('fill', 'transparent');
-    ov.style.cursor = 'crosshair';
-    svg.appendChild(ov);
-    ov.addEventListener('mousemove', handleHover);
-    ov.addEventListener('mouseleave', handleLeave);
-    ov.addEventListener('touchmove', handleTouch);
-    ov.addEventListener('touchend', handleLeave);
-  }
-
-  function handleHover(e) {
-    if (!chartData) return;
-    const svg = document.getElementById('chartMontante');
-    const rect = svg.getBoundingClientRect();
-    const sx = chartData.W / rect.width;
-    aggiornaTooltip((e.clientX - rect.left) * sx, e.clientX, e.clientY);
-  }
-  function handleTouch(e) {
-    if (!chartData || !e.touches[0]) return;
-    e.preventDefault();
-    const svg = document.getElementById('chartMontante');
-    const rect = svg.getBoundingClientRect();
-    const sx = chartData.W / rect.width;
-    const t = e.touches[0];
-    aggiornaTooltip((t.clientX - rect.left) * sx, t.clientX, t.clientY);
-  }
-  function aggiornaTooltip(mx, cx, cy) {
-    const { x, y, serieINPS, serieFP, xMin, xMax, m } = chartData;
-    const ratio = (mx - m.left) / chartData.w;
-    const tEta = xMin + ratio * (xMax - xMin);
-    const idx = Math.max(0, Math.min(serieINPS.length - 1, Math.round(tEta - xMin)));
-    const pI = serieINPS[idx];
-    const pF = serieFP[idx];
-    const xPos = x(pI.eta);
-
-    const cl = document.getElementById('crossLine');
-    cl.classList.add('active');
-    cl.setAttribute('x1', xPos); cl.setAttribute('x2', xPos);
-
-    const di = document.getElementById('dotHoverINPS');
-    di.classList.add('active');
-    di.setAttribute('cx', xPos); di.setAttribute('cy', y(pI.valore));
-
-    const df = document.getElementById('dotHoverFP');
-    if (pF.valore > pI.valore + 100) {
-      df.classList.add('active');
-      df.setAttribute('cx', xPos); df.setAttribute('cy', y(pF.valore));
-    } else df.classList.remove('active');
-
-    const tt = document.getElementById('chartTooltip');
-    const wr = document.getElementById('chartWrapper');
-    const wrRect = wr.getBoundingClientRect();
-    tt.classList.add('active');
-    tt.innerHTML = `
-      <div style="font-weight: 600; margin-bottom: 6px;">A ${pI.eta} anni</div>
-      <div class="tooltip-row">
-        <span class="tooltip-swatch" style="background: var(--sage-light);"></span>
-        <span>Solo INPS: <strong>${formatEuroShort(pI.valore)}</strong></span>
-      </div>
-      ${pF.valore > pI.valore + 100 ? `
-      <div class="tooltip-row">
-        <span class="tooltip-swatch" style="background: var(--emerald);"></span>
-        <span>+ FP/TFR: <strong>${formatEuroShort(pF.valore)}</strong></span>
-      </div>` : ''}
-    `;
-    tt.style.left = (cx - wrRect.left) + 'px';
-    tt.style.top = (cy - wrRect.top) + 'px';
-  }
-  function handleLeave() {
-    const c = document.getElementById('crossLine'); if (c) c.classList.remove('active');
-    const di = document.getElementById('dotHoverINPS'); if (di) di.classList.remove('active');
-    const df = document.getElementById('dotHoverFP'); if (df) df.classList.remove('active');
-    const tt = document.getElementById('chartTooltip'); if (tt) tt.classList.remove('active');
+    const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lbl.setAttribute('class', 'axis-text-bold');
+    lbl.setAttribute('x', x(finalP.eta) - 8);
+    lbl.setAttribute('y', y(finalP.valore) - 10);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.textContent = formatEuroShort(finalP.valore);
+    svg.appendChild(lbl);
   }
 
   // ============================================================
   // SLIDERS
   // ============================================================
   let upTimeout = null;
-  function debUp() {
+  function debouncedUpdate() {
     if (upTimeout) clearTimeout(upTimeout);
-    upTimeout = setTimeout(() => aggiornaDashboard(false), 50);
+    upTimeout = setTimeout(() => {
+      const r = calcolaScenario();
+      if (r.error) return;
+      renderResults(r);
+      disegnaChart(r.seriemont);
+    }, 80);
   }
 
   document.getElementById('sliderContributo').addEventListener('input', e => {
-    state.contributoFP = parseInt(e.target.value);
-    document.getElementById('valContributo').textContent = '€ ' + state.contributoFP;
-    debUp();
+    state.versamentoMensile = parseInt(e.target.value);
+    document.getElementById('valContributo').textContent = '€ ' + state.versamentoMensile;
+    document.getElementById('versamentoMensile').value = state.versamentoMensile;
+    debouncedUpdate();
   });
   document.getElementById('sliderEtaPens').addEventListener('input', e => {
-    state.etaPensioneScenario = parseInt(e.target.value);
-    document.getElementById('valEta').textContent = state.etaPensioneScenario + ' anni';
-    debUp();
+    state.etaPensione = parseInt(e.target.value);
+    document.getElementById('valEta').textContent = state.etaPensione + ' anni';
+    document.getElementById('etaPensione').value = state.etaPensione;
+    debouncedUpdate();
   });
   document.getElementById('sliderRendimento').addEventListener('input', e => {
-    state.rendimentoFP = parseInt(e.target.value) / 1000;
-    document.getElementById('valRendimento').textContent = (state.rendimentoFP * 100).toFixed(1).replace('.', ',') + '%';
-    debUp();
+    state.rendimento = parseInt(e.target.value) / 1000;
+    document.getElementById('valRendimento').textContent = (state.rendimento * 100).toFixed(1).replace('.', ',') + '%';
+    document.getElementById('rendimentoCustom').checked = true;
+    document.getElementById('campoRendimento').classList.add('active');
+    document.getElementById('rendimentoValue').value = (state.rendimento * 100).toFixed(1);
+    debouncedUpdate();
   });
-
-  function toggleMethodology() {
-    document.getElementById('methodology').classList.toggle('open');
-  }
 
   // ============================================================
   // UTILS
   // ============================================================
-  function formatEuro(num) { return '€ ' + Math.round(num).toLocaleString('it-IT'); }
-  function formatNum(num) { return Math.round(num).toLocaleString('it-IT'); }
+  function formatEuro(num) {
+    return Math.round(num).toLocaleString('it-IT') + ' €';
+  }
+  function formatEuroDec(num) {
+    return num.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  }
   function formatEuroShort(num) {
-    if (num >= 1000000) return '€ ' + (num / 1000000).toFixed(1).replace('.', ',') + ' M';
-    if (num >= 1000) return '€ ' + Math.round(num / 1000) + 'k';
-    return '€ ' + Math.round(num);
+    if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.', ',') + 'M €';
+    if (num >= 1000) return Math.round(num / 1000) + 'k €';
+    return Math.round(num) + ' €';
   }
 
-  function apriModalPDF() { document.getElementById('modalPDF').classList.add('active'); }
-  function chiudiModalPDF() { document.getElementById('modalPDF').classList.remove('active'); }
-  function inviaRichiesta() {
-    const e = document.getElementById('emailReport').value;
-    const n = document.getElementById('nomeReport').value;
-    if (!e || !n) { alert('Per favore, inserisci nome ed email.'); return; }
-    alert(`Grazie ${n}! Riceverai il report a ${e} entro 24 ore.\n\n(NB: integrare backend per invio reale)`);
-    chiudiModalPDF();
+  function inviaContatto() {
+    const nome = document.getElementById('ctcNome').value;
+    const email = document.getElementById('ctcEmail').value;
+    const tel = document.getElementById('ctcTel').value;
+    const msg = document.getElementById('ctcMsg').value;
+    if (!nome || !email || !tel || !msg) {
+      alert('Per favore compila tutti i campi obbligatori.');
+      return;
+    }
+    alert(`Grazie ${nome}! Ti ricontatterò entro 24 ore.\n\n(NB: integrare backend per invio reale)`);
   }
-  document.getElementById('modalPDF').addEventListener('click', (e) => {
-    if (e.target.id === 'modalPDF') chiudiModalPDF();
-  });
-
 </script>
+
+</Layout>
