@@ -29,7 +29,6 @@ export const footerData = {
       links: [
         { text: 'andrea@giardiniconsulenza.it', href: 'mailto:andrea@giardiniconsulenza.it' },
         { text: '+39 351 545 6845', href: 'tel:+393515456845' },
-        { text: 'LinkedIn', href: 'https://www.linkedin.com/in/andrea-giardini-58923a268' },
         { text: 'Instagram', href: 'https://www.instagram.com/andreagiardini.finanza/' },
       ],
     },
@@ -44,7 +43,6 @@ export const footerData = {
   ],
   secondaryLinks: [],
   socialLinks: [
-    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/andrea-giardini-58923a268' },
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/andreagiardini.finanza/' },
     { ariaLabel: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: '#' },
     { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:andrea@giardiniconsulenza.it' },
