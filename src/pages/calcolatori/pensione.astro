@@ -277,23 +277,32 @@ const metadata = {
   <!-- ============== FORM CONTATTI ============== -->
   <div class="contact-form" id="contactForm">
     <h3>Mettiti in contatto</h3>
-    <div class="form-group">
-      <label for="ctcNome">Nome e Cognome <span style="color: var(--ochre-dark);">(*)</span></label>
-      <input type="text" id="ctcNome">
-    </div>
-    <div class="form-group">
-      <label for="ctcEmail">Email <span style="color: var(--ochre-dark);">(*)</span></label>
-      <input type="email" id="ctcEmail">
-    </div>
-    <div class="form-group">
-      <label for="ctcTel">Telefono <span style="color: var(--ochre-dark);">(*)</span></label>
-      <input type="text" id="ctcTel">
-    </div>
-    <div class="form-group">
-      <label for="ctcMsg">Messaggio <span style="color: var(--ochre-dark);">(*)</span></label>
-      <textarea id="ctcMsg" rows="4"></textarea>
-    </div>
-    <button class="btn btn-primary" style="width: 100%; margin-top: 8px;" onclick="inviaContatto()">Invia</button>
+    <form id="calcContactForm" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="0d00a04d-f883-4684-ba20-f0f134c63d36" />
+      <input type="hidden" name="subject" value="Nuovo contatto dal Calcolatore Pensione — giardiniconsulenza.it" />
+      <input type="hidden" name="from_name" value="giardiniconsulenza.it — Calcolatore Pensione" />
+      <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+      <input type="hidden" id="calcSimulazione" name="simulazione" value="" />
+
+      <div class="form-group">
+        <label for="ctcNome">Nome e Cognome <span style="color: var(--ochre-dark);">(*)</span></label>
+        <input type="text" id="ctcNome" name="nome" required>
+      </div>
+      <div class="form-group">
+        <label for="ctcEmail">Email <span style="color: var(--ochre-dark);">(*)</span></label>
+        <input type="email" id="ctcEmail" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="ctcTel">Telefono <span style="color: var(--ochre-dark);">(*)</span></label>
+        <input type="text" id="ctcTel" name="telefono" required>
+      </div>
+      <div class="form-group">
+        <label for="ctcMsg">Messaggio <span style="color: var(--ochre-dark);">(*)</span></label>
+        <textarea id="ctcMsg" name="messaggio" rows="4" required></textarea>
+      </div>
+      <div id="calcContactResult" class="hidden" style="margin-bottom: 12px; padding: 12px 14px; border-radius: 6px; font-size: 0.9rem; text-align: center;"></div>
+      <button type="submit" class="btn btn-primary" id="calcContactSubmit" style="width: 100%; margin-top: 8px;">Invia</button>
+    </form>
   </div>
 
   <!-- DISCLAIMER FINALE -->
@@ -1315,17 +1324,63 @@ const metadata = {
     return Math.round(num) + ' €';
   }
 
-  function inviaContatto() {
-    const nome = document.getElementById('ctcNome').value;
-    const email = document.getElementById('ctcEmail').value;
-    const tel = document.getElementById('ctcTel').value;
-    const msg = document.getElementById('ctcMsg').value;
-    if (!nome || !email || !tel || !msg) {
-      alert('Per favore compila tutti i campi obbligatori.');
-      return;
-    }
-    alert(`Grazie ${nome}! Ti ricontatterò entro 24 ore.\n\n(NB: integrare backend per invio reale)`);
-  }
+  // ============================================================
+  // FORM CONTATTI → Web3Forms (andrea@giardiniconsulenza.it)
+  // ============================================================
+  (function initCalcContactForm() {
+    const form = document.getElementById('calcContactForm');
+    const result = document.getElementById('calcContactResult');
+    const btn = document.getElementById('calcContactSubmit');
+    if (!form || !result || !btn) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Invio in corso...';
+      result.classList.add('hidden');
+
+      // Includi sintesi simulazione corrente nel messaggio inviato ad Andrea
+      const simulazione = state.calcolato
+        ? `Età ${state.eta} → pensione a ${state.etaPensione} | Versamento ${state.versamentoMensile}€/mese | Tipo ${state.tipo} | Rendimento ${(state.rendimento*100).toFixed(2)}% | RAL/Reddito ${state.tipo === 'dipendente' ? state.redditoLordo : (state.tipo === 'autonomo_ordinario' ? state.redditoOrdinario : state.fatturatoForf+' (forfettario, coef '+state.coefRedditivita+')')}`
+        : 'Form inviato senza calcolo eseguito';
+      const simField = document.getElementById('calcSimulazione');
+      if (simField) simField.value = simulazione;
+
+      const fd = new FormData(form);
+      const jsonBody = {};
+      for (const [key, val] of [...fd.entries()]) {
+        if (!(val instanceof File)) jsonBody[key] = val;
+      }
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(jsonBody),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          result.textContent = 'Messaggio inviato! Ti risponderò entro 24 ore lavorative.';
+          result.style.background = '#E8F0EC';
+          result.style.color = '#3A4A3F';
+          result.style.border = '1px solid #C7DACD';
+          form.reset();
+        } else {
+          throw new Error('fail');
+        }
+      } catch {
+        result.textContent = 'Si è verificato un errore. Riprova o scrivimi a andrea@giardiniconsulenza.it';
+        result.style.background = '#FDECEC';
+        result.style.color = '#A04040';
+        result.style.border = '1px solid #F5C2C2';
+      }
+
+      result.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Invia';
+    });
+  })();
 </script>
 
 </Layout>
