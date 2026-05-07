@@ -5,12 +5,12 @@ export const headerData = {
     { text: 'Chi sono', href: '/#about' },
     { text: 'Percorso', href: '/#resume' },
     { text: 'Servizi', href: '/#portfolio' },
-    { text: 'Contatti', href: 'mailto:andrea@giardiniconsulenza.it' },
+    { text: 'Contatti', href: '/contatti' },
   ],
   actions: [
     {
       text: 'Scrivimi',
-      href: 'mailto:andrea@giardiniconsulenza.it',
+      href: '/contatti',
     },
   ],
 };
