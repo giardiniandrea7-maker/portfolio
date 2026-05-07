@@ -14,13 +14,26 @@ function initServiceForm() {
     result.classList.add('hidden');
 
     const fd = new FormData(form);
+    const fileNames: string[] = [];
+    for (const [key, val] of [...fd.entries()]) {
+      if (val instanceof File) {
+        if (val.size > 0) fileNames.push(val.name);
+        fd.delete(key);
+      }
+    }
+    if (fileNames.length > 0) {
+      fd.append('allegati_indicati', fileNames.join(', '));
+    }
 
     try {
       const res = await fetch(WEB3FORMS_URL, { method: 'POST', body: fd });
       const data = await res.json();
 
       if (data.success) {
-        result.textContent = 'Richiesta inviata con successo! Ti ricontatteremo il prima possibile.';
+        const fileNote = fileNames.length > 0
+          ? ' Per i file allegati, inviali a diagnosi@giardiniconsulenza.it o via WhatsApp.'
+          : '';
+        result.textContent = 'Richiesta inviata con successo! Ti ricontatteremo il prima possibile.' + fileNote;
         result.className = 'rounded-sm p-4 text-sm font-semibold text-center bg-green-50 text-green-700 border border-green-200';
         form.reset();
       } else {
