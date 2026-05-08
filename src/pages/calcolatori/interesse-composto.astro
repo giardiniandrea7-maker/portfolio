@@ -1141,5 +1141,11 @@ const metadata = {
 
     // Primo render
     aggiornaRisultati();
+
+    // Cleanup per Astro View Transitions (ClientRouter)
+    document.addEventListener('astro:before-swap', () => {
+      if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+      if (updateTimer) { clearTimeout(updateTimer); updateTimer = null; }
+    }, { once: true });
   </script>
 </Layout>
