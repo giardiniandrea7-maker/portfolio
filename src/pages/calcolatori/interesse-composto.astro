@@ -98,35 +98,32 @@ const metadata = {
     </div>
 
     <!-- ============== GRAFICO ============== -->
-    <section class="card chart-card" aria-label="Crescita del montante nel tempo">
+    <section class="card chart-card" aria-label="Crescita del capitale nel tempo">
       <div class="chart-header">
-        <h2 class="card-title">Crescita del montante nel tempo</h2>
-        <div class="chart-legend">
+        <h2 class="card-title">Crescita del capitale nel tempo</h2>
+        <div class="chart-legend" id="ic-legend">
           <span class="legend-item">
-            <span class="legend-swatch legend-investito"></span>
-            Capitale Investito
+            <span class="legend-swatch legend-iniziale"></span>
+            Capitale Iniziale
           </span>
           <span class="legend-item">
-            <span class="legend-swatch legend-totale"></span>
-            Capitale Totale (Montante)
+            <span class="legend-swatch legend-versamenti"></span>
+            Versamenti Aggiuntivi
           </span>
           <span class="legend-item">
-            <span class="legend-swatch legend-area"></span>
+            <span class="legend-swatch legend-interessi"></span>
             Interessi Maturati
           </span>
         </div>
       </div>
       <div class="chart-wrap">
-        <svg
+        <canvas
           id="ic-chart"
-          class="chart-svg"
-          viewBox="0 0 800 360"
-          preserveAspectRatio="xMidYMid meet"
-          role="img"
-          aria-label="Grafico della crescita del montante anno per anno">
-        </svg>
-        <div id="ic-tooltip" class="chart-tooltip" role="tooltip" aria-hidden="true"></div>
+          aria-label="Grafico a barre impilate della crescita del capitale anno per anno"
+          role="img">
+        </canvas>
       </div>
+      <p id="ic-chart-fallback" class="sr-only" aria-live="polite"></p>
     </section>
 
     <!-- ============== COME FUNZIONA (collapsible) ============== -->
@@ -475,65 +472,50 @@ const metadata = {
 
     /* ============== CHART ============== */
     .calc-ic .chart-card { margin-bottom: 30px; }
+    .calc-ic .chart-card .card-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--sage-dark);
+      letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
     .calc-ic .chart-header {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: flex-start;
-      flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
     .calc-ic .chart-legend {
-      display: flex; flex-wrap: wrap; gap: 16px;
-      font-size: 0.82rem; color: var(--gray-text);
+      display: flex; flex-wrap: wrap; gap: 18px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.84rem; color: var(--charcoal);
     }
-    .calc-ic .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .calc-ic .legend-item { display: inline-flex; align-items: center; gap: 8px; }
     .calc-ic .legend-swatch {
       display: inline-block;
-      width: 20px; height: 4px;
-      border-radius: 2px;
+      width: 14px; height: 14px;
+      border-radius: 3px;
     }
-    .calc-ic .legend-investito { background: var(--sage); }
-    .calc-ic .legend-totale { background: var(--charcoal); height: 5px; }
-    .calc-ic .legend-area { background: var(--emerald); opacity: 0.4; height: 12px; border-radius: 3px; }
+    .calc-ic .legend-iniziale { background: var(--sage-light); }
+    .calc-ic .legend-versamenti { background: var(--charcoal); }
+    .calc-ic .legend-interessi { background: var(--emerald); }
 
-    .calc-ic .chart-wrap { position: relative; }
-    .calc-ic .chart-svg { width: 100%; height: auto; display: block; }
+    .calc-ic .chart-wrap {
+      position: relative;
+      height: 380px;
+      padding: 8px 4px 0;
+    }
+    .calc-ic .chart-wrap canvas { display: block; }
 
-    .calc-ic .chart-svg .axis-line { stroke: var(--gray-soft); }
-    .calc-ic .chart-svg .grid-line { stroke: var(--gray-soft); stroke-dasharray: 3 4; opacity: 0.6; }
-    .calc-ic .chart-svg .axis-text { font: 11px 'Manrope', sans-serif; fill: var(--gray-text); }
-    .calc-ic .chart-svg .axis-text-bold { font: 600 11px 'Manrope', sans-serif; fill: var(--charcoal); }
-    .calc-ic .chart-svg .hover-line { stroke: var(--charcoal); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0; }
-    .calc-ic .chart-svg .hover-dot { opacity: 0; }
-
-    .calc-ic .chart-tooltip {
+    .calc-ic .sr-only {
       position: absolute;
-      pointer-events: none;
-      background: white;
-      border: 1px solid rgba(22, 105, 99, 0.2);
-      border-radius: 8px;
-      box-shadow: 0 4px 18px rgba(55, 61, 66, 0.12);
-      padding: 10px 12px;
-      font-size: 0.82rem;
-      line-height: 1.5;
-      color: var(--charcoal);
-      transform: translate(-50%, -110%);
-      opacity: 0;
-      transition: opacity 0.12s ease;
-      white-space: nowrap;
-      min-width: 180px;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0);
+      white-space: nowrap; border: 0;
     }
-    .calc-ic .chart-tooltip.is-visible { opacity: 1; }
-    .calc-ic .chart-tooltip .tt-anno {
-      font-weight: 700; color: var(--sage-dark);
-      margin-bottom: 4px;
-    }
-    .calc-ic .chart-tooltip .tt-row {
-      display: flex; justify-content: space-between; gap: 14px;
-    }
-    .calc-ic .chart-tooltip .tt-row span:first-child { color: var(--gray-text); }
-    .calc-ic .chart-tooltip .tt-row span:last-child { font-weight: 600; color: var(--charcoal); }
 
     /* ============== SEZIONE COME FUNZIONA ============== */
     .calc-ic .how-it-works { margin-bottom: 40px; }
@@ -788,23 +770,40 @@ const metadata = {
       .calc-ic .math-content { padding: 4px 18px 24px; }
       .calc-ic .btn { width: 100%; }
       .calc-ic .cta-buttons { flex-direction: column; }
-      .calc-ic .chart-tooltip { font-size: 0.78rem; min-width: 160px; }
+      .calc-ic .chart-wrap { height: 280px; padding: 6px 0 0; }
+      .calc-ic .chart-legend { gap: 12px; font-size: 0.78rem; }
     }
   </style>
 
   <script>
     import { calcolaInteresseComposto } from '~/lib/calcolatori/interesse-composto';
-    import type { Frequenza, PuntoAnnuo } from '~/lib/calcolatori/interesse-composto';
+    import type { Frequenza } from '~/lib/calcolatori/interesse-composto';
+    import {
+      Chart,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+    } from 'chart.js';
+
+    Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
     // -------------------- FORMATTERS --------------------
     const fmtEuro = new Intl.NumberFormat('it-IT', {
       style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2,
     });
-    const fmtEuroShort = (n: number): string => {
-      if (!Number.isFinite(n)) return '—';
-      if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1).replace('.', ',') + 'M €';
-      if (Math.abs(n) >= 1_000) return Math.round(n / 1000) + 'k €';
-      return Math.round(n).toLocaleString('it-IT') + ' €';
+    /** Formatter per i tick dell'asse Y: K / M, breve e leggibile. */
+    const formatCurrencyShort = (value: number | string): string => {
+      const v = typeof value === 'number' ? value : parseFloat(value);
+      if (!Number.isFinite(v)) return '';
+      if (Math.abs(v) >= 1_000_000) {
+        const m = v / 1_000_000;
+        return (Number.isInteger(m) ? m.toString() : m.toFixed(1).replace('.', ',')) + 'M €';
+      }
+      if (Math.abs(v) >= 1_000) return Math.round(v / 1000) + 'K €';
+      return Math.round(v) + ' €';
     };
     const fmtPct = (n: number): string => {
       if (!Number.isFinite(n)) return '—';
@@ -863,243 +862,165 @@ const metadata = {
       return { value: v, warning: '' };
     }
 
-    // -------------------- CHART DRAW --------------------
-    const SVG_NS = 'http://www.w3.org/2000/svg';
-    function svgEl(tag: string, attrs: Record<string, string | number>): SVGElement {
-      const el = document.createElementNS(SVG_NS, tag);
-      for (const k in attrs) el.setAttribute(k, String(attrs[k]));
-      return el as SVGElement;
-    }
-
-    type ChartCtx = {
-      x: (anno: number) => number;
-      y: (val: number) => number;
-      m: { top: number; right: number; bottom: number; left: number };
-      W: number; H: number; w: number; h: number;
-      dati: PuntoAnnuo[];
+    // -------------------- CHART (Chart.js stacked bars) --------------------
+    // Palette brand del sito (allineata ai token della pagina e del calc pensione)
+    const BAR_COLORS = {
+      iniziale: '#79B9AD',   // sage-light: capitale iniziale (base costante)
+      versamenti: '#373D42', // charcoal: versamenti aggiuntivi
+      interessi: '#00A652',  // emerald: interessi maturati
     };
-    let chartCtx: ChartCtx | null = null;
 
-    function disegnaChart(dati: PuntoAnnuo[]): ChartCtx | null {
-      const svg = $('ic-chart') as unknown as SVGSVGElement;
-      svg.innerHTML = '';
-      if (!dati.length) return null;
+    let chartInstance: import('chart.js').Chart | null = null;
+    let firstRender = true;
 
-      const W = 800, H = 360;
-      const m = { top: 24, right: 30, bottom: 50, left: 76 };
-      const w = W - m.left - m.right;
-      const h = H - m.top - m.bottom;
+    function disegnaChart(dati: import('~/lib/calcolatori/interesse-composto').DatoBarra[]): void {
+      const canvas = $('ic-chart') as unknown as HTMLCanvasElement;
+      if (!canvas || !dati.length) return;
 
-      const xMin = 0;
-      const xMax = dati[dati.length - 1].anno;
-      const yMaxRaw = Math.max(...dati.map((d) => d.totale));
-      const yMax = yMaxRaw > 0 ? yMaxRaw * 1.08 : 100;
+      const N = dati.length - 1;
+      // Etichette asse X: "Anno 0", "Anno 1", ... — diradate se N > 30
+      const labels = dati.map((d) => `Anno ${d.anno}`);
+      const showXTick = (idx: number) => (N > 30 ? idx % 5 === 0 || idx === N : true);
+      const rotateXLabels = N > 15;
 
-      const x = (anno: number) => m.left + ((anno - xMin) / Math.max(1, xMax - xMin)) * w;
-      const y = (val: number) => m.top + h - (val / yMax) * h;
+      const dataIniziale = dati.map((d) => d.capitaleIniziale);
+      const dataVersamenti = dati.map((d) => d.versamentiAggiuntivi);
+      const dataInteressi = dati.map((d) => d.interessiMaturati);
 
-      // Grid Y + tick labels
-      for (let i = 0; i <= 4; i++) {
-        const val = (yMax / 4) * i;
-        const yPos = y(val);
-        svg.appendChild(svgEl('line', {
-          class: 'grid-line', x1: m.left, x2: m.left + w, y1: yPos, y2: yPos, 'stroke-width': 1,
-        }));
-        const lb = svgEl('text', {
-          class: 'axis-text', x: m.left - 10, y: yPos + 4, 'text-anchor': 'end',
-        });
-        lb.textContent = fmtEuroShort(val);
-        svg.appendChild(lb);
-      }
-
-      // Asse X
-      svg.appendChild(svgEl('line', {
-        class: 'axis-line', x1: m.left, x2: m.left + w, y1: m.top + h, y2: m.top + h, 'stroke-width': 1,
-      }));
-
-      const numAnni = xMax - xMin;
-      // Tick adattivi: pochi tick su mobile (orizzontali), più tick su intervalli ampi
-      const stepTick = numAnni <= 5 ? 1 : numAnni <= 12 ? 2 : numAnni <= 25 ? 5 : 10;
-      for (let anno = xMin; anno <= xMax; anno += stepTick) {
-        const tl = svgEl('text', {
-          class: 'axis-text', x: x(anno), y: m.top + h + 20, 'text-anchor': 'middle',
-        });
-        tl.textContent = String(anno);
-        svg.appendChild(tl);
-      }
-      const xLabel = svgEl('text', {
-        class: 'axis-text', x: m.left + w / 2, y: H - 8, 'text-anchor': 'middle',
-      });
-      xLabel.textContent = 'Anni';
-      svg.appendChild(xLabel);
-
-      // Path generator
-      const buildLine = (key: 'investito' | 'totale') => {
-        let p = '';
-        dati.forEach((pt, i) => {
-          p += (i === 0 ? 'M' : 'L') + x(pt.anno) + ',' + y(pt[key]) + ' ';
-        });
-        return p;
-      };
-      const pathInvestito = buildLine('investito');
-      const pathTotale = buildLine('totale');
-
-      // Area sfumata tra investito e totale (interessi maturati)
-      let areaPath = '';
-      dati.forEach((pt, i) => {
-        areaPath += (i === 0 ? 'M' : 'L') + x(pt.anno) + ',' + y(pt.totale) + ' ';
-      });
-      for (let i = dati.length - 1; i >= 0; i--) {
-        const pt = dati[i];
-        areaPath += 'L' + x(pt.anno) + ',' + y(pt.investito) + ' ';
-      }
-      areaPath += 'Z';
-      svg.appendChild(svgEl('path', {
-        d: areaPath, fill: 'var(--emerald)', 'fill-opacity': '0.15',
-      }));
-
-      // Linea capitale investito (sage, sottile)
-      svg.appendChild(svgEl('path', {
-        d: pathInvestito,
-        fill: 'none',
-        stroke: 'var(--sage)',
-        'stroke-width': '1.8',
-        'stroke-linejoin': 'round',
-      }));
-
-      // Linea totale (charcoal, più spessa)
-      const lineTop = svgEl('path', {
-        d: pathTotale,
-        fill: 'none',
-        stroke: 'var(--charcoal)',
-        'stroke-width': '2.6',
-        'stroke-linejoin': 'round',
-      }) as SVGPathElement;
-      svg.appendChild(lineTop);
-
-      // Punti finali
-      const finalP = dati[dati.length - 1];
-      svg.appendChild(svgEl('circle', {
-        cx: x(finalP.anno), cy: y(finalP.totale), r: 5,
-        fill: 'white', stroke: 'var(--charcoal)', 'stroke-width': 2.5,
-      }));
-      svg.appendChild(svgEl('circle', {
-        cx: x(finalP.anno), cy: y(finalP.investito), r: 4,
-        fill: 'white', stroke: 'var(--sage)', 'stroke-width': 2,
-      }));
-
-      // Hover guides (riga verticale + due punti)
-      const hoverLine = svgEl('line', {
-        class: 'hover-line',
-        x1: 0, x2: 0, y1: m.top, y2: m.top + h,
-      });
-      svg.appendChild(hoverLine);
-      const hoverDotTotale = svgEl('circle', {
-        class: 'hover-dot', cx: 0, cy: 0, r: 5,
-        fill: 'white', stroke: 'var(--charcoal)', 'stroke-width': 2.5,
-      });
-      const hoverDotInvestito = svgEl('circle', {
-        class: 'hover-dot', cx: 0, cy: 0, r: 4,
-        fill: 'white', stroke: 'var(--sage)', 'stroke-width': 2,
-      });
-      svg.appendChild(hoverDotTotale);
-      svg.appendChild(hoverDotInvestito);
-
-      // Overlay trasparente per cattura mouse
-      const overlay = svgEl('rect', {
-        x: m.left, y: m.top, width: w, height: h,
-        fill: 'transparent',
-      }) as SVGRectElement;
-      svg.appendChild(overlay);
-
-      return { x, y, m, W, H, w, h, dati };
-    }
-
-    // -------------------- TOOLTIP --------------------
-    const tooltipEl = $('ic-tooltip');
-
-    function findClosestPoint(annoExact: number, dati: PuntoAnnuo[]): PuntoAnnuo {
-      let best = dati[0];
-      let bestDiff = Math.abs(dati[0].anno - annoExact);
-      for (const pt of dati) {
-        const d = Math.abs(pt.anno - annoExact);
-        if (d < bestDiff) { best = pt; bestDiff = d; }
-      }
-      return best;
-    }
-
-    function updateHoverFromClientX(clientX: number) {
-      if (!chartCtx) return;
-      const svg = $('ic-chart') as unknown as SVGSVGElement;
-      const rect = svg.getBoundingClientRect();
-      // Converti coordinata client in coordinata SVG (viewBox)
-      const ctm = svg.getScreenCTM();
-      if (!ctm) return;
-      const xRatio = chartCtx.W / rect.width;
-      const xSvg = (clientX - rect.left) * xRatio;
-      const xMin = chartCtx.dati[0].anno;
-      const xMax = chartCtx.dati[chartCtx.dati.length - 1].anno;
-      const annoExact = xMin + ((xSvg - chartCtx.m.left) / chartCtx.w) * (xMax - xMin);
-      if (annoExact < xMin - 0.5 || annoExact > xMax + 0.5) {
-        hideTooltip();
+      // Update veloce senza animazione se il chart esiste già (no flicker durante typing)
+      if (chartInstance) {
+        chartInstance.data.labels = labels;
+        chartInstance.data.datasets[0].data = dataIniziale;
+        chartInstance.data.datasets[1].data = dataVersamenti;
+        chartInstance.data.datasets[2].data = dataInteressi;
+        // Aggiorna scale config (rotazione X) per cambi di N
+        const xScale = chartInstance.options.scales?.x as any;
+        if (xScale?.ticks) {
+          xScale.ticks.maxRotation = rotateXLabels ? 45 : 0;
+          xScale.ticks.minRotation = rotateXLabels ? 45 : 0;
+          xScale.ticks.callback = function (_v: unknown, index: number) {
+            return showXTick(index) ? labels[index] : '';
+          };
+        }
+        chartInstance.update('none');
         return;
       }
-      const pt = findClosestPoint(annoExact, chartCtx.dati);
-      showTooltip(pt, rect);
+
+      // Primo render: animazione 600ms easeOutQuart
+      chartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Capitale Iniziale',
+              data: dataIniziale,
+              backgroundColor: BAR_COLORS.iniziale,
+              borderWidth: 0,
+              stack: 'montante',
+            },
+            {
+              label: 'Versamenti Aggiuntivi',
+              data: dataVersamenti,
+              backgroundColor: BAR_COLORS.versamenti,
+              borderWidth: 0,
+              stack: 'montante',
+            },
+            {
+              label: 'Interessi Maturati',
+              data: dataInteressi,
+              backgroundColor: BAR_COLORS.interessi,
+              borderWidth: 0,
+              stack: 'montante',
+              borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender ? { duration: 600, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            // Legenda custom in HTML sopra al grafico → quella di Chart.js è disabilitata
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              footerColor: '#373D42',
+              footerFont: { family: 'Manrope, sans-serif', weight: 700, size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: true,
+              boxPadding: 4,
+              callbacks: {
+                title: (items) => `Anno ${dati[items[0].dataIndex].anno}`,
+                label: (ctx) => `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
+                footer: (items) => {
+                  const idx = items[0].dataIndex;
+                  const tot = dataIniziale[idx] + dataVersamenti[idx] + dataInteressi[idx];
+                  return `Totale: ${fmtEuro.format(tot)}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false, color: 'rgba(22, 105, 99, 0.05)' },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                maxRotation: rotateXLabels ? 45 : 0,
+                minRotation: rotateXLabels ? 45 : 0,
+                autoSkip: false,
+                callback: function (_value: any, index: number) {
+                  return showXTick(index) ? labels[index] : '';
+                },
+              },
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(22, 105, 99, 0.15)',
+                lineWidth: 1,
+              },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (value) => formatCurrencyShort(value as number),
+              },
+            },
+          },
+        },
+      });
+      firstRender = false;
     }
 
-    function showTooltip(pt: PuntoAnnuo, rect: DOMRect) {
-      if (!chartCtx) return;
-      const xPx = chartCtx.x(pt.anno);
-      const yPxTotale = chartCtx.y(pt.totale);
-      const yPxInvestito = chartCtx.y(pt.investito);
-
-      const hoverLine = $('ic-chart')!.querySelector('.hover-line') as SVGLineElement | null;
-      const dots = $('ic-chart')!.querySelectorAll('.hover-dot');
-      if (hoverLine) {
-        hoverLine.setAttribute('x1', String(xPx));
-        hoverLine.setAttribute('x2', String(xPx));
-        hoverLine.style.opacity = '0.6';
-      }
-      if (dots[0]) {
-        (dots[0] as SVGCircleElement).setAttribute('cx', String(xPx));
-        (dots[0] as SVGCircleElement).setAttribute('cy', String(yPxTotale));
-        (dots[0] as SVGCircleElement).style.opacity = '1';
-      }
-      if (dots[1]) {
-        (dots[1] as SVGCircleElement).setAttribute('cx', String(xPx));
-        (dots[1] as SVGCircleElement).setAttribute('cy', String(yPxInvestito));
-        (dots[1] as SVGCircleElement).style.opacity = '1';
-      }
-
-      // Posiziona tooltip sopra il punto totale, in coordinate pixel del wrap
-      const ratio = rect.width / chartCtx.W;
-      const px = xPx * ratio;
-      const py = yPxTotale * ratio;
-      tooltipEl.style.left = `${px}px`;
-      tooltipEl.style.top = `${py - 14}px`;
-      tooltipEl.innerHTML = `
-        <div class="tt-anno">Anno ${pt.anno}</div>
-        <div class="tt-row"><span>Investito</span><span>${fmtEuro.format(pt.investito)}</span></div>
-        <div class="tt-row"><span>Totale</span><span>${fmtEuro.format(pt.totale)}</span></div>
-        <div class="tt-row"><span>Interessi</span><span>${fmtEuro.format(pt.interessi)}</span></div>
-      `;
-      tooltipEl.classList.add('is-visible');
-      tooltipEl.setAttribute('aria-hidden', 'false');
-    }
-
-    function hideTooltip() {
-      tooltipEl.classList.remove('is-visible');
-      tooltipEl.setAttribute('aria-hidden', 'true');
-      const hoverLine = $('ic-chart')!.querySelector('.hover-line') as SVGLineElement | null;
-      const dots = $('ic-chart')!.querySelectorAll('.hover-dot');
-      if (hoverLine) hoverLine.style.opacity = '0';
-      dots.forEach((d) => ((d as SVGCircleElement).style.opacity = '0'));
+    /** Aggiorna il fallback testuale per screen reader. */
+    function updateChartFallback(dati: import('~/lib/calcolatori/interesse-composto').DatoBarra[]) {
+      const el = $('ic-chart-fallback');
+      if (!el || !dati.length) return;
+      const last = dati[dati.length - 1];
+      const tot = last.capitaleIniziale + last.versamentiAggiuntivi + last.interessiMaturati;
+      el.textContent =
+        `All'anno ${last.anno}: capitale iniziale ${fmtEuro.format(last.capitaleIniziale)}, ` +
+        `versamenti aggiuntivi ${fmtEuro.format(last.versamentiAggiuntivi)}, ` +
+        `interessi maturati ${fmtEuro.format(last.interessiMaturati)}, ` +
+        `totale ${fmtEuro.format(tot)}.`;
     }
 
     // -------------------- MAIN UPDATE --------------------
-    let lastValidOutput: ReturnType<typeof calcolaInteresseComposto> | null = null;
-
     function getFrequenza(): Frequenza {
       const checked = document.querySelector<HTMLInputElement>(
         'input[name="ic-frequenza"]:checked'
@@ -1132,8 +1053,6 @@ const metadata = {
         anni,
         tasso,
       });
-      lastValidOutput = result;
-
       out.finale.textContent = fmtEuro.format(result.capitaleFinale);
       out.investito.textContent = fmtEuro.format(result.capitaleInvestito);
       out.interessi.textContent = fmtEuro.format(result.interessiMaturati);
@@ -1146,8 +1065,8 @@ const metadata = {
         out.pct.classList.add('is-zero');
       }
 
-      chartCtx = disegnaChart(result.datiAnnui);
-      hideTooltip();
+      disegnaChart(result.datiBarre);
+      updateChartFallback(result.datiBarre);
     }
 
     // -------------------- DEBOUNCE --------------------
@@ -1164,25 +1083,6 @@ const metadata = {
     });
     document.querySelectorAll<HTMLInputElement>('input[name="ic-frequenza"]').forEach((el) => {
       el.addEventListener('change', scheduleUpdate);
-    });
-
-    // Hover sul grafico (mouse + touch)
-    const chartWrap = document.querySelector<HTMLElement>('.calc-ic .chart-wrap');
-    if (chartWrap) {
-      chartWrap.addEventListener('mousemove', (e) => updateHoverFromClientX(e.clientX));
-      chartWrap.addEventListener('mouseleave', hideTooltip);
-      chartWrap.addEventListener('touchstart', (e) => {
-        if (e.touches[0]) updateHoverFromClientX(e.touches[0].clientX);
-      }, { passive: true });
-      chartWrap.addEventListener('touchmove', (e) => {
-        if (e.touches[0]) updateHoverFromClientX(e.touches[0].clientX);
-      }, { passive: true });
-      chartWrap.addEventListener('touchend', hideTooltip);
-    }
-
-    // Ridisegno su resize (i tick adattivi cambiano densità)
-    window.addEventListener('resize', () => {
-      if (lastValidOutput) chartCtx = disegnaChart(lastValidOutput.datiAnnui);
     });
 
     // Primo render

@@ -38,14 +38,27 @@ export interface PuntoAnnuo {
   interessi: number;
 }
 
+/**
+ * Dato per il grafico a barre impilate.
+ * I tre segmenti sommano sempre al montante (totale[k]) di quell'anno.
+ */
+export interface DatoBarra {
+  anno: number;
+  capitaleIniziale: number;
+  versamentiAggiuntivi: number;
+  interessiMaturati: number;
+}
+
 export interface InteresseCompostoOutput {
   capitaleFinale: number;
   capitaleInvestito: number;
   interessiMaturati: number;
   /** Variazione % degli interessi rispetto al capitale investito (NaN se investito = 0). */
   rendimentoPercentuale: number;
-  /** Serie completa { anno, investito, totale, interessi } per popolare il grafico. */
+  /** Serie completa { anno, investito, totale, interessi } per popolare il grafico a linee. */
   datiAnnui: PuntoAnnuo[];
+  /** Serie pronta per il bar chart impilato (3 segmenti per anno). */
+  datiBarre: DatoBarra[];
 }
 
 /**
@@ -68,6 +81,7 @@ export function calcolaInteresseComposto(
   const R = Math.max(0, (input.tasso || 0) / 100);
 
   const datiAnnui: PuntoAnnuo[] = [];
+  const datiBarre: DatoBarra[] = [];
 
   for (let k = 0; k <= N; k++) {
     const investito = C + A * k;
@@ -90,6 +104,12 @@ export function calcolaInteresseComposto(
 
     const interessi = Math.max(0, totale - investito);
     datiAnnui.push({ anno: k, investito, totale, interessi });
+    datiBarre.push({
+      anno: k,
+      capitaleIniziale: C,
+      versamentiAggiuntivi: A * k,
+      interessiMaturati: interessi,
+    });
   }
 
   const finale = datiAnnui[datiAnnui.length - 1];
@@ -105,5 +125,6 @@ export function calcolaInteresseComposto(
     interessiMaturati,
     rendimentoPercentuale,
     datiAnnui,
+    datiBarre,
   };
 }
