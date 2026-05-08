@@ -250,46 +250,72 @@ const metadata = {
     </section>
 
     <!-- ============== GRAFICO 1 — DECUMULAZIONE ============== -->
-    <section class="card chart-card" aria-label="Andamento del patrimonio nel tempo">
-      <div class="chart-header">
-        <h2 class="card-title">Andamento del patrimonio nel tempo</h2>
-        <p class="chart-subtitle" id="rd-chart-subtitle"></p>
-        <fieldset class="chart-toggle" role="radiogroup" aria-label="Vista grafico">
+    <section class="card chart-card" aria-label="Andamento del tuo patrimonio nel tempo">
+      <div class="chart-header chart-header-row">
+        <div>
+          <h2 class="card-title">Andamento del tuo patrimonio nel tempo</h2>
+          <p class="chart-subtitle" id="rd-chart-subtitle"></p>
+        </div>
+        <fieldset class="chart-toggle" role="tablist" aria-label="Vista valori">
           <legend class="sr-only">Vista valori</legend>
-          <label class="chart-toggle-pill">
-            <input type="radio" name="rd-vista" value="nominale" checked />
-            <span>Valori nominali</span>
+          <label class="chart-toggle-pill" role="tab">
+            <input type="radio" name="rd-vista" value="nominale" />
+            <span>Valori nominali (€ correnti)</span>
           </label>
-          <label class="chart-toggle-pill">
-            <input type="radio" name="rd-vista" value="reale" />
-            <span>Valori reali (potere d'acquisto)</span>
+          <label class="chart-toggle-pill" role="tab">
+            <input type="radio" name="rd-vista" value="reale" checked />
+            <span>Valori reali (potere d'acquisto di oggi)</span>
           </label>
         </fieldset>
       </div>
+      <p class="chart-vista-hint" id="rd-vista-hint">
+        Quanto potrai davvero comprare con quel denaro, nei prezzi di oggi.
+      </p>
       <div class="chart-wrap">
-        <canvas id="rd-chart" aria-label="Grafico a linea dell'andamento del patrimonio nel tempo" role="img"></canvas>
+        <canvas id="rd-chart" role="img" aria-label="Grafico a linea dell'andamento del patrimonio nel tempo"></canvas>
       </div>
       <p id="rd-chart-fallback" class="sr-only" aria-live="polite"></p>
     </section>
 
-    <!-- ============== GRAFICO 2 — POTERE D'ACQUISTO (collapse, solo Mod B) ============== -->
-    <section class="how-it-works" id="rd-rendita-section" hidden>
-      <details class="math-details">
-        <summary>
-          <span class="summary-text">Cosa potrai comprare ogni anno con la tua rendita?</span>
-          <span class="summary-icon" aria-hidden="true"></span>
-        </summary>
-        <div class="rendita-content">
-          <p class="rendita-intro">
-            La rendita nominale (sage) cresce con l'inflazione per mantenere costante il potere
-            d'acquisto reale (charcoal): è quello che ti permette di "vivere allo stesso tenore
-            di vita" anno dopo anno.
-          </p>
-          <div class="chart-wrap chart-wrap-secondary">
-            <canvas id="rd-chart-acquisto" aria-label="Grafico a barre del potere d'acquisto della rendita" role="img"></canvas>
-          </div>
-        </div>
-      </details>
+    <!-- ============== GRAFICO 2 — TRE SCENARI ============== -->
+    <section class="card chart-card" aria-label="Confronto tre scenari">
+      <div class="chart-header">
+        <h2 class="card-title">Cosa succede in tre scenari diversi?</h2>
+        <p class="chart-subtitle">
+          Il rendimento dei mercati non è prevedibile. Ecco cosa succederebbe al tuo patrimonio
+          in tre scenari realistici, mantenendo costanti tutti gli altri parametri.
+        </p>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="rd-chart-scenari" role="img" aria-label="Grafico a tre linee per scenario pessimistico, atteso, ottimistico"></canvas>
+      </div>
+      <div class="chart-legend chart-legend-bottom" aria-hidden="true">
+        <span class="legend-item"><span class="legend-swatch swatch-pess"></span><span id="rd-leg-pess">Pessimistico</span></span>
+        <span class="legend-item"><span class="legend-swatch swatch-att"></span><span id="rd-leg-att">Atteso</span></span>
+        <span class="legend-item"><span class="legend-swatch swatch-ott"></span><span id="rd-leg-ott">Ottimistico</span></span>
+      </div>
+      <div class="diagnostic-box" id="rd-diagnostic" role="status">—</div>
+      <p id="rd-chart-scenari-fallback" class="sr-only" aria-live="polite"></p>
+    </section>
+
+    <!-- ============== GRAFICO 3 — CLIFF (condizionale) ============== -->
+    <section class="card cliff-card" id="rd-cliff-section" aria-live="assertive" hidden>
+      <div class="cliff-badge">⚠️ AVVISO IMPORTANTE</div>
+      <h2 class="cliff-title">Il tuo capitale potrebbe esaurirsi prima del previsto</h2>
+      <p class="cliff-subtitle" id="rd-cliff-subtitle">—</p>
+      <div class="chart-wrap chart-wrap-cliff">
+        <canvas id="rd-chart-cliff" role="img" aria-label="Grafico drammatico dell'esaurimento del capitale"></canvas>
+      </div>
+      <div class="cliff-cta">
+        <h3 class="cliff-cta-title">Vuoi capire come evitare questo scenario?</h3>
+        <p class="cliff-cta-text">
+          Una pianificazione professionale può ridurre il rischio di esaurire il capitale.
+          Strategie come la diversificazione del portafoglio, la gestione dinamica dei prelievi
+          (<em>guard rails</em>), e l'integrazione con altre fonti di reddito (pensione
+          integrativa, immobili a reddito) possono fare la differenza.
+        </p>
+        <a href="/contatti" class="btn btn-cliff">Prenota una consulenza gratuita →</a>
+      </div>
     </section>
 
     <!-- ============== COME FUNZIONA ============== -->
@@ -853,13 +879,142 @@ const metadata = {
       color: var(--sage-dark);
     }
 
+    .calc-rd .chart-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .calc-rd .chart-vista-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      margin: 4px 0 14px;
+      font-style: italic;
+    }
     .calc-rd .chart-wrap {
       position: relative;
-      height: 380px;
+      height: 400px;
       padding: 8px 4px 0;
     }
     .calc-rd .chart-wrap canvas { display: block; }
     .calc-rd .chart-wrap-secondary { height: 320px; }
+    .calc-rd .chart-wrap-cliff { height: 360px; }
+
+    /* Chart 2: legenda sotto e box diagnostica */
+    .calc-rd .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 18px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.84rem; color: var(--charcoal);
+    }
+    .calc-rd .legend-item { display: inline-flex; align-items: center; gap: 8px; }
+    .calc-rd .legend-swatch {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border-radius: 3px;
+    }
+    .calc-rd .chart-legend-bottom { margin-top: 12px; justify-content: flex-start; }
+    .calc-rd .swatch-pess { background: var(--ochre); }
+    .calc-rd .swatch-att { background: var(--emerald); }
+    .calc-rd .swatch-ott { background: var(--sage-light); }
+
+    .calc-rd .diagnostic-box {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--sage);
+      border-radius: 6px;
+      font-size: 0.92rem;
+      color: var(--charcoal);
+      line-height: 1.5;
+    }
+    .calc-rd .diagnostic-box.is-warning {
+      background: rgba(171, 127, 98, 0.08);
+      border-left-color: var(--ochre);
+      color: var(--ochre-dark);
+    }
+    .calc-rd .diagnostic-box.is-critical {
+      background: rgba(220, 38, 38, 0.08);
+      border-left-color: #c0392b;
+      color: #c0392b;
+      font-weight: 500;
+    }
+
+    /* Cliff card (condizionale) */
+    .calc-rd .cliff-card {
+      margin-bottom: 24px;
+      border: 2px solid var(--ochre);
+      background: linear-gradient(180deg, rgba(171, 127, 98, 0.06) 0%, white 100%);
+      animation: rd-fade-in 320ms ease-out;
+    }
+    @keyframes rd-fade-in {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .calc-rd .cliff-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--ochre);
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+    .calc-rd .cliff-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: clamp(1.25rem, 3vw, 1.5rem);
+      color: var(--ochre-dark);
+      font-weight: 600;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .cliff-subtitle {
+      color: var(--charcoal);
+      font-size: 0.96rem;
+      line-height: 1.55;
+      margin: 0 0 18px;
+    }
+    .calc-rd .cliff-cta {
+      margin-top: 20px;
+      padding: 18px 20px;
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: 10px;
+    }
+    .calc-rd .cliff-cta-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+    .calc-rd .cliff-cta-text {
+      color: var(--charcoal);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+    .calc-rd .cliff-cta-text em {
+      color: var(--ochre-dark);
+      font-style: italic;
+    }
+    .calc-rd .btn-cliff {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      background: var(--ochre);
+      color: white;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s ease;
+      min-height: 48px;
+    }
+    .calc-rd .btn-cliff:hover { background: var(--ochre-dark); color: white; }
 
     .calc-rd .sr-only {
       position: absolute;
@@ -1072,9 +1227,15 @@ const metadata = {
       .calc-rd .rendita-content { padding: 4px 18px 24px; }
       .calc-rd .btn { width: 100%; }
       .calc-rd .cta-buttons { flex-direction: column; }
-      .calc-rd .chart-wrap { height: 280px; padding: 6px 0 0; }
+      .calc-rd .chart-wrap { height: 320px; padding: 6px 0 0; }
       .calc-rd .chart-wrap-secondary { height: 240px; }
-      .calc-rd .chart-toggle-pill { font-size: 0.78rem; padding: 6px 12px; }
+      .calc-rd .chart-wrap-cliff { height: 320px; }
+      .calc-rd .chart-toggle-pill { font-size: 0.78rem; padding: 8px 12px; }
+      .calc-rd .chart-toggle { width: 100%; }
+      .calc-rd .chart-toggle-pill { flex: 1 1 0; justify-content: center; min-width: 0; }
+      .calc-rd .chart-header-row { flex-direction: column; gap: 12px; }
+      .calc-rd .cliff-card { border-width: 3px; }
+      .calc-rd .btn-cliff { width: 100%; }
     }
   </style>
 
@@ -1084,6 +1245,7 @@ const metadata = {
       ModalitaRendita,
       AndamentoAnnuo,
       OutputRendita,
+      ScenarioCurva,
     } from '~/lib/calcolatori/rendita';
     import {
       Chart,
@@ -1176,34 +1338,61 @@ const metadata = {
       const ereditaSec = $('rd-eredita-section');
       if (ereditaSec) ereditaSec.hidden = !inputs.ereditaToggle.checked;
 
-      const renditaSec = $('rd-rendita-section');
-      if (renditaSec) renditaSec.hidden = modalita !== 'rendita-sostenibile';
-
       const tassoPrelRow = $('rd-row-tasso-prelievo');
       if (tassoPrelRow) tassoPrelRow.hidden = modalita !== 'rendita-sostenibile';
     }
 
-    // -------------------- CHART 1: DECUMULAZIONE --------------------
+    // Aggiorna l'hint sotto il toggle nominale/reale
+    function aggiornaVistaHint(): void {
+      const el = $('rd-vista-hint');
+      if (!el) return;
+      el.textContent = getVista() === 'reale'
+        ? "Quanto potrai davvero comprare con quel denaro, nei prezzi di oggi."
+        : "Il numero che leggerai sul tuo conto: importi in euro correnti, non aggiustati per l'inflazione.";
+    }
+
+    // -------------------- COLORI BRAND --------------------
     const COLORS = {
-      capitale: '#373D42',
-      area: 'rgba(0, 166, 82, 0.15)',
-      ereditaRef: '#166963',
-      esaurito: '#c0392b',
+      emerald: '#00A652',
+      sage: '#166963',
+      sageLight: '#79B9AD',
+      ochre: '#AB7F62',
+      ochreDark: '#8A6449',
+      charcoal: '#373D42',
+      grayText: '#6B7672',
+      red: '#c0392b',
     };
 
     let chart1: import('chart.js').Chart | null = null;
     let chart2: import('chart.js').Chart | null = null;
+    let chart3: import('chart.js').Chart | null = null;
     let firstRender1 = true;
     let firstRender2 = true;
+    let firstRender3 = true;
+
+    // Stato condiviso letto dai callback Chart.js (evita stale closure)
     const currentChart: {
       andamento: AndamentoAnnuo[];
       vista: 'nominale' | 'reale';
       capitaleEsauritoAnno: number | null;
-    } = { andamento: [], vista: 'nominale', capitaleEsauritoAnno: null };
+      capitaleIniziale: number;
+      ereditaAttiva: boolean;
+      ereditaTargetReale: number;
+      inflazione: number;
+      scenarioPess?: ScenarioCurva;
+      scenarioAtt?: ScenarioCurva;
+      scenarioOtt?: ScenarioCurva;
+      scenarioCliff?: ScenarioCurva | null;
+    } = {
+      andamento: [], vista: 'reale', capitaleEsauritoAnno: null,
+      capitaleIniziale: 0, ereditaAttiva: false, ereditaTargetReale: 0, inflazione: 0,
+    };
 
+    // ============== CHART 1: CURVA DI DECUMULAZIONE ==============
     function disegnaChart1(
       andamento: AndamentoAnnuo[],
       vista: 'nominale' | 'reale',
+      capitaleIniziale: number,
       ereditaTargetReale: number,
       ereditaAttiva: boolean,
       capitaleEsauritoAnno: number | null,
@@ -1215,11 +1404,22 @@ const metadata = {
       currentChart.andamento = andamento;
       currentChart.vista = vista;
       currentChart.capitaleEsauritoAnno = capitaleEsauritoAnno;
+      currentChart.capitaleIniziale = capitaleIniziale;
+      currentChart.ereditaAttiva = ereditaAttiva;
+      currentChart.ereditaTargetReale = ereditaTargetReale;
+      currentChart.inflazione = inflazione;
 
       const labels = andamento.map((a) => `Anno ${a.anno}`);
       const dataCap = andamento.map((a) =>
         vista === 'nominale' ? a.capitaleNominale : a.capitaleReale
       );
+      const N = andamento.length - 1;
+      const milestones = new Set([0, Math.round(N / 4), Math.round(N / 2), Math.round((3 * N) / 4), N]);
+
+      // Linea di riferimento orizzontale al capitale iniziale
+      // (in vista nominale resta a capitaleIniziale; in vista reale uguale, perché
+      // anno 0 non è ancora deflattato.)
+      const dataRef = andamento.map(() => capitaleIniziale);
 
       const dataEredita = ereditaAttiva
         ? andamento.map((a) =>
@@ -1231,37 +1431,46 @@ const metadata = {
 
       const datasets: any[] = [
         {
+          label: 'Capitale di partenza',
+          data: dataRef,
+          borderColor: 'rgba(55, 61, 66, 0.5)',
+          borderDash: [4, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+        },
+        {
           label: 'Capitale residuo',
           data: dataCap,
-          borderColor: COLORS.capitale,
-          backgroundColor: COLORS.area,
+          borderColor: COLORS.emerald,
+          backgroundColor: 'rgba(0, 166, 82, 0.15)',
           borderWidth: 3,
           pointRadius: (ctx: any) => {
             const idx = ctx.dataIndex;
-            const lastIdx = andamento.length - 1;
-            if (idx === 0 || idx === lastIdx) return 6;
-            if (capitaleEsauritoAnno !== null && andamento[idx]?.anno === capitaleEsauritoAnno) return 7;
-            return 0;
+            const a = andamento[idx];
+            if (capitaleEsauritoAnno !== null && a?.anno === capitaleEsauritoAnno) return 7;
+            return milestones.has(idx) ? 4 : 0;
           },
           pointBackgroundColor: (ctx: any) => {
-            const idx = ctx.dataIndex;
-            if (capitaleEsauritoAnno !== null && andamento[idx]?.anno === capitaleEsauritoAnno) {
-              return COLORS.esaurito;
-            }
-            return '#00A652';
+            const a = andamento[ctx.dataIndex];
+            return capitaleEsauritoAnno !== null && a?.anno === capitaleEsauritoAnno
+              ? COLORS.red
+              : COLORS.emerald;
           },
           pointBorderColor: '#FFFFFF',
           pointBorderWidth: 2,
-          pointHoverRadius: 8,
+          pointHoverRadius: 7,
           fill: 'origin',
-          tension: 0.18,
+          tension: 0.2,
         },
       ];
       if (dataEredita) {
         datasets.push({
-          label: 'Eredità target',
+          label: 'Target eredità',
           data: dataEredita,
-          borderColor: COLORS.ereditaRef,
+          borderColor: COLORS.sage,
           borderDash: [6, 4],
           borderWidth: 1.5,
           pointRadius: 0,
@@ -1271,10 +1480,17 @@ const metadata = {
         });
       }
 
-      const N = andamento.length;
+      // Asse Y: NON parte da zero
+      const allValues = dataCap.concat([capitaleIniziale]);
+      if (dataEredita) allValues.push(...dataEredita);
+      const minV = Math.min(...allValues);
+      const maxV = Math.max(...allValues);
+      const yMin = Math.max(0, Math.floor(minV * 0.9));
+      const yMax = Math.ceil(maxV * 1.1);
+
       const showXTick = (idx: number): boolean =>
-        N > 30 ? idx % 5 === 0 || idx === N - 1
-        : N > 15 ? idx % 3 === 0 || idx === N - 1
+        N > 30 ? idx % 5 === 0 || idx === N
+        : N > 15 ? idx % 3 === 0 || idx === N
         : true;
 
       if (chart1) {
@@ -1282,6 +1498,8 @@ const metadata = {
         chart1.data.datasets = datasets;
         chart1.setActiveElements([]);
         if (chart1.tooltip) chart1.tooltip.setActiveElements([], { x: 0, y: 0 });
+        const ys = chart1.options.scales?.y as any;
+        if (ys) { ys.min = yMin; ys.max = yMax; }
         const xs = chart1.options.scales?.x as any;
         if (xs?.ticks) {
           xs.ticks.callback = function (_v: unknown, idx: number) {
@@ -1309,31 +1527,34 @@ const metadata = {
               borderWidth: 1,
               titleColor: '#0F4F4A',
               titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
-              bodyColor: '#373D42',
+              bodyColor: COLORS.charcoal,
               bodyFont: { family: 'Manrope, sans-serif', size: 12 },
               padding: 12,
               cornerRadius: 8,
               displayColors: false,
               callbacks: {
                 title: (items) => {
-                  const idx = items[0].dataIndex;
-                  const a = currentChart.andamento[idx];
+                  const a = currentChart.andamento[items[0].dataIndex];
                   return a ? `Anno ${a.anno}` : '';
                 },
                 label: (ctx) => {
-                  const idx = ctx.dataIndex;
-                  const a = currentChart.andamento[idx];
+                  const a = currentChart.andamento[ctx.dataIndex];
                   if (!a) return '';
-                  if (ctx.datasetIndex === 1) {
-                    return `Eredità target: ${fmtEuro.format(Number(ctx.parsed.y))}`;
+                  if (ctx.datasetIndex === 0) return ''; // ref
+                  if (ctx.datasetIndex === 2) {
+                    return `Target eredità: ${fmtEuro.format(Number(ctx.parsed.y))}`;
                   }
                   const lines: string[] = [];
-                  const cap = currentChart.vista === 'nominale' ? a.capitaleNominale : a.capitaleReale;
-                  lines.push(`Capitale residuo: ${fmtEuro.format(cap)}`);
+                  if (currentChart.vista === 'nominale') {
+                    lines.push(`Capitale: ${fmtEuro.format(a.capitaleNominale)}`);
+                    lines.push(`Equivalente in € di oggi: ${fmtEuro.format(a.capitaleReale)}`);
+                  } else {
+                    lines.push(`Potere d'acquisto: ${fmtEuro.format(a.capitaleReale)}`);
+                    lines.push(`Capitale nominale: ${fmtEuro.format(a.capitaleNominale)}`);
+                  }
                   if (a.anno > 0) {
-                    const prelievo = currentChart.vista === 'nominale' ? a.prelievoNominale : a.prelievoReale;
-                    lines.push(`Prelievo dell'anno: ${fmtEuro.format(prelievo)}`);
-                    lines.push(`Inflazione cumulata: ${fmtPct(a.inflazioneCumulata, 1)}`);
+                    lines.push(`Prelievo annuo: ${fmtEuro.format(a.prelievoNominale)}`);
+                    lines.push(`Inflazione cumulata: ${fmtPctSigned(a.inflazioneCumulata, 1)}`);
                   }
                   if (currentChart.capitaleEsauritoAnno !== null && a.anno === currentChart.capitaleEsauritoAnno) {
                     lines.push('⚠ Capitale esaurito qui');
@@ -1348,7 +1569,7 @@ const metadata = {
               grid: { display: false },
               border: { display: false },
               ticks: {
-                color: '#6B7672',
+                color: COLORS.grayText,
                 font: { family: 'Manrope, sans-serif', size: 11 },
                 autoSkip: false,
                 callback: function (_v: any, idx: number) {
@@ -1357,11 +1578,12 @@ const metadata = {
               },
             },
             y: {
-              beginAtZero: true,
+              min: yMin,
+              max: yMax,
               grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
               border: { display: false },
               ticks: {
-                color: '#6B7672',
+                color: COLORS.grayText,
                 font: { family: 'Manrope, sans-serif', size: 11 },
                 callback: (v) => fmtEuroShort(v as number),
               },
@@ -1375,42 +1597,110 @@ const metadata = {
       firstRender1 = false;
     }
 
-    // -------------------- CHART 2: POTERE D'ACQUISTO --------------------
-    function disegnaChart2(andamento: AndamentoAnnuo[]): void {
-      const canvas = $('rd-chart-acquisto') as unknown as HTMLCanvasElement;
-      if (!canvas || !andamento.length) return;
+    // ============== CHART 2: TRE SCENARI ==============
+    function disegnaChart2(
+      pess: ScenarioCurva,
+      att: ScenarioCurva,
+      ott: ScenarioCurva,
+      capitaleIniziale: number
+    ): void {
+      const canvas = $('rd-chart-scenari') as unknown as HTMLCanvasElement;
+      if (!canvas || !att.andamento.length) return;
 
-      const N = andamento.length - 1;
-      const step = N <= 10 ? 1 : N <= 25 ? 5 : 10;
-      const punti = andamento.filter((a) => a.anno > 0 && (a.anno % step === 0 || a.anno === N));
+      currentChart.scenarioPess = pess;
+      currentChart.scenarioAtt = att;
+      currentChart.scenarioOtt = ott;
 
-      const labels = punti.map((p) => `Anno ${p.anno}`);
-      const dataNom = punti.map((p) => p.prelievoNominale);
-      const dataReale = punti.map((p) => p.prelievoReale);
+      const labels = att.andamento.map((a) => `Anno ${a.anno}`);
+      const N = att.andamento.length - 1;
+      // Tutte le serie in valori REALI
+      const dataPess = pess.andamento.map((a) => a.capitaleReale);
+      const dataAtt = att.andamento.map((a) => a.capitaleReale);
+      const dataOtt = ott.andamento.map((a) => a.capitaleReale);
+      const dataRef = att.andamento.map(() => capitaleIniziale);
+
+      const allValues = dataPess.concat(dataAtt, dataOtt, [capitaleIniziale]);
+      const minV = Math.min(...allValues);
+      const maxV = Math.max(...allValues);
+      const yMin = Math.max(0, Math.floor(minV * 0.9));
+      const yMax = Math.ceil(maxV * 1.1);
+
+      const showXTick = (idx: number): boolean =>
+        N > 30 ? idx % 5 === 0 || idx === N
+        : N > 15 ? idx % 3 === 0 || idx === N
+        : true;
+
+      const datasets: any[] = [
+        {
+          label: 'Capitale di partenza',
+          data: dataRef,
+          borderColor: 'rgba(55, 61, 66, 0.4)',
+          borderDash: [4, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+        },
+        // Ottimistico (top boundary della banda)
+        {
+          label: `Ottimistico (${fmtPct(ott.rendimentoUsato, 1)})`,
+          data: dataOtt,
+          borderColor: COLORS.sageLight,
+          backgroundColor: 'rgba(55, 61, 66, 0.08)',
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: 3, // riempi tra ottimistico (idx 1) e pessimistico (idx 3)
+          tension: 0.2,
+        },
+        // Atteso (linea principale)
+        {
+          label: `Atteso (${fmtPct(att.rendimentoUsato, 1)})`,
+          data: dataAtt,
+          borderColor: COLORS.emerald,
+          borderWidth: 3,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          fill: false,
+          tension: 0.2,
+        },
+        // Pessimistico (bottom boundary della banda)
+        {
+          label: `Pessimistico (${fmtPct(pess.rendimentoUsato, 1)})`,
+          data: dataPess,
+          borderColor: COLORS.ochre,
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          fill: false,
+          tension: 0.2,
+        },
+      ];
 
       if (chart2) {
         chart2.data.labels = labels;
-        chart2.data.datasets[0].data = dataNom;
-        chart2.data.datasets[1].data = dataReale;
+        chart2.data.datasets = datasets;
         chart2.setActiveElements([]);
         if (chart2.tooltip) chart2.tooltip.setActiveElements([], { x: 0, y: 0 });
+        const ys = chart2.options.scales?.y as any;
+        if (ys) { ys.min = yMin; ys.max = yMax; }
+        const xs = chart2.options.scales?.x as any;
+        if (xs?.ticks) {
+          xs.ticks.callback = function (_v: unknown, idx: number) {
+            return showXTick(idx) ? labels[idx] : '';
+          };
+        }
         chart2.update('none');
         return;
       }
 
       chart2 = new Chart(canvas, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Rendita nominale', data: dataNom, backgroundColor: '#79B9AD', borderWidth: 0, borderRadius: 4 },
-            { label: 'Rendita reale (€ di oggi)', data: dataReale, backgroundColor: '#373D42', borderWidth: 0, borderRadius: 4 },
-          ],
-        },
+        type: 'line',
+        data: { labels, datasets },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: firstRender2 ? { duration: 600, easing: 'easeOutQuart' } : false,
+          animation: firstRender2 ? { duration: 800, easing: 'easeOutQuart' } : false,
           layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
           interaction: { mode: 'index', intersect: false },
           plugins: {
@@ -1421,12 +1711,30 @@ const metadata = {
               borderWidth: 1,
               titleColor: '#0F4F4A',
               titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
-              bodyColor: '#373D42',
+              bodyColor: COLORS.charcoal,
               bodyFont: { family: 'Manrope, sans-serif', size: 12 },
               padding: 12,
               cornerRadius: 8,
+              displayColors: true,
               callbacks: {
-                label: (ctx) => `${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  return currentChart.scenarioAtt
+                    ? `Anno ${currentChart.scenarioAtt.andamento[idx]?.anno ?? idx}`
+                    : '';
+                },
+                label: (ctx) => {
+                  if (ctx.datasetIndex === 0) return ''; // ref
+                  return `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`;
+                },
+                footer: (items) => {
+                  if (!currentChart.scenarioPess || !currentChart.scenarioOtt) return '';
+                  const idx = items[0].dataIndex;
+                  const pess = currentChart.scenarioPess.andamento[idx]?.capitaleReale ?? 0;
+                  const ott = currentChart.scenarioOtt.andamento[idx]?.capitaleReale ?? 0;
+                  const diff = ott - pess;
+                  return `Δ ottimistico − pessimistico: ${fmtEuro.format(diff)}`;
+                },
               },
             },
           },
@@ -1434,14 +1742,22 @@ const metadata = {
             x: {
               grid: { display: false },
               border: { display: false },
-              ticks: { color: '#6B7672', font: { family: 'Manrope, sans-serif', size: 11 } },
+              ticks: {
+                color: COLORS.grayText,
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                autoSkip: false,
+                callback: function (_v: any, idx: number) {
+                  return showXTick(idx) ? labels[idx] : '';
+                },
+              },
             },
             y: {
-              beginAtZero: true,
+              min: yMin,
+              max: yMax,
               grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
               border: { display: false },
               ticks: {
-                color: '#6B7672',
+                color: COLORS.grayText,
                 font: { family: 'Manrope, sans-serif', size: 11 },
                 callback: (v) => fmtEuroShort(v as number),
               },
@@ -1455,9 +1771,137 @@ const metadata = {
       firstRender2 = false;
     }
 
+    // ============== CHART 3: CLIFF (condizionale) ==============
+    function disegnaChart3(scenario: ScenarioCurva): void {
+      const canvas = $('rd-chart-cliff') as unknown as HTMLCanvasElement;
+      if (!canvas || !scenario.andamento.length) return;
+
+      currentChart.scenarioCliff = scenario;
+
+      const labels = scenario.andamento.map((a) => `Anno ${a.anno}`);
+      const N = scenario.andamento.length - 1;
+      const dataCap = scenario.andamento.map((a) => a.capitaleReale);
+      const annoCriticoIdx = scenario.andamento.findIndex(
+        (a) => a.anno === scenario.capitaleEsauritoAnno
+      );
+
+      const showXTick = (idx: number): boolean =>
+        N > 30 ? idx % 5 === 0 || idx === N
+        : N > 15 ? idx % 3 === 0 || idx === N
+        : true;
+
+      const datasets: any[] = [
+        {
+          label: 'Capitale residuo (peggior scenario)',
+          data: dataCap,
+          borderColor: COLORS.ochre,
+          backgroundColor: 'rgba(171, 127, 98, 0.25)',
+          borderWidth: 4,
+          pointRadius: (ctx: any) => (ctx.dataIndex === annoCriticoIdx ? 8 : 0),
+          pointBackgroundColor: COLORS.red,
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointHoverRadius: 9,
+          fill: 'origin',
+          tension: 0,
+        },
+      ];
+
+      if (chart3) {
+        chart3.data.labels = labels;
+        chart3.data.datasets = datasets;
+        chart3.setActiveElements([]);
+        if (chart3.tooltip) chart3.tooltip.setActiveElements([], { x: 0, y: 0 });
+        const xs = chart3.options.scales?.x as any;
+        if (xs?.ticks) {
+          xs.ticks.callback = function (_v: unknown, idx: number) {
+            return showXTick(idx) ? labels[idx] : '';
+          };
+        }
+        chart3.update('none');
+        return;
+      }
+
+      chart3 = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender3 ? { duration: 700, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(171, 127, 98, 0.4)',
+              borderWidth: 1,
+              titleColor: COLORS.ochreDark,
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: COLORS.charcoal,
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                title: (items) => {
+                  const sc = currentChart.scenarioCliff;
+                  if (!sc) return '';
+                  const a = sc.andamento[items[0].dataIndex];
+                  return a ? `Anno ${a.anno}` : '';
+                },
+                label: (ctx) => {
+                  const sc = currentChart.scenarioCliff;
+                  if (!sc) return '';
+                  const a = sc.andamento[ctx.dataIndex];
+                  if (!a) return '';
+                  const v = Number(ctx.parsed.y);
+                  if (v <= 0.5 && sc.capitaleEsauritoAnno !== null) {
+                    const anniSenza = a.anno - sc.capitaleEsauritoAnno;
+                    return anniSenza > 0
+                      ? `0 € — Capitale esaurito da ${anniSenza} ann${anniSenza === 1 ? 'o' : 'i'}`
+                      : 'Capitale esaurito';
+                  }
+                  return `Capitale residuo: ${fmtEuro.format(v)}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: COLORS.grayText,
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                autoSkip: false,
+                callback: function (_v: any, idx: number) {
+                  return showXTick(idx) ? labels[idx] : '';
+                },
+              },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(171, 127, 98, 0.15)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: COLORS.grayText,
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+      requestAnimationFrame(() => {
+        if (chart3 && chart3.options) (chart3.options as any).animation = false;
+      });
+      firstRender3 = false;
+    }
+
     // -------------------- MAIN --------------------
     let lastResult: OutputRendita | null = null;
-    let chart2WhenOpen = false;
 
     function aggiorna(): void {
       setVisibility();
@@ -1618,12 +2062,88 @@ const metadata = {
         }
       }
 
-      // ----- Disegna grafici -----
-      const ereditaTargetReale = ereditaToggle && Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0;
-      disegnaChart1(result.andamento, getVista(), ereditaTargetReale, ereditaToggle, result.capitaleEsauritoAnno, inflazione);
+      // ----- Capitale iniziale (per linea di riferimento) -----
+      const capitaleIniziale =
+        modalita === 'capitale-necessario'
+          ? (result.capitaleNecessario ?? 0)
+          : (capitaleDisponibile ?? 0);
 
-      if (modalita === 'rendita-sostenibile' && chart2WhenOpen) {
-        disegnaChart2(result.andamento);
+      // ----- Aggiorna legende e hint -----
+      aggiornaVistaHint();
+      const legPess = $('rd-leg-pess');
+      const legAtt = $('rd-leg-att');
+      const legOtt = $('rd-leg-ott');
+      if (legPess) legPess.textContent = `Pessimistico (${fmtPct(result.scenari.pessimistico.rendimentoUsato, 1)})`;
+      if (legAtt)  legAtt.textContent  = `Atteso (${fmtPct(result.scenari.atteso.rendimentoUsato, 1)})`;
+      if (legOtt)  legOtt.textContent  = `Ottimistico (${fmtPct(result.scenari.ottimistico.rendimentoUsato, 1)})`;
+
+      // ----- Disegna grafici 1 e 2 (sempre) -----
+      const ereditaTargetReale = ereditaToggle && Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0;
+      disegnaChart1(
+        result.andamento,
+        getVista(),
+        capitaleIniziale,
+        ereditaTargetReale,
+        ereditaToggle,
+        result.capitaleEsauritoAnno,
+        inflazione
+      );
+      disegnaChart2(
+        result.scenari.pessimistico,
+        result.scenari.atteso,
+        result.scenari.ottimistico,
+        capitaleIniziale
+      );
+
+      // ----- Diagnostic box (sotto grafico 2) -----
+      const diag = $('rd-diagnostic');
+      const attEsau = result.scenari.atteso.capitaleEsauritoAnno;
+      const pessEsau = result.scenari.pessimistico.capitaleEsauritoAnno;
+      if (diag) {
+        diag.classList.remove('is-warning', 'is-critical');
+        if (attEsau !== null) {
+          diag.classList.add('is-critical');
+          diag.textContent = `⚠️ Critico: anche con rendimento atteso il capitale si esaurisce all'anno ${attEsau}. Riconsidera spese o orizzonte temporale.`;
+        } else if (pessEsau !== null) {
+          diag.classList.add('is-warning');
+          diag.textContent = `⚠️ Attenzione: in caso di mercati sfavorevoli (rendimento ${fmtPct(result.scenari.pessimistico.rendimentoUsato, 1)}) il tuo capitale potrebbe esaurirsi all'anno ${pessEsau}.`;
+        } else {
+          diag.textContent = `✓ Il tuo piano sembra robusto: anche in scenario pessimistico (${fmtPct(result.scenari.pessimistico.rendimentoUsato, 1)}) il capitale resiste fino all'anno ${anni}.`;
+        }
+      }
+
+      // ----- Cliff card (condizionale) -----
+      const cliffSection = $('rd-cliff-section');
+      const cliffSubtitle = $('rd-cliff-subtitle');
+      if (cliffSection && cliffSubtitle) {
+        const wasHidden = cliffSection.hidden;
+        if (result.almenoUnoScenarioEsaurisce && result.scenarioPiuPessimisticoCheEsaurisce) {
+          const sc = result.scenarioPiuPessimisticoCheEsaurisce;
+          cliffSection.hidden = false;
+          if (attEsau !== null) {
+            cliffSubtitle.textContent =
+              `Anche nello scenario ATTESO, il capitale si esaurirebbe all'anno ${attEsau}. ` +
+              `Questo è un segnale forte di pianificazione insostenibile.`;
+          } else {
+            cliffSubtitle.textContent =
+              `Nello scenario pessimistico (rendimento ${fmtPct(sc.rendimentoUsato, 1)}), ` +
+              `il capitale si esaurirebbe all'anno ${sc.capitaleEsauritoAnno} (su ${anni} richiesti).`;
+          }
+          disegnaChart3(sc);
+          // Scroll automatico solo se la card era nascosta E non siamo su mobile
+          if (wasHidden && window.innerWidth > 880) {
+            requestAnimationFrame(() => {
+              cliffSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+          }
+        } else {
+          cliffSection.hidden = true;
+          if (chart3) {
+            chart3.destroy();
+            chart3 = null;
+            firstRender3 = true;
+          }
+        }
       }
     }
 
@@ -1662,32 +2182,27 @@ const metadata = {
 
     inputs.vistaRadios.forEach((el) =>
       el.addEventListener('change', () => {
+        aggiornaVistaHint();
         if (lastResult) {
-          const ereditaToggle = inputs.ereditaToggle.checked;
-          const ereditaTarget = parseNum(inputs.ereditaTarget.value);
+          const ereditaToggleCk = inputs.ereditaToggle.checked;
+          const ereditaTargetVal = parseNum(inputs.ereditaTarget.value);
           const inflazione = parseNum(inputs.inflazione.value) || 0;
-          const ereditaTargetReale = ereditaToggle && Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0;
+          const ereditaTargetReale = ereditaToggleCk && Number.isFinite(ereditaTargetVal) ? Math.max(0, ereditaTargetVal) : 0;
+          const capitaleIniziale = lastResult.modalita === 'capitale-necessario'
+            ? (lastResult.capitaleNecessario ?? 0)
+            : (parseNum(inputs.capitale.value) || 0);
           disegnaChart1(
             lastResult.andamento,
             getVista(),
+            capitaleIniziale,
             ereditaTargetReale,
-            ereditaToggle,
+            ereditaToggleCk,
             lastResult.capitaleEsauritoAnno,
             inflazione
           );
         }
       })
     );
-
-    const renditaDetails = document.querySelector<HTMLDetailsElement>('#rd-rendita-section details');
-    if (renditaDetails) {
-      renditaDetails.addEventListener('toggle', () => {
-        if (renditaDetails.open && lastResult && getModalita() === 'rendita-sostenibile') {
-          chart2WhenOpen = true;
-          disegnaChart2(lastResult.andamento);
-        }
-      });
-    }
 
     aggiorna();
   </script>

@@ -57,6 +57,19 @@ export interface ConfrontoRegola4 {
   differenzaPerc: number;
 }
 
+export interface ScenarioCurva {
+  rendimentoUsato: number;            // % annuo nominale netto
+  label: 'Pessimistico' | 'Atteso' | 'Ottimistico';
+  andamento: AndamentoAnnuo[];
+  capitaleEsauritoAnno: number | null;
+}
+
+export interface CurvaPotereAcquisto {
+  anno: number;
+  valoreNominale: number;
+  valoreReale: number;
+}
+
 export interface OutputRendita {
   ok: boolean;
   errore?: string;
@@ -73,7 +86,19 @@ export interface OutputRendita {
   capitaleEsauritoAnno: number | null;
   confrontoRegola4Percento: ConfrontoRegola4;
   andamento: AndamentoAnnuo[];
+  curvaPotereAcquisto: CurvaPotereAcquisto[];
+  scenari: {
+    pessimistico: ScenarioCurva;
+    atteso: ScenarioCurva;
+    ottimistico: ScenarioCurva;
+  };
+  almenoUnoScenarioEsaurisce: boolean;
+  scenarioPiuPessimisticoCheEsaurisce: ScenarioCurva | null;
   warning: string[];
+}
+
+function emptyScenario(label: ScenarioCurva['label'], rendimentoUsato: number): ScenarioCurva {
+  return { rendimentoUsato, label, andamento: [], capitaleEsauritoAnno: null };
 }
 
 function emptyOutput(errore: string, modalita: ModalitaRendita): OutputRendita {
@@ -94,8 +119,65 @@ function emptyOutput(errore: string, modalita: ModalitaRendita): OutputRendita {
       differenzaPerc: 0,
     },
     andamento: [],
+    curvaPotereAcquisto: [],
+    scenari: {
+      pessimistico: emptyScenario('Pessimistico', 0),
+      atteso: emptyScenario('Atteso', 0),
+      ottimistico: emptyScenario('Ottimistico', 0),
+    },
+    almenoUnoScenarioEsaurisce: false,
+    scenarioPiuPessimisticoCheEsaurisce: null,
     warning: [errore],
   };
+}
+
+// Simulazione iterativa anno-per-anno con un dato rendimento r (decimale).
+// Usata sia per lo scenario "atteso" che per pessimistico/ottimistico.
+function simulaScenario(args: {
+  capitaleIniziale: number;
+  prelievoBase: number;
+  N: number;
+  r: number;
+  inf: number;
+  label: ScenarioCurva['label'];
+  rendimentoUsatoPerc: number;
+}): ScenarioCurva {
+  const { capitaleIniziale, prelievoBase, N, r, inf, label, rendimentoUsatoPerc } = args;
+  const andamento: AndamentoAnnuo[] = [];
+  andamento.push({
+    anno: 0,
+    capitaleNominale: capitaleIniziale,
+    capitaleReale: capitaleIniziale,
+    prelievoNominale: 0,
+    prelievoReale: 0,
+    inflazioneCumulata: 0,
+  });
+
+  let capitale = capitaleIniziale;
+  let capitaleEsauritoAnno: number | null = null;
+
+  for (let k = 1; k <= N; k++) {
+    let prelievoNom = prelievoBase * Math.pow(1 + inf, k - 1);
+    const capDopoRendimento = capitale * (1 + r);
+    let nuovoCap = capDopoRendimento - prelievoNom;
+    if (nuovoCap < 0) {
+      if (capitaleEsauritoAnno === null) capitaleEsauritoAnno = k;
+      prelievoNom = Math.max(0, capDopoRendimento);
+      nuovoCap = 0;
+    }
+    capitale = nuovoCap;
+    const inflFactor = Math.pow(1 + inf, k);
+    andamento.push({
+      anno: k,
+      capitaleNominale: capitale,
+      capitaleReale: capitale / inflFactor,
+      prelievoNominale: prelievoNom,
+      prelievoReale: capitaleEsauritoAnno !== null && k > capitaleEsauritoAnno ? 0 : prelievoBase,
+      inflazioneCumulata: (inflFactor - 1) * 100,
+    });
+  }
+
+  return { rendimentoUsato: rendimentoUsatoPerc, label, andamento, capitaleEsauritoAnno };
 }
 
 export function calcolaRendita(input: InputRendita): OutputRendita {
@@ -162,44 +244,46 @@ export function calcolaRendita(input: InputRendita): OutputRendita {
     prelievoBase = r_annua;
   }
 
-  // -------- Simulazione iterativa --------
-  const andamento: AndamentoAnnuo[] = [];
-  andamento.push({
-    anno: 0,
-    capitaleNominale: capitaleIniziale,
-    capitaleReale: capitaleIniziale,
-    prelievoNominale: 0,
-    prelievoReale: 0,
-    inflazioneCumulata: 0,
+  // -------- Tre scenari --------
+  // Atteso: usa il rendimento dell'utente. Pessimistico: r-2pp. Ottimistico: r+2pp.
+  // Tutti partono dallo stesso capitaleIniziale e prelievoBase: stress test sul rendimento.
+  const rendimentoAttesoPerc = input.rendimentoNettoPerc;
+  const rPessDecimal = (rendimentoAttesoPerc - 2) / 100;
+  const rOttDecimal = (rendimentoAttesoPerc + 2) / 100;
+
+  const atteso = simulaScenario({
+    capitaleIniziale, prelievoBase, N, r, inf,
+    label: 'Atteso', rendimentoUsatoPerc: rendimentoAttesoPerc,
+  });
+  const pessimistico = simulaScenario({
+    capitaleIniziale, prelievoBase, N, r: rPessDecimal, inf,
+    label: 'Pessimistico', rendimentoUsatoPerc: rendimentoAttesoPerc - 2,
+  });
+  const ottimistico = simulaScenario({
+    capitaleIniziale, prelievoBase, N, r: rOttDecimal, inf,
+    label: 'Ottimistico', rendimentoUsatoPerc: rendimentoAttesoPerc + 2,
   });
 
-  let capitale = capitaleIniziale;
-  let totalePrelevato = 0;
-  let capitaleEsauritoAnno: number | null = null;
+  const andamento = atteso.andamento;
+  const capitaleEsauritoAnno = atteso.capitaleEsauritoAnno;
+  const totalePrelevato = andamento.reduce((s, a) => s + a.prelievoNominale, 0);
 
-  for (let k = 1; k <= N; k++) {
-    let prelievoNom = prelievoBase * Math.pow(1 + inf, k - 1);
-    const capDopoRendimento = capitale * (1 + r);
-    let nuovoCap = capDopoRendimento - prelievoNom;
-    if (nuovoCap < 0) {
-      if (capitaleEsauritoAnno === null) capitaleEsauritoAnno = k;
-      // Ultimo prelievo "parziale" pari al capitale residuo dopo la crescita
-      prelievoNom = Math.max(0, capDopoRendimento);
-      nuovoCap = 0;
-    }
-    capitale = nuovoCap;
-    totalePrelevato += prelievoNom;
-    const inflFactor = Math.pow(1 + inf, k);
-    andamento.push({
-      anno: k,
-      capitaleNominale: capitale,
-      capitaleReale: capitale / inflFactor,
-      prelievoNominale: prelievoNom,
-      // Prelievo reale: per convenzione = base (è "S in valore di anno 1")
-      prelievoReale: capitaleEsauritoAnno !== null && k > capitaleEsauritoAnno ? 0 : prelievoBase,
-      inflazioneCumulata: (inflFactor - 1) * 100,
-    });
-  }
+  const almenoUnoScenarioEsaurisce =
+    atteso.capitaleEsauritoAnno !== null || pessimistico.capitaleEsauritoAnno !== null;
+  // Priorità: l'atteso che esaurisce è "peggiore" (più allarmante) del solo pessimistico
+  const scenarioPiuPessimisticoCheEsaurisce: ScenarioCurva | null =
+    atteso.capitaleEsauritoAnno !== null
+      ? atteso
+      : pessimistico.capitaleEsauritoAnno !== null
+        ? pessimistico
+        : null;
+
+  // Curva potere d'acquisto (proiezione dello scenario atteso, valori N e R per anno)
+  const curvaPotereAcquisto: CurvaPotereAcquisto[] = andamento.map((a) => ({
+    anno: a.anno,
+    valoreNominale: a.capitaleNominale,
+    valoreReale: a.capitaleReale,
+  }));
 
   const tassoPrelevamentoIniziale =
     capitaleIniziale > 0 ? (prelievoBase / capitaleIniziale) * 100 : 0;
@@ -262,6 +346,10 @@ export function calcolaRendita(input: InputRendita): OutputRendita {
       differenzaPerc,
     },
     andamento,
+    curvaPotereAcquisto,
+    scenari: { pessimistico, atteso, ottimistico },
+    almenoUnoScenarioEsaurisce,
+    scenarioPiuPessimisticoCheEsaurisce,
     warning: warnings,
   };
 }
