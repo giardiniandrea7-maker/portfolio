@@ -873,7 +873,19 @@ const metadata = {
     let chartInstance: import('chart.js').Chart | null = null;
     let firstRender = true;
 
-    function disegnaChart(dati: import('~/lib/calcolatori/interesse-composto').DatoBarra[]): void {
+    // Stato corrente del grafico — i callback del tooltip leggono SEMPRE da qui,
+    // così quando cambia N (o qualunque altro input) non restano agganciati alla
+    // closure del primo render. È la causa principale del bug del tooltip stale.
+    type DatoBarra = import('~/lib/calcolatori/interesse-composto').DatoBarra;
+    const currentChart: {
+      dati: DatoBarra[];
+      labels: string[];
+      iniziale: number[];
+      versamenti: number[];
+      interessi: number[];
+    } = { dati: [], labels: [], iniziale: [], versamenti: [], interessi: [] };
+
+    function disegnaChart(dati: DatoBarra[]): void {
       const canvas = $('ic-chart') as unknown as HTMLCanvasElement;
       if (!canvas || !dati.length) return;
 
@@ -887,13 +899,24 @@ const metadata = {
       const dataVersamenti = dati.map((d) => d.versamentiAggiuntivi);
       const dataInteressi = dati.map((d) => d.interessiMaturati);
 
-      // Update veloce senza animazione se il chart esiste già (no flicker durante typing)
+      // Aggiorna lo stato condiviso PRIMA di toccare il chart: i callback
+      // del tooltip lo leggeranno via riferimento, sempre fresco.
+      const previousLength = currentChart.labels.length;
+      currentChart.dati = dati;
+      currentChart.labels = labels;
+      currentChart.iniziale = dataIniziale;
+      currentChart.versamenti = dataVersamenti;
+      currentChart.interessi = dataInteressi;
+
+      // Update di un'istanza esistente
       if (chartInstance) {
         chartInstance.data.labels = labels;
         chartInstance.data.datasets[0].data = dataIniziale;
         chartInstance.data.datasets[1].data = dataVersamenti;
         chartInstance.data.datasets[2].data = dataInteressi;
-        // Aggiorna scale config (rotazione X) per cambi di N
+
+        // Aggiorna config scala X (rotazione + callback tick) — il callback
+        // chiude su `labels` e `showXTick` locali, quindi va riscritto ad ogni update.
         const xScale = chartInstance.options.scales?.x as any;
         if (xScale?.ticks) {
           xScale.ticks.maxRotation = rotateXLabels ? 45 : 0;
@@ -902,7 +925,19 @@ const metadata = {
             return showXTick(index) ? labels[index] : '';
           };
         }
-        chartInstance.update('none');
+
+        // Reset dello stato hover/tooltip per evitare l'ultima barra "evidenziata"
+        // o tooltip persistenti dopo lo swap dei dati.
+        chartInstance.setActiveElements([]);
+        if (chartInstance.tooltip) {
+          chartInstance.tooltip.setActiveElements([], { x: 0, y: 0 });
+        }
+
+        // Se è cambiato il numero di barre, serve l'update pieno (rebuild scale e
+        // ticks). Altrimenti basta lo skip animazione per evitare flicker durante
+        // la digitazione di tasso/capitale.
+        const labelsChanged = previousLength !== labels.length;
+        chartInstance.update(labelsChanged ? undefined : 'none');
         return;
       }
 
@@ -961,11 +996,21 @@ const metadata = {
               displayColors: true,
               boxPadding: 4,
               callbacks: {
-                title: (items) => `Anno ${dati[items[0].dataIndex].anno}`,
-                label: (ctx) => `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
+                // I callback leggono da `currentChart` (mutabile) e non dalle
+                // array `dati`/`dataXxx` del primo render → no stale closure.
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  const punto = currentChart.dati[idx];
+                  return punto ? `Anno ${punto.anno}` : '';
+                },
+                label: (ctx) =>
+                  `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
                 footer: (items) => {
                   const idx = items[0].dataIndex;
-                  const tot = dataIniziale[idx] + dataVersamenti[idx] + dataInteressi[idx];
+                  const tot =
+                    (currentChart.iniziale[idx] ?? 0) +
+                    (currentChart.versamenti[idx] ?? 0) +
+                    (currentChart.interessi[idx] ?? 0);
                   return `Totale: ${fmtEuro.format(tot)}`;
                 },
               },
@@ -1003,6 +1048,15 @@ const metadata = {
             },
           },
         },
+      });
+
+      // Dopo il primo render disattivo l'animazione globale: i full update()
+      // (necessari quando cambia N) non avranno più la transizione 600ms,
+      // così la digitazione veloce sull'input "anni" non causa flicker.
+      requestAnimationFrame(() => {
+        if (chartInstance && chartInstance.options) {
+          (chartInstance.options as any).animation = false;
+        }
       });
       firstRender = false;
     }
