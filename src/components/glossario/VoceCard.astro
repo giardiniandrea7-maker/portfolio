@@ -1,0 +1,82 @@
+---
+import { CATEGORIE, LIVELLI, type VoceGlossario } from '~/data/glossario';
+
+interface Props {
+  voce: VoceGlossario;
+  /** Mostra il badge categoria (in basso). Default: true. */
+  showCategoria?: boolean;
+}
+
+const { voce, showCategoria = true } = Astro.props;
+const liv = LIVELLI[voce.livello];
+
+// Trafiletto della frase essenziale: prime 2 righe ~ 160 caratteri.
+function trafiletto(text: string, max = 160): string {
+  // Strippa il markdown inline per l'anteprima.
+  const stripped = text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  if (stripped.length <= max) return stripped;
+  // Tronca all'ultimo spazio prima del limite per non spezzare a metà parola.
+  const truncated = stripped.slice(0, max);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
+}
+
+const livelloClass = {
+  sage:  'bg-[var(--aw-color-primary)]/10 text-[var(--aw-color-primary)] border-[var(--aw-color-primary)]/30',
+  ochre: 'bg-[var(--aw-color-accent)]/15 text-[var(--aw-color-accent)] border-[var(--aw-color-accent)]/30',
+  red:   'bg-[rgba(192,57,43,0.10)] text-[#A04032] border-[#c0392b]/30',
+}[liv.color];
+---
+
+<a
+  href={`/glossario/${voce.slug}`}
+  data-glossario-card
+  data-titolo={voce.titolo.toLowerCase()}
+  data-sigla={voce.sigla?.toLowerCase() ?? ''}
+  data-categoria={voce.categoria}
+  data-livello={voce.livello}
+  class="group relative flex flex-col bg-white rounded-2xl border border-[var(--aw-color-primary)]/15 hover:border-[var(--aw-color-primary)]/50 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 p-6 h-full focus:outline-none focus:ring-2 focus:ring-[var(--aw-color-primary)]/40 focus:ring-offset-2"
+  aria-label={`Apri voce: ${voce.titolo}${voce.sigla ? ` (${voce.sigla})` : ''}`}
+>
+  <!-- Badge livello in alto a destra -->
+  <span class:list={['absolute top-4 right-4 inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full border', livelloClass]}>
+    <span aria-hidden="true">{liv.emoji}</span>
+    <span>{liv.label}</span>
+  </span>
+
+  <!-- Titolo -->
+  <h3 class="font-heading text-xl md:text-2xl font-semibold text-[var(--aw-color-text-heading)] leading-snug pr-20 mb-1">
+    {voce.titolo}
+  </h3>
+
+  <!-- Sigla (se presente) -->
+  {voce.sigla && (
+    <p class="text-sm text-[var(--aw-color-primary)] font-medium mb-3">
+      {voce.sigla}
+    </p>
+  )}
+
+  <!-- Trafiletto della frase essenziale -->
+  <p class="text-base text-[var(--aw-color-text-muted)] leading-relaxed mb-5 flex-grow">
+    {trafiletto(voce.fraseEssenziale)}
+  </p>
+
+  <!-- Categoria badge in basso + freccia -->
+  <div class="flex items-center justify-between mt-auto pt-3 border-t border-[var(--aw-color-primary)]/10">
+    {showCategoria ? (
+      <span class="inline-block text-xs font-semibold tracking-[0.08em] uppercase text-[var(--aw-color-primary)]/80 bg-[var(--aw-color-primary)]/8 px-2.5 py-1 rounded-full">
+        {CATEGORIE[voce.categoria]}
+      </span>
+    ) : <span></span>}
+    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)] group-hover:gap-2.5 transition-all">
+      Apri
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </span>
+  </div>
+</a>

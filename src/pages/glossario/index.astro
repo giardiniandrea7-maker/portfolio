@@ -1,0 +1,270 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import VoceCard from '~/components/glossario/VoceCard.astro';
+import {
+  CATEGORIE,
+  LIVELLI,
+  getVociPubblicate,
+  getVociByCategoria,
+  getVociByLivello,
+  getVociPerLettera,
+  type Categoria,
+  type Livello,
+} from '~/data/glossario';
+
+const totale = getVociPubblicate().length;
+const perCategoria = getVociByCategoria();
+const perLivello = getVociByLivello();
+const perLettera = getVociPerLettera();
+
+const metadata = {
+  title: 'Glossario finanziario | Andrea Giardini',
+  description:
+    "Glossario di finanza personale spiegato con chiarezza: TAEG, ETF, BTP, inflazione, spread, previdenza complementare e altri concetti chiave per gestire bene il tuo denaro.",
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- ===================== HERO ===================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-4">Risorse</p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.1] font-heading">
+        Glossario finanziario
+      </h1>
+      <p class="text-lg md:text-xl text-[var(--aw-color-text-muted)] leading-relaxed max-w-2xl mx-auto">
+        I concetti finanziari più importanti, spiegati con chiarezza. Nessun gergo inutile,
+        tanti esempi concreti, e per ogni voce gli errori più comuni che vedo nei miei clienti.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== SEARCH + FILTERS + GRID ===================== -->
+  <section class="bg-cream py-12 md:py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Barra di ricerca (sticky su mobile durante scroll) -->
+      <div class="sticky top-2 z-20 mb-6 md:static md:top-auto md:z-auto">
+        <label for="glossario-search" class="sr-only">Cerca un termine</label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--aw-color-text-muted)]" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <input
+            type="search"
+            id="glossario-search"
+            class="w-full pl-12 pr-4 h-12 md:h-14 border border-[var(--aw-color-primary)]/20 bg-white rounded-2xl font-sans text-base text-[var(--aw-color-text-heading)] placeholder:text-[var(--aw-color-text-muted)] focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-2 focus:ring-[var(--aw-color-primary)]/20 shadow-sm transition-all"
+            placeholder="Cerca un termine (es. TAEG, ETF, spread...)"
+            aria-controls="glossario-grid"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <!-- Tab filtri -->
+      <div role="tablist" aria-label="Modalità di visualizzazione" class="flex flex-wrap gap-2 mb-8 border-b border-[var(--aw-color-primary)]/15 pb-px">
+        <button
+          type="button"
+          role="tab"
+          id="tab-categoria"
+          aria-selected="true"
+          aria-controls="view-categoria"
+          data-filter="categoria"
+          class="px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors aria-[selected=true]:border-[var(--aw-color-primary)] aria-[selected=true]:text-[var(--aw-color-primary)] aria-[selected=false]:border-transparent aria-[selected=false]:text-[var(--aw-color-text-muted)] hover:text-[var(--aw-color-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aw-color-primary)]/30 focus-visible:ring-offset-1 rounded-sm"
+        >
+          Per categoria
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-alfabetico"
+          aria-selected="false"
+          aria-controls="view-alfabetico"
+          data-filter="alfabetico"
+          class="px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors aria-[selected=true]:border-[var(--aw-color-primary)] aria-[selected=true]:text-[var(--aw-color-primary)] aria-[selected=false]:border-transparent aria-[selected=false]:text-[var(--aw-color-text-muted)] hover:text-[var(--aw-color-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aw-color-primary)]/30 focus-visible:ring-offset-1 rounded-sm"
+        >
+          Alfabetico A–Z
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-livello"
+          aria-selected="false"
+          aria-controls="view-livello"
+          data-filter="livello"
+          class="px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors aria-[selected=true]:border-[var(--aw-color-primary)] aria-[selected=true]:text-[var(--aw-color-primary)] aria-[selected=false]:border-transparent aria-[selected=false]:text-[var(--aw-color-text-muted)] hover:text-[var(--aw-color-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aw-color-primary)]/30 focus-visible:ring-offset-1 rounded-sm"
+        >
+          Per livello
+        </button>
+      </div>
+
+      <!-- Empty-state ricerca -->
+      <div id="glossario-empty" class="hidden text-center py-12">
+        <p class="text-lg text-[var(--aw-color-text-muted)]">Nessun termine corrisponde alla tua ricerca.</p>
+        <p class="mt-2 text-sm text-[var(--aw-color-text-muted)]">Prova con un'altra parola, o suggerisci il termine in fondo alla pagina.</p>
+      </div>
+
+      <!-- Container delle 3 viste -->
+      <div id="glossario-grid">
+
+        {totale === 0 && (
+          <p class="text-center py-12 text-[var(--aw-color-text-muted)]">
+            Le voci del glossario verranno aggiunte a breve.
+          </p>
+        )}
+
+        <!-- VISTA "Per categoria" (default visibile) -->
+        <div id="view-categoria" role="tabpanel" aria-labelledby="tab-categoria" data-view="categoria">
+          {perCategoria.map(({ categoria, voci }) => (
+            <div class="mb-12 last:mb-0" data-group data-group-key={`cat-${categoria}`}>
+              <div class="flex items-baseline justify-between gap-4 mb-5">
+                <h2 class="font-heading text-2xl md:text-3xl font-semibold text-[var(--aw-color-text-heading)]">
+                  {CATEGORIE[categoria]}
+                </h2>
+                <span class="text-sm text-[var(--aw-color-text-muted)]" data-group-count>
+                  {voci.length} {voci.length === 1 ? 'voce' : 'voci'}
+                </span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {voci.map((v) => <VoceCard voce={v} showCategoria={false} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- VISTA "Alfabetico A-Z" (hidden) -->
+        <div id="view-alfabetico" role="tabpanel" aria-labelledby="tab-alfabetico" data-view="alfabetico" hidden>
+          {perLettera.map(({ lettera, voci }) => (
+            <div class="mb-10 last:mb-0" data-group data-group-key={`alpha-${lettera}`}>
+              <h2 id={`lettera-${lettera}`} class="font-heading text-3xl md:text-4xl font-semibold text-[var(--aw-color-primary)] mb-5">
+                {lettera}
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {voci.map((v) => <VoceCard voce={v} />)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- VISTA "Per livello" (hidden) -->
+        <div id="view-livello" role="tabpanel" aria-labelledby="tab-livello" data-view="livello" hidden>
+          {perLivello.map(({ livello, voci }) => {
+            const liv = LIVELLI[livello];
+            return (
+              <div class="mb-12 last:mb-0" data-group data-group-key={`liv-${livello}`}>
+                <div class="flex items-baseline justify-between gap-4 mb-5">
+                  <h2 class="font-heading text-2xl md:text-3xl font-semibold text-[var(--aw-color-text-heading)] flex items-center gap-3">
+                    <span aria-hidden="true">{liv.emoji}</span>
+                    <span>{liv.label}</span>
+                  </h2>
+                  <span class="text-sm text-[var(--aw-color-text-muted)]" data-group-count>
+                    {voci.length} {voci.length === 1 ? 'voce' : 'voci'}
+                  </span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {voci.map((v) => <VoceCard voce={v} />)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SUGGERISCI UN TERMINE ===================== -->
+  <section class="bg-white py-16 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-tight">
+        Non trovi un termine che ti interessa?
+      </h2>
+      <p class="text-base md:text-lg text-[var(--aw-color-text-muted)] leading-relaxed mb-8">
+        Scrivimi e lo aggiungerò al glossario. È un lavoro in corso, fatto pensando alle
+        domande reali che mi arrivano dai clienti.
+      </p>
+      <a
+        href="/contatti?topic=glossario"
+        class="inline-flex items-center justify-center px-8 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold rounded-sm transition-all hover:shadow-lg font-heading"
+      >
+        Suggerisci un termine →
+      </a>
+    </div>
+  </section>
+
+  <script>
+    // ============================================================
+    // Glossario: filter tabs + live search (vanilla, no deps)
+    // ============================================================
+    type FilterKey = 'categoria' | 'alfabetico' | 'livello';
+
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[role="tab"][data-filter]');
+    const views = document.querySelectorAll<HTMLElement>('[data-view]');
+    const search = document.getElementById('glossario-search') as HTMLInputElement | null;
+    const empty = document.getElementById('glossario-empty');
+
+    function activeView(): HTMLElement | null {
+      return document.querySelector<HTMLElement>('[data-view]:not([hidden])');
+    }
+
+    function selectTab(key: FilterKey): void {
+      tabs.forEach((t) => {
+        const isActive = t.dataset.filter === key;
+        t.setAttribute('aria-selected', String(isActive));
+      });
+      views.forEach((v) => {
+        v.hidden = v.dataset.view !== key;
+      });
+      // Riapplica il filtro di ricerca alla nuova vista
+      applySearch();
+    }
+
+    tabs.forEach((t) => {
+      t.addEventListener('click', () => selectTab(t.dataset.filter as FilterKey));
+    });
+
+    function normalize(s: string): string {
+      // Confronto accent-insensitive: NFD per separare i diacritici, poi rimuove quelli
+      return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    function applySearch(): void {
+      const view = activeView();
+      if (!view) return;
+      const q = normalize(search?.value.trim() ?? '');
+      const cards = view.querySelectorAll<HTMLAnchorElement>('[data-glossario-card]');
+      let matchesTotal = 0;
+
+      cards.forEach((card) => {
+        const titolo = normalize(card.dataset.titolo ?? '');
+        const sigla = normalize(card.dataset.sigla ?? '');
+        const match = q === '' || titolo.includes(q) || sigla.includes(q);
+        card.hidden = !match;
+        if (match) matchesTotal++;
+      });
+
+      // Nasconde i gruppi senza alcun match e aggiorna il count
+      const groups = view.querySelectorAll<HTMLElement>('[data-group]');
+      groups.forEach((g) => {
+        const visibleCards = g.querySelectorAll<HTMLAnchorElement>('[data-glossario-card]:not([hidden])');
+        g.hidden = visibleCards.length === 0;
+        const counter = g.querySelector<HTMLElement>('[data-group-count]');
+        if (counter && q !== '') {
+          counter.textContent =
+            visibleCards.length + ' ' + (visibleCards.length === 1 ? 'voce' : 'voci');
+        }
+      });
+
+      if (empty) empty.classList.toggle('hidden', matchesTotal > 0 || cards.length === 0);
+    }
+
+    if (search) {
+      search.addEventListener('input', applySearch);
+      // Pulsante "x" del search nativo: triggera anche 'search'
+      search.addEventListener('search', applySearch);
+    }
+  </script>
+</Layout>
