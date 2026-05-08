@@ -55,11 +55,11 @@ export const calcolatori: Calcolatore[] = [
   },
   {
     slug: 'isee',
-    titolo: 'Calcolatore ISEE',
+    titolo: 'Calcolatore ISEE 2026',
     descrizione:
-      'Simulazione dell’ISEE per stimare l’accesso a sconti universitari, bonus statali, agevolazioni per servizi sociali e molto altro.',
+      'Simulatore ISEE aggiornato alla normativa 2026: tipologie Ordinario, Universitario e Inclusione, con franchigie aggiornate, criptovalute e nuova scala di equivalenza.',
     href: '/calcolatori/isee',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:file-invoice',
   },
   {

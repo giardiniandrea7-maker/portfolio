@@ -1,17 +1,2004 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
-import { calcolatori } from '~/data/calcolatori';
-
-const slug = 'isee';
-const calc = calcolatori.find((c) => c.slug === slug)!;
 
 const metadata = {
-  title: `${calc.titolo} | Andrea Giardini`,
-  description: calc.descrizione,
+  title: 'Calcolatore ISEE 2026 | Andrea Giardini',
+  description:
+    "Calcolatore ISEE 2026 aggiornato alla nuova normativa. Stima ISEE Ordinario, Universitario e Inclusione con franchigie aggiornate, criptovalute e nuova scala di equivalenza.",
 };
 ---
 
 <Layout metadata={metadata}>
-  <PlaceholderCalcolatore slug={slug} />
+  <div class="calc-isee">
+    <!-- ============== HERO ============== -->
+    <header class="calc-header">
+      <h1>Calcolatore ISEE 2026</h1>
+      <p>
+        Stima il tuo ISEE aggiornato alla normativa 2026, con le nuove franchigie sulla prima
+        casa e l'inclusione di criptovalute nel patrimonio mobiliare. Tre tipologie disponibili:
+        Ordinario, Universitario e Inclusione.
+      </p>
+    </header>
+
+    <!-- ============== BANNER NORMATIVA ============== -->
+    <div class="info-banner" role="note">
+      <span class="info-icon" aria-hidden="true">i</span>
+      <span class="info-text">
+        <strong>Aggiornato alla normativa 2026:</strong> franchigia prima casa 91.500€
+        (200.000€ città metropolitane per ISEE Inclusione), nuova scala di equivalenza,
+        inclusione di criptovalute e asset digitali.
+      </span>
+    </div>
+
+    <!-- ============== TAB TIPOLOGIA ============== -->
+    <fieldset class="tipologia-tabs" role="radiogroup" aria-label="Tipologia di ISEE">
+      <legend class="sr-only">Tipologia ISEE</legend>
+      <label class="tab-pill">
+        <input type="radio" name="is-tipologia" value="ordinario" checked />
+        <span class="tab-content">
+          <span class="tab-title">ISEE Ordinario</span>
+          <span class="tab-desc">Per la maggior parte delle prestazioni</span>
+        </span>
+      </label>
+      <label class="tab-pill">
+        <input type="radio" name="is-tipologia" value="universitario" />
+        <span class="tab-content">
+          <span class="tab-title">ISEE Universitario</span>
+          <span class="tab-desc">Per le tasse universitarie</span>
+        </span>
+      </label>
+      <label class="tab-pill">
+        <input type="radio" name="is-tipologia" value="inclusione" />
+        <span class="tab-content">
+          <span class="tab-title">ISEE Inclusione</span>
+          <span class="tab-desc">Per inclusione sociale (franchigia 200K metropolitane)</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ============== TOGGLE MODALITÀ ============== -->
+    <div class="modalita-toggle">
+      <span class="modalita-label">Modalità di compilazione:</span>
+      <fieldset class="toggle-group" role="radiogroup" aria-label="Modalità di compilazione">
+        <legend class="sr-only">Modalità di compilazione</legend>
+        <label class="toggle-item">
+          <input type="radio" name="is-modalita" value="semplice" checked />
+          <span>Semplice</span>
+        </label>
+        <label class="toggle-item">
+          <input type="radio" name="is-modalita" value="avanzata" />
+          <span>Avanzata</span>
+        </label>
+      </fieldset>
+    </div>
+
+    <!-- ============== FORM + RISULTATI ============== -->
+    <div class="main-grid">
+      <!-- COLONNA SX: FORM ACCORDION -->
+      <div class="card form-card">
+        <h2 class="card-title">Inserisci i dati</h2>
+
+        <!-- SEZIONE 1: NUCLEO FAMILIARE -->
+        <details class="accordion" open>
+          <summary>
+            <span class="acc-title">1. Nucleo familiare</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-componenti">Componenti del nucleo
+                  <span class="tip" tabindex="0" aria-label="Aiuto: chi conta come componente del nucleo">?
+                    <span class="tip-text">Comprende coniuge, figli a carico (anche maggiorenni se a carico) e altri soggetti conviventi a carico ai fini IRPEF.</span>
+                  </span>
+                </label>
+                <input type="number" id="is-componenti" min="1" max="10" step="1" value="4" inputmode="numeric" />
+              </div>
+              <div class="form-group">
+                <label for="is-figli-carico">Figli a carico (totale)</label>
+                <input type="number" id="is-figli-carico" min="0" max="8" step="1" value="2" inputmode="numeric" />
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-figli-minori">Figli minorenni</label>
+                <input type="number" id="is-figli-minori" min="0" max="8" step="1" value="1" inputmode="numeric" />
+              </div>
+              <div class="form-group">
+                <label for="is-figli-tre">Figli sotto i 3 anni</label>
+                <input type="number" id="is-figli-tre" min="0" max="8" step="1" value="0" inputmode="numeric" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="is-disabili">Componenti con disabilità</label>
+              <input type="number" id="is-disabili" min="0" max="8" step="1" value="0" inputmode="numeric" />
+            </div>
+
+            <div class="form-group disabilita-tipo" hidden>
+              <label>Tipologia di disabilità</label>
+              <div class="radio-inline">
+                <label><input type="radio" name="is-tipo-disabilita" value="media" checked /> Media</label>
+                <label><input type="radio" name="is-tipo-disabilita" value="grave" /> Grave</label>
+                <label><input type="radio" name="is-tipo-disabilita" value="non_autosufficiente" /> Non autosufficiente</label>
+              </div>
+            </div>
+
+            <!-- AVANZATA: nucleo esteso -->
+            <div class="advanced-only">
+              <label class="checkbox-row">
+                <input type="checkbox" id="is-genitori-lavorano" />
+                <span>Entrambi i genitori lavorano <em>(maggiorazione scala equivalenza)</em></span>
+              </label>
+            </div>
+          </div>
+        </details>
+
+        <!-- SEZIONE 2: ABITAZIONE PRINCIPALE -->
+        <details class="accordion" open>
+          <summary>
+            <span class="acc-title">2. Abitazione principale</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <div class="form-group">
+              <label for="is-tipo-casa">Tipologia abitazione</label>
+              <select id="is-tipo-casa">
+                <option value="proprieta" selected>Proprietà</option>
+                <option value="affitto">Affitto</option>
+                <option value="comodato">Comodato d'uso gratuito</option>
+                <option value="altro">Altra situazione</option>
+              </select>
+            </div>
+
+            <div class="casa-proprieta-group">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="is-valore-casa">Valore catastale prima casa</label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="is-valore-casa" min="0" step="5000" value="100000" inputmode="decimal" />
+                    <span class="suffix">€</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="is-mutuo-residuo">Mutuo residuo</label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="is-mutuo-residuo" min="0" step="1000" value="0" inputmode="decimal" />
+                    <span class="suffix">€</span>
+                  </div>
+                </div>
+              </div>
+
+              <fieldset class="form-group radio-group">
+                <legend>Comune di residenza</legend>
+                <div class="radio-stack">
+                  <label><input type="radio" name="is-comune" value="metropolitano" /> Città metropolitana <span class="hint-inline">(Roma, Milano, Torino, Napoli, Firenze, Bologna, Genova, Bari, Reggio Calabria, etc.)</span></label>
+                  <label><input type="radio" name="is-comune" value="altro" checked /> Altro comune</label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="casa-affitto-group" hidden>
+              <div class="form-group">
+                <label for="is-canone">Canone annuo</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-canone" min="0" step="100" value="7200" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+                <p class="form-hint">L'affitto effettivamente pagato è anche deducibile dai redditi (modalità avanzata).</p>
+              </div>
+            </div>
+
+            <!-- AVANZATA: altri immobili -->
+            <div class="advanced-only">
+              <p class="acc-subtitle">Altri immobili</p>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="is-altri-immobili">Valore catastale altri immobili</label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="is-altri-immobili" min="0" step="5000" value="0" inputmode="decimal" />
+                    <span class="suffix">€</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="is-mutuo-altri">Mutuo residuo altri immobili</label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="is-mutuo-altri" min="0" step="1000" value="0" inputmode="decimal" />
+                    <span class="suffix">€</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- SEZIONE 3: PATRIMONIO MOBILIARE -->
+        <details class="accordion" open>
+          <summary>
+            <span class="acc-title">3. Patrimonio mobiliare</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-conti">Depositi e conti correnti</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-conti" min="0" step="500" value="5000" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="is-investimenti">Investimenti finanziari
+                  <span class="tip" tabindex="0">?
+                    <span class="tip-text">Fondi, azioni, ETF, obbligazioni corporate. NON includere titoli di Stato (esclusi dal calcolo dal 2024) né previdenza complementare.</span>
+                  </span>
+                </label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-investimenti" min="0" step="1000" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+
+            <details class="sub-collapse">
+              <summary>
+                <span class="sub-title">Asset particolari (cripto, conti esteri)</span>
+                <span class="acc-icon" aria-hidden="true"></span>
+              </summary>
+              <div class="sub-body">
+                <div class="form-group">
+                  <label for="is-cripto">Criptovalute e asset digitali
+                    <span class="tip" tabindex="0">?
+                      <span class="tip-text">Bitcoin, ETH, NFT, e altri asset digitali. Dal 2026 vanno OBBLIGATORIAMENTE dichiarati nel patrimonio mobiliare.</span>
+                    </span>
+                  </label>
+                  <div class="input-with-suffix">
+                    <input type="number" id="is-cripto" min="0" step="500" value="0" inputmode="decimal" />
+                    <span class="suffix">€</span>
+                  </div>
+                </div>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="is-conti-esteri">Conti correnti esteri</label>
+                    <div class="input-with-suffix">
+                      <input type="number" id="is-conti-esteri" min="0" step="500" value="0" inputmode="decimal" />
+                      <span class="suffix">€</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="is-money-transfer">Money transfer / rimesse estero</label>
+                    <div class="input-with-suffix">
+                      <input type="number" id="is-money-transfer" min="0" step="500" value="0" inputmode="decimal" />
+                      <span class="suffix">€</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </details>
+
+        <!-- SEZIONE 4: REDDITI -->
+        <details class="accordion" open>
+          <summary>
+            <span class="acc-title">4. Redditi</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-red-dipendente">Lavoro dipendente</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-red-dipendente" min="0" step="500" value="25000" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="is-red-autonomo">Lavoro autonomo</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-red-autonomo" min="0" step="500" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-pensioni">Pensioni</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-pensioni" min="0" step="500" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="is-altri-redditi">Altri redditi imponibili</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-altri-redditi" min="0" step="500" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- SEZIONE 4bis: DEDUZIONI (avanzata) -->
+        <details class="accordion advanced-only" open>
+          <summary>
+            <span class="acc-title">5. Deduzioni e abbattimenti</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-affitto-pagato">Affitto effettivamente pagato (annuo)</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-affitto-pagato" min="0" step="100" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+                <p class="form-hint">Deduzione max 7.000€/anno.</p>
+              </div>
+              <div class="form-group">
+                <label for="is-spese-sanitarie">Spese sanitarie per disabili</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-spese-sanitarie" min="0" step="100" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+                <p class="form-hint">Max 5.000€ disabilità media; illimitata per non autosufficiente.</p>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-assegni">Assegni mantenimento ex-coniuge</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-assegni" min="0" step="100" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="is-spese-assistenza">Spese per assistenza disabili</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-spese-assistenza" min="0" step="100" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <!-- SEZIONE 5: UNIVERSITARIO -->
+        <details class="accordion universitario-only" open hidden>
+          <summary>
+            <span class="acc-title">6. Studente universitario</span>
+            <span class="acc-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="acc-body">
+            <label class="checkbox-row">
+              <input type="checkbox" id="is-fuori-sede" />
+              <span>Studente fuori sede</span>
+            </label>
+            <div class="fuori-sede-extra" hidden>
+              <div class="form-group">
+                <label for="is-distanza">Distanza casa-università</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-distanza" min="0" step="10" value="0" inputmode="numeric" />
+                  <span class="suffix">km</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="is-reddito-studente">Reddito personale studente</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-reddito-studente" min="0" step="500" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="is-patrimonio-studente">Patrimonio personale studente</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="is-patrimonio-studente" min="0" step="500" value="0" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <p class="form-hint">Il calcolo si aggiorna automaticamente.</p>
+        <p class="warn warn-blocking" id="is-blocking" role="alert" aria-live="assertive"></p>
+      </div>
+
+      <!-- COLONNA DX: RISULTATI -->
+      <div class="card results-card" aria-live="polite" aria-atomic="true">
+        <h2 class="card-title">Risultati</h2>
+
+        <!-- METRICA PRINCIPALE -->
+        <div class="result-block result-primary">
+          <span class="result-label" id="is-primary-label">ISEE stimato</span>
+          <span class="result-value result-value-xl" id="is-out-isee">—</span>
+          <span class="result-badge" id="is-fascia-badge"></span>
+        </div>
+
+        <!-- METRICHE INTERMEDIE -->
+        <h3 class="metrics-title">Indicatori</h3>
+        <ul class="metrics-list">
+          <li><span class="m-label">ISR — Sit. reddituale</span><span class="m-value" id="is-out-isr">—</span></li>
+          <li><span class="m-label">ISP — Sit. patrimoniale</span><span class="m-value" id="is-out-isp">—</span></li>
+          <li><span class="m-label">ISE — Sit. economica (ISR + 0,20×ISP)</span><span class="m-value" id="is-out-ise">—</span></li>
+          <li><span class="m-label">Reddito figurativo (3,5%)</span><span class="m-value" id="is-out-figurativo">—</span></li>
+          <li><span class="m-label">Scala equivalenza</span><span class="m-value" id="is-out-scala">—</span></li>
+        </ul>
+
+        <h3 class="metrics-title">Patrimonio</h3>
+        <ul class="metrics-list">
+          <li><span class="m-label">Immobiliare lordo</span><span class="m-value" id="is-out-imm-lordo">—</span></li>
+          <li><span class="m-label">Franchigia prima casa</span><span class="m-value" id="is-out-franchigia-imm">—</span></li>
+          <li><span class="m-label">Immobiliare al netto</span><span class="m-value" id="is-out-imm-netto">—</span></li>
+          <li><span class="m-label">Mobiliare lordo</span><span class="m-value" id="is-out-mob-lordo">—</span></li>
+          <li><span class="m-label">Franchigia mobiliare</span><span class="m-value" id="is-out-franchigia-mob">—</span></li>
+          <li><span class="m-label">Mobiliare al netto</span><span class="m-value" id="is-out-mob-netto">—</span></li>
+        </ul>
+
+        <h3 class="metrics-title">Redditi</h3>
+        <ul class="metrics-list">
+          <li><span class="m-label">Redditi totali lordi</span><span class="m-value" id="is-out-red-lordi">—</span></li>
+          <li><span class="m-label">Abbattimento 20% (lavoro/pensione)</span><span class="m-value" id="is-out-abb20">—</span></li>
+          <li><span class="m-label">Deduzioni totali</span><span class="m-value" id="is-out-deduzioni">—</span></li>
+          <li><span class="m-label">Reddito ai fini ISEE</span><span class="m-value" id="is-out-red-netto">—</span></li>
+        </ul>
+
+        <div class="warn-list" id="is-warnings" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- ============== CONFRONTO TIPOLOGIE ============== -->
+    <section class="card compare-card">
+      <h2 class="card-title">Confronto tra tipologie di ISEE</h2>
+      <p class="compare-intro">Lo stesso nucleo familiare può avere ISEE diversi a seconda della tipologia richiesta.</p>
+      <ul class="compare-list">
+        <li class="compare-item" id="is-row-ord">
+          <span class="cmp-label">ISEE Ordinario</span>
+          <span class="cmp-value" id="is-cmp-ord">—</span>
+        </li>
+        <li class="compare-item" id="is-row-uni">
+          <span class="cmp-label">ISEE Universitario</span>
+          <span class="cmp-value" id="is-cmp-uni">—</span>
+        </li>
+        <li class="compare-item" id="is-row-inc">
+          <span class="cmp-label">ISEE Inclusione</span>
+          <span class="cmp-value" id="is-cmp-inc">—</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============== AGEVOLAZIONI ============== -->
+    <section class="card agevolazioni-card">
+      <h2 class="card-title">Agevolazioni accessibili</h2>
+      <p class="compare-intro">Stima delle principali agevolazioni a cui potresti accedere con questo ISEE.</p>
+      <ul class="agevolazioni-list" id="is-agevolazioni"></ul>
+      <p class="agevolazioni-note">
+        Le stime sono indicative. Le soglie effettive variano per Comune e per anno; alcuni
+        bonus richiedono requisiti aggiuntivi oltre all'ISEE (residenza, reddito, patrimonio).
+      </p>
+    </section>
+
+    <!-- ============== GRAFICO COMPOSIZIONE ISE ============== -->
+    <section class="card chart-card" aria-label="Composizione dell'ISE">
+      <div class="chart-header">
+        <h2 class="card-title">Da cosa è composto il tuo ISE?</h2>
+        <p class="chart-subtitle">L'ISE (prima della divisione per scala di equivalenza) è la somma dei tuoi redditi netti più il 20% del patrimonio. Capire i pesi aiuta a sapere dove puoi intervenire.</p>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:#373D42"></span>Redditi netti</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#166963"></span>20% Patrimonio immobiliare</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#00A652"></span>20% Patrimonio mobiliare</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#AB7F62"></span>Reddito figurativo</span>
+        </div>
+      </div>
+      <div class="chart-wrap chart-wrap-stacked">
+        <canvas id="is-chart-comp" aria-label="Barra orizzontale impilata della composizione dell'ISE" role="img"></canvas>
+      </div>
+      <p class="scala-note">
+        ÷ <span id="is-scala-display">—</span> &nbsp;= ISEE finale
+      </p>
+    </section>
+
+    <!-- ============== GRAFICO SCENARI ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">E se cambiasse...? Simula scenari di pianificazione</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="ammortamento-content">
+          <p class="ammortamento-intro">
+            Confronta l'ISEE attuale con scenari alternativi per capire dove la pianificazione
+            patrimoniale può avere impatto.
+          </p>
+          <div class="chart-wrap chart-wrap-scenarios">
+            <canvas id="is-chart-scenari" aria-label="Bar chart confronto scenari" role="img"></canvas>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== COME FUNZIONA ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra come si calcola l'ISEE</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="math-content">
+          <h2>Cos'è l'ISEE e a cosa serve</h2>
+          <p>
+            L'<b>ISEE</b> (Indicatore della Situazione Economica Equivalente) è la fotografia
+            economica di un nucleo familiare. Tiene conto contemporaneamente di <em>redditi</em>
+            e <em>patrimonio</em> (mobiliare e immobiliare), pesati per la composizione del
+            nucleo. Serve per accedere a quasi tutte le prestazioni sociali agevolate: bonus
+            bollette, asilo nido, mensa scolastica, riduzione tasse universitarie, Assegno
+            Unico, e molto altro.
+          </p>
+
+          <h3>ISR, ISP, ISE, ISEE: che differenza c'è?</h3>
+          <ul>
+            <li><b>ISR</b> — Indicatore della <em>Situazione Reddituale</em>. È il reddito complessivo del nucleo, al netto degli abbattimenti e delle deduzioni, più il reddito figurativo del patrimonio mobiliare.</li>
+            <li><b>ISP</b> — Indicatore della <em>Situazione Patrimoniale</em>. È la somma di patrimonio immobiliare (al netto della franchigia prima casa) e patrimonio mobiliare (al netto della franchigia mobiliare).</li>
+            <li><b>ISE</b> — Indicatore della <em>Situazione Economica</em>. <b>ISE = ISR + 0,20 × ISP</b>: i redditi pesano al 100%, il patrimonio al 20%.</li>
+            <li><b>ISEE</b> — È l'ISE diviso per la <b>scala di equivalenza</b> del nucleo: <b>ISEE = ISE / Scala</b>. La scala dà un peso "equivalente" ai vari nuclei (single, coppia, famiglia con figli, disabili, ecc.).</li>
+          </ul>
+
+          <h3>Le tre tipologie di ISEE</h3>
+          <ul>
+            <li><b>Ordinario</b> — La forma standard, usata per la maggior parte delle prestazioni.</li>
+            <li><b>Universitario</b> — Riferito al nucleo dello studente. Per studenti fuori sede ci sono regole specifiche sulla composizione del nucleo di riferimento.</li>
+            <li><b>Inclusione</b> — Riservato a prestazioni di inclusione sociale (es. Assegno di Inclusione). Nel 2026 prevede una <b>franchigia prima casa elevata a 200.000€ nelle città metropolitane</b> e una maggiorazione 0,15 alla scala di equivalenza per nuclei con componenti non autosufficienti.</li>
+          </ul>
+
+          <h3>Le novità 2026</h3>
+          <ul>
+            <li><b>Franchigia prima casa</b> da 52.500€ → <b>91.500€</b> (200.000€ per ISEE Inclusione metropolitano).</li>
+            <li><b>Criptovalute, conti esteri, asset digitali</b> obbligatoriamente inclusi nel patrimonio mobiliare (Legge di Bilancio 2026, commi 32-34).</li>
+            <li><b>Scala di equivalenza</b> con maggiorazioni potenziate (+0,05 punti) per nuclei con 3, 4 o 5+ figli minori.</li>
+            <li><b>Nuovo modello DSU</b> ai sensi del Decreto Ministeriale 2 marzo 2026 n. 3.</li>
+          </ul>
+
+          <h3>Le formule chiave</h3>
+          <div class="formula-block">
+            ISE = ISR + 0,20 × ISP<br />
+            ISEE = ISE ÷ Scala di Equivalenza
+          </div>
+
+          <h3>Scala di equivalenza 2026</h3>
+          <table class="scala-table">
+            <thead>
+              <tr><th>Componenti del nucleo</th><th>Coefficiente base</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>1,00</td></tr>
+              <tr><td>2</td><td>1,57</td></tr>
+              <tr><td>3</td><td>2,04</td></tr>
+              <tr><td>4</td><td>2,46</td></tr>
+              <tr><td>5</td><td>2,85</td></tr>
+              <tr><td>6+</td><td>2,85 + 0,35 per ogni componente oltre il quinto</td></tr>
+            </tbody>
+          </table>
+
+          <p class="formula-note">
+            <strong>Maggiorazioni cumulabili:</strong> +0,50 per disabilità grave; +0,30 per
+            disabilità media o non autosufficiente; +0,25 / +0,40 / +0,55 per nuclei con 3 / 4 /
+            5+ figli minori; +0,20 per ogni figlio sotto i 3 anni; +0,10 se entrambi i genitori
+            lavorano e ci sono figli minori; +0,15 (solo Inclusione) per non autosufficienti.
+          </p>
+
+          <h3>Le franchigie 2026</h3>
+          <ul>
+            <li><b>Prima casa</b>: 91.500€ (Ordinario, Universitario) — 200.000€ (Inclusione, città metropolitane). Più 2.500€ per ogni figlio convivente oltre il primo.</li>
+            <li><b>Patrimonio mobiliare</b>: 6.000€ + 2.000€ per ogni componente oltre il primo, fino a un massimo di 10.000€.</li>
+            <li><b>Abbattimento 20%</b> sui redditi da lavoro dipendente e pensioni, max 3.000€.</li>
+            <li><b>Deduzione affitto</b> effettivamente pagato, max 7.000€.</li>
+          </ul>
+
+          <p class="formula-note">
+            <strong>Nota onesta:</strong> Questo calcolatore fornisce una <em>stima</em>. Il
+            valore ISEE ufficiale è determinato dall'INPS sulla base della DSU presentata. Per
+            piccole discrepanze considera spese e patrimoni esatti, e situazioni particolari
+            (separazioni, eredità in corso, ecc.). Per la certificazione ufficiale rivolgiti al
+            CAF o all'INPS.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== CTA ============== -->
+    <section class="cta-section">
+      <div class="eyebrow">Vuoi ottimizzare il tuo ISEE?</div>
+      <h2>Vuoi capire come ottimizzare il tuo ISEE?</h2>
+      <p>
+        Spesso piccole modifiche nella composizione del patrimonio o nella tempistica delle
+        operazioni finanziarie possono ridurre significativamente l'ISEE e dare accesso a
+        maggiori agevolazioni. Posso aiutarti a pianificare in modo strategico la tua
+        situazione patrimoniale, anche in vista dell'ISEE dei prossimi anni. La prima chiamata
+        è gratuita.
+      </p>
+      <div class="cta-buttons">
+        <a href="/contatti" class="btn btn-primary">Prenota una consulenza</a>
+        <a href="/calcolatori" class="btn btn-secondary">Torna ai calcolatori</a>
+      </div>
+    </section>
+
+    <!-- ============== DISCLAIMER ============== -->
+    <div class="final-disclaimer">
+      <strong>Nota informativa:</strong> Le stime fornite hanno valore puramente indicativo e si
+      basano sulla normativa ISEE in vigore al momento dell'aggiornamento (2026). Il valore
+      ISEE ufficiale è determinato esclusivamente dall'INPS sulla base della DSU
+      (Dichiarazione Sostitutiva Unica) presentata, che richiede documentazione precisa di
+      redditi, patrimoni e composizione familiare. Per richiedere il proprio ISEE rivolgersi
+      a CAF, patronati o direttamente al portale INPS. Questo strumento non sostituisce la
+      documentazione ufficiale e non costituisce consulenza fiscale o legale personalizzata.
+    </div>
+  </div>
+
+  <style is:global>
+    .calc-isee {
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
+      font-family: 'Manrope', -apple-system, sans-serif;
+      color: var(--charcoal);
+      line-height: 1.65;
+      font-size: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .calc-isee * { box-sizing: border-box; }
+
+    .calc-isee .calc-header {
+      text-align: center;
+      margin-bottom: 22px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-isee .calc-header h1 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-isee .calc-header p {
+      color: var(--gray-text);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* Banner normativa */
+    .calc-isee .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      margin: 0 0 24px;
+      background: rgba(22, 105, 99, 0.06);
+      border: 1px solid rgba(22, 105, 99, 0.18);
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .calc-isee .info-icon {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      background: var(--sage);
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      font-weight: 700;
+      font-family: 'Times New Roman', serif;
+      font-size: 0.95rem;
+      margin-top: 1px;
+    }
+    .calc-isee .info-text { color: var(--charcoal); }
+    .calc-isee .info-text strong { color: var(--sage-dark); }
+
+    /* Tab tipologia (3 colonne) */
+    .calc-isee .tipologia-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 0 0 16px;
+      border: 0;
+      padding: 0;
+    }
+    .calc-isee .tab-pill {
+      position: relative;
+      display: block;
+      padding: 14px 18px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 10px;
+      cursor: pointer;
+      background: white;
+      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-isee .tab-pill input[type="radio"] {
+      position: absolute; opacity: 0; pointer-events: none;
+    }
+    .calc-isee .tab-pill:hover { border-color: var(--sage-light); }
+    .calc-isee .tab-pill:has(input:checked) {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.10);
+    }
+    .calc-isee .tab-pill:has(input:focus-visible) {
+      outline: 2px solid var(--emerald);
+      outline-offset: 2px;
+    }
+    .calc-isee .tab-content { display: block; }
+    .calc-isee .tab-title {
+      display: block; font-weight: 600; color: var(--sage-dark); font-size: 0.98rem;
+    }
+    .calc-isee .tab-desc {
+      display: block; color: var(--gray-text); font-size: 0.8rem; margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* Toggle modalità */
+    .calc-isee .modalita-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin: 0 0 22px;
+      flex-wrap: wrap;
+    }
+    .calc-isee .modalita-label {
+      color: var(--gray-text);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    .calc-isee .toggle-group {
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 999px;
+      padding: 3px;
+      display: inline-flex;
+      gap: 0;
+      background: white;
+    }
+    .calc-isee .toggle-group legend { padding: 0; }
+    .calc-isee .toggle-item {
+      position: relative;
+      cursor: pointer;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--gray-text);
+      transition: background 0.18s ease, color 0.18s ease;
+      margin: 0;
+      user-select: none;
+    }
+    .calc-isee .toggle-item input { position: absolute; opacity: 0; pointer-events: none; }
+    .calc-isee .toggle-item:has(input:checked) {
+      background: var(--emerald);
+      color: white;
+    }
+    .calc-isee .toggle-item:has(input:focus-visible) {
+      outline: 2px solid var(--emerald);
+      outline-offset: 2px;
+    }
+
+    /* Grid principale */
+    .calc-isee .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+      align-items: start;
+    }
+    .calc-isee .card {
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.15);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-soft);
+    }
+    .calc-isee .card-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 18px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Form */
+    .calc-isee .form-group { margin-bottom: 16px; }
+    .calc-isee .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .calc-isee label,
+    .calc-isee fieldset legend {
+      display: block;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      padding: 0;
+    }
+    .calc-isee input[type="number"],
+    .calc-isee input[type="text"],
+    .calc-isee select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      background: white;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-isee input:focus,
+    .calc-isee select:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    }
+    .calc-isee input[type="number"]::-webkit-outer-spin-button,
+    .calc-isee input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .calc-isee input[type="number"] { -moz-appearance: textfield; }
+
+    .calc-isee .input-with-suffix { position: relative; }
+    .calc-isee .input-with-suffix .suffix {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-text); font-size: 0.9rem; pointer-events: none;
+    }
+    .calc-isee .input-with-suffix input { padding-right: 60px; }
+
+    /* Radio group */
+    .calc-isee .radio-group { border: 0; padding: 0; }
+    .calc-isee .radio-inline {
+      display: flex; gap: 18px; align-items: center; margin-top: 4px; flex-wrap: wrap;
+    }
+    .calc-isee .radio-inline label {
+      display: inline-flex; align-items: center; gap: 6px; margin: 0;
+      cursor: pointer; font-weight: 400; font-size: 0.92rem;
+    }
+    .calc-isee .radio-inline input[type="radio"],
+    .calc-isee .radio-stack input[type="radio"] {
+      accent-color: var(--emerald); width: 16px; height: 16px;
+    }
+    .calc-isee .radio-stack {
+      display: flex; flex-direction: column; gap: 8px; margin-top: 4px;
+    }
+    .calc-isee .radio-stack label {
+      display: inline-flex; align-items: flex-start; gap: 8px;
+      font-weight: 400; font-size: 0.92rem; cursor: pointer; line-height: 1.5;
+    }
+    .calc-isee .hint-inline {
+      color: var(--gray-text); font-size: 0.82rem;
+    }
+
+    /* Checkbox row */
+    .calc-isee .checkbox-row {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; margin-bottom: 12px;
+      font-weight: 500; font-size: 0.92rem;
+    }
+    .calc-isee .checkbox-row input[type="checkbox"] {
+      accent-color: var(--emerald);
+      width: 17px; height: 17px;
+      flex-shrink: 0;
+    }
+    .calc-isee .checkbox-row em {
+      font-weight: 400; color: var(--gray-text); font-size: 0.85rem; font-style: italic;
+    }
+
+    /* Hint */
+    .calc-isee .form-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      margin: 6px 0 0;
+      line-height: 1.45;
+    }
+
+    /* Tooltip */
+    .calc-isee .tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--sage-light);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-left: 4px;
+      cursor: help;
+      position: relative;
+      vertical-align: middle;
+      outline: none;
+    }
+    .calc-isee .tip:focus-visible { box-shadow: 0 0 0 2px var(--emerald); }
+    .calc-isee .tip-text {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 250px;
+      max-width: 90vw;
+      padding: 10px 12px;
+      background: var(--charcoal);
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 400;
+      line-height: 1.45;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 50;
+    }
+    .calc-isee .tip:hover .tip-text,
+    .calc-isee .tip:focus .tip-text,
+    .calc-isee .tip:focus-visible .tip-text {
+      opacity: 1;
+    }
+
+    /* Accordion */
+    .calc-isee .accordion {
+      border: 1px solid var(--gray-soft);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: white;
+      overflow: hidden;
+    }
+    .calc-isee .accordion summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--ivory-warm);
+      transition: background 0.18s ease;
+    }
+    .calc-isee .accordion summary::-webkit-details-marker { display: none; }
+    .calc-isee .accordion summary:hover { background: var(--ivory); }
+    .calc-isee .accordion summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-isee .acc-title {
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 0.96rem;
+    }
+    .calc-isee .acc-icon {
+      width: 10px; height: 10px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+    .calc-isee .accordion[open] > summary .acc-icon { transform: rotate(225deg); }
+    .calc-isee .acc-body { padding: 16px 18px 4px; border-top: 1px solid var(--gray-soft); }
+    .calc-isee .acc-subtitle {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 12px 0 8px;
+    }
+
+    /* Sub-collapse (asset particolari) */
+    .calc-isee .sub-collapse {
+      background: var(--ivory-warm);
+      border-radius: 6px;
+      margin-top: 8px;
+      border: 1px dashed var(--sage-light);
+      overflow: hidden;
+    }
+    .calc-isee .sub-collapse > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--sage-dark);
+    }
+    .calc-isee .sub-collapse > summary::-webkit-details-marker { display: none; }
+    .calc-isee .sub-collapse > summary:hover { background: rgba(22, 105, 99, 0.04); }
+    .calc-isee .sub-collapse > summary:focus-visible {
+      outline: 2px solid var(--emerald); outline-offset: -2px;
+    }
+    .calc-isee .sub-title { display: inline-block; }
+    .calc-isee .sub-collapse[open] > summary .acc-icon { transform: rotate(225deg); }
+    .calc-isee .sub-body { padding: 10px 14px 6px; border-top: 1px dashed var(--sage-light); }
+
+    /* Warn */
+    .calc-isee .warn {
+      min-height: 0;
+      margin: 8px 0 0;
+      font-size: 0.84rem;
+      color: var(--ochre-dark);
+      line-height: 1.45;
+    }
+    .calc-isee .warn-blocking:not(:empty) {
+      padding: 8px 12px;
+      background: rgba(171, 127, 98, 0.08);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      color: var(--ochre-dark);
+      font-weight: 500;
+    }
+
+    /* Risultati */
+    .calc-isee .results-card {
+      background: linear-gradient(180deg, var(--ivory-warm) 0%, white 100%);
+    }
+    .calc-isee .result-block {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-isee .result-primary { padding: 6px 0 18px; }
+    .calc-isee .result-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .calc-isee .result-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+      display: block;
+    }
+    .calc-isee .result-value-xl {
+      font-size: clamp(1.7rem, 3.6vw, 2.1rem);
+      color: var(--sage-dark);
+    }
+    .calc-isee .result-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--gray-soft);
+      color: var(--charcoal);
+    }
+    .calc-isee .result-badge.fascia-bassa { background: rgba(0, 166, 82, 0.15); color: var(--emerald); }
+    .calc-isee .result-badge.fascia-media { background: rgba(22, 105, 99, 0.15); color: var(--sage-dark); }
+    .calc-isee .result-badge.fascia-alta-bassa { background: rgba(171, 127, 98, 0.18); color: var(--ochre-dark); }
+    .calc-isee .result-badge.fascia-alta { background: rgba(55, 61, 66, 0.12); color: var(--charcoal); }
+    .calc-isee .result-badge:empty { display: none; }
+
+    .calc-isee .metrics-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+    .calc-isee .metrics-list { list-style: none; padding: 0; margin: 0; }
+    .calc-isee .metrics-list li {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(221, 228, 226, 0.7);
+      font-size: 0.88rem;
+    }
+    .calc-isee .metrics-list li:last-child { border-bottom: 0; }
+    .calc-isee .metrics-list .m-label { color: var(--gray-text); }
+    .calc-isee .metrics-list .m-value {
+      font-weight: 600;
+      color: var(--charcoal);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-isee .warn-list {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: var(--ochre-dark);
+    }
+    .calc-isee .warn-list ul { margin: 0; padding-left: 20px; }
+    .calc-isee .warn-list li { margin: 4px 0; line-height: 1.5; }
+
+    /* Card Confronto */
+    .calc-isee .compare-card { margin-bottom: 24px; }
+    .calc-isee .compare-intro {
+      color: var(--gray-text);
+      font-size: 0.92rem;
+      margin: 0 0 14px;
+    }
+    .calc-isee .compare-list { list-style: none; padding: 0; margin: 0; }
+    .calc-isee .compare-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--ivory-warm);
+      border: 1px solid transparent;
+      transition: border-color 0.18s ease;
+    }
+    .calc-isee .compare-item.is-active {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+    }
+    .calc-isee .compare-item .cmp-label { font-weight: 500; color: var(--charcoal); }
+    .calc-isee .compare-item .cmp-value {
+      font-weight: 700; color: var(--sage-dark);
+      font-variant-numeric: tabular-nums;
+      font-size: 1.05rem;
+    }
+
+    /* Card Agevolazioni */
+    .calc-isee .agevolazioni-card { margin-bottom: 30px; }
+    .calc-isee .agevolazioni-list { list-style: none; padding: 0; margin: 0; }
+    .calc-isee .agev-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--ivory-warm);
+    }
+    .calc-isee .agev-name { font-weight: 600; color: var(--sage-dark); font-size: 0.95rem; }
+    .calc-isee .agev-status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .calc-isee .agev-status.ok {
+      background: rgba(0, 166, 82, 0.15);
+      color: var(--emerald);
+    }
+    .calc-isee .agev-status.no {
+      background: rgba(221, 228, 226, 0.6);
+      color: var(--gray-text);
+    }
+    .calc-isee .agev-importo {
+      font-size: 0.82rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-isee .agev-note {
+      grid-column: 1 / -1;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.45;
+    }
+    .calc-isee .agevolazioni-note {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      margin: 14px 0 0;
+      padding: 10px 12px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      line-height: 1.55;
+    }
+
+    /* Chart */
+    .calc-isee .chart-card { margin-bottom: 24px; }
+    .calc-isee .chart-card .card-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--sage-dark); letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+    .calc-isee .chart-header {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .calc-isee .chart-subtitle {
+      font-size: 0.86rem;
+      color: var(--gray-text);
+      margin: 0 0 4px;
+      line-height: 1.5;
+    }
+    .calc-isee .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.82rem; color: var(--charcoal);
+      margin-top: 4px;
+    }
+    .calc-isee .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .calc-isee .legend-swatch {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border-radius: 3px;
+    }
+
+    .calc-isee .chart-wrap {
+      position: relative;
+      padding: 8px 4px 0;
+    }
+    .calc-isee .chart-wrap-stacked { height: 130px; }
+    .calc-isee .chart-wrap-scenarios { height: 320px; }
+    .calc-isee .chart-wrap canvas { display: block; }
+
+    .calc-isee .scala-note {
+      margin: 14px 0 0;
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--gray-text);
+      font-weight: 500;
+    }
+    .calc-isee .scala-note span {
+      color: var(--sage-dark);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-isee .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* Come funziona */
+    .calc-isee .how-it-works { margin-bottom: 24px; }
+    .calc-isee .math-details {
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .calc-isee .math-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 1.02rem;
+    }
+    .calc-isee .math-details summary::-webkit-details-marker { display: none; }
+    .calc-isee .math-details summary:hover { background: var(--ivory-warm); }
+    .calc-isee .math-details summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-isee .summary-icon {
+      width: 12px; height: 12px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+    .calc-isee .math-details[open] .summary-icon { transform: rotate(225deg); }
+    .calc-isee .math-content,
+    .calc-isee .ammortamento-content {
+      padding: 6px 30px 30px;
+      border-top: 1px solid var(--gray-soft);
+    }
+    .calc-isee .ammortamento-intro {
+      color: var(--gray-text);
+      font-size: 0.9rem;
+      margin: 14px 0 14px;
+    }
+    .calc-isee .math-content h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.35rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-isee .math-content h3 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .calc-isee .math-content p {
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .calc-isee .math-content ul {
+      margin: 8px 0 16px 22px;
+    }
+    .calc-isee .math-content li {
+      margin-bottom: 6px;
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+    .calc-isee .math-content b { color: var(--sage-dark); font-weight: 700; }
+    .calc-isee .math-content em { font-style: italic; color: var(--ochre-dark); font-weight: 500; }
+    .calc-isee .formula-block {
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--emerald);
+      padding: 14px 20px;
+      margin: 14px 0 18px;
+      border-radius: 6px;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .calc-isee .formula-note {
+      font-size: 0.88rem;
+      color: var(--gray-text);
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 10px 0 18px;
+      line-height: 1.6;
+    }
+
+    .calc-isee .scala-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 8px 0 16px;
+    }
+    .calc-isee .scala-table thead th {
+      background: var(--ivory);
+      color: var(--sage-dark);
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--gray-soft);
+      font-size: 0.84rem;
+    }
+    .calc-isee .scala-table tbody td {
+      padding: 7px 12px;
+      border-bottom: 1px solid rgba(221, 228, 226, 0.55);
+    }
+    .calc-isee .scala-table tbody tr:last-child td { border-bottom: 0; }
+
+    /* CTA */
+    .calc-isee .cta-section {
+      text-align: center;
+      margin: 40px 0 30px;
+      padding: 35px 25px;
+    }
+    .calc-isee .cta-section .eyebrow {
+      color: var(--ochre-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .calc-isee .cta-section h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+      color: var(--sage-dark);
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .calc-isee .cta-section p {
+      color: var(--gray-text);
+      max-width: 640px;
+      margin: 0 auto 25px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+    .calc-isee .cta-buttons {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .calc-isee .btn {
+      padding: 13px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .calc-isee .btn-primary { background: var(--sage); color: var(--ivory); }
+    .calc-isee .btn-primary:hover { background: var(--sage-dark); }
+    .calc-isee .btn-secondary {
+      background: transparent;
+      color: var(--sage);
+      border: 1.5px solid var(--sage);
+    }
+    .calc-isee .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
+
+    .calc-isee .final-disclaimer {
+      margin-top: 30px;
+      padding: 18px 22px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+    .calc-isee .final-disclaimer strong { color: var(--charcoal); }
+
+    /* Visibilità per modalità */
+    .calc-isee.modo-semplice .advanced-only { display: none !important; }
+
+    /* Responsive */
+    @media (max-width: 880px) {
+      .calc-isee { padding: 25px 16px 40px; }
+      .calc-isee .tipologia-tabs { grid-template-columns: 1fr; }
+      .calc-isee .modalita-toggle { justify-content: flex-start; }
+      .calc-isee .main-grid { grid-template-columns: 1fr; gap: 18px; }
+      .calc-isee .card { padding: 22px 22px; }
+      .calc-isee .form-row-2 { grid-template-columns: 1fr; gap: 0; }
+      .calc-isee .math-content,
+      .calc-isee .ammortamento-content { padding: 4px 18px 24px; }
+      .calc-isee .btn { width: 100%; }
+      .calc-isee .cta-buttons { flex-direction: column; }
+      .calc-isee .chart-wrap-scenarios { height: 260px; }
+      .calc-isee .chart-legend { gap: 10px; font-size: 0.76rem; }
+      .calc-isee .agev-item { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script>
+    import { calcolaIsee } from '~/lib/calcolatori/isee';
+    import type {
+      InputIsee,
+      OutputIsee,
+      TipologiaIsee,
+      ModalitaIsee,
+      TipoCasa,
+      TipoComune,
+      TipoDisabilita,
+    } from '~/lib/calcolatori/isee';
+    import {
+      Chart,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+    } from 'chart.js';
+
+    Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
+
+    // -------------------- FORMATTERS --------------------
+    const fmtEuro = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtEuroNoCents = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    });
+    const fmtEuroShort = (v: number): string => {
+      if (!Number.isFinite(v)) return '';
+      const a = Math.abs(v);
+      if (a >= 1_000_000) {
+        const m = v / 1_000_000;
+        return (Number.isInteger(m) ? m.toString() : m.toFixed(1).replace('.', ',')) + 'M €';
+      }
+      if (a >= 1_000) return Math.round(v / 1000) + 'K €';
+      return Math.round(v) + ' €';
+    };
+    const fmtScala = (v: number): string =>
+      Number.isFinite(v) ? v.toFixed(2).replace('.', ',') : '—';
+    const parseNum = (v: string): number => {
+      if (!v) return NaN;
+      return parseFloat(v.replace(',', '.'));
+    };
+
+    // -------------------- DOM HELPERS --------------------
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+      document.getElementById(id) as T;
+    const $$ = <T extends HTMLElement = HTMLElement>(sel: string) =>
+      document.querySelectorAll<T>(sel);
+    const root = document.querySelector<HTMLElement>('.calc-isee')!;
+
+    // -------------------- READ INPUT --------------------
+    function getTipologia(): TipologiaIsee {
+      const r = document.querySelector<HTMLInputElement>('input[name="is-tipologia"]:checked');
+      const v = r?.value;
+      return (v === 'universitario' || v === 'inclusione' ? v : 'ordinario') as TipologiaIsee;
+    }
+    function getModalita(): ModalitaIsee {
+      const r = document.querySelector<HTMLInputElement>('input[name="is-modalita"]:checked');
+      return (r?.value === 'avanzata' ? 'avanzata' : 'semplice') as ModalitaIsee;
+    }
+    function getTipoCasa(): TipoCasa {
+      const v = ($<HTMLSelectElement>('is-tipo-casa').value || 'proprieta') as TipoCasa;
+      return v;
+    }
+    function getTipoComune(): TipoComune {
+      const r = document.querySelector<HTMLInputElement>('input[name="is-comune"]:checked');
+      return (r?.value === 'metropolitano' ? 'metropolitano' : 'altro') as TipoComune;
+    }
+    function getTipoDisabilita(): TipoDisabilita | undefined {
+      const r = document.querySelector<HTMLInputElement>('input[name="is-tipo-disabilita"]:checked');
+      const v = r?.value;
+      if (v === 'media' || v === 'grave' || v === 'non_autosufficiente') return v;
+      return undefined;
+    }
+    function nz(id: string, def = 0): number {
+      const v = parseNum(($<HTMLInputElement>(id))?.value ?? '');
+      return Number.isFinite(v) ? v : def;
+    }
+
+    // -------------------- VISIBILITY --------------------
+    function setVisibility(): void {
+      const modalita = getModalita();
+      const tipologia = getTipologia();
+      const tipoCasa = getTipoCasa();
+      const numDisabili = nz('is-disabili', 0);
+
+      // modalità: classe sul root → CSS spegne i blocchi `.advanced-only`
+      root.classList.toggle('modo-semplice', modalita === 'semplice');
+
+      // Tipologia universitaria → mostra sezione studente
+      $$<HTMLElement>('.universitario-only').forEach((el) => {
+        el.hidden = tipologia !== 'universitario';
+      });
+
+      // Tipo casa
+      const propGroup = document.querySelector<HTMLElement>('.casa-proprieta-group');
+      const affGroup = document.querySelector<HTMLElement>('.casa-affitto-group');
+      if (propGroup) propGroup.hidden = tipoCasa !== 'proprieta';
+      if (affGroup) affGroup.hidden = tipoCasa !== 'affitto';
+
+      // Disabilità → mostra tipologia
+      const tipoDisGroup = document.querySelector<HTMLElement>('.disabilita-tipo');
+      if (tipoDisGroup) tipoDisGroup.hidden = numDisabili <= 0;
+
+      // Fuori sede
+      const fuoriSede = ($<HTMLInputElement>('is-fuori-sede'))?.checked;
+      const fuoriSedeExtra = document.querySelector<HTMLElement>('.fuori-sede-extra');
+      if (fuoriSedeExtra) fuoriSedeExtra.hidden = !fuoriSede;
+    }
+
+    // -------------------- BUILD INPUT --------------------
+    function buildInput(): InputIsee {
+      const modalita = getModalita();
+      const tipologia = getTipologia();
+
+      const inp: InputIsee = {
+        tipologia,
+        modalita,
+        numeroComponenti: Math.max(1, Math.round(nz('is-componenti', 1))),
+        numeroFigliMinorenni: Math.max(0, Math.round(nz('is-figli-minori', 0))),
+        numeroFigliSottoTreAnni: Math.max(0, Math.round(nz('is-figli-tre', 0))),
+        numeroFigliACarico: Math.max(0, Math.round(nz('is-figli-carico', 0))),
+        numeroDisabili: Math.max(0, Math.round(nz('is-disabili', 0))),
+        tipoDisabilita: nz('is-disabili', 0) > 0 ? getTipoDisabilita() : undefined,
+        tipoCasa: getTipoCasa(),
+        valoreCatastalePrimaCasa: Math.max(0, nz('is-valore-casa', 0)),
+        mutuoResiduoPrimaCasa: Math.max(0, nz('is-mutuo-residuo', 0)),
+        tipoComune: getTipoComune(),
+        canoneAffitto: Math.max(0, nz('is-canone', 0)),
+        contiCorrentiDepositi: Math.max(0, nz('is-conti', 0)),
+        investimentiFinanziari: Math.max(0, nz('is-investimenti', 0)),
+        criptovalute: Math.max(0, nz('is-cripto', 0)),
+        contiEsteri: Math.max(0, nz('is-conti-esteri', 0)),
+        moneyTransferEstero: Math.max(0, nz('is-money-transfer', 0)),
+        redditoLavoroDipendente: Math.max(0, nz('is-red-dipendente', 0)),
+        redditoLavoroAutonomo: Math.max(0, nz('is-red-autonomo', 0)),
+        pensioni: Math.max(0, nz('is-pensioni', 0)),
+        altriRedditi: Math.max(0, nz('is-altri-redditi', 0)),
+      };
+
+      // Avanzata
+      if (modalita === 'avanzata') {
+        inp.valoreAltriImmobili = Math.max(0, nz('is-altri-immobili', 0));
+        inp.mutuoAltriImmobili = Math.max(0, nz('is-mutuo-altri', 0));
+        inp.affittoPagato = Math.max(0, nz('is-affitto-pagato', 0));
+        inp.speseSanitarieDisabili = Math.max(0, nz('is-spese-sanitarie', 0));
+        inp.assegniMantenimento = Math.max(0, nz('is-assegni', 0));
+        inp.speseAssistenzaDisabili = Math.max(0, nz('is-spese-assistenza', 0));
+        inp.entrambiGenitoriLavorano = $<HTMLInputElement>('is-genitori-lavorano')?.checked ?? false;
+      }
+
+      // Universitario
+      if (tipologia === 'universitario') {
+        inp.studenteFuoriSede = $<HTMLInputElement>('is-fuori-sede')?.checked ?? false;
+        inp.distanzaUniversitaKm = Math.max(0, nz('is-distanza', 0));
+        inp.redditoPersonaleStudente = Math.max(0, nz('is-reddito-studente', 0));
+        inp.patrimonioPersonaleStudente = Math.max(0, nz('is-patrimonio-studente', 0));
+      }
+
+      return inp;
+    }
+
+    // -------------------- FASCIA BADGE --------------------
+    function fasciaIsee(isee: number): { label: string; cls: string } {
+      if (isee < 9_360) return { label: 'Soglia bassa — accesso a maggior parte agevolazioni', cls: 'fascia-bassa' };
+      if (isee < 15_000) return { label: 'Fascia intermedia', cls: 'fascia-media' };
+      if (isee < 25_000) return { label: 'Soglia media', cls: 'fascia-alta-bassa' };
+      return { label: 'Soglia alta', cls: 'fascia-alta' };
+    }
+
+    // -------------------- AGEVOLAZIONI RENDER --------------------
+    function renderAgevolazioni(out: OutputIsee): void {
+      const list = $('is-agevolazioni') as HTMLUListElement;
+      while (list.firstChild) list.removeChild(list.firstChild);
+      for (const a of out.agevolazioniAccessibili) {
+        const li = document.createElement('li');
+        li.className = 'agev-item';
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'agev-name';
+        nameEl.textContent = a.nome;
+        li.appendChild(nameEl);
+
+        const right = document.createElement('span');
+        right.style.display = 'flex';
+        right.style.flexDirection = 'column';
+        right.style.alignItems = 'flex-end';
+        right.style.gap = '4px';
+
+        const status = document.createElement('span');
+        status.className = `agev-status ${a.accessibile ? 'ok' : 'no'}`;
+        status.textContent = a.accessibile ? '✓ Possibile accesso' : '✗ Non accessibile';
+        right.appendChild(status);
+
+        if (a.importoStimato && a.importoStimato > 0 && a.accessibile) {
+          const imp = document.createElement('span');
+          imp.className = 'agev-importo';
+          imp.textContent = `≈ ${fmtEuroNoCents.format(a.importoStimato)}/anno`;
+          right.appendChild(imp);
+        }
+        li.appendChild(right);
+
+        if (a.note) {
+          const note = document.createElement('span');
+          note.className = 'agev-note';
+          note.textContent = a.note;
+          li.appendChild(note);
+        }
+
+        list.appendChild(li);
+      }
+    }
+
+    // -------------------- WARNINGS --------------------
+    function renderWarnings(out: OutputIsee): void {
+      const warnEl = $('is-warnings');
+      while (warnEl.firstChild) warnEl.removeChild(warnEl.firstChild);
+      if (out.warning.length) {
+        const ul = document.createElement('ul');
+        for (const w of out.warning) {
+          const li = document.createElement('li');
+          li.textContent = w;
+          ul.appendChild(li);
+        }
+        warnEl.appendChild(ul);
+      }
+    }
+
+    // -------------------- CHART COMPOSIZIONE ISE --------------------
+    let chartComp: import('chart.js').Chart | null = null;
+
+    function disegnaChartComp(out: OutputIsee): void {
+      const canvas = $('is-chart-comp') as unknown as HTMLCanvasElement;
+      if (!canvas) return;
+      const d = out.dettaglioComponenti;
+
+      // Componenti dell'ISE: redditi (esclusi i fittizi), 20% imm, 20% mob, fittizio
+      const reddPure = Math.max(0, d.redditoNetto - d.redditoFigurativo);
+      const c20Imm = d.componente20PatrimonioImmobiliare;
+      const c20Mob = d.componente20PatrimonioMobiliare;
+      const figur = d.redditoFigurativo;
+
+      const datasets = [
+        { label: 'Redditi netti', data: [reddPure], backgroundColor: '#373D42' },
+        { label: '20% Patrimonio immobiliare', data: [c20Imm], backgroundColor: '#166963' },
+        { label: '20% Patrimonio mobiliare', data: [c20Mob], backgroundColor: '#00A652' },
+        { label: 'Reddito figurativo', data: [figur], backgroundColor: '#AB7F62' },
+      ];
+
+      if (chartComp) {
+        chartComp.data.datasets.forEach((ds, i) => { ds.data = datasets[i].data; });
+        chartComp.update('none');
+        return;
+      }
+
+      chartComp = new Chart(canvas, {
+        type: 'bar',
+        data: { labels: ['ISE'], datasets },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 500, easing: 'easeOutQuart' },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: true,
+              boxPadding: 4,
+              callbacks: {
+                title: () => 'Composizione ISE',
+                label: (ctx) =>
+                  `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.x))}`,
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: true,
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.1)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+            y: {
+              stacked: true,
+              grid: { display: false },
+              border: { display: false },
+              ticks: { display: false },
+            },
+          },
+        },
+      });
+    }
+
+    // -------------------- CHART SCENARI --------------------
+    let chartScen: import('chart.js').Chart | null = null;
+
+    function calcolaScenari(baseInput: InputIsee): { label: string; isee: number }[] {
+      const scenari: { label: string; input: InputIsee }[] = [
+        { label: 'Attuale', input: baseInput },
+        {
+          label: 'Mobiliare −10K',
+          input: {
+            ...baseInput,
+            contiCorrentiDepositi: Math.max(0, baseInput.contiCorrentiDepositi - 10_000),
+          },
+        },
+        {
+          label: 'Affitto +2K dedotto',
+          input: {
+            ...baseInput,
+            modalita: 'avanzata',
+            affittoPagato: (baseInput.affittoPagato || 0) + 2_000,
+          },
+        },
+        {
+          label: '+1 figlio nucleo',
+          input: {
+            ...baseInput,
+            numeroComponenti: baseInput.numeroComponenti + 1,
+            numeroFigliMinorenni: baseInput.numeroFigliMinorenni + 1,
+            numeroFigliACarico: baseInput.numeroFigliACarico + 1,
+          },
+        },
+        {
+          label: 'Acquisto casa 100K',
+          input: {
+            ...baseInput,
+            tipoCasa: 'proprieta',
+            valoreCatastalePrimaCasa: baseInput.valoreCatastalePrimaCasa + 100_000,
+          },
+        },
+      ];
+      return scenari.map((s) => {
+        const r = calcolaIsee(s.input);
+        return { label: s.label, isee: r.ok ? r.iseeStimato : 0 };
+      });
+    }
+
+    function disegnaChartScenari(baseInput: InputIsee): void {
+      const canvas = $('is-chart-scenari') as unknown as HTMLCanvasElement;
+      if (!canvas) return;
+      const data = calcolaScenari(baseInput);
+      const labels = data.map((d) => d.label);
+      const values = data.map((d) => d.isee);
+      const colors = data.map((_, i) => i === 0 ? '#00A652' : '#79B9AD');
+
+      if (chartScen) {
+        chartScen.data.labels = labels;
+        chartScen.data.datasets[0].data = values;
+        (chartScen.data.datasets[0] as any).backgroundColor = colors;
+        chartScen.update('none');
+        return;
+      }
+
+      chartScen = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'ISEE',
+            data: values,
+            backgroundColor: colors,
+            borderWidth: 0,
+            borderRadius: 6,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 500, easing: 'easeOutQuart' },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: (ctx) => `ISEE: ${fmtEuroNoCents.format(Number(ctx.parsed.y))}`,
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                maxRotation: 30,
+                minRotation: 0,
+              },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.12)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // -------------------- MAIN --------------------
+    function aggiorna(): void {
+      setVisibility();
+
+      const blocking = $('is-blocking');
+      const inp = buildInput();
+      const out = calcolaIsee(inp);
+
+      if (!out.ok) {
+        blocking.textContent = out.errore ?? 'Dati non validi.';
+        return;
+      }
+      blocking.textContent = '';
+
+      // Output principale
+      $('is-out-isee').textContent = fmtEuro.format(out.iseeStimato);
+      const fascia = fasciaIsee(out.iseeStimato);
+      const badge = $('is-fascia-badge');
+      badge.textContent = fascia.label;
+      badge.className = `result-badge ${fascia.cls}`;
+
+      $('is-primary-label').textContent =
+        inp.tipologia === 'universitario' ? 'ISEE Universitario stimato'
+        : inp.tipologia === 'inclusione' ? 'ISEE Inclusione stimato'
+        : 'ISEE Ordinario stimato';
+
+      // Indicatori
+      $('is-out-isr').textContent = fmtEuroNoCents.format(out.isr);
+      $('is-out-isp').textContent = fmtEuroNoCents.format(out.isp);
+      $('is-out-ise').textContent = fmtEuroNoCents.format(out.ise);
+      $('is-out-figurativo').textContent = fmtEuroNoCents.format(out.dettaglioComponenti.redditoFigurativo);
+      $('is-out-scala').textContent = fmtScala(out.scalaEquivalenza);
+
+      // Patrimonio
+      const d = out.dettaglioComponenti;
+      $('is-out-imm-lordo').textContent = fmtEuroNoCents.format(d.patrimonioImmobiliareLordo);
+      $('is-out-franchigia-imm').textContent = fmtEuroNoCents.format(d.franchigiaApplicata);
+      $('is-out-imm-netto').textContent = fmtEuroNoCents.format(d.patrimonioImmobiliareNetto);
+      $('is-out-mob-lordo').textContent = fmtEuroNoCents.format(d.patrimonioMobiliareLordo);
+      $('is-out-franchigia-mob').textContent = fmtEuroNoCents.format(d.franchigiaMobiliare);
+      $('is-out-mob-netto').textContent = fmtEuroNoCents.format(d.patrimonioMobiliareNetto);
+
+      // Redditi
+      $('is-out-red-lordi').textContent = fmtEuroNoCents.format(d.redditiTotali);
+      $('is-out-abb20').textContent = `− ${fmtEuroNoCents.format(d.abbattimento20Percento)}`;
+      $('is-out-deduzioni').textContent = `− ${fmtEuroNoCents.format(d.deduzioniTotali)}`;
+      $('is-out-red-netto').textContent = fmtEuroNoCents.format(d.redditoNetto);
+
+      // Confronto tipologie
+      $('is-cmp-ord').textContent = fmtEuro.format(out.iseeOrdinario);
+      $('is-cmp-uni').textContent = fmtEuro.format(out.iseeUniversitario);
+      $('is-cmp-inc').textContent = fmtEuro.format(out.iseeInclusione);
+      const tipo = inp.tipologia;
+      $('is-row-ord').classList.toggle('is-active', tipo === 'ordinario');
+      $('is-row-uni').classList.toggle('is-active', tipo === 'universitario');
+      $('is-row-inc').classList.toggle('is-active', tipo === 'inclusione');
+
+      // Scala display
+      $('is-scala-display').textContent = fmtScala(out.scalaEquivalenza);
+
+      // Warnings
+      renderWarnings(out);
+
+      // Agevolazioni
+      renderAgevolazioni(out);
+
+      // Charts
+      disegnaChartComp(out);
+      disegnaChartScenari(inp);
+    }
+
+    // -------------------- DEBOUNCE + WIRING --------------------
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    function schedule(): void {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(aggiorna, 200);
+    }
+
+    // Tutti gli input/select cambiano → ricalcola
+    $$<HTMLInputElement | HTMLSelectElement>('.calc-isee input, .calc-isee select').forEach((el) => {
+      el.addEventListener('input', schedule);
+      el.addEventListener('change', schedule);
+    });
+
+    aggiorna();
+  </script>
 </Layout>
