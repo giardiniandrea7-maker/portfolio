@@ -9,22 +9,22 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: Andrea Giardini — Consulente Finanziario
+    default: 'Andrea Giardini | Consulente Finanziario'
     template: '%s — Andrea Giardini'
-  description: "Consulente finanziario indipendente. Affianco persone e famiglie nella pianificazione del patrimonio, negli investimenti e nella protezione del futuro, con metodo, ascolto e competenze certificate."
+  description: "Consulenza finanziaria su misura. Pianificazione patrimoniale, previdenziale e fiscale per privati e professionisti."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: Andrea Giardini — Consulente Finanziario
+    site_name: 'Andrea Giardini'
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/og-image.jpg'
         width: 1200
-        height: 628
+        height: 630
     type: website
   twitter:
-    handle: ''
-    site: ''
+    handle: '@giardiniconsulenza'
+    site: '@giardiniconsulenza'
     cardType: summary_large_image
 
 i18n:
