@@ -2000,5 +2000,12 @@ const metadata = {
     });
 
     aggiorna();
+
+    // Cleanup per Astro View Transitions (ClientRouter)
+    document.addEventListener('astro:before-swap', () => {
+      if (chartComp) { chartComp.destroy(); chartComp = null; }
+      if (chartScen) { chartScen.destroy(); chartScen = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
+    }, { once: true });
   </script>
 </Layout>
