@@ -1,17 +1,1390 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
-import { calcolatori } from '~/data/calcolatori';
-
-const slug = 'rendimento-obbligazioni';
-const calc = calcolatori.find((c) => c.slug === slug)!;
 
 const metadata = {
-  title: `${calc.titolo} | Andrea Giardini`,
-  description: calc.descrizione,
+  title: 'Calcolatore Rendimento Obbligazioni e BTP | Andrea Giardini',
+  description:
+    'Calcolatore gratuito per il rendimento di BTP, BOT, CTZ, CCT e obbligazioni corporate. Calcola YTM, capitale finale netto e fiscalità con due modalità: semplice e avanzata.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <PlaceholderCalcolatore slug={slug} />
+  <div class="calc-ob">
+    <!-- ============== HERO ============== -->
+    <header class="calc-header">
+      <h1>Calcolatore di Rendimento per Obbligazioni e Titoli di Stato</h1>
+      <p>
+        Calcola rendimento, capitale finale e impatto fiscale per BTP, BOT, CTZ, CCT e
+        obbligazioni corporate. Lo strumento gestisce correttamente rateo cedolare,
+        credito d'imposta e tassazione differenziata.
+      </p>
+    </header>
+
+    <!-- ============== TAB MODALITÀ ============== -->
+    <fieldset class="modal-tabs" role="radiogroup" aria-label="Modalità di calcolo">
+      <legend class="sr-only">Modalità di calcolo</legend>
+      <label class="tab-pill">
+        <input type="radio" name="ob-modalita" value="semplice" checked />
+        <span class="tab-content">
+          <span class="tab-title">Semplice</span>
+          <span class="tab-desc">BOT, CTZ o stima alla scadenza</span>
+        </span>
+      </label>
+      <label class="tab-pill">
+        <input type="radio" name="ob-modalita" value="avanzata" />
+        <span class="tab-content">
+          <span class="tab-title">Avanzata</span>
+          <span class="tab-desc">BTP, CCT con cedole intermedie</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ============== FORM + RISULTATI ============== -->
+    <div class="main-grid">
+      <!-- COLONNA SX: FORM -->
+      <div class="card form-card">
+        <h2 class="card-title">Inserisci i dati del titolo</h2>
+
+        <div class="form-group">
+          <label for="ob-tipologia">Tipologia titolo</label>
+          <select id="ob-tipologia">
+            <option value="titolo_stato">Titolo di Stato italiano (12,5%)</option>
+            <option value="corporate">Obbligazione corporate (26%)</option>
+            <option value="personalizzata">Aliquota personalizzata</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="ob-row-aliquota" hidden>
+          <label for="ob-aliquota">Aliquota fiscale</label>
+          <div class="input-with-suffix">
+            <input
+              type="number"
+              id="ob-aliquota"
+              min="0"
+              max="100"
+              step="0.5"
+              value="12.5"
+              inputmode="decimal"
+            />
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="ob-data-acquisto">Data di acquisto</label>
+            <input type="date" id="ob-data-acquisto" />
+          </div>
+          <div class="form-group">
+            <label for="ob-data-scadenza">Data di scadenza/vendita</label>
+            <input type="date" id="ob-data-scadenza" />
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="ob-prezzo-acq">Prezzo di acquisto</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                id="ob-prezzo-acq"
+                min="0"
+                max="200"
+                step="0.01"
+                value="98"
+                inputmode="decimal"
+              />
+              <span class="suffix">/100</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ob-prezzo-rimb">Prezzo di rimborso</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                id="ob-prezzo-rimb"
+                min="0"
+                max="200"
+                step="0.01"
+                value="100"
+                inputmode="decimal"
+              />
+              <span class="suffix">/100</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="ob-nominale">Capitale nominale</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                id="ob-nominale"
+                min="0"
+                step="1000"
+                value="10000"
+                inputmode="decimal"
+              />
+              <span class="suffix">€</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ob-numero-titoli">Numero titoli (taglio 1000€)</label>
+            <input type="text" id="ob-numero-titoli" disabled value="10" aria-readonly="true" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ob-cedola">Cedola lorda annua</label>
+          <div class="input-with-suffix">
+            <input
+              type="number"
+              id="ob-cedola"
+              min="0"
+              max="15"
+              step="0.05"
+              value="0"
+              inputmode="decimal"
+            />
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <!-- SOLO AVANZATA -->
+        <div class="advanced-only" hidden>
+          <hr class="form-sep" />
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="ob-frequenza">Frequenza cedolare</label>
+              <select id="ob-frequenza">
+                <option value="annuale">Annuale</option>
+                <option value="semestrale" selected>Semestrale</option>
+                <option value="trimestrale">Trimestrale</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="ob-data-prox-cedola">Data prossima cedola</label>
+              <input type="date" id="ob-data-prox-cedola" />
+            </div>
+          </div>
+
+          <div class="toggle-block">
+            <label class="toggle-row">
+              <input type="checkbox" id="ob-rateo" checked />
+              <span class="toggle-text">Includi rateo cedolare in acquisto</span>
+            </label>
+            <p class="toggle-hint">
+              Il prezzo "tel quel" comprende corso secco + rateo. Per i Titoli di Stato il
+              rateo genera credito d'imposta del 12,5% sulle cedole successive.
+            </p>
+          </div>
+
+          <div class="toggle-block">
+            <label class="toggle-row">
+              <input type="checkbox" id="ob-reinvesti" />
+              <span class="toggle-text">Reinvesti cedole</span>
+            </label>
+            <div id="ob-row-tassoR" hidden class="toggle-extra">
+              <label for="ob-tasso-r">Tasso di reinvestimento</label>
+              <div class="input-with-suffix">
+                <input
+                  type="number"
+                  id="ob-tasso-r"
+                  min="0"
+                  max="20"
+                  step="0.1"
+                  value="3"
+                  inputmode="decimal"
+                />
+                <span class="suffix">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="form-hint">Il calcolo si aggiorna automaticamente.</p>
+        <p class="warn warn-blocking" id="ob-blocking" role="alert" aria-live="assertive"></p>
+      </div>
+
+      <!-- COLONNA DX: RISULTATI -->
+      <div class="card results-card" aria-live="polite" aria-atomic="true">
+        <h2 class="card-title">Risultati</h2>
+
+        <div class="result-block result-primary">
+          <span class="result-label">Capitale finale netto</span>
+          <span class="result-value result-value-xl" id="ob-out-capitale-finale">—</span>
+        </div>
+        <div class="result-block">
+          <span class="result-label">Rendimento totale netto</span>
+          <span class="result-value" id="ob-out-rendimento-tot">—</span>
+        </div>
+        <div class="result-block">
+          <span class="result-label">Rendimento medio annuo netto</span>
+          <span class="result-value" id="ob-out-rendimento-medio">—</span>
+        </div>
+        <div class="result-block ytm-block" id="ob-row-ytm-netto" hidden>
+          <span class="result-label">YTM netto (annuo)</span>
+          <span class="result-value result-value-accent" id="ob-out-ytm-netto">—</span>
+        </div>
+
+        <h3 class="metrics-title">Dettaglio</h3>
+        <ul class="metrics-list">
+          <li><span class="m-label">Aliquota applicata</span><span class="m-value" id="ob-out-aliquota">—</span></li>
+          <li><span class="m-label">Anni residui</span><span class="m-value" id="ob-out-anni">—</span></li>
+          <li id="ob-row-ytm-lordo" hidden><span class="m-label">YTM lordo (annuo)</span><span class="m-value" id="ob-out-ytm-lordo">—</span></li>
+          <li id="ob-row-cedole-lorde" hidden><span class="m-label">Cedole totali lorde</span><span class="m-value" id="ob-out-cedole-lorde">—</span></li>
+          <li id="ob-row-cedole-nette" hidden><span class="m-label">Cedole totali nette</span><span class="m-value" id="ob-out-cedole-nette">—</span></li>
+          <li><span class="m-label">Guadagno conto capitale lordo</span><span class="m-value" id="ob-out-cg-lordo">—</span></li>
+          <li><span class="m-label">Guadagno conto capitale netto</span><span class="m-value" id="ob-out-cg-netto">—</span></li>
+          <li id="ob-row-rateo" hidden><span class="m-label">Rateo cedolare versato</span><span class="m-value" id="ob-out-rateo">—</span></li>
+          <li id="ob-row-credito" hidden><span class="m-label">Credito d'imposta maturato</span><span class="m-value" id="ob-out-credito">—</span></li>
+          <li><span class="m-label">Imposte totali pagate</span><span class="m-value" id="ob-out-imposte">—</span></li>
+        </ul>
+
+        <div class="warn-list" id="ob-warnings" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- ============== GRAFICO ============== -->
+    <section class="card chart-card" aria-label="Flussi di cassa nel tempo">
+      <div class="chart-header">
+        <h2 class="card-title">Flussi di cassa nel tempo</h2>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch legend-acquisto"></span>Esborso iniziale</span>
+          <span class="legend-item"><span class="legend-swatch legend-cedola"></span>Cedole nette</span>
+          <span class="legend-item"><span class="legend-swatch legend-rimborso"></span>Rimborso netto</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="ob-chart" aria-label="Grafico a barre dei flussi di cassa nel tempo" role="img"></canvas>
+      </div>
+      <p id="ob-chart-fallback" class="sr-only" aria-live="polite"></p>
+    </section>
+
+    <!-- ============== COME FUNZIONA ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra le formule e la fiscalità</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="math-content">
+          <h2>Come funziona il calcolatore</h2>
+          <p>
+            Il <em>rendimento</em> di un'obbligazione non è il solo tasso di cedola. È la somma
+            di tre componenti: la <b>cedola</b> che incassi periodicamente, il <b>guadagno (o
+            perdita) in conto capitale</b> tra prezzo di acquisto e prezzo di rimborso, e
+            l'effetto delle <b>imposte</b>. Una stima onesta deve tenere conto di tutto.
+          </p>
+          <p>
+            Lo standard professionale per misurare il rendimento è lo <b>YTM</b> (<em>Yield to
+            Maturity</em>): il tasso annuo che rende il valore attuale di tutti i flussi futuri
+            pari al prezzo che paghi oggi. È la "media implicita" del titolo che tiene conto
+            del valore temporale del denaro. Per BTP, BOT, CTZ e obbligazioni corporate è la
+            metrica giusta.
+          </p>
+          <p>
+            La <b>fiscalità italiana</b> è asimmetrica: i Titoli di Stato (e gli equiparati)
+            sono tassati al <b>12,5%</b>, le obbligazioni societarie al <b>26%</b>. Le
+            minusvalenze in conto capitale finiscono nel "zainetto fiscale" e si compensano
+            solo con plusvalenze future della stessa natura: il calcolatore non le tassa
+            ma non le scarica automaticamente. Il <b>rateo cedolare</b> che paghi al venditore
+            quando compri tra una cedola e l'altra genera, sui Titoli di Stato, un
+            <b>credito d'imposta</b> del 12,5% che si recupera sulle prime cedole successive.
+          </p>
+
+          <h3>Rendimento medio annuo netto</h3>
+          <div class="formula-block">
+            <i>R</i><sub>medio</sub> =
+            <span class="frac">
+              <span class="frac-top">rendimento totale netto</span>
+              <span class="frac-bottom">capitale investito</span>
+            </span>
+            ·
+            <span class="frac">
+              <span class="frac-top">1</span>
+              <span class="frac-bottom">anni residui</span>
+            </span>
+            · 100
+          </div>
+          <p class="formula-note">
+            È una media aritmetica semplice — utile come confronto, ma non tiene conto del
+            valore temporale del denaro. Per un confronto rigoroso usa lo YTM.
+          </p>
+
+          <h3>Yield to Maturity (YTM)</h3>
+          <div class="formula-block">
+            0 = Σ<sub>i</sub>
+            <span class="frac">
+              <span class="frac-top">flusso<sub>i</sub></span>
+              <span class="frac-bottom">(1 + <i>r</i>)<sup>t<sub>i</sub></sup></span>
+            </span>
+          </div>
+          <p>
+            Si risolve numericamente per <i>r</i>, dove t<sub>i</sub> è il tempo (in periodi
+            cedolari) dall'acquisto al flusso i-esimo, e i flussi includono l'esborso iniziale
+            (negativo), tutte le cedole e il rimborso finale. Il calcolatore restituisce
+            <i>r</i> come tasso annuo, espresso alla frequenza cedolare.
+          </p>
+          <p class="formula-note">
+            Lo YTM assume implicitamente che le cedole siano reinvestite al tasso YTM stesso —
+            ipotesi non sempre realistica. Se vuoi simulare un tasso di reinvestimento diverso,
+            attiva l'opzione "Reinvesti cedole" in modalità Avanzata.
+          </p>
+
+          <h3>Capitale finale netto</h3>
+          <p>
+            È quanto torna in tasca a scadenza, al netto di tutte le imposte:
+          </p>
+          <div class="formula-block">
+            <i>F</i> = esborso a corso secco + cedole nette + guadagno netto in conto capitale
+          </div>
+          <p class="formula-note">
+            In presenza di rateo, il <i>capitale investito</i> aumenta dell'importo del rateo,
+            ma il credito d'imposta sui Titoli di Stato riduce le tasse sulle cedole successive,
+            recuperando parte di quel costo.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== CTA ============== -->
+    <section class="cta-section">
+      <div class="eyebrow">Vuoi un parere professionale?</div>
+      <h2>Vuoi un parere sulle tue obbligazioni o sui tuoi BTP?</h2>
+      <p>
+        Posso aiutarti ad analizzare il tuo portafoglio obbligazionario, valutare se i
+        rendimenti che stai ottenendo sono in linea con il rischio e capire come ottimizzare
+        la tua allocazione. La prima chiamata è gratuita e senza impegno.
+      </p>
+      <div class="cta-buttons">
+        <a href="/contatti" class="btn btn-primary">Prenota una consulenza</a>
+        <a href="/calcolatori" class="btn btn-secondary">Torna ai calcolatori</a>
+      </div>
+    </section>
+
+    <!-- ============== DISCLAIMER ============== -->
+    <div class="final-disclaimer">
+      <strong>Nota informativa:</strong> Questo calcolatore ha finalità esclusivamente educative
+      e illustrative. Le ipotesi di calcolo (in particolare per il rateo cedolare, la
+      liquidazione del credito d'imposta e la compensazione delle minusvalenze) possono
+      semplificare alcune casistiche del regime fiscale italiano. Per una valutazione adatta
+      al tuo specifico portafoglio è necessaria una consulenza personalizzata. I rendimenti
+      passati non sono garanzia di rendimenti futuri.
+    </div>
+  </div>
+
+  <style is:global>
+    .calc-ob {
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
+      font-family: 'Manrope', -apple-system, sans-serif;
+      color: var(--charcoal);
+      line-height: 1.65;
+      font-size: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .calc-ob * { box-sizing: border-box; }
+
+    .calc-ob .calc-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-ob .calc-header h1 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-ob .calc-header p {
+      color: var(--gray-text);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ============== TAB MODALITÀ ============== */
+    .calc-ob .modal-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 0 0 24px;
+      border: 0;
+      padding: 0;
+    }
+    .calc-ob .tab-pill {
+      position: relative;
+      display: block;
+      padding: 14px 18px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 10px;
+      cursor: pointer;
+      background: white;
+      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-ob .tab-pill input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .calc-ob .tab-pill:hover { border-color: var(--sage-light); }
+    .calc-ob .tab-pill:has(input:checked) {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.10);
+    }
+    .calc-ob .tab-pill:has(input:focus-visible) {
+      outline: 2px solid var(--emerald);
+      outline-offset: 2px;
+    }
+    .calc-ob .tab-content { display: block; }
+    .calc-ob .tab-title {
+      display: block;
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 0.98rem;
+    }
+    .calc-ob .tab-desc {
+      display: block;
+      color: var(--gray-text);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+
+    /* ============== GRID ============== */
+    .calc-ob .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+      align-items: start;
+    }
+    .calc-ob .card {
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.15);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-soft);
+    }
+    .calc-ob .card-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 18px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ============== FORM ============== */
+    .calc-ob .form-group { margin-bottom: 16px; }
+    .calc-ob .form-group:last-child { margin-bottom: 0; }
+    .calc-ob .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .calc-ob label,
+    .calc-ob .modal-tabs legend {
+      display: block;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      padding: 0;
+    }
+    .calc-ob input[type="number"],
+    .calc-ob input[type="text"],
+    .calc-ob input[type="date"],
+    .calc-ob select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      background: white;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-ob input:focus,
+    .calc-ob select:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    }
+    .calc-ob input[type="number"]::-webkit-outer-spin-button,
+    .calc-ob input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .calc-ob input[type="number"] { -moz-appearance: textfield; }
+    .calc-ob input[disabled] {
+      background: var(--ivory-warm);
+      color: var(--gray-text);
+      cursor: not-allowed;
+    }
+
+    .calc-ob .input-with-suffix { position: relative; }
+    .calc-ob .input-with-suffix .suffix {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-text);
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .calc-ob .input-with-suffix input { padding-right: 42px; }
+
+    .calc-ob .form-sep {
+      border: 0;
+      border-top: 1px dashed var(--gray-soft);
+      margin: 18px 0 16px;
+    }
+    .calc-ob .toggle-block {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--ivory-warm);
+    }
+    .calc-ob .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      margin: 0;
+      font-weight: 500;
+      font-size: 0.93rem;
+    }
+    .calc-ob .toggle-row input[type="checkbox"] {
+      accent-color: var(--emerald);
+      width: 17px; height: 17px;
+      flex-shrink: 0;
+    }
+    .calc-ob .toggle-text { color: var(--charcoal); }
+    .calc-ob .toggle-hint {
+      color: var(--gray-text);
+      font-size: 0.8rem;
+      margin: 6px 0 0 27px;
+      line-height: 1.45;
+    }
+    .calc-ob .toggle-extra { margin: 12px 0 0 27px; }
+    .calc-ob .toggle-extra label {
+      font-size: 0.85rem;
+      color: var(--gray-text);
+    }
+
+    .calc-ob .warn {
+      min-height: 0;
+      margin: 8px 0 0;
+      font-size: 0.84rem;
+      color: var(--ochre-dark);
+      line-height: 1.45;
+    }
+    .calc-ob .warn-blocking:not(:empty) {
+      padding: 8px 12px;
+      background: rgba(171, 127, 98, 0.08);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      color: var(--ochre-dark);
+      font-weight: 500;
+    }
+    .calc-ob .form-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      font-style: italic;
+      margin: 14px 0 0;
+    }
+
+    /* ============== RISULTATI ============== */
+    .calc-ob .results-card {
+      background: linear-gradient(180deg, var(--ivory-warm) 0%, white 100%);
+    }
+    .calc-ob .result-block {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-ob .result-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .calc-ob .result-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+    }
+    .calc-ob .result-value-xl {
+      font-size: clamp(1.7rem, 3.6vw, 2.1rem);
+      color: var(--sage-dark);
+    }
+    .calc-ob .result-value-accent {
+      color: var(--emerald);
+    }
+    .calc-ob .ytm-block {
+      background: rgba(0, 166, 82, 0.05);
+      border: 1px solid rgba(0, 166, 82, 0.18);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+
+    .calc-ob .metrics-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+    .calc-ob .metrics-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .calc-ob .metrics-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(221, 228, 226, 0.7);
+      font-size: 0.88rem;
+    }
+    .calc-ob .metrics-list li:last-child { border-bottom: 0; }
+    .calc-ob .metrics-list .m-label { color: var(--gray-text); }
+    .calc-ob .metrics-list .m-value {
+      font-weight: 600;
+      color: var(--charcoal);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-ob .warn-list {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: var(--ochre-dark);
+    }
+    .calc-ob .warn-list ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .calc-ob .warn-list li {
+      margin: 4px 0;
+      line-height: 1.5;
+    }
+
+    /* ============== CHART ============== */
+    .calc-ob .chart-card { margin-bottom: 30px; }
+    .calc-ob .chart-card .card-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--sage-dark);
+      letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+    .calc-ob .chart-header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .calc-ob .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 18px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.84rem; color: var(--charcoal);
+    }
+    .calc-ob .legend-item { display: inline-flex; align-items: center; gap: 8px; }
+    .calc-ob .legend-swatch {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border-radius: 3px;
+    }
+    .calc-ob .legend-acquisto { background: #373D42; }
+    .calc-ob .legend-cedola { background: #79B9AD; }
+    .calc-ob .legend-rimborso { background: #00A652; }
+
+    .calc-ob .chart-wrap {
+      position: relative;
+      height: 380px;
+      padding: 8px 4px 0;
+    }
+    .calc-ob .chart-wrap canvas { display: block; }
+
+    .calc-ob .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* ============== COME FUNZIONA ============== */
+    .calc-ob .how-it-works { margin-bottom: 40px; }
+    .calc-ob .math-details {
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .calc-ob .math-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 1.02rem;
+    }
+    .calc-ob .math-details summary::-webkit-details-marker { display: none; }
+    .calc-ob .math-details summary:hover { background: var(--ivory-warm); }
+    .calc-ob .math-details summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-ob .summary-icon {
+      width: 12px; height: 12px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+    .calc-ob .math-details[open] .summary-icon { transform: rotate(225deg); }
+    .calc-ob .math-content {
+      padding: 6px 30px 30px;
+      border-top: 1px solid var(--gray-soft);
+    }
+    .calc-ob .math-content h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.35rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-ob .math-content h3 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .calc-ob .math-content p {
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .calc-ob .math-content b { color: var(--sage-dark); font-weight: 700; }
+    .calc-ob .math-content em { font-style: italic; color: var(--ochre-dark); font-weight: 500; }
+    .calc-ob .math-content i {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-style: italic;
+      font-size: 1.05em;
+      color: var(--charcoal);
+    }
+    .calc-ob .math-content sup { font-size: 0.7em; }
+    .calc-ob .math-content sub { font-size: 0.7em; }
+
+    .calc-ob .formula-block {
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--emerald);
+      padding: 14px 20px;
+      margin: 14px 0 18px;
+      border-radius: 6px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--charcoal);
+    }
+    .calc-ob .formula-note {
+      font-size: 0.88rem;
+      color: var(--gray-text);
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 10px 0 18px;
+    }
+    .calc-ob .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      line-height: 1.1;
+    }
+    .calc-ob .frac-top { padding: 0 6px 2px; border-bottom: 1.5px solid var(--charcoal); }
+    .calc-ob .frac-bottom { padding: 2px 6px 0; }
+
+    /* ============== CTA ============== */
+    .calc-ob .cta-section {
+      text-align: center;
+      margin: 50px 0 40px;
+      padding: 35px 25px;
+    }
+    .calc-ob .cta-section .eyebrow {
+      color: var(--ochre-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .calc-ob .cta-section h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+      color: var(--sage-dark);
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .calc-ob .cta-section p {
+      color: var(--gray-text);
+      max-width: 640px;
+      margin: 0 auto 25px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+    .calc-ob .cta-buttons {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .calc-ob .btn {
+      padding: 13px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .calc-ob .btn-primary { background: var(--sage); color: var(--ivory); }
+    .calc-ob .btn-primary:hover { background: var(--sage-dark); }
+    .calc-ob .btn-secondary {
+      background: transparent;
+      color: var(--sage);
+      border: 1.5px solid var(--sage);
+    }
+    .calc-ob .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
+
+    .calc-ob .final-disclaimer {
+      margin-top: 30px;
+      padding: 18px 22px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+    .calc-ob .final-disclaimer strong { color: var(--charcoal); }
+
+    /* ============== RESPONSIVE ============== */
+    @media (max-width: 880px) {
+      .calc-ob { padding: 25px 16px 40px; }
+      .calc-ob .modal-tabs { grid-template-columns: 1fr; }
+      .calc-ob .main-grid { grid-template-columns: 1fr; gap: 18px; }
+      .calc-ob .card { padding: 22px 22px; }
+      .calc-ob .form-row-2 { grid-template-columns: 1fr; gap: 0; }
+      .calc-ob .math-content { padding: 4px 18px 24px; }
+      .calc-ob .btn { width: 100%; }
+      .calc-ob .cta-buttons { flex-direction: column; }
+      .calc-ob .chart-wrap { height: 280px; padding: 6px 0 0; }
+      .calc-ob .chart-legend { gap: 12px; font-size: 0.78rem; }
+    }
+  </style>
+
+  <script>
+    import { calcolaRendimentoObbligazione } from '~/lib/calcolatori/rendimento-obbligazioni';
+    import type {
+      ModalitaCalcolo,
+      Tipologia,
+      Frequenza,
+      FlussoCassa,
+    } from '~/lib/calcolatori/rendimento-obbligazioni';
+    import {
+      Chart,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Legend,
+    } from 'chart.js';
+
+    Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+    // -------------------- FORMATTERS --------------------
+    const fmtEuro = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtEuroShort = (v: number): string => {
+      if (!Number.isFinite(v)) return '';
+      const a = Math.abs(v);
+      if (a >= 1_000_000) {
+        const m = v / 1_000_000;
+        return (Number.isInteger(m) ? m.toString() : m.toFixed(1).replace('.', ',')) + 'M €';
+      }
+      if (a >= 1_000) return Math.round(v / 1000) + 'K €';
+      return Math.round(v) + ' €';
+    };
+    const fmtPct = (v: number, digits = 3): string => {
+      if (!Number.isFinite(v)) return '—';
+      const fixed = v.toFixed(digits);
+      const trimmed = fixed.replace(/\.?0+$/, '');
+      return trimmed.replace('.', ',') + '%';
+    };
+    const fmtPctFixed = (v: number, digits = 3): string => {
+      if (!Number.isFinite(v)) return '—';
+      return v.toFixed(digits).replace('.', ',') + '%';
+    };
+    const fmtDate = (d: Date) => d.toLocaleDateString('it-IT');
+    const fmtDateShort = (d: Date): string => {
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const y = String(d.getFullYear()).slice(-2);
+      return `${m}/${y}`;
+    };
+
+    function parseISODate(s: string): Date | null {
+      if (!s) return null;
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+      if (!m) return null;
+      const y = parseInt(m[1], 10);
+      const mo = parseInt(m[2], 10) - 1;
+      const d = parseInt(m[3], 10);
+      const dt = new Date(y, mo, d);
+      if (dt.getFullYear() !== y || dt.getMonth() !== mo || dt.getDate() !== d) return null;
+      return dt;
+    }
+    function toISODate(d: Date): string {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${dd}`;
+    }
+    function addYearsTo(d: Date, years: number): Date {
+      const r = new Date(d); r.setFullYear(r.getFullYear() + years); return r;
+    }
+    function addMonthsTo(d: Date, months: number): Date {
+      const r = new Date(d); r.setMonth(r.getMonth() + months); return r;
+    }
+    function parseNum(v: string): number {
+      if (!v) return NaN;
+      return parseFloat(v.replace(',', '.'));
+    }
+
+    // -------------------- DOM REFS --------------------
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+      document.getElementById(id) as T;
+    const inputs = {
+      modalitaRadios: document.querySelectorAll<HTMLInputElement>('input[name="ob-modalita"]'),
+      tipologia: $<HTMLSelectElement>('ob-tipologia'),
+      aliquota: $<HTMLInputElement>('ob-aliquota'),
+      dataAcquisto: $<HTMLInputElement>('ob-data-acquisto'),
+      dataScadenza: $<HTMLInputElement>('ob-data-scadenza'),
+      prezzoAcq: $<HTMLInputElement>('ob-prezzo-acq'),
+      prezzoRimb: $<HTMLInputElement>('ob-prezzo-rimb'),
+      nominale: $<HTMLInputElement>('ob-nominale'),
+      numeroTitoli: $<HTMLInputElement>('ob-numero-titoli'),
+      cedola: $<HTMLInputElement>('ob-cedola'),
+      frequenza: $<HTMLSelectElement>('ob-frequenza'),
+      dataProxCedola: $<HTMLInputElement>('ob-data-prox-cedola'),
+      rateo: $<HTMLInputElement>('ob-rateo'),
+      reinvesti: $<HTMLInputElement>('ob-reinvesti'),
+      tassoR: $<HTMLInputElement>('ob-tasso-r'),
+    };
+
+    // -------------------- INIT DEFAULTS --------------------
+    const oggi = new Date();
+    oggi.setHours(0, 0, 0, 0);
+    inputs.dataAcquisto.value = toISODate(oggi);
+    inputs.dataScadenza.value = toISODate(addYearsTo(oggi, 5));
+    inputs.dataProxCedola.value = toISODate(addMonthsTo(oggi, 6));
+
+    function getModalita(): ModalitaCalcolo {
+      const r = document.querySelector<HTMLInputElement>('input[name="ob-modalita"]:checked');
+      return (r?.value === 'avanzata' ? 'avanzata' : 'semplice') as ModalitaCalcolo;
+    }
+
+    function setVisibility(): void {
+      const modalita = getModalita();
+      const advancedSection = document.querySelector<HTMLElement>('.advanced-only');
+      if (advancedSection) advancedSection.hidden = modalita !== 'avanzata';
+
+      const tipologia = inputs.tipologia.value as Tipologia;
+      const aliquotaRow = $('ob-row-aliquota');
+      if (aliquotaRow) aliquotaRow.hidden = tipologia !== 'personalizzata';
+
+      const tassoRRow = $('ob-row-tassoR');
+      if (tassoRRow) tassoRRow.hidden = !inputs.reinvesti.checked;
+    }
+
+    // -------------------- CHART --------------------
+    const COLORS = {
+      acquisto: '#373D42',
+      cedola: '#79B9AD',
+      rimborso: '#00A652',
+    };
+
+    let chartInstance: import('chart.js').Chart | null = null;
+    let firstRender = true;
+
+    type GroupedFlow = { data: Date; label: string; items: FlussoCassa[] };
+    const currentChart: { byDate: GroupedFlow[] } = { byDate: [] };
+
+    function aggregateByDate(flussi: FlussoCassa[]): GroupedFlow[] {
+      const map = new Map<string, GroupedFlow>();
+      for (const f of flussi) {
+        const key = toISODate(f.data);
+        if (!map.has(key)) {
+          map.set(key, { data: f.data, label: fmtDateShort(f.data), items: [] });
+        }
+        map.get(key)!.items.push(f);
+      }
+      return Array.from(map.values()).sort((a, b) => a.data.getTime() - b.data.getTime());
+    }
+
+    function disegnaChart(flussi: FlussoCassa[]): void {
+      const canvas = $('ob-chart') as unknown as HTMLCanvasElement;
+      if (!canvas) return;
+
+      const grouped = aggregateByDate(flussi);
+      currentChart.byDate = grouped;
+
+      const labels = grouped.map((g) => g.label);
+      const dataAcquisto = grouped.map((g) =>
+        g.items.filter((i) => i.tipo === 'acquisto').reduce((s, i) => s + i.importoLordo, 0)
+      );
+      const dataCedola = grouped.map((g) =>
+        g.items.filter((i) => i.tipo === 'cedola').reduce((s, i) => s + i.importoNetto, 0)
+      );
+      const dataRimborso = grouped.map((g) =>
+        g.items.filter((i) => i.tipo === 'rimborso').reduce((s, i) => s + i.importoNetto, 0)
+      );
+
+      const N = grouped.length;
+      const showXTick = (idx: number): boolean =>
+        N > 30 ? idx % 4 === 0 || idx === N - 1
+        : N > 18 ? idx % 2 === 0 || idx === N - 1
+        : true;
+      const rotate = N > 12;
+
+      if (chartInstance) {
+        chartInstance.data.labels = labels;
+        chartInstance.data.datasets[0].data = dataAcquisto;
+        chartInstance.data.datasets[1].data = dataCedola;
+        chartInstance.data.datasets[2].data = dataRimborso;
+        const xs = chartInstance.options.scales?.x as any;
+        if (xs?.ticks) {
+          xs.ticks.maxRotation = rotate ? 45 : 0;
+          xs.ticks.minRotation = rotate ? 45 : 0;
+          xs.ticks.callback = function (_v: unknown, idx: number) {
+            return showXTick(idx) ? labels[idx] : '';
+          };
+        }
+        chartInstance.setActiveElements([]);
+        if (chartInstance.tooltip) {
+          chartInstance.tooltip.setActiveElements([], { x: 0, y: 0 });
+        }
+        chartInstance.update('none');
+        return;
+      }
+
+      chartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Esborso iniziale', data: dataAcquisto, backgroundColor: COLORS.acquisto, stack: 'cf', borderWidth: 0, borderRadius: 4 },
+            { label: 'Cedole nette', data: dataCedola, backgroundColor: COLORS.cedola, stack: 'cf', borderWidth: 0, borderRadius: 4 },
+            { label: 'Rimborso netto', data: dataRimborso, backgroundColor: COLORS.rimborso, stack: 'cf', borderWidth: 0, borderRadius: 4 },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender ? { duration: 600, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              footerColor: '#6B7672',
+              footerFont: { family: 'Manrope, sans-serif', weight: 400, size: 11 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: true,
+              boxPadding: 4,
+              callbacks: {
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  const g = currentChart.byDate[idx];
+                  return g ? fmtDate(g.data) : '';
+                },
+                label: (ctx) => {
+                  const v = Number(ctx.parsed.y);
+                  if (Math.abs(v) < 0.005) return '';
+                  return `  ${ctx.dataset.label}: ${fmtEuro.format(v)}`;
+                },
+                footer: (items) => {
+                  const idx = items[0].dataIndex;
+                  const g = currentChart.byDate[idx];
+                  if (!g) return '';
+                  const lines: string[] = [];
+                  for (const it of g.items) {
+                    const segno = it.tipo === 'acquisto' ? '−' : '+';
+                    lines.push(
+                      `${it.descrizione} (${segno} lordo ${fmtEuro.format(Math.abs(it.importoLordo))}, imposte ${fmtEuro.format(it.imposte)})`
+                    );
+                  }
+                  return lines.join('\n');
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                maxRotation: rotate ? 45 : 0,
+                minRotation: rotate ? 45 : 0,
+                autoSkip: false,
+                callback: function (_v: any, idx: number) {
+                  return showXTick(idx) ? labels[idx] : '';
+                },
+              },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+
+      requestAnimationFrame(() => {
+        if (chartInstance && chartInstance.options) {
+          (chartInstance.options as any).animation = false;
+        }
+      });
+      firstRender = false;
+    }
+
+    function updateChartFallback(flussi: FlussoCassa[]): void {
+      const el = $('ob-chart-fallback');
+      if (!el) return;
+      const totIngressi = flussi
+        .filter((f) => f.tipo !== 'acquisto')
+        .reduce((s, f) => s + f.importoNetto, 0);
+      const esborso = flussi
+        .filter((f) => f.tipo === 'acquisto')
+        .reduce((s, f) => s + Math.abs(f.importoLordo), 0);
+      el.textContent =
+        `Flussi: esborso totale ${fmtEuro.format(esborso)}, ` +
+        `ingressi netti totali ${fmtEuro.format(totIngressi)} su ${flussi.length} eventi.`;
+    }
+
+    // -------------------- MAIN --------------------
+    function aggiorna(): void {
+      setVisibility();
+
+      const modalita = getModalita();
+      const tipologia = inputs.tipologia.value as Tipologia;
+      const aliquotaPersonalizzata = parseNum(inputs.aliquota.value);
+      const dataAcquisto = parseISODate(inputs.dataAcquisto.value);
+      const dataScadenza = parseISODate(inputs.dataScadenza.value);
+      const prezzoAcquisto = parseNum(inputs.prezzoAcq.value);
+      const prezzoRimborso = parseNum(inputs.prezzoRimb.value);
+      const capitaleNominale = parseNum(inputs.nominale.value);
+      const cedolaLordaAnnua = parseNum(inputs.cedola.value);
+      const frequenzaCedolare = inputs.frequenza.value as Frequenza;
+      const dataProssimaCedola = parseISODate(inputs.dataProxCedola.value);
+      const includiRateo = inputs.rateo.checked;
+      const reinvestiCedole = inputs.reinvesti.checked;
+      const tassoReinvestimento = parseNum(inputs.tassoR.value);
+
+      // Numero titoli (informativo)
+      inputs.numeroTitoli.value = Number.isFinite(capitaleNominale) && capitaleNominale > 0
+        ? (capitaleNominale / 1000).toFixed(2).replace(/\.?0+$/, '').replace('.', ',')
+        : '0';
+
+      const blocking = $('ob-blocking');
+
+      if (!dataAcquisto || !dataScadenza) {
+        blocking.textContent = 'Inserisci date valide.';
+        return;
+      }
+      if (dataScadenza.getTime() <= dataAcquisto.getTime()) {
+        blocking.textContent = 'La data di scadenza deve essere successiva alla data di acquisto.';
+        return;
+      }
+      if (!Number.isFinite(capitaleNominale) || capitaleNominale <= 0) {
+        blocking.textContent = 'Inserisci un capitale nominale maggiore di zero.';
+        return;
+      }
+      blocking.textContent = '';
+
+      const result = calcolaRendimentoObbligazione({
+        modalita,
+        tipologia,
+        aliquotaPersonalizzata: Number.isFinite(aliquotaPersonalizzata) ? aliquotaPersonalizzata : 0,
+        dataAcquisto,
+        dataScadenza,
+        prezzoAcquisto: Number.isFinite(prezzoAcquisto) ? prezzoAcquisto : 0,
+        prezzoRimborso: Number.isFinite(prezzoRimborso) ? prezzoRimborso : 0,
+        capitaleNominale,
+        cedolaLordaAnnua: Number.isFinite(cedolaLordaAnnua) ? cedolaLordaAnnua : 0,
+        frequenzaCedolare,
+        dataProssimaCedola: dataProssimaCedola ?? undefined,
+        includiRateo,
+        reinvestiCedole,
+        tassoReinvestimento: Number.isFinite(tassoReinvestimento) ? tassoReinvestimento : 0,
+      });
+
+      if (!result.ok) {
+        blocking.textContent = result.errore ?? 'Dati non validi.';
+        return;
+      }
+
+      // Output principali
+      $('ob-out-capitale-finale').textContent = fmtEuro.format(result.capitaleFinaleNetto);
+      $('ob-out-rendimento-tot').textContent = fmtEuro.format(result.rendimentoTotaleNetto);
+      $('ob-out-rendimento-medio').textContent = fmtPctFixed(result.rendimentoPercMedioAnnuoNetto, 3);
+
+      // Output dettaglio
+      $('ob-out-aliquota').textContent =
+        result.aliquotaApplicata.toFixed(1).replace(/\.?0+$/, '').replace('.', ',') + '%';
+      $('ob-out-anni').textContent = result.anniResidui.toFixed(2).replace('.', ',');
+      $('ob-out-cg-lordo').textContent = fmtEuro.format(result.guadagnoContoCapitaleLordo);
+      $('ob-out-cg-netto').textContent = fmtEuro.format(result.guadagnoContoCapitaleNetto);
+      $('ob-out-imposte').textContent = fmtEuro.format(result.impostePagateTotali);
+
+      // Cedole (se > 0)
+      const showCedole = result.cedoleTotaliLorde > 0;
+      $('ob-row-cedole-lorde').hidden = !showCedole;
+      $('ob-row-cedole-nette').hidden = !showCedole;
+      if (showCedole) {
+        $('ob-out-cedole-lorde').textContent = fmtEuro.format(result.cedoleTotaliLorde);
+        $('ob-out-cedole-nette').textContent = fmtEuro.format(result.cedoleTotaliNette);
+      }
+
+      // YTM (solo Avanzata)
+      const isAvanzata = modalita === 'avanzata';
+      $('ob-row-ytm-netto').hidden = !isAvanzata;
+      $('ob-row-ytm-lordo').hidden = !isAvanzata;
+      if (isAvanzata) {
+        $('ob-out-ytm-netto').textContent =
+          result.ytmNetto !== null ? fmtPctFixed(result.ytmNetto, 3) : '—';
+        $('ob-out-ytm-lordo').textContent =
+          result.ytmLordo !== null ? fmtPctFixed(result.ytmLordo, 3) : '—';
+      }
+
+      // Rateo / credito (se applicabile)
+      const showRateo = result.rateoVersato > 0;
+      $('ob-row-rateo').hidden = !showRateo;
+      if (showRateo) $('ob-out-rateo').textContent = fmtEuro.format(result.rateoVersato);
+
+      const showCredito = result.creditoImpostaMaturato > 0;
+      $('ob-row-credito').hidden = !showCredito;
+      if (showCredito)
+        $('ob-out-credito').textContent = fmtEuro.format(result.creditoImpostaMaturato);
+
+      // Warnings
+      const warnEl = $('ob-warnings');
+      warnEl.innerHTML = '';
+      if (result.warning.length) {
+        const ul = document.createElement('ul');
+        for (const w of result.warning) {
+          const li = document.createElement('li');
+          li.textContent = w;
+          ul.appendChild(li);
+        }
+        warnEl.appendChild(ul);
+      }
+
+      disegnaChart(result.flussi);
+      updateChartFallback(result.flussi);
+    }
+
+    // -------------------- DEBOUNCE + WIRING --------------------
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    function schedule(): void {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(aggiorna, 200);
+    }
+
+    const allInputs: Array<HTMLInputElement | HTMLSelectElement> = [
+      inputs.tipologia,
+      inputs.aliquota,
+      inputs.dataAcquisto,
+      inputs.dataScadenza,
+      inputs.prezzoAcq,
+      inputs.prezzoRimb,
+      inputs.nominale,
+      inputs.cedola,
+      inputs.frequenza,
+      inputs.dataProxCedola,
+      inputs.tassoR,
+    ];
+    for (const el of allInputs) {
+      el.addEventListener('input', schedule);
+      el.addEventListener('change', schedule);
+    }
+    inputs.rateo.addEventListener('change', schedule);
+    inputs.reinvesti.addEventListener('change', schedule);
+    inputs.modalitaRadios.forEach((el) => el.addEventListener('change', schedule));
+
+    aggiorna();
+  </script>
 </Layout>

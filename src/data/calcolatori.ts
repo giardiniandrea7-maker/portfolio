@@ -32,7 +32,7 @@ export const calcolatori: Calcolatore[] = [
     descrizione:
       'Calcola rendimento (assoluto, percentuale, annuo), capitale finale, tempo residuo ed eventuale credito d’imposta per BTP, BOT, CTZ, CCT e obbligazioni.',
     href: '/calcolatori/rendimento-obbligazioni',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:certificate',
   },
   {
