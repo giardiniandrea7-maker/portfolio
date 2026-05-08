@@ -24,6 +24,10 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   output: 'static',
 
+  redirects: {
+    '/calcolatori/pensione': '/calcolatori/pensione-integrativa',
+  },
+
   integrations: [
     tailwind({
       applyBaseStyles: false,

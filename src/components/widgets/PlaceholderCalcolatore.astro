@@ -1,0 +1,56 @@
+---
+import { Icon } from 'astro-icon/components';
+import { calcolatori } from '~/data/calcolatori';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const calc = calcolatori.find((c) => c.slug === slug);
+
+if (!calc) {
+  throw new Error(`PlaceholderCalcolatore: slug "${slug}" non trovato in src/data/calcolatori.ts`);
+}
+---
+
+<section class="bg-white py-16 md:py-24">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+    {calc.icona && (
+      <div class="w-16 h-16 mx-auto rounded-sm bg-[var(--aw-color-primary)]/10 text-[var(--aw-color-primary)] flex items-center justify-center mb-8">
+        <Icon name={calc.icona} class="w-8 h-8" />
+      </div>
+    )}
+
+    <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-4">In arrivo</p>
+
+    <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.15] font-heading">
+      {calc.titolo}
+    </h1>
+
+    <p class="text-lg md:text-xl text-[var(--aw-color-text-muted)] leading-relaxed mb-4">
+      {calc.descrizione}
+    </p>
+
+    <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10">
+      Questo strumento è in fase di sviluppo. Nel frattempo, se vuoi una stima personalizzata sulla tua situazione, contattami per una diagnosi gratuita.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a
+        href="/richiedi-diagnosi"
+        class="inline-flex items-center justify-center px-8 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold rounded-sm transition-all hover:shadow-lg font-heading"
+      >
+        Richiedi diagnosi gratuita
+      </a>
+      <a
+        href="/calcolatori"
+        class="inline-flex items-center justify-center px-8 py-4 border border-[var(--aw-color-primary)] text-[var(--aw-color-primary)] hover:bg-[var(--aw-color-primary)] hover:text-white font-semibold rounded-sm transition-all font-heading"
+      >
+        Torna ai calcolatori
+      </a>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,17 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
+import { calcolatori } from '~/data/calcolatori';
+
+const slug = 'rendimento-obbligazioni';
+const calc = calcolatori.find((c) => c.slug === slug)!;
+
+const metadata = {
+  title: `${calc.titolo} | Andrea Giardini`,
+  description: calc.descrizione,
+};
+---
+
+<Layout metadata={metadata}>
+  <PlaceholderCalcolatore slug={slug} />
+</Layout>
