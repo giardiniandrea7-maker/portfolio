@@ -23,7 +23,7 @@ export const calcolatori: Calcolatore[] = [
     descrizione:
       'Stima il capitale finale ottenuto dall’accumulo degli interessi nel corso degli anni partendo da un capitale iniziale, con eventuali versamenti periodici.',
     href: '/calcolatori/interesse-composto',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:trending-up',
   },
   {

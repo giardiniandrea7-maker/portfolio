@@ -1,17 +1,1191 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
-import { calcolatori } from '~/data/calcolatori';
-
-const slug = 'interesse-composto';
-const calc = calcolatori.find((c) => c.slug === slug)!;
 
 const metadata = {
-  title: `${calc.titolo} | Andrea Giardini`,
-  description: calc.descrizione,
+  title: 'Calcolatore di Interesse Composto | Andrea Giardini',
+  description:
+    'Calcolatore gratuito di interesse composto. Stima il capitale finale, gli interessi maturati e la crescita del montante con aggiunte periodiche annuali o mensili. Spiegazione matematica inclusa.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <PlaceholderCalcolatore slug={slug} />
+  <div class="calc-ic">
+
+    <!-- ============== HERO ============== -->
+    <header class="calc-header">
+      <h1>Calcolatore di Interesse Composto</h1>
+      <p>
+        Stima il capitale finale, tieni conto del capitale investito e scopri gli interessi
+        maturati in un determinato periodo di tempo, dati il capitale iniziale, le aggiunte
+        periodiche e il tasso di interesse medio stimato.
+      </p>
+    </header>
+
+    <!-- ============== FORM + RISULTATI ============== -->
+    <div class="main-grid">
+
+      <!-- COLONNA SX: FORM -->
+      <div class="card form-card" aria-label="Inserisci i tuoi dati">
+        <h2 class="card-title">Inserisci i tuoi dati</h2>
+
+        <div class="form-group">
+          <label for="ic-capitale">Capitale iniziale</label>
+          <div class="input-with-suffix">
+            <input type="number" id="ic-capitale" min="0" step="100" value="10000" inputmode="decimal" />
+            <span class="suffix">€</span>
+          </div>
+          <p class="warn" id="ic-warn-capitale" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="ic-aggiunta">Aggiunte periodiche</label>
+          <div class="input-with-suffix">
+            <input type="number" id="ic-aggiunta" min="0" step="50" value="0" inputmode="decimal" />
+            <span class="suffix">€</span>
+          </div>
+          <p class="warn" id="ic-warn-aggiunta" role="alert" aria-live="polite"></p>
+        </div>
+
+        <fieldset class="form-group radio-group">
+          <legend>Frequenza aggiunte</legend>
+          <div class="radio-inline">
+            <label><input type="radio" name="ic-frequenza" value="annuale" checked /> Annuali</label>
+            <label><input type="radio" name="ic-frequenza" value="mensile" /> Mensili</label>
+          </div>
+        </fieldset>
+
+        <div class="form-group">
+          <label for="ic-anni">Anni di crescita</label>
+          <input type="number" id="ic-anni" min="1" max="60" step="1" value="10" inputmode="numeric" />
+          <p class="warn" id="ic-warn-anni" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="ic-tasso">Tasso di interesse annuo</label>
+          <div class="input-with-suffix">
+            <input type="number" id="ic-tasso" min="0" max="30" step="0.1" value="7" inputmode="decimal" />
+            <span class="suffix">%</span>
+          </div>
+          <p class="warn" id="ic-warn-tasso" role="alert" aria-live="polite"></p>
+        </div>
+
+        <p class="form-hint">Il calcolo si aggiorna automaticamente mentre modifichi i campi.</p>
+      </div>
+
+      <!-- COLONNA DX: RISULTATI -->
+      <div class="card results-card" aria-live="polite" aria-atomic="true">
+        <h2 class="card-title">Risultati</h2>
+
+        <div class="result-block result-primary">
+          <span class="result-label">Capitale Finale</span>
+          <span class="result-value result-value-xl" id="ic-out-finale">—</span>
+        </div>
+
+        <div class="result-block">
+          <span class="result-label">Capitale Investito</span>
+          <span class="result-value" id="ic-out-investito">—</span>
+        </div>
+
+        <div class="result-block">
+          <span class="result-label">Interessi Maturati</span>
+          <div class="result-row">
+            <span class="result-value" id="ic-out-interessi">—</span>
+            <span class="badge-pct" id="ic-out-pct" aria-label="Variazione percentuale rispetto al capitale investito">—</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============== GRAFICO ============== -->
+    <section class="card chart-card" aria-label="Crescita del montante nel tempo">
+      <div class="chart-header">
+        <h2 class="card-title">Crescita del montante nel tempo</h2>
+        <div class="chart-legend">
+          <span class="legend-item">
+            <span class="legend-swatch legend-investito"></span>
+            Capitale Investito
+          </span>
+          <span class="legend-item">
+            <span class="legend-swatch legend-totale"></span>
+            Capitale Totale (Montante)
+          </span>
+          <span class="legend-item">
+            <span class="legend-swatch legend-area"></span>
+            Interessi Maturati
+          </span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg
+          id="ic-chart"
+          class="chart-svg"
+          viewBox="0 0 800 360"
+          preserveAspectRatio="xMidYMid meet"
+          role="img"
+          aria-label="Grafico della crescita del montante anno per anno">
+        </svg>
+        <div id="ic-tooltip" class="chart-tooltip" role="tooltip" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ============== COME FUNZIONA (collapsible) ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra la matematica dietro al calcolatore</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+
+        <div class="math-content">
+          <h2>Come funziona il calcolatore?</h2>
+
+          <p>
+            Per non lasciarti il dubbio sulla bontà di questo strumento, ti spiego passo passo
+            come arriviamo al risultato. La formula non è magica: nasce da un ragionamento che
+            puoi seguire anche se la matematica non è il tuo pane quotidiano.
+          </p>
+
+          <h3>Le quattro grandezze in gioco</h3>
+          <ul>
+            <li><b>C</b> — il <em>Capitale iniziale</em> che investi oggi</li>
+            <li><b>R</b> — il <em>Tasso di interesse</em> annuo, espresso in forma decimale (es. 0,07 per 7%)</li>
+            <li><b>N</b> — il numero di <em>anni</em> per cui lasci crescere l'investimento</li>
+            <li><b>A</b> — l'<em>aggiunta annuale</em> che versi all'inizio di ogni anno (zero se non ne fai)</li>
+          </ul>
+
+          <h3>1 — Solo capitale iniziale, nessuna aggiunta</h3>
+          <p>
+            Iniziamo dal caso più semplice: investi <b>C</b> e non aggiungi più nulla. Ad ogni
+            anno il capitale viene rivalutato del tasso <b>R</b>. Anno dopo anno succede questo:
+          </p>
+
+          <div class="table-wrap">
+            <table class="math-table" aria-label="Crescita del capitale senza aggiunte">
+              <caption>Capitale a inizio anno (senza aggiunte)</caption>
+              <thead>
+                <tr><th scope="col">Anno</th><th scope="col">Capitale</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td><i>C</i></td></tr>
+                <tr><td>1</td><td><i>C</i> + <i>R</i>·<i>C</i> = <i>C</i>(1 + <i>R</i>)</td></tr>
+                <tr><td>2</td><td>(<i>C</i> + <i>R</i>·<i>C</i>) + <i>R</i>(<i>C</i> + <i>R</i>·<i>C</i>) = <i>C</i>(1 + <i>R</i>)<sup>2</sup></td></tr>
+                <tr><td>3</td><td><i>C</i>(1 + <i>R</i>)<sup>3</sup></td></tr>
+                <tr><td>…</td><td>…</td></tr>
+                <tr><td><i>N</i></td><td><i>C</i>(1 + <i>R</i>)<sup><i>N</i></sup></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>Il capitale finale, in questo caso, ha una formula compatta:</p>
+
+          <div class="formula-block" aria-label="Formula del capitale finale senza aggiunte">
+            <i>F</i> = <i>C</i>(1 + <i>R</i>)<sup><i>N</i></sup>
+          </div>
+
+          <h3>2 — Con aggiunte annuali costanti</h3>
+          <p>
+            Adesso ipotizziamo che <em>oltre</em> al capitale iniziale tu versi una somma <b>A</b>
+            all'inizio di ogni anno (un classico Piano di Accumulo del Capitale, detto PAC).
+            All'inizio dell'anno 1 versi <b>A</b>, poi tutto cresce del tasso <b>R</b>; all'inizio
+            dell'anno 2 versi un'altra volta <b>A</b>, e così via.
+          </p>
+
+          <div class="table-wrap">
+            <table class="math-table" aria-label="Crescita del capitale con aggiunte annuali">
+              <caption>Capitale a fine anno (con aggiunte)</caption>
+              <thead>
+                <tr><th scope="col">Anno</th><th scope="col">Capitale</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td><i>C</i></td></tr>
+                <tr><td>1</td><td>(<i>C</i> + <i>A</i>)(1 + <i>R</i>)</td></tr>
+                <tr><td>2</td><td>[(<i>C</i> + <i>A</i>)(1 + <i>R</i>) + <i>A</i>](1 + <i>R</i>)</td></tr>
+                <tr><td>3</td><td>&#123;[(<i>C</i> + <i>A</i>)(1 + <i>R</i>) + <i>A</i>](1 + <i>R</i>) + <i>A</i>&#125;(1 + <i>R</i>)</td></tr>
+                <tr><td>…</td><td>…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Espandendo i prodotti riconosciamo una <b>serie geometrica</b> di ragione (1 + <i>R</i>):
+            sommando i contributi delle aggiunte e applicando la formula chiusa della somma, otteniamo:
+          </p>
+
+          <div class="formula-block" aria-label="Formula del capitale finale con aggiunte">
+            <i>F</i> = <i>C</i>(1 + <i>R</i>)<sup><i>N</i></sup>
+            + <i>A</i> ·
+            <span class="frac">
+              <span class="frac-top">(1 + <i>R</i>)<sup><i>N</i>+1</sup> − (1 + <i>R</i>)</span>
+              <span class="frac-bottom"><i>R</i></span>
+            </span>
+          </div>
+
+          <p class="formula-note">
+            Quando il tasso è zero (<i>R</i> = 0) la formula si semplifica: niente interessi,
+            il montante coincide con il capitale investito (<i>F</i> = <i>C</i> + <i>A</i> · <i>N</i>).
+            Il calcolatore gestisce in automatico questo caso particolare.
+          </p>
+
+          <h3>Aggiunte mensili</h3>
+          <p>
+            Se scegli <em>aggiunte mensili</em>, il calcolatore moltiplica per 12 l'importo che
+            inserisci e tratta la somma come un'unica aggiunta annuale. È una semplificazione
+            volutamente <em>didattica</em>: rende la formula leggibile a costo di una piccola
+            sottostima (i versamenti mensili reali producono interessi anche all'interno
+            dell'anno). Per ordini di grandezza la differenza è trascurabile; per stime di
+            precisione su importi e orizzonti molto grandi conviene un'analisi mensile dedicata.
+          </p>
+
+          <p class="cta-inline">
+            <a href="/calcolatori/semplice-vs-composto" class="cta-link">
+              Confronta interesse semplice e composto →
+            </a>
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== CTA FINALE ============== -->
+    <section class="cta-section">
+      <div class="eyebrow">Vuoi una consulenza?</div>
+      <h2>Vuoi sfruttare al meglio l'interesse composto sui tuoi risparmi?</h2>
+      <p>
+        Posso aiutarti a costruire un piano di accumulo coerente con i tuoi obiettivi, la tua
+        tolleranza al rischio e il tuo orizzonte temporale. La prima chiamata è gratuita e senza
+        impegno.
+      </p>
+      <div class="cta-buttons">
+        <a href="/contatti" class="btn btn-primary">Prenota una consulenza</a>
+        <a href="/calcolatori" class="btn btn-secondary">Torna ai calcolatori</a>
+      </div>
+    </section>
+
+    <!-- ============== DISCLAIMER ============== -->
+    <div class="final-disclaimer">
+      <strong>Nota informativa:</strong> Le simulazioni di questo calcolatore hanno finalità
+      esclusivamente educative e illustrative. Non costituiscono raccomandazioni personalizzate
+      di investimento. I rendimenti passati non sono garanzia di rendimenti futuri: i mercati
+      finanziari possono subire oscillazioni anche significative. Per una valutazione adatta alla
+      tua situazione è necessaria una consulenza personalizzata.
+    </div>
+
+  </div>
+
+  <style is:global>
+    .calc-ic {
+      /* Palette allineata al sito (stessa di pensione-integrativa) */
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
+      font-family: 'Manrope', -apple-system, sans-serif;
+      color: var(--charcoal);
+      line-height: 1.65;
+      font-size: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .calc-ic * { box-sizing: border-box; }
+
+    /* ============== HERO ============== */
+    .calc-ic .calc-header {
+      text-align: center;
+      margin-bottom: 35px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-ic .calc-header h1 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-ic .calc-header p {
+      color: var(--gray-text);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ============== GRID FORM + RISULTATI ============== */
+    .calc-ic .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .calc-ic .card {
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.15);
+      border-radius: var(--radius);
+      padding: 28px 30px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .calc-ic .card-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 20px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ============== FORM ============== */
+    .calc-ic .form-group { margin-bottom: 18px; }
+    .calc-ic .form-group:last-of-type { margin-bottom: 8px; }
+
+    .calc-ic label,
+    .calc-ic .radio-group legend {
+      display: block;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+      font-size: 0.93rem;
+      padding: 0;
+    }
+
+    .calc-ic input[type="number"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.97rem;
+      color: var(--charcoal);
+      background: white;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .calc-ic input[type="number"]:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    }
+    /* Toglie spinner brutti del browser senza impedire input numerico */
+    .calc-ic input[type="number"]::-webkit-outer-spin-button,
+    .calc-ic input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .calc-ic input[type="number"] { -moz-appearance: textfield; }
+
+    .calc-ic .input-with-suffix { position: relative; }
+    .calc-ic .input-with-suffix .suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-text);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+    .calc-ic .input-with-suffix input { padding-right: 36px; }
+
+    .calc-ic .radio-group { border: 0; padding: 0; margin-bottom: 18px; }
+    .calc-ic .radio-inline {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .calc-ic .radio-inline label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      cursor: pointer;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+    .calc-ic .radio-inline input[type="radio"] {
+      accent-color: var(--emerald);
+      width: 16px; height: 16px;
+    }
+
+    .calc-ic .warn {
+      min-height: 1.1em;
+      margin: 6px 0 0;
+      font-size: 0.82rem;
+      color: var(--ochre-dark);
+      line-height: 1.4;
+    }
+    .calc-ic .warn:empty { min-height: 0; margin: 0; }
+
+    .calc-ic .form-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      font-style: italic;
+      margin-top: 18px;
+    }
+
+    /* ============== RISULTATI ============== */
+    .calc-ic .results-card {
+      background: linear-gradient(180deg, var(--ivory-warm) 0%, white 100%);
+    }
+    .calc-ic .result-block {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-ic .result-block:last-child { border-bottom: 0; }
+
+    .calc-ic .result-label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .calc-ic .result-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.45rem;
+      letter-spacing: -0.01em;
+    }
+    .calc-ic .result-value-xl {
+      font-size: clamp(1.9rem, 4vw, 2.4rem);
+      color: var(--sage-dark);
+    }
+    .calc-ic .result-row {
+      display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    }
+    .calc-ic .badge-pct {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      background: rgba(0, 166, 82, 0.12);
+      color: #0a7d3f;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .calc-ic .badge-pct.is-zero { background: var(--gray-soft); color: var(--gray-text); }
+
+    /* ============== CHART ============== */
+    .calc-ic .chart-card { margin-bottom: 30px; }
+    .calc-ic .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .calc-ic .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      font-size: 0.82rem; color: var(--gray-text);
+    }
+    .calc-ic .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .calc-ic .legend-swatch {
+      display: inline-block;
+      width: 20px; height: 4px;
+      border-radius: 2px;
+    }
+    .calc-ic .legend-investito { background: var(--sage); }
+    .calc-ic .legend-totale { background: var(--charcoal); height: 5px; }
+    .calc-ic .legend-area { background: var(--emerald); opacity: 0.4; height: 12px; border-radius: 3px; }
+
+    .calc-ic .chart-wrap { position: relative; }
+    .calc-ic .chart-svg { width: 100%; height: auto; display: block; }
+
+    .calc-ic .chart-svg .axis-line { stroke: var(--gray-soft); }
+    .calc-ic .chart-svg .grid-line { stroke: var(--gray-soft); stroke-dasharray: 3 4; opacity: 0.6; }
+    .calc-ic .chart-svg .axis-text { font: 11px 'Manrope', sans-serif; fill: var(--gray-text); }
+    .calc-ic .chart-svg .axis-text-bold { font: 600 11px 'Manrope', sans-serif; fill: var(--charcoal); }
+    .calc-ic .chart-svg .hover-line { stroke: var(--charcoal); stroke-width: 1; stroke-dasharray: 4 3; opacity: 0; }
+    .calc-ic .chart-svg .hover-dot { opacity: 0; }
+
+    .calc-ic .chart-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.2);
+      border-radius: 8px;
+      box-shadow: 0 4px 18px rgba(55, 61, 66, 0.12);
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--charcoal);
+      transform: translate(-50%, -110%);
+      opacity: 0;
+      transition: opacity 0.12s ease;
+      white-space: nowrap;
+      min-width: 180px;
+    }
+    .calc-ic .chart-tooltip.is-visible { opacity: 1; }
+    .calc-ic .chart-tooltip .tt-anno {
+      font-weight: 700; color: var(--sage-dark);
+      margin-bottom: 4px;
+    }
+    .calc-ic .chart-tooltip .tt-row {
+      display: flex; justify-content: space-between; gap: 14px;
+    }
+    .calc-ic .chart-tooltip .tt-row span:first-child { color: var(--gray-text); }
+    .calc-ic .chart-tooltip .tt-row span:last-child { font-weight: 600; color: var(--charcoal); }
+
+    /* ============== SEZIONE COME FUNZIONA ============== */
+    .calc-ic .how-it-works { margin-bottom: 40px; }
+
+    .calc-ic .math-details {
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .calc-ic .math-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 1.02rem;
+    }
+    .calc-ic .math-details summary::-webkit-details-marker { display: none; }
+    .calc-ic .math-details summary:hover { background: var(--ivory-warm); }
+    .calc-ic .math-details summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-ic .summary-icon {
+      width: 12px; height: 12px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+    .calc-ic .math-details[open] .summary-icon {
+      transform: rotate(225deg);
+    }
+
+    .calc-ic .math-content {
+      padding: 6px 30px 30px;
+      border-top: 1px solid var(--gray-soft);
+    }
+    .calc-ic .math-content h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.35rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-ic .math-content h3 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .calc-ic .math-content p {
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .calc-ic .math-content ul {
+      margin: 10px 0 16px 22px;
+      color: var(--charcoal);
+    }
+    .calc-ic .math-content li {
+      margin-bottom: 6px;
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+    .calc-ic .math-content b { color: var(--sage-dark); font-weight: 700; }
+    .calc-ic .math-content em { font-style: italic; color: var(--ochre-dark); font-weight: 500; }
+    .calc-ic .math-content i {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-style: italic;
+      font-size: 1.05em;
+      color: var(--charcoal);
+    }
+    .calc-ic .math-content sup { font-size: 0.7em; }
+
+    .calc-ic .table-wrap {
+      overflow-x: auto;
+      margin: 14px 0 18px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-soft);
+    }
+    .calc-ic .math-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    .calc-ic .math-table caption {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--ivory-warm);
+      color: var(--gray-text);
+      font-size: 0.82rem;
+      font-weight: 600;
+      caption-side: top;
+    }
+    .calc-ic .math-table thead th {
+      background: var(--ivory);
+      color: var(--sage-dark);
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-soft);
+      font-size: 0.86rem;
+    }
+    .calc-ic .math-table tbody td {
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(221, 228, 226, 0.55);
+      vertical-align: top;
+    }
+    .calc-ic .math-table tbody tr:last-child td { border-bottom: 0; }
+    .calc-ic .math-table tbody tr:nth-child(even) td { background: rgba(245, 250, 249, 0.5); }
+    .calc-ic .math-table td:first-child { font-weight: 600; color: var(--sage-dark); width: 80px; }
+
+    .calc-ic .formula-block {
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--emerald);
+      padding: 16px 22px;
+      margin: 14px 0 18px;
+      border-radius: 6px;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--charcoal);
+    }
+    .calc-ic .formula-note {
+      font-size: 0.88rem;
+      color: var(--gray-text);
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 10px 0 18px;
+    }
+
+    .calc-ic .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      line-height: 1.1;
+    }
+    .calc-ic .frac-top {
+      padding: 0 6px 2px;
+      border-bottom: 1.5px solid var(--charcoal);
+    }
+    .calc-ic .frac-bottom {
+      padding: 2px 6px 0;
+    }
+
+    .calc-ic .cta-inline { margin-top: 18px; }
+    .calc-ic .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border: 1.5px solid var(--sage);
+      color: var(--sage-dark);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .calc-ic .cta-link:hover { background: var(--sage); color: white; }
+
+    /* ============== CTA FINALE ============== */
+    .calc-ic .cta-section {
+      text-align: center;
+      margin: 50px 0 40px;
+      padding: 35px 25px;
+    }
+    .calc-ic .cta-section .eyebrow {
+      color: var(--ochre-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .calc-ic .cta-section h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+      color: var(--sage-dark);
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .calc-ic .cta-section p {
+      color: var(--gray-text);
+      max-width: 640px;
+      margin: 0 auto 25px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+    .calc-ic .cta-buttons {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .calc-ic .btn {
+      padding: 13px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .calc-ic .btn-primary { background: var(--sage); color: var(--ivory); }
+    .calc-ic .btn-primary:hover { background: var(--sage-dark); }
+    .calc-ic .btn-secondary {
+      background: transparent;
+      color: var(--sage);
+      border: 1.5px solid var(--sage);
+    }
+    .calc-ic .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
+
+    /* ============== DISCLAIMER ============== */
+    .calc-ic .final-disclaimer {
+      margin-top: 30px;
+      padding: 18px 22px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+    .calc-ic .final-disclaimer strong { color: var(--charcoal); }
+
+    /* ============== RESPONSIVE ============== */
+    @media (max-width: 880px) {
+      .calc-ic { padding: 25px 16px 40px; }
+      .calc-ic .main-grid { grid-template-columns: 1fr; gap: 18px; }
+      .calc-ic .card { padding: 22px 22px; }
+      .calc-ic .math-content { padding: 4px 18px 24px; }
+      .calc-ic .btn { width: 100%; }
+      .calc-ic .cta-buttons { flex-direction: column; }
+      .calc-ic .chart-tooltip { font-size: 0.78rem; min-width: 160px; }
+    }
+  </style>
+
+  <script>
+    import { calcolaInteresseComposto } from '~/lib/calcolatori/interesse-composto';
+    import type { Frequenza, PuntoAnnuo } from '~/lib/calcolatori/interesse-composto';
+
+    // -------------------- FORMATTERS --------------------
+    const fmtEuro = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtEuroShort = (n: number): string => {
+      if (!Number.isFinite(n)) return '—';
+      if (Math.abs(n) >= 1_000_000) return (n / 1_000_000).toFixed(1).replace('.', ',') + 'M €';
+      if (Math.abs(n) >= 1_000) return Math.round(n / 1000) + 'k €';
+      return Math.round(n).toLocaleString('it-IT') + ' €';
+    };
+    const fmtPct = (n: number): string => {
+      if (!Number.isFinite(n)) return '—';
+      const sign = n >= 0 ? '+' : '';
+      return sign + n.toFixed(n >= 100 ? 0 : 1).replace('.', ',') + '%';
+    };
+
+    // -------------------- DOM REFS --------------------
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+      document.getElementById(id) as T;
+    const inputs = {
+      capitale: $<HTMLInputElement>('ic-capitale'),
+      aggiunta: $<HTMLInputElement>('ic-aggiunta'),
+      anni: $<HTMLInputElement>('ic-anni'),
+      tasso: $<HTMLInputElement>('ic-tasso'),
+    };
+    const warns = {
+      capitale: $('ic-warn-capitale'),
+      aggiunta: $('ic-warn-aggiunta'),
+      anni: $('ic-warn-anni'),
+      tasso: $('ic-warn-tasso'),
+    };
+    const out = {
+      finale: $('ic-out-finale'),
+      investito: $('ic-out-investito'),
+      interessi: $('ic-out-interessi'),
+      pct: $('ic-out-pct'),
+    };
+
+    // -------------------- VALIDATION --------------------
+    type Range = { min: number; max: number; label: string; warnIfZero?: boolean };
+    const ranges: Record<string, Range> = {
+      capitale: { min: 0, max: 10_000_000, label: 'capitale iniziale' },
+      aggiunta: { min: 0, max: 100_000, label: 'aggiunta periodica' },
+      anni: { min: 1, max: 60, label: 'anni' },
+      tasso: { min: 0, max: 30, label: 'tasso' },
+    };
+
+    function validateInput(key: keyof typeof inputs): { value: number; warning: string } {
+      const el = inputs[key];
+      const r = ranges[key];
+      const raw = el.value.replace(',', '.');
+      const v = parseFloat(raw);
+      if (!Number.isFinite(v)) {
+        return { value: NaN, warning: `Inserisci un valore numerico per ${r.label}.` };
+      }
+      if (v < r.min) return { value: r.min, warning: `Il valore minimo è ${r.min}.` };
+      if (v > r.max) return { value: r.max, warning: `Valore molto alto: stiamo usando ${r.max} per la stima.` };
+      // Warning soft per casi limite plausibili ma poco realistici
+      if (key === 'tasso' && v > 15) {
+        return { value: v, warning: 'Un tasso superiore al 15% annuo è raramente sostenibile sul lungo periodo.' };
+      }
+      if (key === 'anni' && v > 50) {
+        return { value: v, warning: 'Stai simulando un orizzonte molto lungo: i risultati sono solo indicativi.' };
+      }
+      return { value: v, warning: '' };
+    }
+
+    // -------------------- CHART DRAW --------------------
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+    function svgEl(tag: string, attrs: Record<string, string | number>): SVGElement {
+      const el = document.createElementNS(SVG_NS, tag);
+      for (const k in attrs) el.setAttribute(k, String(attrs[k]));
+      return el as SVGElement;
+    }
+
+    type ChartCtx = {
+      x: (anno: number) => number;
+      y: (val: number) => number;
+      m: { top: number; right: number; bottom: number; left: number };
+      W: number; H: number; w: number; h: number;
+      dati: PuntoAnnuo[];
+    };
+    let chartCtx: ChartCtx | null = null;
+
+    function disegnaChart(dati: PuntoAnnuo[]): ChartCtx | null {
+      const svg = $('ic-chart') as unknown as SVGSVGElement;
+      svg.innerHTML = '';
+      if (!dati.length) return null;
+
+      const W = 800, H = 360;
+      const m = { top: 24, right: 30, bottom: 50, left: 76 };
+      const w = W - m.left - m.right;
+      const h = H - m.top - m.bottom;
+
+      const xMin = 0;
+      const xMax = dati[dati.length - 1].anno;
+      const yMaxRaw = Math.max(...dati.map((d) => d.totale));
+      const yMax = yMaxRaw > 0 ? yMaxRaw * 1.08 : 100;
+
+      const x = (anno: number) => m.left + ((anno - xMin) / Math.max(1, xMax - xMin)) * w;
+      const y = (val: number) => m.top + h - (val / yMax) * h;
+
+      // Grid Y + tick labels
+      for (let i = 0; i <= 4; i++) {
+        const val = (yMax / 4) * i;
+        const yPos = y(val);
+        svg.appendChild(svgEl('line', {
+          class: 'grid-line', x1: m.left, x2: m.left + w, y1: yPos, y2: yPos, 'stroke-width': 1,
+        }));
+        const lb = svgEl('text', {
+          class: 'axis-text', x: m.left - 10, y: yPos + 4, 'text-anchor': 'end',
+        });
+        lb.textContent = fmtEuroShort(val);
+        svg.appendChild(lb);
+      }
+
+      // Asse X
+      svg.appendChild(svgEl('line', {
+        class: 'axis-line', x1: m.left, x2: m.left + w, y1: m.top + h, y2: m.top + h, 'stroke-width': 1,
+      }));
+
+      const numAnni = xMax - xMin;
+      // Tick adattivi: pochi tick su mobile (orizzontali), più tick su intervalli ampi
+      const stepTick = numAnni <= 5 ? 1 : numAnni <= 12 ? 2 : numAnni <= 25 ? 5 : 10;
+      for (let anno = xMin; anno <= xMax; anno += stepTick) {
+        const tl = svgEl('text', {
+          class: 'axis-text', x: x(anno), y: m.top + h + 20, 'text-anchor': 'middle',
+        });
+        tl.textContent = String(anno);
+        svg.appendChild(tl);
+      }
+      const xLabel = svgEl('text', {
+        class: 'axis-text', x: m.left + w / 2, y: H - 8, 'text-anchor': 'middle',
+      });
+      xLabel.textContent = 'Anni';
+      svg.appendChild(xLabel);
+
+      // Path generator
+      const buildLine = (key: 'investito' | 'totale') => {
+        let p = '';
+        dati.forEach((pt, i) => {
+          p += (i === 0 ? 'M' : 'L') + x(pt.anno) + ',' + y(pt[key]) + ' ';
+        });
+        return p;
+      };
+      const pathInvestito = buildLine('investito');
+      const pathTotale = buildLine('totale');
+
+      // Area sfumata tra investito e totale (interessi maturati)
+      let areaPath = '';
+      dati.forEach((pt, i) => {
+        areaPath += (i === 0 ? 'M' : 'L') + x(pt.anno) + ',' + y(pt.totale) + ' ';
+      });
+      for (let i = dati.length - 1; i >= 0; i--) {
+        const pt = dati[i];
+        areaPath += 'L' + x(pt.anno) + ',' + y(pt.investito) + ' ';
+      }
+      areaPath += 'Z';
+      svg.appendChild(svgEl('path', {
+        d: areaPath, fill: 'var(--emerald)', 'fill-opacity': '0.15',
+      }));
+
+      // Linea capitale investito (sage, sottile)
+      svg.appendChild(svgEl('path', {
+        d: pathInvestito,
+        fill: 'none',
+        stroke: 'var(--sage)',
+        'stroke-width': '1.8',
+        'stroke-linejoin': 'round',
+      }));
+
+      // Linea totale (charcoal, più spessa)
+      const lineTop = svgEl('path', {
+        d: pathTotale,
+        fill: 'none',
+        stroke: 'var(--charcoal)',
+        'stroke-width': '2.6',
+        'stroke-linejoin': 'round',
+      }) as SVGPathElement;
+      svg.appendChild(lineTop);
+
+      // Punti finali
+      const finalP = dati[dati.length - 1];
+      svg.appendChild(svgEl('circle', {
+        cx: x(finalP.anno), cy: y(finalP.totale), r: 5,
+        fill: 'white', stroke: 'var(--charcoal)', 'stroke-width': 2.5,
+      }));
+      svg.appendChild(svgEl('circle', {
+        cx: x(finalP.anno), cy: y(finalP.investito), r: 4,
+        fill: 'white', stroke: 'var(--sage)', 'stroke-width': 2,
+      }));
+
+      // Hover guides (riga verticale + due punti)
+      const hoverLine = svgEl('line', {
+        class: 'hover-line',
+        x1: 0, x2: 0, y1: m.top, y2: m.top + h,
+      });
+      svg.appendChild(hoverLine);
+      const hoverDotTotale = svgEl('circle', {
+        class: 'hover-dot', cx: 0, cy: 0, r: 5,
+        fill: 'white', stroke: 'var(--charcoal)', 'stroke-width': 2.5,
+      });
+      const hoverDotInvestito = svgEl('circle', {
+        class: 'hover-dot', cx: 0, cy: 0, r: 4,
+        fill: 'white', stroke: 'var(--sage)', 'stroke-width': 2,
+      });
+      svg.appendChild(hoverDotTotale);
+      svg.appendChild(hoverDotInvestito);
+
+      // Overlay trasparente per cattura mouse
+      const overlay = svgEl('rect', {
+        x: m.left, y: m.top, width: w, height: h,
+        fill: 'transparent',
+      }) as SVGRectElement;
+      svg.appendChild(overlay);
+
+      return { x, y, m, W, H, w, h, dati };
+    }
+
+    // -------------------- TOOLTIP --------------------
+    const tooltipEl = $('ic-tooltip');
+
+    function findClosestPoint(annoExact: number, dati: PuntoAnnuo[]): PuntoAnnuo {
+      let best = dati[0];
+      let bestDiff = Math.abs(dati[0].anno - annoExact);
+      for (const pt of dati) {
+        const d = Math.abs(pt.anno - annoExact);
+        if (d < bestDiff) { best = pt; bestDiff = d; }
+      }
+      return best;
+    }
+
+    function updateHoverFromClientX(clientX: number) {
+      if (!chartCtx) return;
+      const svg = $('ic-chart') as unknown as SVGSVGElement;
+      const rect = svg.getBoundingClientRect();
+      // Converti coordinata client in coordinata SVG (viewBox)
+      const ctm = svg.getScreenCTM();
+      if (!ctm) return;
+      const xRatio = chartCtx.W / rect.width;
+      const xSvg = (clientX - rect.left) * xRatio;
+      const xMin = chartCtx.dati[0].anno;
+      const xMax = chartCtx.dati[chartCtx.dati.length - 1].anno;
+      const annoExact = xMin + ((xSvg - chartCtx.m.left) / chartCtx.w) * (xMax - xMin);
+      if (annoExact < xMin - 0.5 || annoExact > xMax + 0.5) {
+        hideTooltip();
+        return;
+      }
+      const pt = findClosestPoint(annoExact, chartCtx.dati);
+      showTooltip(pt, rect);
+    }
+
+    function showTooltip(pt: PuntoAnnuo, rect: DOMRect) {
+      if (!chartCtx) return;
+      const xPx = chartCtx.x(pt.anno);
+      const yPxTotale = chartCtx.y(pt.totale);
+      const yPxInvestito = chartCtx.y(pt.investito);
+
+      const hoverLine = $('ic-chart')!.querySelector('.hover-line') as SVGLineElement | null;
+      const dots = $('ic-chart')!.querySelectorAll('.hover-dot');
+      if (hoverLine) {
+        hoverLine.setAttribute('x1', String(xPx));
+        hoverLine.setAttribute('x2', String(xPx));
+        hoverLine.style.opacity = '0.6';
+      }
+      if (dots[0]) {
+        (dots[0] as SVGCircleElement).setAttribute('cx', String(xPx));
+        (dots[0] as SVGCircleElement).setAttribute('cy', String(yPxTotale));
+        (dots[0] as SVGCircleElement).style.opacity = '1';
+      }
+      if (dots[1]) {
+        (dots[1] as SVGCircleElement).setAttribute('cx', String(xPx));
+        (dots[1] as SVGCircleElement).setAttribute('cy', String(yPxInvestito));
+        (dots[1] as SVGCircleElement).style.opacity = '1';
+      }
+
+      // Posiziona tooltip sopra il punto totale, in coordinate pixel del wrap
+      const ratio = rect.width / chartCtx.W;
+      const px = xPx * ratio;
+      const py = yPxTotale * ratio;
+      tooltipEl.style.left = `${px}px`;
+      tooltipEl.style.top = `${py - 14}px`;
+      tooltipEl.innerHTML = `
+        <div class="tt-anno">Anno ${pt.anno}</div>
+        <div class="tt-row"><span>Investito</span><span>${fmtEuro.format(pt.investito)}</span></div>
+        <div class="tt-row"><span>Totale</span><span>${fmtEuro.format(pt.totale)}</span></div>
+        <div class="tt-row"><span>Interessi</span><span>${fmtEuro.format(pt.interessi)}</span></div>
+      `;
+      tooltipEl.classList.add('is-visible');
+      tooltipEl.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideTooltip() {
+      tooltipEl.classList.remove('is-visible');
+      tooltipEl.setAttribute('aria-hidden', 'true');
+      const hoverLine = $('ic-chart')!.querySelector('.hover-line') as SVGLineElement | null;
+      const dots = $('ic-chart')!.querySelectorAll('.hover-dot');
+      if (hoverLine) hoverLine.style.opacity = '0';
+      dots.forEach((d) => ((d as SVGCircleElement).style.opacity = '0'));
+    }
+
+    // -------------------- MAIN UPDATE --------------------
+    let lastValidOutput: ReturnType<typeof calcolaInteresseComposto> | null = null;
+
+    function getFrequenza(): Frequenza {
+      const checked = document.querySelector<HTMLInputElement>(
+        'input[name="ic-frequenza"]:checked'
+      );
+      return (checked?.value === 'mensile' ? 'mensile' : 'annuale') as Frequenza;
+    }
+
+    function aggiornaRisultati() {
+      const validation = (Object.keys(inputs) as Array<keyof typeof inputs>).map((k) => {
+        const r = validateInput(k);
+        warns[k].textContent = r.warning;
+        return { key: k, ...r };
+      });
+
+      const blocking = validation.find((v) => Number.isNaN(v.value));
+      if (blocking) {
+        // Mantieni l'ultimo output valido se c'è
+        return;
+      }
+
+      const capitale = validation.find((v) => v.key === 'capitale')!.value;
+      const aggiunta = validation.find((v) => v.key === 'aggiunta')!.value;
+      const anni = validation.find((v) => v.key === 'anni')!.value;
+      const tasso = validation.find((v) => v.key === 'tasso')!.value;
+
+      const result = calcolaInteresseComposto({
+        capitaleIniziale: capitale,
+        aggiunta,
+        frequenza: getFrequenza(),
+        anni,
+        tasso,
+      });
+      lastValidOutput = result;
+
+      out.finale.textContent = fmtEuro.format(result.capitaleFinale);
+      out.investito.textContent = fmtEuro.format(result.capitaleInvestito);
+      out.interessi.textContent = fmtEuro.format(result.interessiMaturati);
+
+      if (Number.isFinite(result.rendimentoPercentuale) && result.capitaleInvestito > 0) {
+        out.pct.textContent = fmtPct(result.rendimentoPercentuale);
+        out.pct.classList.toggle('is-zero', result.rendimentoPercentuale === 0);
+      } else {
+        out.pct.textContent = '—';
+        out.pct.classList.add('is-zero');
+      }
+
+      chartCtx = disegnaChart(result.datiAnnui);
+      hideTooltip();
+    }
+
+    // -------------------- DEBOUNCE --------------------
+    let updateTimer: ReturnType<typeof setTimeout> | null = null;
+    function scheduleUpdate() {
+      if (updateTimer) clearTimeout(updateTimer);
+      updateTimer = setTimeout(aggiornaRisultati, 200);
+    }
+
+    // -------------------- WIRING --------------------
+    Object.values(inputs).forEach((el) => {
+      el.addEventListener('input', scheduleUpdate);
+      el.addEventListener('change', scheduleUpdate);
+    });
+    document.querySelectorAll<HTMLInputElement>('input[name="ic-frequenza"]').forEach((el) => {
+      el.addEventListener('change', scheduleUpdate);
+    });
+
+    // Hover sul grafico (mouse + touch)
+    const chartWrap = document.querySelector<HTMLElement>('.calc-ic .chart-wrap');
+    if (chartWrap) {
+      chartWrap.addEventListener('mousemove', (e) => updateHoverFromClientX(e.clientX));
+      chartWrap.addEventListener('mouseleave', hideTooltip);
+      chartWrap.addEventListener('touchstart', (e) => {
+        if (e.touches[0]) updateHoverFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+      chartWrap.addEventListener('touchmove', (e) => {
+        if (e.touches[0]) updateHoverFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+      chartWrap.addEventListener('touchend', hideTooltip);
+    }
+
+    // Ridisegno su resize (i tick adattivi cambiano densità)
+    window.addEventListener('resize', () => {
+      if (lastValidOutput) chartCtx = disegnaChart(lastValidOutput.datiAnnui);
+    });
+
+    // Primo render
+    aggiornaRisultati();
+  </script>
 </Layout>
