@@ -13,9 +13,22 @@
 **Posizionamento del brand:** consulenza finanziaria moderna, accessibile, empatica e trasparente. Tono professionale ma umano. Il sito si rivolge a persone e famiglie italiane che vogliono ridurre costi nascosti, pianificare obiettivi (casa, figli, pensione), costruire una strategia che « regge nel tempo ».
 
 **Identità visiva (da rispettare ovunque):**
-- **Palette:** sage `#4A5D4F` · ocra `#D4A574` · avorio `#F5F1E8` · antracite `#2C2C2A` · smeraldo accento `#00A652`
-- **Tipografia:** Playfair Display o Fraunces per titoli (serif elegante) · Manrope o Inter per body (sans moderno)
+
+- **Palette effettiva del sito** (definita in `src/components/CustomStyles.astro` + `src/styles/calcolatori.css`):
+  - sage / primary `#166963` (verde petrolio scuro) — `var(--aw-color-primary)`
+  - sage-light / secondary `#79B9AD` (verde salvia chiaro) — `var(--aw-color-secondary)`
+  - ochre / accent `#AB7F62` (terracotta) — `var(--aw-color-accent)`
+  - charcoal / text-heading `#373D42` (antracite) — `var(--aw-color-text-heading)`
+  - ivory / bg-cream `#EEF7F6` (verdolino chiarissimo, `rgb(238 247 246)`) — classe `.bg-cream`
+  - emerald accent (logo) `#00A652` — `var(--emerald)` nei calcolatori
+  - alert-red `#c0392b` (uso riservato a stati critici, es. scenari "aggressivo" del calcolatore di rendita)
+- **Token aggiuntivi per i calcolatori** (in `src/styles/calcolatori.css`): `--sage-dark #0F4F4A`, `--ochre-dark #8A6449`, `--ochre-light #C49A7E`, `--ivory-warm rgb(245 250 249)`, `--gray-soft #DDE4E2`, `--gray-text #6B7672`. Radius canonico 12px (card), 8px (input/button), 6px (badge/pill).
+- **Tipografia:**
+  - **Stato attuale:** tutto il sito è impostato a **Manrope** (`@fontsource-variable/manrope`). I `var(--aw-font-heading)`, `--aw-font-serif`, `--aw-font-sans` puntano tutti a Manrope.
+  - **Aspirazionale (NON ancora implementato):** Fraunces per i titoli serif (è già installato come `@fontsource-variable/fraunces` ma non importato). Eventuali invocazioni a `'Playfair Display'` come fallback nei file dei calcolatori sono refusi storici, in pratica il browser cade su Georgia.
 - **Logo:** α calligrafica minuscola fusa con G corsiva maiuscola, freccia a zig-zag ascendente che termina in smeraldo `#00A652`. Il tratto della α è più spesso del tratto della G.
+
+> **Nota storica:** versioni precedenti di questo briefing dichiaravano una palette diversa (sage `#4A5D4F`, ocra `#D4A574`, avorio `#F5F1E8`, antracite `#2C2C2A`). Quella palette era aspirazionale e non è mai stata implementata. La fonte di verità è `CustomStyles.astro` e — per i calcolatori — `src/styles/calcolatori.css`.
 
 ---
 
