@@ -1,5 +1,6 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
+import '~/styles/calcolatori.css';
 
 const metadata = {
   title: 'Calcolatore Rendimento Obbligazioni e BTP | Andrea Giardini',
@@ -376,16 +377,8 @@ const metadata = {
   </div>
 
   <style is:global>
+    /* Palette/radius/ombre centralizzati in src/styles/calcolatori.css */
     .calc-ob {
-      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
-      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
-      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
-      --charcoal: #373D42;
-      --emerald: #00A652;
-      --gray-soft: #DDE4E2; --gray-text: #6B7672;
-      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
-      --radius: 12px;
-
       font-family: 'Manrope', -apple-system, sans-serif;
       color: var(--charcoal);
       line-height: 1.65;
@@ -724,13 +717,13 @@ const metadata = {
     }
     .calc-ob .legend-breakeven {
       width: 22px; height: 0;
-      border-top: 1.5px dashed #373D42;
+      border-top: 1.5px dashed var(--charcoal);
       border-radius: 0;
       align-self: center;
     }
     .calc-ob .legend-valore {
       width: 22px; height: 3px;
-      background: #00A652;
+      background: var(--emerald);
       border-radius: 2px;
       align-self: center;
       position: relative;
@@ -741,7 +734,7 @@ const metadata = {
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       width: 8px; height: 8px;
-      background: #00A652;
+      background: var(--emerald);
       border: 2px solid white;
       border-radius: 50%;
     }
