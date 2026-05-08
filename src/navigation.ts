@@ -25,6 +25,13 @@ export const footerData = {
       ],
     },
     {
+      title: 'Risorse',
+      links: [
+        { text: 'Calcolatori', href: '/calcolatori' },
+        { text: 'Glossario', href: '/glossario' },
+      ],
+    },
+    {
       title: 'Contatti',
       links: [
         { text: 'andrea@giardiniconsulenza.it', href: 'mailto:andrea@giardiniconsulenza.it' },
