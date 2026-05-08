@@ -1,6 +1,5 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import '~/styles/calcolatori.css';
 
 const metadata = {
   title: 'Stimatore Pensione Integrativa | Andrea Giardini',
@@ -252,7 +251,7 @@ const metadata = {
     <h3>Calcolo delle deduzioni fiscali</h3>
     <p>Puoi dedurre i tuoi versamenti dalla tassazione fino al valore massimo di <strong>5.164,57 €/anno</strong>, corrispondenti a circa <strong>431 €/mese</strong>. L'<em>Aliquota</em> utile per questo calcolo è stimata a partire dal tuo <em>Reddito Lordo</em>. Il valore deducibile sarà quindi pari ai tuoi <em>Versamenti Annuali</em>, ottenuti moltiplicando per 12 i tuoi <em>Versamenti Mensili</em>, moltiplicati per l'aliquota. Se i tuoi versamenti sono superiori a 5165€/anno sarà invece questo il valore utilizzato nel calcolo.</p>
 
-    <p style="font-size: 0.93rem; background: var(--ivory-warm); border-left: 3px solid var(--ochre); padding: 12px 16px; border-radius: 4px;"><strong>Nota per i forfettari:</strong> nel regime forfettario non è prevista deducibilità IRPEF dei contributi al fondo pensione (regime di imposta sostitutiva). Il calcolatore tiene conto di questa particolarità e mostra il risparmio fiscale come "non applicabile".</p>
+    <p style="font-size: 0.93rem; background: #FAF4EA; border-left: 3px solid var(--ochre); padding: 12px 16px; border-radius: 4px;"><strong>Nota per i forfettari:</strong> nel regime forfettario non è prevista deducibilità IRPEF dei contributi al fondo pensione (regime di imposta sostitutiva). Il calcolatore tiene conto di questa particolarità e mostra il risparmio fiscale come "non applicabile".</p>
 
     <h3>Stima del reddito lordo a partire da quello netto</h3>
     <p>Se non conosci il tuo stipendio lordo puoi scegliere di stimarlo a partire dal tuo stipendio netto. Questa stima non è molto precisa, ma considerando la natura di questo calcolatore — che vuole solo mostrare le potenzialità di questo strumento finanziario — non è un grave problema. La stima viene fatta in maniera molto semplice utilizzando i vari scaglioni IRPEF come riferimento.</p>
@@ -319,12 +318,16 @@ const metadata = {
 </div>
 
 <style is:global>
-  /* Palette/radius/ombre centralizzati in src/styles/calcolatori.css.
-     Pensione-integrativa è il primo calcolatore costruito: la struttura
-     a 3 colonne (.calc-wrapper) è stata mantenuta per non riscrivere
-     l'intero file, ma i token, le dimensioni di input/btn e i colori
-     rogue sono stati allineati agli altri 6 calcolatori. */
   .calc-wrapper {
+    /* Palette allineata al sito: primary #166963, secondary #79B9AD, accent #AB7F62 */
+    --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+    --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+    --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+    --charcoal: #373D42;
+    --emerald: #00A652;
+    --gray-soft: #DDE4E2; --gray-text: #6B7672;
+    --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+    --radius: 8px;
     font-family: 'Manrope', -apple-system, sans-serif;
     color: var(--charcoal);
     line-height: 1.65;
@@ -419,21 +422,20 @@ const metadata = {
   .calc-wrapper input[type="email"],
   .calc-wrapper select {
     width: 100%;
-    padding: 10px 12px;
+    padding: 11px 14px;
     border: 1.5px solid var(--gray-soft);
-    border-radius: var(--calc-radius-sm, 8px);
+    border-radius: 6px;
     font-family: 'Manrope', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.97rem;
     color: var(--charcoal);
     background: white;
-    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    transition: border-color 0.2s ease;
   }
 
   .calc-wrapper input:focus,
   .calc-wrapper select:focus {
     outline: none;
-    border-color: var(--emerald);
-    box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    border-color: var(--sage);
   }
 
   /* ============== RADIO INLINE (Sì/No) ============== */
@@ -455,17 +457,16 @@ const metadata = {
   }
 
   .calc-wrapper .radio-inline input[type="radio"] {
-    accent-color: var(--emerald);
+    accent-color: var(--sage);
     width: 16px;
     height: 16px;
   }
 
   /* ============== INFO BOX (callouts) ============== */
   .calc-wrapper .info-callout {
-    background: var(--ivory-warm);
-    border: 1px solid rgba(22, 105, 99, 0.15);
-    border-left: 3px solid var(--sage-light);
-    border-radius: var(--calc-radius-xs, 6px);
+    background: #E8F0EC;
+    border: 1px solid #C7DACD;
+    border-radius: 6px;
     padding: 12px 16px;
     font-size: 0.87rem;
     color: var(--charcoal);
@@ -493,7 +494,7 @@ const metadata = {
     margin-top: 6px;
   }
   .calc-wrapper .checkbox-row input[type="checkbox"] {
-    accent-color: var(--emerald);
+    accent-color: var(--sage);
     width: 17px;
     height: 17px;
   }
@@ -796,10 +797,10 @@ const metadata = {
   .calc-wrapper .btn {
     padding: 13px 28px;
     border: none;
-    border-radius: var(--calc-radius-sm, 8px);
+    border-radius: 6px;
     font-family: 'Manrope', sans-serif;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.93rem;
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
@@ -807,7 +808,6 @@ const metadata = {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 48px;
   }
 
   .calc-wrapper .btn-primary {
@@ -1167,7 +1167,7 @@ const metadata = {
     const r = calcolaScenario();
 
     if (r.error) {
-      document.getElementById('resultsContent').innerHTML = `<p style="color: var(--alert-red, #c0392b); text-align: center;"><strong>⚠️ ${r.error}</strong></p>`;
+      document.getElementById('resultsContent').innerHTML = `<p style="color: #C75D5D; text-align: center;"><strong>⚠️ ${r.error}</strong></p>`;
       return;
     }
 
@@ -1479,18 +1479,18 @@ const metadata = {
 
         if (data.success) {
           result.textContent = 'Messaggio inviato! Ti risponderò entro 24 ore lavorative.';
-          result.style.background = 'rgba(0, 166, 82, 0.08)';
-          result.style.color = 'var(--calc-success, #0a7d3f)';
-          result.style.border = '1px solid rgba(0, 166, 82, 0.25)';
+          result.style.background = '#E8F0EC';
+          result.style.color = '#3A4A3F';
+          result.style.border = '1px solid #C7DACD';
           form.reset();
         } else {
           throw new Error('fail');
         }
       } catch {
         result.textContent = 'Si è verificato un errore. Riprova o scrivimi a andrea@giardiniconsulenza.it';
-        result.style.background = 'rgba(220, 38, 38, 0.06)';
-        result.style.color = 'var(--alert-red, #c0392b)';
-        result.style.border = '1px solid rgba(220, 38, 38, 0.25)';
+        result.style.background = '#FDECEC';
+        result.style.color = '#A04040';
+        result.style.border = '1px solid #F5C2C2';
       }
 
       result.classList.remove('hidden');

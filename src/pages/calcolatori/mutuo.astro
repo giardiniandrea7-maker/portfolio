@@ -1,6 +1,5 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import '~/styles/calcolatori.css';
 
 const metadata = {
   title: 'Calcolatore Rata Mutuo | Andrea Giardini',
@@ -394,8 +393,16 @@ const metadata = {
   </div>
 
   <style is:global>
-    /* Palette/radius/ombre centralizzati in src/styles/calcolatori.css */
     .calc-mu {
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
       font-family: 'Manrope', -apple-system, sans-serif;
       color: var(--charcoal);
       line-height: 1.65;
