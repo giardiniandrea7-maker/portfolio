@@ -1425,6 +1425,16 @@ const metadata = {
   }
 
   // ============================================================
+  // CLEANUP per Astro View Transitions (ClientRouter)
+  // ============================================================
+  // Pensione-integrativa non usa Chart.js (SVG manuale). Pulisce solo il
+  // timer di debounce dello slider per evitare un'esecuzione tardiva su
+  // elementi DOM detached dopo la navigazione.
+  document.addEventListener('astro:before-swap', () => {
+    if (upTimeout) { clearTimeout(upTimeout); upTimeout = null; }
+  }, { once: true });
+
+  // ============================================================
   // BOTTONE CALENDLY → popup widget (resta sulla pagina)
   // ============================================================
   (function initCalendlyPopup() {
