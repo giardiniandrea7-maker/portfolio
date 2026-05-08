@@ -41,7 +41,7 @@ export const calcolatori: Calcolatore[] = [
     descrizione:
       'Comprendi l’impatto finanziario di un mutuo sulla tua situazione: rata periodica, totale interessi e piano di ammortamento.',
     href: '/calcolatori/mutuo',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:home',
   },
   {

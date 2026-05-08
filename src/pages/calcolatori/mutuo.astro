@@ -1,17 +1,1593 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
-import { calcolatori } from '~/data/calcolatori';
-
-const slug = 'mutuo';
-const calc = calcolatori.find((c) => c.slug === slug)!;
 
 const metadata = {
-  title: `${calc.titolo} | Andrea Giardini`,
-  description: calc.descrizione,
+  title: 'Calcolatore Rata Mutuo | Andrea Giardini',
+  description:
+    'Calcolatore mutuo gratuito: rata, piano di ammortamento, TAEG, confronto tasso fisso e variabile. Calcola anche quanto puoi permetterti in base alla rata sostenibile.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <PlaceholderCalcolatore slug={slug} />
+  <div class="calc-mu">
+    <!-- ============== HERO ============== -->
+    <header class="calc-header">
+      <h1>Calcolatore Rata Mutuo</h1>
+      <p>
+        Stima la rata del tuo mutuo, scopri come si compone tra capitale e interessi e simula
+        scenari diversi tra tasso fisso e variabile. Strumento puramente indicativo: per
+        un'offerta reale, rivolgiti alla tua banca o al tuo consulente.
+      </p>
+    </header>
+
+    <!-- ============== TAB MODALITÀ ============== -->
+    <fieldset class="modal-tabs" role="radiogroup" aria-label="Modalità di calcolo">
+      <legend class="sr-only">Modalità di calcolo</legend>
+      <label class="tab-pill">
+        <input type="radio" name="mu-modalita" value="rata" checked />
+        <span class="tab-content">
+          <span class="tab-title">Calcola la rata</span>
+          <span class="tab-desc">Inserisci immobile e anticipo</span>
+        </span>
+      </label>
+      <label class="tab-pill">
+        <input type="radio" name="mu-modalita" value="sostenibilita" />
+        <span class="tab-content">
+          <span class="tab-title">Quanto posso permettermi</span>
+          <span class="tab-desc">Inserisci la rata sostenibile</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ============== FORM + RISULTATI ============== -->
+    <div class="main-grid">
+      <!-- COLONNA SX: FORM -->
+      <div class="card form-card">
+        <h2 class="card-title">Inserisci i dati del mutuo</h2>
+
+        <!-- Modalità: Calcola la rata -->
+        <div class="mode-rata">
+          <div class="form-group">
+            <label for="mu-valore-immobile">Valore dell'immobile</label>
+            <div class="input-with-suffix">
+              <input type="number" id="mu-valore-immobile" min="0" step="5000" value="250000" inputmode="decimal" />
+              <span class="suffix">€</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="mu-anticipo">Anticipo</label>
+            <div class="input-with-suffix">
+              <input type="number" id="mu-anticipo" min="0" step="1000" value="50000" inputmode="decimal" />
+              <span class="suffix">€</span>
+            </div>
+            <p class="form-hint hint-info" id="mu-anticipo-info">Mutuo richiesto: —</p>
+          </div>
+        </div>
+
+        <!-- Modalità: Quanto posso permettermi -->
+        <div class="mode-sostenibilita" hidden>
+          <div class="form-group">
+            <label for="mu-rata-sostenibile">Rata mensile sostenibile</label>
+            <div class="input-with-suffix">
+              <input type="number" id="mu-rata-sostenibile" min="100" step="50" value="800" inputmode="decimal" />
+              <span class="suffix">€</span>
+            </div>
+            <p class="form-hint">
+              Le banche generalmente richiedono che la rata non superi il 30–35% del reddito
+              netto mensile.
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="mu-anticipo-disponibile">Anticipo disponibile</label>
+            <div class="input-with-suffix">
+              <input type="number" id="mu-anticipo-disponibile" min="0" step="1000" value="30000" inputmode="decimal" />
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Durata -->
+        <div class="form-group">
+          <label for="mu-durata">Durata mutuo: <span class="durata-display" id="mu-durata-display">25 anni</span></label>
+          <div class="durata-row">
+            <input type="range" id="mu-durata-slider" min="5" max="40" step="1" value="25" />
+            <input type="number" id="mu-durata" min="5" max="40" step="1" value="25" inputmode="numeric" class="durata-number" />
+          </div>
+        </div>
+
+        <!-- Tipo tasso -->
+        <fieldset class="form-group radio-group">
+          <legend>Tipologia tasso</legend>
+          <div class="radio-inline">
+            <label><input type="radio" name="mu-tipo-tasso" value="fisso" checked /> Fisso</label>
+            <label><input type="radio" name="mu-tipo-tasso" value="variabile" /> Variabile</label>
+          </div>
+        </fieldset>
+
+        <!-- Tasso fisso -->
+        <div class="tasso-fisso-group">
+          <div class="form-group">
+            <label for="mu-tasso-fisso">Tasso annuo (TAN)</label>
+            <div class="input-with-suffix">
+              <input type="number" id="mu-tasso-fisso" min="0" max="15" step="0.05" value="3.5" inputmode="decimal" />
+              <span class="suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasso variabile -->
+        <div class="tasso-variabile-group" hidden>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="mu-spread">Spread</label>
+              <div class="input-with-suffix">
+                <input type="number" id="mu-spread" min="0" max="5" step="0.05" value="1.2" inputmode="decimal" />
+                <span class="suffix">%</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mu-euribor">Euribor di riferimento</label>
+              <div class="input-with-suffix">
+                <input type="number" id="mu-euribor" min="-1" max="10" step="0.05" value="2.5" inputmode="decimal" />
+                <span class="suffix">%</span>
+              </div>
+            </div>
+          </div>
+          <p class="form-hint hint-info" id="mu-tasso-variabile-info">Tasso variabile attuale: —</p>
+          <p class="form-hint">
+            Per il calcolo iniziale assumiamo che il tasso variabile rimanga costante per tutta
+            la durata. La composizione interesse/capitale potrebbe variare nel tempo.
+          </p>
+        </div>
+
+        <!-- Frequenza rata -->
+        <div class="form-group">
+          <label for="mu-frequenza">Frequenza rata</label>
+          <select id="mu-frequenza">
+            <option value="mensile" selected>Mensile</option>
+            <option value="trimestrale">Trimestrale</option>
+            <option value="semestrale">Semestrale</option>
+            <option value="annuale">Annuale</option>
+          </select>
+        </div>
+
+        <!-- TAEG toggle -->
+        <div class="toggle-block">
+          <label class="toggle-row">
+            <input type="checkbox" id="mu-includi-taeg" />
+            <span class="toggle-text">Includi TAEG (con spese accessorie)</span>
+          </label>
+          <p class="toggle-hint">
+            Il TAEG è il costo effettivo del mutuo, inclusi spese di istruttoria, polizze
+            obbligatorie e oneri ricorrenti. È sempre ≥ TAN.
+          </p>
+
+          <div class="toggle-extra" id="mu-taeg-section" hidden>
+            <h3 class="taeg-subtitle">Spese accessorie</h3>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="mu-istruttoria">Spese istruttoria</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-istruttoria" min="0" step="50" value="500" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="mu-perizia">Spese perizia</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-perizia" min="0" step="50" value="300" inputmode="decimal" />
+                  <span class="suffix">€</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="mu-imposta">Imposta sostitutiva</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-imposta" min="0" step="10" value="500" inputmode="decimal" data-auto="true" />
+                  <span class="suffix">€</span>
+                </div>
+                <p class="form-hint">Default: 0,25% del mutuo (prima casa).</p>
+              </div>
+              <div class="form-group">
+                <label for="mu-incasso">Spese incasso rata</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-incasso" min="0" step="0.5" value="2" inputmode="decimal" />
+                  <span class="suffix">€/rata</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="mu-polizza-incendio">Polizza incendio</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-polizza-incendio" min="0" step="10" value="200" inputmode="decimal" />
+                  <span class="suffix">€/anno</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="mu-polizza-vita">Polizza vita (opzionale)</label>
+                <div class="input-with-suffix">
+                  <input type="number" id="mu-polizza-vita" min="0" step="10" value="0" inputmode="decimal" />
+                  <span class="suffix">€/anno</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="form-hint">Il calcolo si aggiorna automaticamente.</p>
+        <p class="warn warn-blocking" id="mu-blocking" role="alert" aria-live="assertive"></p>
+      </div>
+
+      <!-- COLONNA DX: RISULTATI -->
+      <div class="card results-card" aria-live="polite" aria-atomic="true">
+        <h2 class="card-title">Risultati</h2>
+
+        <div class="result-block result-primary">
+          <span class="result-label" id="mu-out-primary-label">Rata mensile</span>
+          <span class="result-value result-value-xl" id="mu-out-primary">—</span>
+        </div>
+        <div class="result-block" id="mu-row-immobile" hidden>
+          <span class="result-label">Immobile teoricamente acquistabile</span>
+          <span class="result-value" id="mu-out-immobile">—</span>
+        </div>
+
+        <h3 class="metrics-title">Dettaglio</h3>
+        <ul class="metrics-list">
+          <li><span class="m-label">Mutuo richiesto</span><span class="m-value" id="mu-out-importo">—</span></li>
+          <li><span class="m-label">Numero rate</span><span class="m-value" id="mu-out-numero-rate">—</span></li>
+          <li><span class="m-label">Totale interessi pagati</span><span class="m-value" id="mu-out-interessi">—</span></li>
+          <li><span class="m-label">Costo totale del mutuo</span><span class="m-value" id="mu-out-totale">—</span></li>
+          <li><span class="m-label">% interessi sul totale</span><span class="m-value" id="mu-out-pct">—</span></li>
+          <li><span class="m-label">TAN</span><span class="m-value" id="mu-out-tan">—</span></li>
+          <li id="mu-row-taeg" hidden><span class="m-label">TAEG</span><span class="m-value" id="mu-out-taeg">—</span></li>
+          <li><span class="m-label">Loan-to-Value (LTV)</span><span class="m-value" id="mu-out-ltv">—</span></li>
+        </ul>
+
+        <div class="warn-list" id="mu-warnings" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- ============== GRAFICO ============== -->
+    <section class="card chart-card" aria-label="Composizione delle rate nel tempo">
+      <div class="chart-header">
+        <h2 class="card-title">Composizione delle rate nel tempo</h2>
+        <p class="chart-subtitle" id="mu-chart-subtitle">Nei primi anni paghi soprattutto interessi; con gli anni cresce la quota di capitale rimborsato.</p>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch legend-interessi" aria-hidden="true"></span>Quota interessi</span>
+          <span class="legend-item"><span class="legend-swatch legend-capitale" aria-hidden="true"></span>Quota capitale</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="mu-chart" aria-label="Grafico a barre impilate della composizione interesse/capitale per anno" role="img"></canvas>
+      </div>
+      <p id="mu-chart-fallback" class="sr-only" aria-live="polite"></p>
+    </section>
+
+    <!-- ============== PIANO DI AMMORTAMENTO ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra il piano di ammortamento dettagliato</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="ammortamento-content">
+          <p class="ammortamento-intro">
+            Vista aggregata anno per anno. Per ottenere il piano completo rata per rata,
+            usa il pulsante "Esporta CSV" in fondo.
+          </p>
+          <div class="table-scroll">
+            <table class="ammortamento-table" id="mu-ammortamento">
+              <caption class="sr-only">Piano di ammortamento aggregato per anno</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Anno</th>
+                  <th scope="col">Rate annue</th>
+                  <th scope="col">Quota interessi</th>
+                  <th scope="col">Quota capitale</th>
+                  <th scope="col">Capitale residuo</th>
+                </tr>
+              </thead>
+              <tbody id="mu-ammortamento-body"></tbody>
+            </table>
+          </div>
+          <button type="button" class="btn btn-secondary csv-btn" id="mu-export-csv">
+            Esporta CSV (rata per rata)
+          </button>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== COME FUNZIONA ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra la matematica del mutuo</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="math-content">
+          <h2>Come funziona il calcolatore</h2>
+          <p>
+            Il calcolo usa il modello dell'<b>ammortamento alla francese</b>: la rata è
+            <em>costante</em> per tutta la durata del mutuo, ma la sua composizione cambia anno
+            dopo anno. Nei primi anni paghi soprattutto interessi (perché il capitale residuo è
+            ancora alto e gli interessi si calcolano su quello), via via la quota capitale
+            cresce e quella di interessi si riduce. È esattamente quello che vedi nel grafico
+            sopra.
+          </p>
+          <p>
+            Il <b>TAN</b> (Tasso Annuo Nominale) è il tasso "puro" applicato al capitale; il
+            <b>TAEG</b> (Tasso Annuo Effettivo Globale) è il costo complessivo che include
+            tutte le spese obbligatorie (istruttoria, perizia, imposte, polizze obbligatorie,
+            spese di incasso). Il TAEG è sempre <b>≥ TAN</b>: serve per confrontare offerte
+            diverse a parità di costo reale.
+          </p>
+          <p>
+            Tasso <b>fisso</b> e <b>variabile</b>: il fisso ti dà certezza sulla rata per tutta
+            la durata, al prezzo di un tasso più alto al momento della firma; il variabile
+            (di norma <em>spread</em> + <em>Euribor</em>) parte spesso più basso ma può salire
+            o scendere nel tempo. Storicamente nessuno dei due "vince sempre": la scelta
+            dipende dall'orizzonte, dalla tua tolleranza al rischio e dal contesto dei tassi.
+          </p>
+
+          <h3>Formula della rata</h3>
+          <div class="formula-block">
+            <i>R</i> =
+            <span class="frac">
+              <span class="frac-top"><i>C</i> · <i>i</i></span>
+              <span class="frac-bottom">1 − (1 + <i>i</i>)<sup>−<i>N</i></sup></span>
+            </span>
+          </div>
+          <ul>
+            <li><b>R</b> — rata periodica</li>
+            <li><b>C</b> — capitale (importo finanziato)</li>
+            <li><b>i</b> — tasso periodico = TAN annuo / numero rate per anno</li>
+            <li><b>N</b> — numero totale di rate (durata in anni × rate per anno)</li>
+          </ul>
+
+          <h3>Esempio numerico</h3>
+          <p>
+            Mutuo di 200.000 € a 25 anni, TAN 3,5%, rata mensile.<br />
+            <i>i</i> = 3,5% / 12 ≈ 0,2917%, &nbsp; <i>N</i> = 25 × 12 = 300.<br />
+            <i>R</i> ≈ <b>1.001,25 €/mese</b>. Su 300 rate paghi circa 300.375 €, di cui
+            ~100.375 € sono interessi (33% del totale rimborsato).
+          </p>
+
+          <p class="formula-note">
+            Questo calcolatore usa l'ammortamento alla francese standard. Alcune banche
+            applicano varianti minori (es. capitalizzazione trimestrale degli interessi,
+            spread di indicizzazione del variabile, modalità di gestione delle date di
+            scadenza) che possono produrre rate leggermente diverse. Per offerte reali, fai
+            sempre riferimento al piano di ammortamento ufficiale fornito dalla banca.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== CTA ============== -->
+    <section class="cta-section">
+      <div class="eyebrow">Vuoi un parere professionale?</div>
+      <h2>Stai valutando un mutuo o vuoi capire se conviene una surroga?</h2>
+      <p>
+        Posso aiutarti ad analizzare la tua offerta, confrontarla con alternative di mercato e
+        capire l'impatto reale del mutuo sulla tua situazione finanziaria. La prima chiamata è
+        gratuita e senza impegno.
+      </p>
+      <div class="cta-buttons">
+        <a href="/contatti" class="btn btn-primary">Prenota una consulenza</a>
+        <a href="/calcolatori" class="btn btn-secondary">Torna ai calcolatori</a>
+      </div>
+    </section>
+
+    <!-- ============== DISCLAIMER ============== -->
+    <div class="final-disclaimer">
+      <strong>Nota informativa:</strong> Le stime fornite hanno valore puramente indicativo e
+      didattico. Il calcolo si basa sull'ammortamento alla francese standard e sui parametri
+      inseriti dall'utente. Le offerte reali delle banche possono differire per:
+      capitalizzazione degli interessi, spese non considerate, modalità di indicizzazione del
+      tasso variabile, garanzie richieste e altri elementi specifici. Per un'offerta concreta
+      rivolgiti alla tua banca o al tuo consulente. Questo strumento non costituisce
+      consulenza finanziaria personalizzata.
+    </div>
+  </div>
+
+  <style is:global>
+    .calc-mu {
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
+      font-family: 'Manrope', -apple-system, sans-serif;
+      color: var(--charcoal);
+      line-height: 1.65;
+      font-size: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .calc-mu * { box-sizing: border-box; }
+
+    .calc-mu .calc-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-mu .calc-header h1 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-mu .calc-header p {
+      color: var(--gray-text);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* Tab modalità */
+    .calc-mu .modal-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 0 0 24px;
+      border: 0;
+      padding: 0;
+    }
+    .calc-mu .tab-pill {
+      position: relative;
+      display: block;
+      padding: 14px 18px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 10px;
+      cursor: pointer;
+      background: white;
+      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-mu .tab-pill input[type="radio"] {
+      position: absolute; opacity: 0; pointer-events: none;
+    }
+    .calc-mu .tab-pill:hover { border-color: var(--sage-light); }
+    .calc-mu .tab-pill:has(input:checked) {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.10);
+    }
+    .calc-mu .tab-pill:has(input:focus-visible) {
+      outline: 2px solid var(--emerald);
+      outline-offset: 2px;
+    }
+    .calc-mu .tab-content { display: block; }
+    .calc-mu .tab-title {
+      display: block; font-weight: 600; color: var(--sage-dark); font-size: 0.98rem;
+    }
+    .calc-mu .tab-desc {
+      display: block; color: var(--gray-text); font-size: 0.82rem; margin-top: 2px;
+    }
+
+    /* Grid */
+    .calc-mu .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 30px;
+      align-items: start;
+    }
+    .calc-mu .card {
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.15);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-soft);
+    }
+    .calc-mu .card-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 18px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Form */
+    .calc-mu .form-group { margin-bottom: 16px; }
+    .calc-mu .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .calc-mu label,
+    .calc-mu .modal-tabs legend,
+    .calc-mu .radio-group legend {
+      display: block;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      padding: 0;
+    }
+    .calc-mu input[type="number"],
+    .calc-mu input[type="text"],
+    .calc-mu select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      color: var(--charcoal);
+      background: white;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .calc-mu input:focus,
+    .calc-mu select:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    }
+    .calc-mu input[type="number"]::-webkit-outer-spin-button,
+    .calc-mu input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .calc-mu input[type="number"] { -moz-appearance: textfield; }
+
+    .calc-mu .input-with-suffix { position: relative; }
+    .calc-mu .input-with-suffix .suffix {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-text); font-size: 0.9rem; pointer-events: none;
+    }
+    .calc-mu .input-with-suffix input { padding-right: 60px; }
+
+    /* Slider durata */
+    .calc-mu .durata-display {
+      color: var(--sage-dark);
+      font-weight: 600;
+    }
+    .calc-mu .durata-row {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      gap: 12px;
+      align-items: center;
+    }
+    .calc-mu input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--gray-soft);
+      border-radius: 999px;
+      outline: none;
+    }
+    .calc-mu input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      background: var(--emerald);
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0, 166, 82, 0.3);
+      cursor: pointer;
+    }
+    .calc-mu input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      background: var(--emerald);
+      border: 3px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .calc-mu .durata-number { text-align: center; }
+
+    /* Radio group */
+    .calc-mu .radio-group { border: 0; padding: 0; }
+    .calc-mu .radio-inline {
+      display: flex; gap: 18px; align-items: center; margin-top: 4px;
+    }
+    .calc-mu .radio-inline label {
+      display: inline-flex; align-items: center; gap: 6px; margin: 0;
+      cursor: pointer; font-weight: 400; font-size: 0.95rem;
+    }
+    .calc-mu .radio-inline input[type="radio"] {
+      accent-color: var(--emerald); width: 16px; height: 16px;
+    }
+
+    /* Toggle (TAEG) */
+    .calc-mu .toggle-block {
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--ivory-warm);
+    }
+    .calc-mu .toggle-row {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; margin: 0;
+      font-weight: 500; font-size: 0.94rem;
+    }
+    .calc-mu .toggle-row input[type="checkbox"] {
+      accent-color: var(--emerald);
+      width: 17px; height: 17px;
+      flex-shrink: 0;
+    }
+    .calc-mu .toggle-text { color: var(--charcoal); }
+    .calc-mu .toggle-hint {
+      color: var(--gray-text);
+      font-size: 0.8rem;
+      margin: 6px 0 0 27px;
+      line-height: 1.45;
+    }
+    .calc-mu .toggle-extra { margin: 14px 0 0; }
+    .calc-mu .taeg-subtitle {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 4px 0 12px;
+    }
+
+    /* Hints */
+    .calc-mu .form-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      margin: 6px 0 0;
+      line-height: 1.45;
+    }
+    .calc-mu .hint-info {
+      color: var(--sage-dark);
+      font-weight: 500;
+    }
+
+    .calc-mu .warn {
+      min-height: 0;
+      margin: 8px 0 0;
+      font-size: 0.84rem;
+      color: var(--ochre-dark);
+      line-height: 1.45;
+    }
+    .calc-mu .warn-blocking:not(:empty) {
+      padding: 8px 12px;
+      background: rgba(171, 127, 98, 0.08);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      color: var(--ochre-dark);
+      font-weight: 500;
+    }
+
+    /* Risultati */
+    .calc-mu .results-card {
+      background: linear-gradient(180deg, var(--ivory-warm) 0%, white 100%);
+    }
+    .calc-mu .result-block {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-mu .result-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .calc-mu .result-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-mu .result-value-xl {
+      font-size: clamp(1.7rem, 3.6vw, 2.1rem);
+      color: var(--sage-dark);
+    }
+
+    .calc-mu .metrics-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+    .calc-mu .metrics-list { list-style: none; padding: 0; margin: 0; }
+    .calc-mu .metrics-list li {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(221, 228, 226, 0.7);
+      font-size: 0.88rem;
+    }
+    .calc-mu .metrics-list li:last-child { border-bottom: 0; }
+    .calc-mu .metrics-list .m-label { color: var(--gray-text); }
+    .calc-mu .metrics-list .m-value {
+      font-weight: 600;
+      color: var(--charcoal);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .calc-mu .warn-list {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: var(--ochre-dark);
+    }
+    .calc-mu .warn-list ul { margin: 0; padding-left: 20px; }
+    .calc-mu .warn-list li { margin: 4px 0; line-height: 1.5; }
+
+    /* Chart */
+    .calc-mu .chart-card { margin-bottom: 30px; }
+    .calc-mu .chart-card .card-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--sage-dark); letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+    .calc-mu .chart-header {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .calc-mu .chart-subtitle {
+      font-size: 0.86rem;
+      color: var(--gray-text);
+      margin: 0 0 4px;
+      line-height: 1.45;
+    }
+    .calc-mu .chart-legend {
+      display: flex; flex-wrap: wrap; gap: 18px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.84rem; color: var(--charcoal);
+      margin-top: 4px;
+    }
+    .calc-mu .legend-item { display: inline-flex; align-items: center; gap: 8px; }
+    .calc-mu .legend-swatch {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border-radius: 3px;
+    }
+    .calc-mu .legend-interessi { background: #00A652; }
+    .calc-mu .legend-capitale { background: #79B9AD; }
+
+    .calc-mu .chart-wrap {
+      position: relative;
+      height: 380px;
+      padding: 8px 4px 0;
+    }
+    .calc-mu .chart-wrap canvas { display: block; }
+
+    .calc-mu .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* Come funziona / Ammortamento */
+    .calc-mu .how-it-works { margin-bottom: 24px; }
+    .calc-mu .math-details {
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .calc-mu .math-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 1.02rem;
+    }
+    .calc-mu .math-details summary::-webkit-details-marker { display: none; }
+    .calc-mu .math-details summary:hover { background: var(--ivory-warm); }
+    .calc-mu .math-details summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-mu .summary-icon {
+      width: 12px; height: 12px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+    }
+    .calc-mu .math-details[open] .summary-icon { transform: rotate(225deg); }
+    .calc-mu .math-content,
+    .calc-mu .ammortamento-content {
+      padding: 6px 30px 30px;
+      border-top: 1px solid var(--gray-soft);
+    }
+    .calc-mu .ammortamento-intro {
+      color: var(--gray-text);
+      font-size: 0.9rem;
+      margin: 14px 0 14px;
+    }
+    .calc-mu .math-content h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.35rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-mu .math-content h3 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .calc-mu .math-content p {
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .calc-mu .math-content ul {
+      margin: 8px 0 16px 22px;
+    }
+    .calc-mu .math-content li {
+      margin-bottom: 4px;
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+    .calc-mu .math-content b { color: var(--sage-dark); font-weight: 700; }
+    .calc-mu .math-content em { font-style: italic; color: var(--ochre-dark); font-weight: 500; }
+    .calc-mu .math-content i {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-style: italic;
+      font-size: 1.05em;
+      color: var(--charcoal);
+    }
+    .calc-mu .math-content sup, .calc-mu .math-content sub { font-size: 0.7em; }
+    .calc-mu .formula-block {
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--emerald);
+      padding: 14px 20px;
+      margin: 14px 0 18px;
+      border-radius: 6px;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--charcoal);
+    }
+    .calc-mu .formula-note {
+      font-size: 0.88rem;
+      color: var(--gray-text);
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 10px 0 18px;
+    }
+    .calc-mu .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      line-height: 1.1;
+    }
+    .calc-mu .frac-top { padding: 0 6px 2px; border-bottom: 1.5px solid var(--charcoal); }
+    .calc-mu .frac-bottom { padding: 2px 6px 0; }
+
+    /* Tabella ammortamento */
+    .calc-mu .table-scroll {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid var(--gray-soft);
+      margin: 0 0 16px;
+    }
+    .calc-mu .ammortamento-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-mu .ammortamento-table thead th {
+      background: var(--ivory);
+      color: var(--sage-dark);
+      font-weight: 600;
+      text-align: right;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-soft);
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+    .calc-mu .ammortamento-table thead th:first-child { text-align: left; }
+    .calc-mu .ammortamento-table tbody td {
+      padding: 8px 14px;
+      border-bottom: 1px solid rgba(221, 228, 226, 0.55);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .calc-mu .ammortamento-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--sage-dark);
+      width: 70px;
+    }
+    .calc-mu .ammortamento-table tbody tr:last-child td { border-bottom: 0; }
+    .calc-mu .ammortamento-table tbody tr:nth-child(even) td { background: rgba(245, 250, 249, 0.5); }
+
+    .calc-mu .csv-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* CTA */
+    .calc-mu .cta-section {
+      text-align: center;
+      margin: 40px 0 30px;
+      padding: 35px 25px;
+    }
+    .calc-mu .cta-section .eyebrow {
+      color: var(--ochre-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .calc-mu .cta-section h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+      color: var(--sage-dark);
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .calc-mu .cta-section p {
+      color: var(--gray-text);
+      max-width: 640px;
+      margin: 0 auto 25px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+    .calc-mu .cta-buttons {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .calc-mu .btn {
+      padding: 13px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .calc-mu .btn-primary { background: var(--sage); color: var(--ivory); }
+    .calc-mu .btn-primary:hover { background: var(--sage-dark); }
+    .calc-mu .btn-secondary {
+      background: transparent;
+      color: var(--sage);
+      border: 1.5px solid var(--sage);
+    }
+    .calc-mu .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
+
+    .calc-mu .final-disclaimer {
+      margin-top: 30px;
+      padding: 18px 22px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+    .calc-mu .final-disclaimer strong { color: var(--charcoal); }
+
+    /* Responsive */
+    @media (max-width: 880px) {
+      .calc-mu { padding: 25px 16px 40px; }
+      .calc-mu .modal-tabs { grid-template-columns: 1fr; }
+      .calc-mu .main-grid { grid-template-columns: 1fr; gap: 18px; }
+      .calc-mu .card { padding: 22px 22px; }
+      .calc-mu .form-row-2 { grid-template-columns: 1fr; gap: 0; }
+      .calc-mu .durata-row { grid-template-columns: 1fr 80px; }
+      .calc-mu .math-content,
+      .calc-mu .ammortamento-content { padding: 4px 18px 24px; }
+      .calc-mu .btn { width: 100%; }
+      .calc-mu .cta-buttons { flex-direction: column; }
+      .calc-mu .chart-wrap { height: 280px; padding: 6px 0 0; }
+      .calc-mu .chart-legend { gap: 12px; font-size: 0.78rem; }
+    }
+  </style>
+
+  <script>
+    import { calcolaMutuo } from '~/lib/calcolatori/mutuo';
+    import type {
+      ModalitaMutuo,
+      TipoTasso,
+      FrequenzaRata,
+      DatoAnnuale,
+      RigaAmmortamento,
+    } from '~/lib/calcolatori/mutuo';
+    import {
+      Chart,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+    } from 'chart.js';
+
+    Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
+
+    // -------------------- FORMATTERS --------------------
+    const fmtEuro = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2,
+    });
+    const fmtEuroNoCents = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    });
+    const fmtEuroShort = (v: number): string => {
+      if (!Number.isFinite(v)) return '';
+      const a = Math.abs(v);
+      if (a >= 1_000_000) {
+        const m = v / 1_000_000;
+        return (Number.isInteger(m) ? m.toString() : m.toFixed(1).replace('.', ',')) + 'M €';
+      }
+      if (a >= 1_000) return Math.round(v / 1000) + 'K €';
+      return Math.round(v) + ' €';
+    };
+    const fmtPct = (v: number, digits = 2): string => {
+      if (!Number.isFinite(v)) return '—';
+      return v.toFixed(digits).replace('.', ',') + '%';
+    };
+    const parseNum = (v: string): number => {
+      if (!v) return NaN;
+      return parseFloat(v.replace(',', '.'));
+    };
+
+    // -------------------- DOM REFS --------------------
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+      document.getElementById(id) as T;
+    const inputs = {
+      modalitaRadios: document.querySelectorAll<HTMLInputElement>('input[name="mu-modalita"]'),
+      tipoTassoRadios: document.querySelectorAll<HTMLInputElement>('input[name="mu-tipo-tasso"]'),
+      // Mode A
+      valoreImmobile: $<HTMLInputElement>('mu-valore-immobile'),
+      anticipo: $<HTMLInputElement>('mu-anticipo'),
+      // Mode B
+      rataSostenibile: $<HTMLInputElement>('mu-rata-sostenibile'),
+      anticipoDisponibile: $<HTMLInputElement>('mu-anticipo-disponibile'),
+      // Comuni
+      durata: $<HTMLInputElement>('mu-durata'),
+      durataSlider: $<HTMLInputElement>('mu-durata-slider'),
+      tassoFisso: $<HTMLInputElement>('mu-tasso-fisso'),
+      spread: $<HTMLInputElement>('mu-spread'),
+      euribor: $<HTMLInputElement>('mu-euribor'),
+      frequenza: $<HTMLSelectElement>('mu-frequenza'),
+      includiTaeg: $<HTMLInputElement>('mu-includi-taeg'),
+      istruttoria: $<HTMLInputElement>('mu-istruttoria'),
+      perizia: $<HTMLInputElement>('mu-perizia'),
+      imposta: $<HTMLInputElement>('mu-imposta'),
+      polizzaIncendio: $<HTMLInputElement>('mu-polizza-incendio'),
+      polizzaVita: $<HTMLInputElement>('mu-polizza-vita'),
+      incasso: $<HTMLInputElement>('mu-incasso'),
+    };
+
+    // -------------------- VISIBILITÀ --------------------
+    function getModalita(): ModalitaMutuo {
+      const r = document.querySelector<HTMLInputElement>('input[name="mu-modalita"]:checked');
+      return (r?.value === 'sostenibilita' ? 'sostenibilita' : 'rata') as ModalitaMutuo;
+    }
+    function getTipoTasso(): TipoTasso {
+      const r = document.querySelector<HTMLInputElement>('input[name="mu-tipo-tasso"]:checked');
+      return (r?.value === 'variabile' ? 'variabile' : 'fisso') as TipoTasso;
+    }
+
+    function setVisibility(): void {
+      const modalita = getModalita();
+      const modeRata = document.querySelector<HTMLElement>('.mode-rata');
+      const modeSost = document.querySelector<HTMLElement>('.mode-sostenibilita');
+      if (modeRata) modeRata.hidden = modalita !== 'rata';
+      if (modeSost) modeSost.hidden = modalita !== 'sostenibilita';
+
+      const tipoTasso = getTipoTasso();
+      const tFisso = document.querySelector<HTMLElement>('.tasso-fisso-group');
+      const tVar = document.querySelector<HTMLElement>('.tasso-variabile-group');
+      if (tFisso) tFisso.hidden = tipoTasso !== 'fisso';
+      if (tVar) tVar.hidden = tipoTasso !== 'variabile';
+
+      const taegSection = $('mu-taeg-section');
+      if (taegSection) taegSection.hidden = !inputs.includiTaeg.checked;
+    }
+
+    // -------------------- CHART --------------------
+    const COLORS = {
+      interessi: '#00A652',  // emerald
+      capitale: '#79B9AD',   // sage-light
+    };
+
+    let chartInstance: import('chart.js').Chart | null = null;
+    let firstRender = true;
+
+    const currentChart: { dati: DatoAnnuale[] } = { dati: [] };
+
+    function disegnaChart(dati: DatoAnnuale[]): void {
+      const canvas = $('mu-chart') as unknown as HTMLCanvasElement;
+      if (!canvas || !dati.length) return;
+
+      currentChart.dati = dati;
+
+      const labels = dati.map((d) => `Anno ${d.anno}`);
+      const dataInteressi = dati.map((d) => d.quotaInteressiAnnua);
+      const dataCapitale = dati.map((d) => d.quotaCapitaleAnnua);
+
+      const N = dati.length;
+      const showXTick = (idx: number): boolean =>
+        N > 30 ? idx % 5 === 0 || idx === N - 1
+        : N > 18 ? idx % 2 === 0 || idx === N - 1
+        : true;
+      const rotate = N > 15;
+
+      if (chartInstance) {
+        chartInstance.data.labels = labels;
+        chartInstance.data.datasets[0].data = dataInteressi;
+        chartInstance.data.datasets[1].data = dataCapitale;
+        const xs = chartInstance.options.scales?.x as any;
+        if (xs?.ticks) {
+          xs.ticks.maxRotation = rotate ? 45 : 0;
+          xs.ticks.minRotation = rotate ? 45 : 0;
+          xs.ticks.callback = function (_v: unknown, idx: number) {
+            return showXTick(idx) ? labels[idx] : '';
+          };
+        }
+        chartInstance.setActiveElements([]);
+        if (chartInstance.tooltip) {
+          chartInstance.tooltip.setActiveElements([], { x: 0, y: 0 });
+        }
+        chartInstance.update('none');
+        return;
+      }
+
+      chartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Quota interessi',
+              data: dataInteressi,
+              backgroundColor: COLORS.interessi,
+              stack: 'rata',
+              borderWidth: 0,
+            },
+            {
+              label: 'Quota capitale',
+              data: dataCapitale,
+              backgroundColor: COLORS.capitale,
+              stack: 'rata',
+              borderWidth: 0,
+              borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender ? { duration: 600, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              footerColor: '#373D42',
+              footerFont: { family: 'Manrope, sans-serif', weight: 700, size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: true,
+              boxPadding: 4,
+              callbacks: {
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  const d = currentChart.dati[idx];
+                  return d ? `Anno ${d.anno}` : '';
+                },
+                label: (ctx) =>
+                  `  ${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
+                footer: (items) => {
+                  const idx = items[0].dataIndex;
+                  const d = currentChart.dati[idx];
+                  if (!d) return '';
+                  return [
+                    `Totale rate annue: ${fmtEuro.format(d.rateAnnuTotali)}`,
+                    `Capitale residuo a fine anno: ${fmtEuroNoCents.format(d.capitaleResiduoFineAnno)}`,
+                  ];
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: true,
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                maxRotation: rotate ? 45 : 0,
+                minRotation: rotate ? 45 : 0,
+                autoSkip: false,
+                callback: function (_v: any, idx: number) {
+                  return showXTick(idx) ? labels[idx] : '';
+                },
+              },
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+
+      requestAnimationFrame(() => {
+        if (chartInstance && chartInstance.options) {
+          (chartInstance.options as any).animation = false;
+        }
+      });
+      firstRender = false;
+    }
+
+    function updateChartFallback(dati: DatoAnnuale[]): void {
+      const el = $('mu-chart-fallback');
+      if (!el || !dati.length) return;
+      const totInteressi = dati.reduce((s, d) => s + d.quotaInteressiAnnua, 0);
+      const totCapitale = dati.reduce((s, d) => s + d.quotaCapitaleAnnua, 0);
+      el.textContent =
+        `Su ${dati.length} anni: capitale rimborsato ${fmtEuro.format(totCapitale)}, ` +
+        `interessi pagati ${fmtEuro.format(totInteressi)}.`;
+    }
+
+    // -------------------- AMMORTAMENTO TABLE --------------------
+    let pianoCorrente: RigaAmmortamento[] = [];
+
+    function aggiornaTabellaAmmortamento(dati: DatoAnnuale[]): void {
+      const tbody = $('mu-ammortamento-body');
+      if (!tbody) return;
+      // Pulisci e ricostruisci
+      while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+      for (const d of dati) {
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          `<td>Anno ${d.anno}</td>` +
+          `<td>${fmtEuro.format(d.rateAnnuTotali)}</td>` +
+          `<td>${fmtEuro.format(d.quotaInteressiAnnua)}</td>` +
+          `<td>${fmtEuro.format(d.quotaCapitaleAnnua)}</td>` +
+          `<td>${fmtEuroNoCents.format(d.capitaleResiduoFineAnno)}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function exportCSV(): void {
+      if (!pianoCorrente.length) return;
+      const header = ['Numero rata', 'Anno', 'Quota capitale', 'Quota interessi', 'Rata totale', 'Capitale residuo'];
+      const rows = pianoCorrente.map((r) => [
+        r.numero,
+        r.anno,
+        r.quotaCapitale.toFixed(2).replace('.', ','),
+        r.quotaInteressi.toFixed(2).replace('.', ','),
+        r.rataTotale.toFixed(2).replace('.', ','),
+        r.capitaleResiduo.toFixed(2).replace('.', ','),
+      ]);
+      const csv = [header, ...rows]
+        .map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(';'))
+        .join('\n');
+      const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `piano-ammortamento-mutuo.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // -------------------- MAIN --------------------
+    function aggiorna(): void {
+      setVisibility();
+
+      const modalita = getModalita();
+      const tipoTasso = getTipoTasso();
+      const durata = parseNum(inputs.durata.value);
+      const tassoFisso = parseNum(inputs.tassoFisso.value);
+      const spread = parseNum(inputs.spread.value);
+      const euribor = parseNum(inputs.euribor.value);
+      const frequenza = inputs.frequenza.value as FrequenzaRata;
+
+      // Sync slider ↔ number per durata
+      const durataDisplay = $('mu-durata-display');
+      if (durataDisplay && Number.isFinite(durata)) {
+        durataDisplay.textContent = `${Math.round(durata)} ann${Math.round(durata) === 1 ? 'o' : 'i'}`;
+      }
+
+      // Display tasso variabile attuale
+      const tassoVarInfo = $('mu-tasso-variabile-info');
+      if (tassoVarInfo && Number.isFinite(spread) && Number.isFinite(euribor)) {
+        tassoVarInfo.textContent = `Tasso variabile attuale: ${fmtPct(spread + euribor, 2)}`;
+      }
+
+      const blocking = $('mu-blocking');
+
+      // Validazione preliminare
+      if (!Number.isFinite(durata) || durata < 1) {
+        blocking.textContent = 'Inserisci una durata di almeno 1 anno.';
+        return;
+      }
+      if (durata > 40) {
+        blocking.textContent = 'La durata massima è 40 anni.';
+        return;
+      }
+
+      let valoreImmobile: number | undefined;
+      let anticipo: number | undefined;
+      let rataSostenibile: number | undefined;
+      let anticipoDisponibile: number | undefined;
+
+      if (modalita === 'rata') {
+        valoreImmobile = parseNum(inputs.valoreImmobile.value);
+        anticipo = parseNum(inputs.anticipo.value);
+        if (!Number.isFinite(valoreImmobile) || valoreImmobile <= 0) {
+          blocking.textContent = "Inserisci il valore dell'immobile.";
+          return;
+        }
+        if (!Number.isFinite(anticipo) || anticipo < 0) anticipo = 0;
+        if (anticipo >= valoreImmobile) {
+          blocking.textContent = "L'anticipo è maggiore o uguale al valore dell'immobile: nessun mutuo necessario.";
+          return;
+        }
+      } else {
+        rataSostenibile = parseNum(inputs.rataSostenibile.value);
+        anticipoDisponibile = parseNum(inputs.anticipoDisponibile.value);
+        if (!Number.isFinite(rataSostenibile) || rataSostenibile <= 0) {
+          blocking.textContent = 'Inserisci una rata sostenibile maggiore di zero.';
+          return;
+        }
+        if (!Number.isFinite(anticipoDisponibile) || anticipoDisponibile < 0) anticipoDisponibile = 0;
+      }
+
+      blocking.textContent = '';
+
+      // Anticipo info (mode A)
+      if (modalita === 'rata' && Number.isFinite(valoreImmobile) && Number.isFinite(anticipo)) {
+        const importo = (valoreImmobile as number) - (anticipo as number);
+        const pct = ((valoreImmobile as number) - (anticipo as number)) / (valoreImmobile as number) * 100;
+        const anticipoInfo = $('mu-anticipo-info');
+        if (anticipoInfo) {
+          anticipoInfo.textContent =
+            `Mutuo richiesto: ${fmtEuroNoCents.format(importo)} (${pct.toFixed(0)}% del valore)`;
+        }
+      }
+
+      // Auto-update imposta sostitutiva (0,25% del mutuo) se non manualmente editata
+      if (inputs.imposta.dataset.auto !== 'false') {
+        let importoStimato = 0;
+        if (modalita === 'rata') {
+          importoStimato = Math.max(0, (valoreImmobile as number) - (anticipo as number));
+        } else {
+          // Stima rapida con la formula base
+          const ra = frequenza === 'mensile' ? 12 : frequenza === 'trimestrale' ? 4 : frequenza === 'semestrale' ? 2 : 1;
+          const n = Math.round(durata * ra);
+          const tan = tipoTasso === 'fisso' ? (tassoFisso || 0) : ((spread || 0) + (euribor || 0));
+          const i = (tan / 100) / ra;
+          importoStimato = i === 0
+            ? (rataSostenibile as number) * n
+            : ((rataSostenibile as number) * (1 - Math.pow(1 + i, -n))) / i;
+        }
+        const imposta = Math.round(importoStimato * 0.0025);
+        if (Number.isFinite(imposta) && imposta >= 0) {
+          inputs.imposta.value = String(imposta);
+        }
+      }
+
+      const result = calcolaMutuo({
+        modalita,
+        valoreImmobile,
+        anticipo,
+        rataSostenibile,
+        anticipoDisponibile,
+        durataAnni: durata,
+        tipoTasso,
+        tassoFisso: Number.isFinite(tassoFisso) ? tassoFisso : 0,
+        spread: Number.isFinite(spread) ? spread : 0,
+        euribor: Number.isFinite(euribor) ? euribor : 0,
+        frequenzaRata: frequenza,
+        includiTaeg: inputs.includiTaeg.checked,
+        speseAccessorie: inputs.includiTaeg.checked
+          ? {
+              istruttoria: parseNum(inputs.istruttoria.value) || 0,
+              perizia: parseNum(inputs.perizia.value) || 0,
+              impostaSostitutiva: parseNum(inputs.imposta.value) || 0,
+              polizzaIncendioAnnua: parseNum(inputs.polizzaIncendio.value) || 0,
+              polizzaVitaAnnua: parseNum(inputs.polizzaVita.value) || 0,
+              speseIncassoRata: parseNum(inputs.incasso.value) || 0,
+            }
+          : undefined,
+      });
+
+      if (!result.ok) {
+        blocking.textContent = result.errore ?? 'Dati non validi.';
+        return;
+      }
+
+      pianoCorrente = result.pianoAmmortamento;
+
+      // Output
+      const primaryLabel = $('mu-out-primary-label');
+      const primaryVal = $('mu-out-primary');
+      const rowImmobile = $('mu-row-immobile');
+      const outImmobile = $('mu-out-immobile');
+
+      const rataLabel =
+        result.rateAnnuali === 12 ? 'Rata mensile'
+        : result.rateAnnuali === 4 ? 'Rata trimestrale'
+        : result.rateAnnuali === 2 ? 'Rata semestrale'
+        : 'Rata annuale';
+
+      if (modalita === 'rata') {
+        primaryLabel.textContent = rataLabel;
+        primaryVal.textContent = fmtEuro.format(result.rataPeriodica);
+        rowImmobile.hidden = true;
+      } else {
+        primaryLabel.textContent = 'Importo finanziabile';
+        primaryVal.textContent = fmtEuroNoCents.format(result.importoMutuo);
+        rowImmobile.hidden = false;
+        outImmobile.textContent =
+          result.valoreImmobileCalcolato !== undefined
+            ? fmtEuroNoCents.format(result.valoreImmobileCalcolato)
+            : '—';
+      }
+
+      $('mu-out-importo').textContent = fmtEuroNoCents.format(result.importoMutuo);
+      $('mu-out-numero-rate').textContent = String(result.numeroRate);
+      $('mu-out-interessi').textContent = fmtEuroNoCents.format(result.totaleInteressi);
+      $('mu-out-totale').textContent = fmtEuroNoCents.format(result.costoTotaleMutuo);
+      $('mu-out-pct').textContent = fmtPct(result.percentualeInteressiSuTotale, 2);
+      $('mu-out-tan').textContent = fmtPct(result.tan, 2);
+      $('mu-out-ltv').textContent = fmtPct(result.ltv, 1);
+
+      const taegRow = $('mu-row-taeg');
+      if (inputs.includiTaeg.checked && result.taeg !== null) {
+        taegRow.hidden = false;
+        $('mu-out-taeg').textContent = fmtPct(result.taeg, 2);
+      } else {
+        taegRow.hidden = true;
+      }
+
+      // Warnings
+      const warnEl = $('mu-warnings');
+      while (warnEl.firstChild) warnEl.removeChild(warnEl.firstChild);
+      if (result.warning.length) {
+        const ul = document.createElement('ul');
+        for (const w of result.warning) {
+          const li = document.createElement('li');
+          li.textContent = w;
+          ul.appendChild(li);
+        }
+        warnEl.appendChild(ul);
+      }
+
+      // Subtitle del grafico (educativa)
+      const sub = $('mu-chart-subtitle');
+      if (sub && result.datiAnnuali.length > 0) {
+        const primo = result.datiAnnuali[0];
+        const pctInteressiPrimoAnno =
+          primo.rateAnnuTotali > 0
+            ? (primo.quotaInteressiAnnua / primo.rateAnnuTotali) * 100
+            : 0;
+        sub.textContent =
+          `Anno 1: il ${pctInteressiPrimoAnno.toFixed(0)}% delle rate è interessi. ` +
+          `Con gli anni la quota capitale (sage) cresce e quella di interessi (emerald) si riduce.`;
+      }
+
+      disegnaChart(result.datiAnnuali);
+      updateChartFallback(result.datiAnnuali);
+      aggiornaTabellaAmmortamento(result.datiAnnuali);
+    }
+
+    // -------------------- DEBOUNCE + WIRING --------------------
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    function schedule(): void {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(aggiorna, 200);
+    }
+
+    // Sync slider ↔ number per durata
+    inputs.durataSlider.addEventListener('input', () => {
+      inputs.durata.value = inputs.durataSlider.value;
+      schedule();
+    });
+    inputs.durata.addEventListener('input', () => {
+      const v = parseNum(inputs.durata.value);
+      if (Number.isFinite(v) && v >= 5 && v <= 40) {
+        inputs.durataSlider.value = String(Math.round(v));
+      }
+      schedule();
+    });
+
+    // Imposta sostitutiva: traccia se l'utente la edita manualmente
+    inputs.imposta.addEventListener('input', () => {
+      inputs.imposta.dataset.auto = 'false';
+      schedule();
+    });
+
+    // Reset auto-imposta quando cambia modalità (nuovo scenario)
+    inputs.modalitaRadios.forEach((el) =>
+      el.addEventListener('change', () => {
+        inputs.imposta.dataset.auto = 'true';
+        schedule();
+      })
+    );
+
+    // Tutti gli altri input
+    const altri: Array<HTMLInputElement | HTMLSelectElement> = [
+      inputs.valoreImmobile,
+      inputs.anticipo,
+      inputs.rataSostenibile,
+      inputs.anticipoDisponibile,
+      inputs.tassoFisso,
+      inputs.spread,
+      inputs.euribor,
+      inputs.frequenza,
+      inputs.istruttoria,
+      inputs.perizia,
+      inputs.polizzaIncendio,
+      inputs.polizzaVita,
+      inputs.incasso,
+    ];
+    for (const el of altri) {
+      el.addEventListener('input', schedule);
+      el.addEventListener('change', schedule);
+    }
+    inputs.includiTaeg.addEventListener('change', schedule);
+    inputs.tipoTassoRadios.forEach((el) => el.addEventListener('change', schedule));
+
+    // Export CSV
+    const csvBtn = $('mu-export-csv');
+    if (csvBtn) csvBtn.addEventListener('click', exportCSV);
+
+    aggiorna();
+  </script>
 </Layout>
