@@ -2205,5 +2205,13 @@ const metadata = {
     );
 
     aggiorna();
+
+    // Cleanup per Astro View Transitions (ClientRouter)
+    document.addEventListener('astro:before-swap', () => {
+      if (chart1) { chart1.destroy(); chart1 = null; }
+      if (chart2) { chart2.destroy(); chart2 = null; }
+      if (chart3) { chart3.destroy(); chart3 = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
+    }, { once: true });
   </script>
 </Layout>
