@@ -1,0 +1,44 @@
+---
+// Wrapper riusabile per le 5 sezioni della pagina voce singola.
+// Stili e tono variano in base alla variant.
+
+interface Props {
+  /** Numero progressivo (1..5). */
+  numero: number;
+  /** Titolo della sezione (es. "La frase essenziale"). */
+  titolo: string;
+  /** Stile visivo della sezione. */
+  variant: 'ivory' | 'white' | 'sage-bordered' | 'emerald-soft';
+  /** Etichetta opzionale sopra il titolo (es. "Per chi vuole approfondire"). */
+  label?: string;
+}
+
+const { numero, titolo, variant, label } = Astro.props;
+
+const variantClass = {
+  'ivory':           'bg-cream',
+  'white':           'bg-white',
+  'sage-bordered':   'bg-white border border-[var(--aw-color-primary)]/20',
+  'emerald-soft':    'bg-[rgba(0,166,82,0.05)] border border-[rgba(0,166,82,0.18)]',
+}[variant];
+---
+
+<section
+  class:list={['rounded-2xl px-6 py-8 md:px-10 md:py-10', variantClass]}
+  aria-labelledby={`sezione-${numero}-titolo`}
+>
+  {label && (
+    <p class="text-xs tracking-[0.18em] uppercase font-semibold text-[var(--aw-color-text-muted)] mb-2">
+      {label}
+    </p>
+  )}
+  <div class="flex items-baseline gap-3 mb-5">
+    <span class="text-sm font-semibold text-[var(--aw-color-primary)]/70 tabular-nums">
+      0{numero}.
+    </span>
+    <h2 id={`sezione-${numero}-titolo`} class="font-heading text-xl md:text-2xl font-semibold text-[var(--aw-color-text-heading)]">
+      {titolo}
+    </h2>
+  </div>
+  <slot />
+</section>

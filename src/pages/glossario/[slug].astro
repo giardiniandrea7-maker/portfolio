@@ -1,0 +1,276 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import VoceCard from '~/components/glossario/VoceCard.astro';
+import SezioneVoce from '~/components/glossario/SezioneVoce.astro';
+import MarkdownInline from '~/components/glossario/MarkdownInline.astro';
+import {
+  CATEGORIE,
+  LIVELLI,
+  getVociPubblicate,
+  getNeighbors,
+  getCorrelate,
+  type VoceGlossario,
+} from '~/data/glossario';
+
+export async function getStaticPaths() {
+  return getVociPubblicate().map((voce) => ({
+    params: { slug: voce.slug },
+    props: { voce },
+  }));
+}
+
+interface Props {
+  voce: VoceGlossario;
+}
+
+const { voce } = Astro.props;
+const liv = LIVELLI[voce.livello];
+const { prev, next } = getNeighbors(voce.slug);
+const correlate = getCorrelate(voce.slug);
+
+const canonicalUrl = `https://giardiniconsulenza.it/glossario/${voce.slug}`;
+const metadata = {
+  title: `${voce.titolo} | Glossario | Andrea Giardini`,
+  description: voce.metaDescription,
+  canonical: canonicalUrl,
+};
+
+// Schema.org DefinedTerm: usa la frase essenziale come definizione (testo
+// pulito, senza markdown), come da spec.
+function stripMarkdown(s: string): string {
+  return s
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTerm',
+  '@id': canonicalUrl,
+  name: voce.titolo,
+  alternateName: voce.sigla,
+  description: stripMarkdown(voce.fraseEssenziale),
+  url: canonicalUrl,
+  inDefinedTermSet: {
+    '@type': 'DefinedTermSet',
+    name: 'Glossario finanziario di Andrea Giardini',
+    url: 'https://giardiniconsulenza.it/glossario',
+  },
+};
+
+const livelloBadgeClass = {
+  sage:  'bg-[var(--aw-color-primary)]/10 text-[var(--aw-color-primary)] border-[var(--aw-color-primary)]/30',
+  ochre: 'bg-[var(--aw-color-accent)]/15 text-[var(--aw-color-accent)] border-[var(--aw-color-accent)]/30',
+  red:   'bg-[rgba(192,57,43,0.10)] text-[#A04032] border-[#c0392b]/30',
+}[liv.color];
+---
+
+<Layout metadata={metadata}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <article class="bg-white">
+
+    <!-- ===================== BREADCRUMB ===================== -->
+    <nav aria-label="Breadcrumb" class="bg-white border-b border-[var(--aw-color-primary)]/10">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <ol class="flex flex-wrap items-center gap-2 text-sm text-[var(--aw-color-text-muted)]">
+          <li><a href="/" class="hover:text-[var(--aw-color-primary)] transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/glossario" class="hover:text-[var(--aw-color-primary)] transition-colors">Glossario</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-[var(--aw-color-text-heading)] font-medium" aria-current="page">{voce.titolo}</li>
+        </ol>
+      </div>
+    </nav>
+
+    <!-- ===================== HEADER VOCE ===================== -->
+    <header class="bg-white pt-10 md:pt-14 pb-6">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-center gap-2 mb-5">
+          <span class:list={['inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2.5 py-1 rounded-full border', livelloBadgeClass]}>
+            <span aria-hidden="true">{liv.emoji}</span>
+            <span>{liv.label}</span>
+          </span>
+          <span class="text-xs font-semibold tracking-[0.08em] uppercase text-[var(--aw-color-primary)]/80 bg-[var(--aw-color-primary)]/8 px-2.5 py-1 rounded-full">
+            {CATEGORIE[voce.categoria]}
+          </span>
+        </div>
+
+        <h1 class="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] leading-[1.1] mb-2">
+          {voce.titolo}
+        </h1>
+
+        {voce.sigla && (
+          <p class="text-lg md:text-xl text-[var(--aw-color-primary)] font-medium">
+            {voce.sigla}
+          </p>
+        )}
+      </div>
+    </header>
+
+    <!-- ===================== 5 SEZIONI ===================== -->
+    <div class="bg-white pb-12">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 md:space-y-8">
+
+        <!-- Sezione 1: La frase essenziale -->
+        <SezioneVoce numero={1} titolo="La frase essenziale" variant="ivory">
+          <MarkdownInline
+            as="p"
+            text={voce.fraseEssenziale}
+            class="font-heading text-xl md:text-2xl text-[var(--aw-color-text-heading)] leading-[1.55]"
+          />
+        </SezioneVoce>
+
+        <!-- Sezione 2: Un esempio concreto -->
+        <SezioneVoce numero={2} titolo="Un esempio concreto" variant="white">
+          <MarkdownInline
+            as="p"
+            text={voce.esempioConcreto}
+            class="text-[17px] text-[var(--aw-color-text-default)] leading-[1.75]"
+          />
+        </SezioneVoce>
+
+        <!-- Sezione 3: Perché ti riguarda -->
+        <SezioneVoce numero={3} titolo="Perché ti riguarda" variant="sage-bordered">
+          <MarkdownInline
+            as="p"
+            text={voce.perchéTiRiguarda}
+            class="text-[17px] text-[var(--aw-color-text-default)] leading-[1.75]"
+          />
+        </SezioneVoce>
+
+        <!-- Sezione 4: La definizione tecnica -->
+        <SezioneVoce
+          numero={4}
+          titolo="La definizione tecnica"
+          variant="sage-bordered"
+          label="Per chi vuole approfondire"
+        >
+          <MarkdownInline
+            as="p"
+            text={voce.definizioneTecnica}
+            class="text-base text-[var(--aw-color-text-default)] leading-[1.75]"
+          />
+        </SezioneVoce>
+
+        <!-- Sezione 5: Errori comuni -->
+        <SezioneVoce numero={5} titolo="Errori comuni" variant="emerald-soft">
+          <ul class="space-y-3">
+            {voce.erroriComuni.map((err) => (
+              <li class="flex gap-3">
+                <span class="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full bg-[var(--aw-color-primary)]" aria-hidden="true"></span>
+                <MarkdownInline as="span" text={err} class="text-[16px] text-[var(--aw-color-text-default)] leading-[1.7]" />
+              </li>
+            ))}
+          </ul>
+        </SezioneVoce>
+      </div>
+    </div>
+
+    <!-- ===================== TERMINI CORRELATI ===================== -->
+    {correlate.length > 0 && (
+      <section class="bg-cream py-14 md:py-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 class="font-heading text-2xl md:text-3xl font-semibold text-[var(--aw-color-text-heading)] mb-6">
+            Termini correlati
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {correlate.map((c) => <VoceCard voce={c} />)}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ===================== APPROFONDISCI CON UN CALCOLATORE ===================== -->
+    {voce.calcolatoreCorrelato && (
+      <section class="bg-white py-14 md:py-16">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="rounded-2xl border border-[var(--aw-color-primary)]/20 bg-[rgba(0,166,82,0.04)] p-8 md:p-10 text-center">
+            <p class="text-xs tracking-[0.18em] uppercase font-semibold text-[var(--aw-color-primary)] mb-3">
+              Approfondisci con uno strumento
+            </p>
+            <h2 class="font-heading text-2xl md:text-3xl font-semibold text-[var(--aw-color-text-heading)] mb-3">
+              {voce.calcolatoreCorrelato.titolo}
+            </h2>
+            <p class="text-[var(--aw-color-text-muted)] leading-relaxed mb-6 max-w-xl mx-auto">
+              Per vedere come questo concetto si traduce in numeri concreti, prova il calcolatore
+              dedicato.
+            </p>
+            <a
+              href={voce.calcolatoreCorrelato.slug}
+              class="inline-flex items-center gap-2 px-6 py-3 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold rounded-sm transition-all hover:shadow-lg font-heading"
+            >
+              Apri il calcolatore
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ===================== PREV / NEXT NAVIGATION ===================== -->
+    <nav class="bg-white py-10 border-t border-[var(--aw-color-primary)]/10" aria-label="Navigazione voci glossario">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {prev ? (
+            <a
+              href={`/glossario/${prev.slug}`}
+              class="group block rounded-2xl border border-[var(--aw-color-primary)]/15 hover:border-[var(--aw-color-primary)]/50 hover:shadow-md p-5 transition-all"
+            >
+              <span class="block text-xs tracking-[0.08em] uppercase font-semibold text-[var(--aw-color-text-muted)] mb-1">
+                ← Voce precedente
+              </span>
+              <span class="block font-heading text-lg font-semibold text-[var(--aw-color-text-heading)] group-hover:text-[var(--aw-color-primary)] transition-colors">
+                {prev.titolo}
+              </span>
+            </a>
+          ) : <div></div>}
+          {next ? (
+            <a
+              href={`/glossario/${next.slug}`}
+              class="group block rounded-2xl border border-[var(--aw-color-primary)]/15 hover:border-[var(--aw-color-primary)]/50 hover:shadow-md p-5 transition-all md:text-right"
+            >
+              <span class="block text-xs tracking-[0.08em] uppercase font-semibold text-[var(--aw-color-text-muted)] mb-1">
+                Voce successiva →
+              </span>
+              <span class="block font-heading text-lg font-semibold text-[var(--aw-color-text-heading)] group-hover:text-[var(--aw-color-primary)] transition-colors">
+                {next.titolo}
+              </span>
+            </a>
+          ) : <div></div>}
+        </div>
+        <div class="mt-6 text-center">
+          <a href="/glossario" class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--aw-color-primary)] hover:underline underline-offset-4">
+            ← Torna al glossario
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===================== CTA FINALE ===================== -->
+    <section class="bg-cream py-16 md:py-20">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-xs tracking-[0.18em] uppercase font-semibold text-[var(--aw-color-accent)] mb-3">
+          Vuoi capire come questo concetto si applica al tuo caso?
+        </p>
+        <h2 class="font-heading text-2xl md:text-3xl font-semibold text-[var(--aw-color-text-heading)] mb-4 leading-tight">
+          Ogni situazione è diversa.
+        </h2>
+        <p class="text-base md:text-lg text-[var(--aw-color-text-muted)] leading-relaxed mb-8 max-w-2xl mx-auto">
+          Se vuoi capire come <strong>{voce.titolo}</strong> si applica concretamente alla tua
+          situazione patrimoniale, posso aiutarti. La prima chiamata è gratuita e senza impegno.
+        </p>
+        <a
+          href="/contatti"
+          class="inline-flex items-center justify-center px-8 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white font-semibold rounded-sm transition-all hover:shadow-lg font-heading"
+        >
+          Prenota una consulenza
+        </a>
+      </div>
+    </section>
+  </article>
+</Layout>

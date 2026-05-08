@@ -1,0 +1,51 @@
+---
+// Render minimo di markdown inline: **bold**, *italic*, [link](url).
+// Niente librerie esterne, niente blocchi (no liste, no headings, no code-fence).
+// Per i blocchi usa un wrapper esterno (<p>, <li>) e passa il testo qui.
+//
+// In più: converte gli spazi tra cifra e simbolo di valuta/percentuale in
+// nbsp ("10.000 €" → "10.000 €") per evitare a-capo brutti.
+
+interface Props {
+  /** Stringa markdown inline. */
+  text: string;
+  /** Tag esterno. Default 'span' (inline). Usa 'p' o 'div' se serve un blocco. */
+  as?: 'span' | 'p' | 'div';
+  /** Classi CSS aggiuntive sull'elemento esterno. */
+  class?: string;
+}
+
+const { text, as = 'span', class: className = '' } = Astro.props;
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function renderMarkdown(input: string): string {
+  let html = escapeHtml(input);
+
+  // Link: [testo](url) — la url può contenere caratteri vari ma non parentesi.
+  // L'href passa nuovamente per escapeHtml — per quote e simili.
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, label, url) => {
+    const safeUrl = url.replace(/"/g, '&quot;');
+    return `<a href="${safeUrl}" class="text-[var(--aw-color-primary)] underline decoration-1 underline-offset-4 hover:decoration-2 transition-all">${label}</a>`;
+  });
+
+  // Bold: **testo** (non greedy)
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Italic: *testo* (non greedy)
+  html = html.replace(/(?<![*])\*([^*\n]+)\*(?![*])/g, '<em>$1</em>');
+
+  // Numero + spazio + (€|%) → nbsp. Conserva il segno e gli arrotondamenti.
+  html = html.replace(/(\d) (€|%)/g, '$1 $2');
+
+  return html;
+}
+
+const rendered = renderMarkdown(text);
+const Tag = as;
+---
+<Tag class={className} set:html={rendered} />
