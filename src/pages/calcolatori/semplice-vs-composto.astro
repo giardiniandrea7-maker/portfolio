@@ -2046,6 +2046,8 @@ const metadata = {
     }
 
     // -------------------- INTERSECTION OBSERVER --------------------
+    let intersectionObs: IntersectionObserver | null = null;
+
     function setupObserver(): void {
       if (!('IntersectionObserver' in window)) {
         // Fallback: inizializza subito
@@ -2053,7 +2055,7 @@ const metadata = {
         if (datiCorrenti.length) avviaRaceAnimation();
         return;
       }
-      const obs = new IntersectionObserver(
+      intersectionObs = new IntersectionObserver(
         (entries) => {
           entries.forEach((e) => {
             if (e.isIntersecting && e.target.id === 'atto-1' && !raceAttoInited) {
@@ -2063,14 +2065,14 @@ const metadata = {
                 // Piccolo delay per dare modo al DOM di stabilizzarsi
                 setTimeout(avviaRaceAnimation, 200);
               }
-              obs.unobserve(e.target);
+              if (intersectionObs) intersectionObs.unobserve(e.target);
             }
           });
         },
         { threshold: 0.3 }
       );
       const t = $('atto-1');
-      if (t) obs.observe(t);
+      if (t) intersectionObs.observe(t);
     }
 
     // -------------------- MAIN --------------------
@@ -2212,5 +2214,21 @@ const metadata = {
     tmSlider.value = inputs.anni.value;
 
     aggiorna();
+
+    // Cleanup per Astro View Transitions (ClientRouter)
+    // Distrugge i 3 chart, l'observer, e cancella i timer del race chart
+    // (animazione 4500ms) e del debounce.
+    document.addEventListener('astro:before-swap', () => {
+      if (chartClassic) { chartClassic.destroy(); chartClassic = null; }
+      if (chartRace) { chartRace.destroy(); chartRace = null; }
+      if (chartRitardo) { chartRitardo.destroy(); chartRitardo = null; }
+      if (raceTimer) { clearTimeout(raceTimer); raceTimer = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
+      if (intersectionObs) { intersectionObs.disconnect(); intersectionObs = null; }
+      // CountUp non ha destroy(): annulla i riferimenti per consentire GC
+      countUpTm = null;
+      countUpMarco = null;
+      countUpLuca = null;
+    }, { once: true });
   </script>
 </Layout>
