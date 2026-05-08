@@ -23,7 +23,13 @@
 export type ModalitaCalcolo = 'semplice' | 'avanzata';
 export type Tipologia = 'titolo_stato' | 'corporate' | 'personalizzata';
 export type Frequenza = 'annuale' | 'semestrale' | 'trimestrale';
-export type TipoFlusso = 'acquisto' | 'cedola' | 'rimborso';
+
+export interface PuntoGrafico {
+  data: Date;
+  valore: number;
+  tipo: 'inizio' | 'cedola' | 'scadenza' | 'tick';
+  descrizione?: string;
+}
 
 export interface InputObbligazione {
   modalita: ModalitaCalcolo;
@@ -41,15 +47,6 @@ export interface InputObbligazione {
   includiRateo?: boolean;
   reinvestiCedole?: boolean;
   tassoReinvestimento?: number;
-}
-
-export interface FlussoCassa {
-  data: Date;
-  descrizione: string;
-  tipo: TipoFlusso;
-  importoLordo: number;
-  imposte: number;
-  importoNetto: number;
 }
 
 export interface OutputObbligazione {
@@ -72,7 +69,7 @@ export interface OutputObbligazione {
   ytmLordo: number | null;
   ytmNetto: number | null;
   impostePagateTotali: number;
-  flussi: FlussoCassa[];
+  curvaCrescita: PuntoGrafico[];
   warning: string[];
 }
 
@@ -188,9 +185,89 @@ function emptyOutput(errore: string): OutputObbligazione {
     ytmLordo: null,
     ytmNetto: null,
     impostePagateTotali: 0,
-    flussi: [],
+    curvaCrescita: [],
     warning: [errore],
   };
+}
+
+// Genera la serie di punti per il grafico "crescita del montante netto".
+// In Avanzata: scalini ai cashing date di ogni cedola netta + step finale a scadenza.
+// In Semplice con cedole: crescita lineare a tick annuali + step finale.
+// In Semplice senza cedole (BOT/CTZ): linea piatta, unico step a scadenza.
+function generaCurvaCrescita(args: {
+  modalita: ModalitaCalcolo;
+  dataA: Date;
+  dataS: Date;
+  capitaleInvestitoTotale: number;
+  capitaleFinaleNetto: number;
+  cedoleTotaliNette: number;
+  cedole: Array<{ data: Date; netta: number }>;
+}): PuntoGrafico[] {
+  const { modalita, dataA, dataS, capitaleInvestitoTotale, capitaleFinaleNetto, cedoleTotaliNette, cedole } = args;
+  const punti: PuntoGrafico[] = [];
+
+  punti.push({
+    data: dataA,
+    valore: capitaleInvestitoTotale,
+    tipo: 'inizio',
+    descrizione: 'Acquisto',
+  });
+
+  if (modalita === 'avanzata' && cedole.length > 0) {
+    let cumulato = capitaleInvestitoTotale;
+    cedole.forEach((c, i) => {
+      // Tick "appena prima" della cedola → crea visivamente lo scalino
+      punti.push({
+        data: new Date(c.data.getTime() - 1),
+        valore: cumulato,
+        tipo: 'tick',
+      });
+      cumulato += c.netta;
+      punti.push({
+        data: c.data,
+        valore: cumulato,
+        tipo: 'cedola',
+        descrizione: `Cedola ${i + 1}: +${c.netta.toFixed(2).replace('.', ',')} €`,
+      });
+    });
+    const lastCedolaTime = cedole[cedole.length - 1].data.getTime();
+    if (lastCedolaTime < dataS.getTime() - 1) {
+      punti.push({
+        data: new Date(dataS.getTime() - 1),
+        valore: cumulato,
+        tipo: 'tick',
+      });
+    }
+  } else if (cedoleTotaliNette > 0) {
+    const anni = (dataS.getTime() - dataA.getTime()) / (365.25 * MS_PER_DAY);
+    const steps = Math.max(2, Math.min(10, Math.ceil(anni)));
+    for (let i = 1; i < steps; i++) {
+      const t = i / steps;
+      const data = new Date(dataA.getTime() + t * (dataS.getTime() - dataA.getTime()));
+      const valore = capitaleInvestitoTotale + t * cedoleTotaliNette;
+      punti.push({ data, valore, tipo: 'tick' });
+    }
+    punti.push({
+      data: new Date(dataS.getTime() - 1),
+      valore: capitaleInvestitoTotale + cedoleTotaliNette,
+      tipo: 'tick',
+    });
+  } else {
+    punti.push({
+      data: new Date(dataS.getTime() - 1),
+      valore: capitaleInvestitoTotale,
+      tipo: 'tick',
+    });
+  }
+
+  punti.push({
+    data: dataS,
+    valore: capitaleFinaleNetto,
+    tipo: 'scadenza',
+    descrizione: 'Rimborso a scadenza',
+  });
+
+  return punti;
 }
 
 export function calcolaRendimentoObbligazione(
@@ -226,7 +303,6 @@ export function calcolaRendimentoObbligazione(
   const numeroTitoli = nominale / 1000;
   const esborsoCorsoSecco = (nominale * prezzoAcq) / 100;
   const rimborsoLordo = (nominale * prezzoRimb) / 100;
-  const flussi: FlussoCassa[] = [];
 
   // ============ MODALITÀ SEMPLICE ============
   if (input.modalita === 'semplice') {
@@ -244,33 +320,6 @@ export function calcolaRendimentoObbligazione(
     const impostaCG = cgLordo > 0 ? cgLordo * aliquotaDec : 0;
     const cgNetto = cgLordo - impostaCG;
 
-    flussi.push({
-      data: dataA,
-      descrizione: 'Acquisto',
-      tipo: 'acquisto',
-      importoLordo: -esborsoCorsoSecco,
-      imposte: 0,
-      importoNetto: -esborsoCorsoSecco,
-    });
-    if (cedoleLorde > 0) {
-      flussi.push({
-        data: dataS,
-        descrizione: 'Cedole accumulate',
-        tipo: 'cedola',
-        importoLordo: cedoleLorde,
-        imposte: impostaCedole,
-        importoNetto: cedoleNette,
-      });
-    }
-    flussi.push({
-      data: dataS,
-      descrizione: 'Rimborso',
-      tipo: 'rimborso',
-      importoLordo: rimborsoLordo,
-      imposte: impostaCG,
-      importoNetto: rimborsoLordo - impostaCG,
-    });
-
     const capitaleInvestitoTotale = esborsoCorsoSecco;
     const capitaleFinaleNetto = esborsoCorsoSecco + cedoleNette + cgNetto;
     const rendimentoTotaleNetto = capitaleFinaleNetto - capitaleInvestitoTotale;
@@ -278,6 +327,16 @@ export function calcolaRendimentoObbligazione(
       capitaleInvestitoTotale > 0
         ? ((rendimentoTotaleNetto / capitaleInvestitoTotale) * 100) / anniResidui
         : 0;
+
+    const curvaCrescita = generaCurvaCrescita({
+      modalita: 'semplice',
+      dataA,
+      dataS,
+      capitaleInvestitoTotale,
+      capitaleFinaleNetto,
+      cedoleTotaliNette: cedoleNette,
+      cedole: [],
+    });
 
     return {
       ok: true,
@@ -298,7 +357,7 @@ export function calcolaRendimentoObbligazione(
       ytmLordo: null,
       ytmNetto: null,
       impostePagateTotali: impostaCedole + impostaCG,
-      flussi,
+      curvaCrescita,
       warning: warnings,
     };
   }
@@ -331,15 +390,6 @@ export function calcolaRendimentoObbligazione(
 
   const capitaleInvestitoTotale = esborsoCorsoSecco + rateoVersato;
 
-  flussi.push({
-    data: dataA,
-    descrizione: rateoVersato > 0 ? 'Acquisto + rateo' : 'Acquisto',
-    tipo: 'acquisto',
-    importoLordo: -capitaleInvestitoTotale,
-    imposte: 0,
-    importoNetto: -capitaleInvestitoTotale,
-  });
-
   // ----- Cedole intermedie -----
   type Cedola = { data: Date; lorda: number; imposta: number; netta: number };
   const cedole: Cedola[] = [];
@@ -356,16 +406,6 @@ export function calcolaRendimentoObbligazione(
       cedole.push({ data: dataC, lorda, imposta: impostaEffettiva, netta: lorda - impostaEffettiva });
     }
   }
-  cedole.forEach((c, idx) => {
-    flussi.push({
-      data: c.data,
-      descrizione: `Cedola ${idx + 1}/${cedole.length}`,
-      tipo: 'cedola',
-      importoLordo: c.lorda,
-      imposte: c.imposta,
-      importoNetto: c.netta,
-    });
-  });
 
   const cedoleTotaliLorde = cedole.reduce((s, c) => s + c.lorda, 0);
   const cedoleTotaliNette = cedole.reduce((s, c) => s + c.netta, 0);
@@ -375,15 +415,6 @@ export function calcolaRendimentoObbligazione(
   const cgLordo = rimborsoLordo - esborsoCorsoSecco;
   const impostaCG = cgLordo > 0 ? cgLordo * aliquotaDec : 0;
   const cgNetto = cgLordo - impostaCG;
-
-  flussi.push({
-    data: dataS,
-    descrizione: 'Rimborso',
-    tipo: 'rimborso',
-    importoLordo: rimborsoLordo,
-    imposte: impostaCG,
-    importoNetto: rimborsoLordo - impostaCG,
-  });
 
   // ----- Capitale finale netto -----
   let capitaleFinaleNetto: number;
@@ -441,6 +472,16 @@ export function calcolaRendimentoObbligazione(
   if (ytmLordo === null) warnings.push('YTM lordo non calcolabile con questi parametri.');
   if (ytmNetto === null) warnings.push('YTM netto non calcolabile con questi parametri.');
 
+  const curvaCrescita = generaCurvaCrescita({
+    modalita: 'avanzata',
+    dataA,
+    dataS,
+    capitaleInvestitoTotale,
+    capitaleFinaleNetto,
+    cedoleTotaliNette,
+    cedole: cedole.map((c) => ({ data: c.data, netta: c.netta })),
+  });
+
   return {
     ok: true,
     aliquotaApplicata: aliquota,
@@ -460,7 +501,7 @@ export function calcolaRendimentoObbligazione(
     ytmLordo: ytmLordo !== null ? ytmLordo * 100 : null,
     ytmNetto: ytmNetto !== null ? ytmNetto * 100 : null,
     impostePagateTotali: impostaCedoleTotale + impostaCG,
-    flussi,
+    curvaCrescita,
     warning: warnings,
   };
 }

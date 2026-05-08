@@ -247,17 +247,17 @@ const metadata = {
     </div>
 
     <!-- ============== GRAFICO ============== -->
-    <section class="card chart-card" aria-label="Flussi di cassa nel tempo">
+    <section class="card chart-card" aria-label="Crescita dell'investimento nel tempo">
       <div class="chart-header">
-        <h2 class="card-title">Flussi di cassa nel tempo</h2>
+        <h2 class="card-title">Crescita del tuo investimento nel tempo</h2>
+        <p class="chart-subtitle" id="ob-chart-subtitle"></p>
         <div class="chart-legend">
-          <span class="legend-item"><span class="legend-swatch legend-acquisto"></span>Esborso iniziale</span>
-          <span class="legend-item"><span class="legend-swatch legend-cedola"></span>Cedole nette</span>
-          <span class="legend-item"><span class="legend-swatch legend-rimborso"></span>Rimborso netto</span>
+          <span class="legend-item"><span class="legend-swatch legend-breakeven" aria-hidden="true"></span>Capitale investito (break-even)</span>
+          <span class="legend-item"><span class="legend-swatch legend-valore" aria-hidden="true"></span>Valore investimento</span>
         </div>
       </div>
       <div class="chart-wrap">
-        <canvas id="ob-chart" aria-label="Grafico a barre dei flussi di cassa nel tempo" role="img"></canvas>
+        <canvas id="ob-chart" aria-label="Grafico a linea della crescita del valore dell'investimento nel tempo" role="img"></canvas>
       </div>
       <p id="ob-chart-fallback" class="sr-only" aria-live="polite"></p>
     </section>
@@ -722,9 +722,36 @@ const metadata = {
       width: 14px; height: 14px;
       border-radius: 3px;
     }
-    .calc-ob .legend-acquisto { background: #373D42; }
-    .calc-ob .legend-cedola { background: #79B9AD; }
-    .calc-ob .legend-rimborso { background: #00A652; }
+    .calc-ob .legend-breakeven {
+      width: 22px; height: 0;
+      border-top: 1.5px dashed #373D42;
+      border-radius: 0;
+      align-self: center;
+    }
+    .calc-ob .legend-valore {
+      width: 22px; height: 3px;
+      background: #00A652;
+      border-radius: 2px;
+      align-self: center;
+      position: relative;
+    }
+    .calc-ob .legend-valore::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px;
+      background: #00A652;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+    .calc-ob .chart-subtitle {
+      font-size: 0.86rem;
+      color: var(--gray-text);
+      margin: 0 0 4px;
+      line-height: 1.45;
+    }
+    .calc-ob .chart-subtitle:empty { display: none; }
 
     .calc-ob .chart-wrap {
       position: relative;
@@ -934,19 +961,19 @@ const metadata = {
       ModalitaCalcolo,
       Tipologia,
       Frequenza,
-      FlussoCassa,
+      PuntoGrafico,
     } from '~/lib/calcolatori/rendimento-obbligazioni';
     import {
       Chart,
-      BarController,
-      BarElement,
-      CategoryScale,
+      LineController,
+      LineElement,
+      PointElement,
       LinearScale,
       Tooltip,
-      Legend,
+      Filler,
     } from 'chart.js';
 
-    Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+    Chart.register(LineController, LineElement, PointElement, LinearScale, Tooltip, Filler);
 
     // -------------------- FORMATTERS --------------------
     const fmtEuro = new Intl.NumberFormat('it-IT', {
@@ -1055,66 +1082,56 @@ const metadata = {
 
     // -------------------- CHART --------------------
     const COLORS = {
-      acquisto: '#373D42',
-      cedola: '#79B9AD',
-      rimborso: '#00A652',
+      breakeven: '#373D42',
+      valore: '#00A652',
     };
 
     let chartInstance: import('chart.js').Chart | null = null;
     let firstRender = true;
 
-    type GroupedFlow = { data: Date; label: string; items: FlussoCassa[] };
-    const currentChart: { byDate: GroupedFlow[] } = { byDate: [] };
+    const currentChart: {
+      curva: PuntoGrafico[];
+      capitaleInvestito: number;
+    } = { curva: [], capitaleInvestito: 0 };
 
-    function aggregateByDate(flussi: FlussoCassa[]): GroupedFlow[] {
-      const map = new Map<string, GroupedFlow>();
-      for (const f of flussi) {
-        const key = toISODate(f.data);
-        if (!map.has(key)) {
-          map.set(key, { data: f.data, label: fmtDateShort(f.data), items: [] });
-        }
-        map.get(key)!.items.push(f);
-      }
-      return Array.from(map.values()).sort((a, b) => a.data.getTime() - b.data.getTime());
-    }
-
-    function disegnaChart(flussi: FlussoCassa[]): void {
+    function disegnaChart(
+      curva: PuntoGrafico[],
+      capitaleInvestito: number,
+      dataA: Date,
+      dataS: Date
+    ): void {
       const canvas = $('ob-chart') as unknown as HTMLCanvasElement;
-      if (!canvas) return;
+      if (!canvas || !curva.length) return;
 
-      const grouped = aggregateByDate(flussi);
-      currentChart.byDate = grouped;
+      currentChart.curva = curva;
+      currentChart.capitaleInvestito = capitaleInvestito;
 
-      const labels = grouped.map((g) => g.label);
-      const dataAcquisto = grouped.map((g) =>
-        g.items.filter((i) => i.tipo === 'acquisto').reduce((s, i) => s + i.importoLordo, 0)
-      );
-      const dataCedola = grouped.map((g) =>
-        g.items.filter((i) => i.tipo === 'cedola').reduce((s, i) => s + i.importoNetto, 0)
-      );
-      const dataRimborso = grouped.map((g) =>
-        g.items.filter((i) => i.tipo === 'rimborso').reduce((s, i) => s + i.importoNetto, 0)
-      );
+      const points = curva.map((p) => ({ x: p.data.getTime(), y: p.valore }));
+      const breakeven = [
+        { x: dataA.getTime(), y: capitaleInvestito },
+        { x: dataS.getTime(), y: capitaleInvestito },
+      ];
 
-      const N = grouped.length;
-      const showXTick = (idx: number): boolean =>
-        N > 30 ? idx % 4 === 0 || idx === N - 1
-        : N > 18 ? idx % 2 === 0 || idx === N - 1
-        : true;
-      const rotate = N > 12;
+      // Asse Y: NON parte da zero. Estremi calcolati su tutti i valori della curva
+      // più il break-even, con padding del 5% sopra/sotto.
+      const tutti = curva.map((p) => p.valore).concat([capitaleInvestito]);
+      const minV = Math.min(...tutti);
+      const maxV = Math.max(...tutti);
+      const yMin = Math.floor(minV * 0.95);
+      const yMax = Math.ceil(maxV * 1.05);
 
       if (chartInstance) {
-        chartInstance.data.labels = labels;
-        chartInstance.data.datasets[0].data = dataAcquisto;
-        chartInstance.data.datasets[1].data = dataCedola;
-        chartInstance.data.datasets[2].data = dataRimborso;
+        chartInstance.data.datasets[0].data = breakeven as any;
+        chartInstance.data.datasets[1].data = points as any;
+        const ys = chartInstance.options.scales?.y as any;
+        if (ys) {
+          ys.min = yMin;
+          ys.max = yMax;
+        }
         const xs = chartInstance.options.scales?.x as any;
-        if (xs?.ticks) {
-          xs.ticks.maxRotation = rotate ? 45 : 0;
-          xs.ticks.minRotation = rotate ? 45 : 0;
-          xs.ticks.callback = function (_v: unknown, idx: number) {
-            return showXTick(idx) ? labels[idx] : '';
-          };
+        if (xs) {
+          xs.min = dataA.getTime();
+          xs.max = dataS.getTime();
         }
         chartInstance.setActiveElements([]);
         if (chartInstance.tooltip) {
@@ -1125,21 +1142,48 @@ const metadata = {
       }
 
       chartInstance = new Chart(canvas, {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels,
           datasets: [
-            { label: 'Esborso iniziale', data: dataAcquisto, backgroundColor: COLORS.acquisto, stack: 'cf', borderWidth: 0, borderRadius: 4 },
-            { label: 'Cedole nette', data: dataCedola, backgroundColor: COLORS.cedola, stack: 'cf', borderWidth: 0, borderRadius: 4 },
-            { label: 'Rimborso netto', data: dataRimborso, backgroundColor: COLORS.rimborso, stack: 'cf', borderWidth: 0, borderRadius: 4 },
+            {
+              label: 'Capitale investito (break-even)',
+              data: breakeven,
+              borderColor: COLORS.breakeven,
+              borderDash: [5, 5],
+              borderWidth: 1.5,
+              pointRadius: 0,
+              pointHoverRadius: 0,
+              fill: false,
+              tension: 0,
+            },
+            {
+              label: 'Valore investimento',
+              data: points,
+              borderColor: COLORS.valore,
+              borderWidth: 3,
+              pointRadius: (ctx) => {
+                const tipo = currentChart.curva[ctx.dataIndex]?.tipo;
+                return tipo === 'cedola' || tipo === 'scadenza' || tipo === 'inizio' ? 5 : 0;
+              },
+              pointHoverRadius: 7,
+              pointBackgroundColor: COLORS.valore,
+              pointBorderColor: '#FFFFFF',
+              pointBorderWidth: 2,
+              fill: {
+                target: '-1',
+                above: 'rgba(0, 166, 82, 0.15)',
+                below: 'rgba(171, 127, 98, 0.12)',
+              },
+              tension: 0,
+            },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: firstRender ? { duration: 600, easing: 'easeOutQuart' } : false,
-          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
-          interaction: { mode: 'index', intersect: false },
+          animation: firstRender ? { duration: 800, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 10, right: 10, bottom: 4, left: 4 } },
+          interaction: { mode: 'nearest', axis: 'x', intersect: false },
           plugins: {
             legend: { display: false },
             tooltip: {
@@ -1150,63 +1194,71 @@ const metadata = {
               titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
               bodyColor: '#373D42',
               bodyFont: { family: 'Manrope, sans-serif', size: 12 },
-              footerColor: '#6B7672',
-              footerFont: { family: 'Manrope, sans-serif', weight: 400, size: 11 },
               padding: 12,
               cornerRadius: 8,
-              displayColors: true,
-              boxPadding: 4,
+              displayColors: false,
               callbacks: {
                 title: (items) => {
-                  const idx = items[0].dataIndex;
-                  const g = currentChart.byDate[idx];
-                  return g ? fmtDate(g.data) : '';
+                  const item = items[0];
+                  if (!item) return '';
+                  const x = Number(item.parsed.x);
+                  return Number.isFinite(x) ? fmtDate(new Date(x)) : '';
                 },
                 label: (ctx) => {
                   const v = Number(ctx.parsed.y);
-                  if (Math.abs(v) < 0.005) return '';
-                  return `  ${ctx.dataset.label}: ${fmtEuro.format(v)}`;
-                },
-                footer: (items) => {
-                  const idx = items[0].dataIndex;
-                  const g = currentChart.byDate[idx];
-                  if (!g) return '';
-                  const lines: string[] = [];
-                  for (const it of g.items) {
-                    const segno = it.tipo === 'acquisto' ? '−' : '+';
+                  if (ctx.datasetIndex === 0) {
+                    return `Break-even: ${fmtEuro.format(v)}`;
+                  }
+                  const lines: string[] = [`Valore: ${fmtEuro.format(v)}`];
+                  const cap = currentChart.capitaleInvestito;
+                  if (cap > 0) {
+                    const gain = v - cap;
+                    const gainPct = (gain / cap) * 100;
+                    const sign = gain >= 0 ? '+' : '';
                     lines.push(
-                      `${it.descrizione} (${segno} lordo ${fmtEuro.format(Math.abs(it.importoLordo))}, imposte ${fmtEuro.format(it.imposte)})`
+                      `Guadagno: ${sign}${fmtEuro.format(gain)} (${sign}${gainPct.toFixed(2).replace('.', ',')}%)`
                     );
                   }
-                  return lines.join('\n');
+                  const punto = currentChart.curva[ctx.dataIndex];
+                  if (
+                    punto?.descrizione &&
+                    (punto.tipo === 'cedola' || punto.tipo === 'scadenza' || punto.tipo === 'inizio')
+                  ) {
+                    lines.push(punto.descrizione);
+                  }
+                  return lines;
                 },
               },
             },
           },
           scales: {
             x: {
-              stacked: true,
+              type: 'linear',
+              min: dataA.getTime(),
+              max: dataS.getTime(),
               grid: { display: false },
               border: { display: false },
               ticks: {
                 color: '#6B7672',
                 font: { family: 'Manrope, sans-serif', size: 11 },
-                maxRotation: rotate ? 45 : 0,
-                minRotation: rotate ? 45 : 0,
-                autoSkip: false,
-                callback: function (_v: any, idx: number) {
-                  return showXTick(idx) ? labels[idx] : '';
+                maxTicksLimit: 8,
+                maxRotation: 0,
+                minRotation: 0,
+                callback: (value) => {
+                  const v = Number(value);
+                  return Number.isFinite(v) ? fmtDateShort(new Date(v)) : '';
                 },
               },
             },
             y: {
-              beginAtZero: true,
+              min: yMin,
+              max: yMax,
               grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
               border: { display: false },
               ticks: {
                 color: '#6B7672',
                 font: { family: 'Manrope, sans-serif', size: 11 },
-                callback: (v) => fmtEuroShort(v as number),
+                callback: (value) => fmtEuroShort(value as number),
               },
             },
           },
@@ -1221,18 +1273,15 @@ const metadata = {
       firstRender = false;
     }
 
-    function updateChartFallback(flussi: FlussoCassa[]): void {
+    function updateChartFallback(curva: PuntoGrafico[], capitaleInvestito: number): void {
       const el = $('ob-chart-fallback');
-      if (!el) return;
-      const totIngressi = flussi
-        .filter((f) => f.tipo !== 'acquisto')
-        .reduce((s, f) => s + f.importoNetto, 0);
-      const esborso = flussi
-        .filter((f) => f.tipo === 'acquisto')
-        .reduce((s, f) => s + Math.abs(f.importoLordo), 0);
+      if (!el || !curva.length) return;
+      const finale = curva[curva.length - 1];
+      const gain = finale.valore - capitaleInvestito;
       el.textContent =
-        `Flussi: esborso totale ${fmtEuro.format(esborso)}, ` +
-        `ingressi netti totali ${fmtEuro.format(totIngressi)} su ${flussi.length} eventi.`;
+        `Investimento: ${fmtEuro.format(capitaleInvestito)} all'acquisto, ` +
+        `${fmtEuro.format(finale.valore)} a scadenza ` +
+        `(${gain >= 0 ? '+' : ''}${fmtEuro.format(gain)}).`;
     }
 
     // -------------------- MAIN --------------------
@@ -1353,8 +1402,28 @@ const metadata = {
         warnEl.appendChild(ul);
       }
 
-      disegnaChart(result.flussi);
-      updateChartFallback(result.flussi);
+      // Sottotitolo descrittivo del grafico
+      const subtitleEl = $('ob-chart-subtitle');
+      if (subtitleEl) {
+        if (modalita === 'avanzata' && result.numeroCedole > 0) {
+          const cedolaMedia = result.cedoleTotaliNette / result.numeroCedole;
+          const freqLabel =
+            frequenzaCedolare === 'annuale' ? 'annuali'
+            : frequenzaCedolare === 'trimestrale' ? 'trimestrali'
+            : 'semestrali';
+          subtitleEl.textContent =
+            `${result.numeroCedole} cedole ${freqLabel} nette da ${fmtEuro.format(cedolaMedia)} + rimborso finale.`;
+        } else if (modalita === 'semplice' && result.cedoleTotaliNette > 0) {
+          subtitleEl.textContent =
+            `Stima Semplice: cedole nette accumulate ${fmtEuro.format(result.cedoleTotaliNette)} su ${result.anniResidui.toFixed(2).replace('.', ',')} anni.`;
+        } else {
+          subtitleEl.textContent =
+            'Per BOT, CTZ e zero coupon il rendimento si manifesta interamente alla scadenza.';
+        }
+      }
+
+      disegnaChart(result.curvaCrescita, result.capitaleInvestitoTotale, dataAcquisto, dataScadenza);
+      updateChartFallback(result.curvaCrescita, result.capitaleInvestitoTotale);
     }
 
     // -------------------- DEBOUNCE + WIRING --------------------
