@@ -1455,5 +1455,11 @@ const metadata = {
     inputs.modalitaRadios.forEach((el) => el.addEventListener('change', schedule));
 
     aggiorna();
+
+    // Cleanup per Astro View Transitions (ClientRouter)
+    document.addEventListener('astro:before-swap', () => {
+      if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
+    }, { once: true });
   </script>
 </Layout>
