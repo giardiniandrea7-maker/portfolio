@@ -66,9 +66,9 @@ export const calcolatori: Calcolatore[] = [
     slug: 'semplice-vs-composto',
     titolo: 'Interesse Semplice vs. Interesse Composto',
     descrizione:
-      'Strumento didattico per percepire numericamente la differenza tra interesse semplice e composto al crescere del tempo.',
+      'Strumento didattico per percepire numericamente la differenza tra interesse semplice e composto al crescere del tempo. Storytelling visivo con quattro atti narrativi.',
     href: '/calcolatori/semplice-vs-composto',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:scale',
   },
 ];
