@@ -50,7 +50,7 @@ export const calcolatori: Calcolatore[] = [
     descrizione:
       'Capisci quanto capitale serve per vivere di rendita o quale rendita può generare il capitale che hai oggi, in base a stile di vita e rendimento atteso.',
     href: '/calcolatori/rendita',
-    disponibile: false,
+    disponibile: true,
     icona: 'tabler:wallet',
   },
   {

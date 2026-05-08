@@ -1,17 +1,1694 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
-import PlaceholderCalcolatore from '~/components/widgets/PlaceholderCalcolatore.astro';
-import { calcolatori } from '~/data/calcolatori';
-
-const slug = 'rendita';
-const calc = calcolatori.find((c) => c.slug === slug)!;
 
 const metadata = {
-  title: `${calc.titolo} | Andrea Giardini`,
-  description: calc.descrizione,
+  title: 'Calcolatore di Rendita | Andrea Giardini',
+  description:
+    'Calcolatore gratuito di rendita patrimoniale. Stima il capitale necessario per vivere di rendita o quanto puoi prelevare dal tuo patrimonio, considerando inflazione, rendimento atteso e regola del 4%.',
 };
 ---
 
 <Layout metadata={metadata}>
-  <PlaceholderCalcolatore slug={slug} />
+  <div class="calc-rd">
+    <!-- ============== HERO ============== -->
+    <header class="calc-header">
+      <h1>Calcolatore di Rendita</h1>
+      <p>
+        Stima quanto capitale ti serve per vivere di rendita o quanto puoi prelevare ogni anno
+        dal tuo patrimonio. Lo strumento tiene conto dell'inflazione, del rendimento atteso e
+        dell'orizzonte temporale, perché 50.000 € oggi non valgono 50.000 € tra 30 anni.
+      </p>
+    </header>
+
+    <!-- ============== TAB MODALITÀ (sticky mobile) ============== -->
+    <fieldset class="modal-tabs" role="radiogroup" aria-label="Modalità di calcolo">
+      <legend class="sr-only">Modalità di calcolo</legend>
+      <label class="tab-pill">
+        <input type="radio" name="rd-modalita" value="capitale-necessario" checked />
+        <span class="tab-content">
+          <span class="tab-title">Quanto capitale mi serve?</span>
+          <span class="tab-desc">Inserisci spese e durata</span>
+        </span>
+      </label>
+      <label class="tab-pill">
+        <input type="radio" name="rd-modalita" value="rendita-sostenibile" />
+        <span class="tab-content">
+          <span class="tab-title">Quanto posso prelevare?</span>
+          <span class="tab-desc">Inserisci capitale e durata</span>
+        </span>
+      </label>
+    </fieldset>
+
+    <!-- ============== FORM + RISULTATI ============== -->
+    <div class="main-grid">
+      <!-- COLONNA SX: FORM -->
+      <div class="card form-card">
+        <h2 class="card-title">Inserisci i tuoi dati</h2>
+
+        <!-- Modalità A: capitale necessario -->
+        <div class="mode-a">
+          <div class="form-group">
+            <label for="rd-spese">
+              Spese annue desiderate
+              <span class="hint-tooltip" title="Quanto vuoi avere a disposizione ogni anno per vivere, in valore di oggi (potere d'acquisto attuale).">ⓘ</span>
+            </label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                id="rd-spese"
+                min="0"
+                step="1000"
+                value="30000"
+                inputmode="decimal"
+              />
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modalità B: rendita sostenibile -->
+        <div class="mode-b" hidden>
+          <div class="form-group">
+            <label for="rd-capitale">Capitale disponibile</label>
+            <div class="input-with-suffix">
+              <input
+                type="number"
+                id="rd-capitale"
+                min="0"
+                step="10000"
+                value="500000"
+                inputmode="decimal"
+              />
+              <span class="suffix">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comuni: anni (slider) -->
+        <div class="form-group">
+          <label for="rd-anni">
+            Per quanti anni vuoi la rendita: <span class="anni-display" id="rd-anni-display">30 anni</span>
+          </label>
+          <div class="anni-row">
+            <input type="range" id="rd-anni-slider" min="1" max="60" step="1" value="30" />
+            <input
+              type="number"
+              id="rd-anni"
+              min="1"
+              max="60"
+              step="1"
+              value="30"
+              inputmode="numeric"
+              class="anni-number"
+            />
+          </div>
+          <p class="form-hint">Tipicamente 25–35 anni se inizi a vivere di rendita verso i 60–65.</p>
+        </div>
+
+        <!-- Comuni: rendimento -->
+        <div class="form-group">
+          <label for="rd-rendimento">
+            Rendimento atteso netto
+            <span class="hint-tooltip" title="Rendimento medio annuo atteso del tuo portafoglio, al netto di tasse e commissioni. Un portafoglio bilanciato 60/40 storicamente ha reso il 5–6% lordo, ~4% netto.">ⓘ</span>
+          </label>
+          <div class="input-with-suffix">
+            <input
+              type="number"
+              id="rd-rendimento"
+              min="0"
+              max="15"
+              step="0.1"
+              value="4"
+              inputmode="decimal"
+            />
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <!-- Comuni: inflazione -->
+        <div class="form-group">
+          <label for="rd-inflazione">
+            Inflazione attesa
+            <span class="hint-tooltip" title="Tasso medio annuo di erosione del potere d'acquisto. Target BCE storico ~2%.">ⓘ</span>
+          </label>
+          <div class="input-with-suffix">
+            <input
+              type="number"
+              id="rd-inflazione"
+              min="0"
+              max="10"
+              step="0.1"
+              value="2"
+              inputmode="decimal"
+            />
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <!-- Eredità toggle -->
+        <div class="toggle-block">
+          <label class="toggle-row">
+            <input type="checkbox" id="rd-eredita-toggle" />
+            <span class="toggle-text">Lascia un'eredità a fine periodo</span>
+          </label>
+
+          <div class="toggle-extra" id="rd-eredita-section" hidden>
+            <div class="form-group">
+              <label for="rd-eredita-target">Eredità desiderata</label>
+              <div class="input-with-suffix">
+                <input
+                  type="number"
+                  id="rd-eredita-target"
+                  min="0"
+                  step="10000"
+                  value="100000"
+                  inputmode="decimal"
+                />
+                <span class="suffix">€</span>
+              </div>
+              <p class="form-hint">
+                Capitale che vuoi lasciare a fine periodo, in valore reale (potere d'acquisto di oggi).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="form-hint">Il calcolo si aggiorna automaticamente.</p>
+        <p class="warn warn-blocking" id="rd-blocking" role="alert" aria-live="assertive"></p>
+      </div>
+
+      <!-- COLONNA DX: RISULTATI -->
+      <div class="card results-card" aria-live="polite" aria-atomic="true">
+        <h2 class="card-title">Risultati</h2>
+
+        <div class="result-block result-primary">
+          <span class="result-label" id="rd-out-primary-label">Capitale necessario oggi</span>
+          <span class="result-value result-value-xl" id="rd-out-primary">—</span>
+          <span class="result-secondary" id="rd-out-secondary"></span>
+        </div>
+
+        <h3 class="metrics-title">Dettaglio</h3>
+        <ul class="metrics-list">
+          <li>
+            <span class="m-label">Rendimento reale (netto inflazione)</span>
+            <span class="m-value" id="rd-out-rendimento-reale">—</span>
+          </li>
+          <li id="rd-row-tasso-prelievo" hidden>
+            <span class="m-label">Tasso prelievo iniziale</span>
+            <span class="m-value-row">
+              <span class="m-value" id="rd-out-tasso-prelievo">—</span>
+              <span class="badge" id="rd-out-tasso-prelievo-badge"></span>
+            </span>
+          </li>
+          <li>
+            <span class="m-label">Totale prelevato in N anni</span>
+            <span class="m-value" id="rd-out-totale-prelevato">—</span>
+          </li>
+          <li>
+            <span class="m-label">Inflazione cumulata</span>
+            <span class="m-value" id="rd-out-inflazione-cum">—</span>
+          </li>
+          <li>
+            <span class="m-label">Capitale residuo a fine periodo</span>
+            <span class="m-value" id="rd-out-residuo">—</span>
+          </li>
+        </ul>
+
+        <div class="warn-list" id="rd-warnings" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <!-- ============== CARD REGOLA DEL 4% ============== -->
+    <section class="card rule-card" aria-label="Regola del 4% (Trinity Study)">
+      <div class="rule-header">
+        <h2 class="rule-title">Confronto con la Regola del 4% (Trinity Study)</h2>
+        <span class="rule-badge">Benchmark</span>
+      </div>
+      <p class="rule-text">
+        La regola del 4% deriva da uno studio storico americano: in un portafoglio bilanciato,
+        prelevare il 4% iniziale del capitale e adeguarlo all'inflazione ogni anno ha permesso
+        di sostenere 30 anni di rendita nel 95% dei casi storici.
+      </p>
+      <div class="rule-grid">
+        <div class="rule-cell">
+          <span class="rule-cell-label" id="rd-rule-label-1">Secondo la regola</span>
+          <span class="rule-cell-value" id="rd-rule-value-1">—</span>
+        </div>
+        <div class="rule-cell rule-cell-yours">
+          <span class="rule-cell-label" id="rd-rule-label-2">Il tuo calcolo</span>
+          <span class="rule-cell-value" id="rd-rule-value-2">—</span>
+        </div>
+        <div class="rule-cell rule-cell-diff">
+          <span class="rule-cell-label">Differenza</span>
+          <span class="rule-cell-value" id="rd-rule-diff">—</span>
+        </div>
+      </div>
+      <p class="rule-disclaimer">
+        Lo studio originale è basato su mercati USA 1926–1995. I risultati italiani/europei
+        possono variare. Considera la regola come benchmark, non come certezza.
+      </p>
+    </section>
+
+    <!-- ============== GRAFICO 1 — DECUMULAZIONE ============== -->
+    <section class="card chart-card" aria-label="Andamento del patrimonio nel tempo">
+      <div class="chart-header">
+        <h2 class="card-title">Andamento del patrimonio nel tempo</h2>
+        <p class="chart-subtitle" id="rd-chart-subtitle"></p>
+        <fieldset class="chart-toggle" role="radiogroup" aria-label="Vista grafico">
+          <legend class="sr-only">Vista valori</legend>
+          <label class="chart-toggle-pill">
+            <input type="radio" name="rd-vista" value="nominale" checked />
+            <span>Valori nominali</span>
+          </label>
+          <label class="chart-toggle-pill">
+            <input type="radio" name="rd-vista" value="reale" />
+            <span>Valori reali (potere d'acquisto)</span>
+          </label>
+        </fieldset>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="rd-chart" aria-label="Grafico a linea dell'andamento del patrimonio nel tempo" role="img"></canvas>
+      </div>
+      <p id="rd-chart-fallback" class="sr-only" aria-live="polite"></p>
+    </section>
+
+    <!-- ============== GRAFICO 2 — POTERE D'ACQUISTO (collapse, solo Mod B) ============== -->
+    <section class="how-it-works" id="rd-rendita-section" hidden>
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Cosa potrai comprare ogni anno con la tua rendita?</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="rendita-content">
+          <p class="rendita-intro">
+            La rendita nominale (sage) cresce con l'inflazione per mantenere costante il potere
+            d'acquisto reale (charcoal): è quello che ti permette di "vivere allo stesso tenore
+            di vita" anno dopo anno.
+          </p>
+          <div class="chart-wrap chart-wrap-secondary">
+            <canvas id="rd-chart-acquisto" aria-label="Grafico a barre del potere d'acquisto della rendita" role="img"></canvas>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== COME FUNZIONA ============== -->
+    <section class="how-it-works">
+      <details class="math-details">
+        <summary>
+          <span class="summary-text">Mostra la matematica e i concetti</span>
+          <span class="summary-icon" aria-hidden="true"></span>
+        </summary>
+        <div class="math-content">
+          <h2>Come funziona il calcolatore</h2>
+          <p>
+            Vivere di rendita significa <b>decumulare</b> il patrimonio: invece di accumulare
+            ogni anno (come durante la vita lavorativa), ogni anno preleviamo per vivere e
+            lasciamo che il resto continui a generare rendimento. L'obiettivo è far <em>durare</em>
+            il capitale almeno per gli anni necessari, eventualmente lasciando un'eredità.
+          </p>
+          <p>
+            L'<b>inflazione</b> è il nemico silenzioso: 30.000 € oggi e 30.000 € tra 20 anni
+            non hanno lo stesso potere d'acquisto. Per mantenere il tenore di vita serve
+            adeguare i prelievi ogni anno. Per questo distinguiamo <em>rendimento nominale</em>
+            (quello che vedi sul conto) e <em>rendimento reale</em> (quanto cresce davvero il
+            potere d'acquisto). La formula di Fisher esatta è:
+          </p>
+          <div class="formula-block">
+            <i>r</i><sub>reale</sub> =
+            <span class="frac">
+              <span class="frac-top">1 + <i>r</i></span>
+              <span class="frac-bottom">1 + <i>inf</i></span>
+            </span>
+            − 1
+          </div>
+          <p>
+            Con rendimento 4% e inflazione 2%, il rendimento reale non è 2% ma circa
+            <b>1,96%</b>. Sembra un dettaglio, ma su 30 anni la differenza pesa.
+          </p>
+          <p>
+            La <b>regola del 4%</b> (Trinity Study, anni '90) è il benchmark più noto della
+            decumulazione: prelevare ogni anno il 4% del capitale iniziale (adeguato
+            all'inflazione) ha sostenuto storicamente 30 anni di rendita nel 95% dei casi USA.
+            Vivere "di interessi" (rendita perpetua) richiederebbe un capitale tipicamente
+            molto più alto: la decumulazione consuma volutamente il capitale.
+          </p>
+
+          <h3>Capitale necessario</h3>
+          <div class="formula-block">
+            <i>C</i> = <i>S</i> ·
+            <span class="frac">
+              <span class="frac-top">1 − ((1+<i>inf</i>)/(1+<i>r</i>))<sup><i>N</i></sup></span>
+              <span class="frac-bottom"><i>r</i> − <i>inf</i></span>
+            </span>
+            + <i>E</i> ·
+            <span class="frac">
+              <span class="frac-top">(1+<i>inf</i>)<sup><i>N</i></sup></span>
+              <span class="frac-bottom">(1+<i>r</i>)<sup><i>N</i></sup></span>
+            </span>
+          </div>
+          <p>
+            Dove <i>S</i> sono le spese annue desiderate (in valore di oggi), <i>N</i> gli anni,
+            ed <i>E</i> l'eventuale eredità target (in valore reale). Il primo termine è il
+            valore attuale di una rendita posticipata crescente; il secondo è il valore attuale
+            dell'eredità nominale a fine periodo. Per la modalità "Quanto posso prelevare?"
+            invertiamo la formula per ottenere <i>S</i> dato <i>C</i>.
+          </p>
+
+          <p class="formula-note">
+            Le proiezioni assumono rendimento e inflazione <em>costanti</em>: nella realtà sono
+            variabili e il <em>rischio sequenza dei rendimenti</em> (subire crolli nei primi
+            anni di prelievo) può compromettere seriamente il piano. Per questo conviene una
+            pianificazione professionale che includa scenari di stress, glide path del rischio
+            e revisione periodica.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============== CTA ============== -->
+    <section class="cta-section">
+      <div class="eyebrow">Vuoi una pianificazione professionale?</div>
+      <h2>Vuoi costruire un piano di rendita per la tua pensione?</h2>
+      <p>
+        La pianificazione di una rendita non è solo matematica: dipende dalla tua tolleranza al
+        rischio, dalla composizione del patrimonio, dalla fiscalità e da scelte personali
+        importanti (eredità, beneficenza, qualità della vita). Posso aiutarti a costruire un
+        piano realistico e robusto. La prima chiamata è gratuita e senza impegno.
+      </p>
+      <div class="cta-buttons">
+        <a href="/contatti" class="btn btn-primary">Prenota una consulenza</a>
+        <a href="/calcolatori" class="btn btn-secondary">Torna ai calcolatori</a>
+      </div>
+    </section>
+
+    <!-- ============== DISCLAIMER ============== -->
+    <div class="final-disclaimer">
+      <strong>Nota informativa:</strong> Le stime fornite hanno valore puramente indicativo e
+      didattico. Le proiezioni sono basate su rendimento e inflazione costanti, ipotesi non
+      realistica nei mercati reali (rischio di sequenza dei rendimenti). La regola del 4% è
+      basata su dati storici USA e non garantisce risultati futuri. Per una pianificazione
+      personalizzata sulla tua situazione patrimoniale, fiscale e di vita, rivolgiti al tuo
+      consulente di fiducia. Questo strumento non costituisce consulenza finanziaria
+      personalizzata.
+    </div>
+  </div>
+
+  <style is:global>
+    .calc-rd {
+      --sage: #166963; --sage-light: #79B9AD; --sage-dark: #0F4F4A;
+      --ochre: #AB7F62; --ochre-light: #C49A7E; --ochre-dark: #8A6449;
+      --ivory: rgb(238 247 246); --ivory-warm: rgb(245 250 249);
+      --charcoal: #373D42;
+      --emerald: #00A652;
+      --gray-soft: #DDE4E2; --gray-text: #6B7672;
+      --shadow-soft: 0 4px 20px rgba(55, 61, 66, 0.06);
+      --radius: 12px;
+
+      font-family: 'Manrope', -apple-system, sans-serif;
+      color: var(--charcoal);
+      line-height: 1.65;
+      font-size: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+    .calc-rd * { box-sizing: border-box; }
+
+    .calc-rd .calc-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-rd .calc-header h1 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .calc-header p {
+      color: var(--gray-text);
+      font-size: 1rem;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* Tab modalità */
+    .calc-rd .modal-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 0 0 24px;
+      border: 0;
+      padding: 0;
+    }
+    .calc-rd .tab-pill {
+      position: relative;
+      display: block;
+      padding: 14px 18px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 10px;
+      cursor: pointer;
+      background: white;
+      transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      min-height: 48px;
+    }
+    .calc-rd .tab-pill input[type="radio"] {
+      position: absolute; opacity: 0; pointer-events: none;
+    }
+    .calc-rd .tab-pill:hover { border-color: var(--sage-light); }
+    .calc-rd .tab-pill:has(input:checked) {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.10);
+    }
+    .calc-rd .tab-pill:has(input:focus-visible) {
+      outline: 2px solid var(--emerald);
+      outline-offset: 2px;
+    }
+    .calc-rd .tab-content { display: block; }
+    .calc-rd .tab-title {
+      display: block; font-weight: 600; color: var(--sage-dark); font-size: 0.98rem;
+    }
+    .calc-rd .tab-desc {
+      display: block; color: var(--gray-text); font-size: 0.82rem; margin-top: 2px;
+    }
+
+    /* Grid */
+    .calc-rd .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+      align-items: start;
+    }
+    .calc-rd .card {
+      background: white;
+      border: 1px solid rgba(22, 105, 99, 0.15);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-soft);
+    }
+    .calc-rd .card-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.15rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0 0 18px;
+      letter-spacing: -0.01em;
+    }
+
+    /* Form */
+    .calc-rd .form-group { margin-bottom: 16px; }
+    .calc-rd label,
+    .calc-rd .modal-tabs legend {
+      display: block;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+      padding: 0;
+    }
+    .calc-rd input[type="number"],
+    .calc-rd input[type="text"],
+    .calc-rd select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.97rem;
+      color: var(--charcoal);
+      background: white;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      min-height: 44px;
+    }
+    .calc-rd input:focus,
+    .calc-rd select:focus {
+      outline: none;
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 3px rgba(0, 166, 82, 0.15);
+    }
+    .calc-rd input[type="number"]::-webkit-outer-spin-button,
+    .calc-rd input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none; margin: 0;
+    }
+    .calc-rd input[type="number"] { -moz-appearance: textfield; }
+
+    .calc-rd .input-with-suffix { position: relative; }
+    .calc-rd .input-with-suffix .suffix {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--gray-text); font-size: 0.92rem; pointer-events: none;
+    }
+    .calc-rd .input-with-suffix input { padding-right: 36px; }
+
+    /* Slider anni */
+    .calc-rd .anni-display { color: var(--sage-dark); font-weight: 600; }
+    .calc-rd .anni-row {
+      display: grid;
+      grid-template-columns: 1fr 80px;
+      gap: 12px;
+      align-items: center;
+    }
+    .calc-rd input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--gray-soft);
+      border-radius: 999px;
+      outline: none;
+    }
+    .calc-rd input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      background: var(--emerald);
+      border: 3px solid white;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0, 166, 82, 0.3);
+      cursor: pointer;
+    }
+    .calc-rd input[type="range"]::-moz-range-thumb {
+      width: 24px; height: 24px;
+      background: var(--emerald);
+      border: 3px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .calc-rd .anni-number { text-align: center; }
+
+    /* Toggle */
+    .calc-rd .toggle-block {
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--ivory-warm);
+    }
+    .calc-rd .toggle-row {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; margin: 0;
+      font-weight: 500; font-size: 0.95rem;
+      min-height: 28px;
+    }
+    .calc-rd .toggle-row input[type="checkbox"] {
+      accent-color: var(--emerald);
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+    }
+    .calc-rd .toggle-text { color: var(--charcoal); }
+    .calc-rd .toggle-extra { margin: 14px 0 0; }
+
+    /* Tooltip hint */
+    .calc-rd .hint-tooltip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--gray-soft);
+      color: var(--gray-text);
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: help;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .calc-rd .hint-tooltip:hover { background: var(--sage-light); color: white; }
+
+    .calc-rd .form-hint {
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      margin: 6px 0 0;
+      line-height: 1.45;
+    }
+
+    .calc-rd .warn { min-height: 0; margin: 8px 0 0; font-size: 0.84rem; color: var(--ochre-dark); line-height: 1.45; }
+    .calc-rd .warn-blocking:not(:empty) {
+      padding: 8px 12px;
+      background: rgba(171, 127, 98, 0.08);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      color: var(--ochre-dark);
+      font-weight: 500;
+    }
+
+    /* Risultati */
+    .calc-rd .results-card {
+      background: linear-gradient(180deg, var(--ivory-warm) 0%, white 100%);
+    }
+    .calc-rd .result-block {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-soft);
+    }
+    .calc-rd .result-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .calc-rd .result-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-rd .result-value-xl {
+      font-size: clamp(1.85rem, 4.2vw, 2.4rem);
+      color: var(--sage-dark);
+      display: block;
+    }
+    .calc-rd .result-secondary {
+      display: block;
+      margin-top: 4px;
+      color: var(--gray-text);
+      font-size: 0.92rem;
+    }
+    .calc-rd .result-secondary:empty { display: none; }
+
+    .calc-rd .metrics-title {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+    .calc-rd .metrics-list { list-style: none; padding: 0; margin: 0; }
+    .calc-rd .metrics-list li {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(221, 228, 226, 0.7);
+      font-size: 0.9rem;
+    }
+    .calc-rd .metrics-list li:last-child { border-bottom: 0; }
+    .calc-rd .metrics-list .m-label { color: var(--gray-text); }
+    .calc-rd .metrics-list .m-value {
+      font-weight: 600;
+      color: var(--charcoal);
+      font-variant-numeric: tabular-nums;
+    }
+    .calc-rd .metrics-list .m-value-row {
+      display: inline-flex; gap: 8px; align-items: center;
+    }
+    .calc-rd .badge {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .calc-rd .badge-prudente { background: rgba(0, 166, 82, 0.15); color: #0a7d3f; }
+    .calc-rd .badge-linea { background: rgba(171, 127, 98, 0.18); color: var(--ochre-dark); }
+    .calc-rd .badge-aggressivo { background: rgba(220, 38, 38, 0.12); color: #c0392b; }
+
+    .calc-rd .warn-list {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--ochre-dark);
+    }
+    .calc-rd .warn-list ul { margin: 0; padding-left: 20px; }
+    .calc-rd .warn-list li { margin: 4px 0; line-height: 1.5; }
+    .calc-rd .warn-list .warn-critical {
+      padding: 8px 12px;
+      background: rgba(220, 38, 38, 0.08);
+      border-left: 3px solid #c0392b;
+      border-radius: 4px;
+      color: #c0392b;
+      font-weight: 500;
+      list-style: none;
+      margin-left: -20px;
+    }
+
+    /* Card Regola del 4% */
+    .calc-rd .rule-card {
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, var(--ivory) 0%, white 100%);
+      border: 1px solid rgba(0, 166, 82, 0.25);
+    }
+    .calc-rd .rule-header {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .calc-rd .rule-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.25rem;
+      color: var(--sage-dark);
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .rule-badge {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(0, 166, 82, 0.12);
+      color: #0a7d3f;
+    }
+    .calc-rd .rule-text {
+      color: var(--charcoal);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin: 0 0 18px;
+    }
+    .calc-rd .rule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .calc-rd .rule-cell {
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: white;
+      border: 1px solid var(--gray-soft);
+    }
+    .calc-rd .rule-cell-yours { border-color: var(--emerald); background: rgba(0, 166, 82, 0.04); }
+    .calc-rd .rule-cell-diff { background: var(--ivory-warm); }
+    .calc-rd .rule-cell-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .calc-rd .rule-cell-value {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 700;
+      color: var(--charcoal);
+      font-size: 1.15rem;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .rule-cell-yours .rule-cell-value { color: var(--sage-dark); }
+    .calc-rd .rule-disclaimer {
+      font-size: 0.78rem;
+      color: var(--gray-text);
+      margin: 0;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Chart */
+    .calc-rd .chart-card { margin-bottom: 24px; }
+    .calc-rd .chart-card .card-title {
+      font-family: var(--aw-font-serif, 'Playfair Display', Georgia, serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--sage-dark);
+      letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+    .calc-rd .chart-header {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .calc-rd .chart-subtitle {
+      font-size: 0.86rem;
+      color: var(--gray-text);
+      margin: 0 0 4px;
+      line-height: 1.45;
+    }
+    .calc-rd .chart-subtitle:empty { display: none; }
+
+    .calc-rd .chart-toggle {
+      display: flex; gap: 8px; padding: 0; border: 0;
+      flex-wrap: wrap;
+    }
+    .calc-rd .chart-toggle-pill {
+      position: relative;
+      cursor: pointer;
+      padding: 7px 14px;
+      border: 1.5px solid var(--gray-soft);
+      border-radius: 999px;
+      font-size: 0.84rem;
+      color: var(--gray-text);
+      font-weight: 500;
+      transition: all 0.18s ease;
+      min-height: 36px;
+      display: inline-flex; align-items: center;
+    }
+    .calc-rd .chart-toggle-pill input[type="radio"] {
+      position: absolute; opacity: 0; pointer-events: none;
+    }
+    .calc-rd .chart-toggle-pill:has(input:checked) {
+      border-color: var(--emerald);
+      background: rgba(0, 166, 82, 0.06);
+      color: var(--sage-dark);
+    }
+
+    .calc-rd .chart-wrap {
+      position: relative;
+      height: 380px;
+      padding: 8px 4px 0;
+    }
+    .calc-rd .chart-wrap canvas { display: block; }
+    .calc-rd .chart-wrap-secondary { height: 320px; }
+
+    .calc-rd .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0);
+      white-space: nowrap; border: 0;
+    }
+
+    /* Come funziona */
+    .calc-rd .how-it-works { margin-bottom: 18px; }
+    .calc-rd .math-details {
+      background: white;
+      border: 1px solid var(--gray-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .calc-rd .math-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-weight: 600;
+      color: var(--sage-dark);
+      font-size: 1.02rem;
+      min-height: 48px;
+    }
+    .calc-rd .math-details summary::-webkit-details-marker { display: none; }
+    .calc-rd .math-details summary:hover { background: var(--ivory-warm); }
+    .calc-rd .math-details summary:focus-visible {
+      outline: 2px solid var(--emerald);
+      outline-offset: -2px;
+    }
+    .calc-rd .summary-icon {
+      width: 12px; height: 12px;
+      border-right: 2px solid var(--sage);
+      border-bottom: 2px solid var(--sage);
+      transform: rotate(45deg);
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+    .calc-rd .math-details[open] .summary-icon { transform: rotate(225deg); }
+    .calc-rd .math-content,
+    .calc-rd .rendita-content {
+      padding: 6px 30px 30px;
+      border-top: 1px solid var(--gray-soft);
+    }
+    .calc-rd .rendita-intro {
+      color: var(--gray-text);
+      font-size: 0.92rem;
+      margin: 14px 0 14px;
+    }
+    .calc-rd .math-content h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.35rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .math-content h3 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: 1.05rem;
+      color: var(--charcoal);
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .calc-rd .math-content p {
+      color: var(--charcoal);
+      margin-bottom: 12px;
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .calc-rd .math-content b { color: var(--sage-dark); font-weight: 700; }
+    .calc-rd .math-content em { font-style: italic; color: var(--ochre-dark); font-weight: 500; }
+    .calc-rd .math-content i {
+      font-family: 'Times New Roman', Georgia, serif;
+      font-style: italic;
+      font-size: 1.05em;
+      color: var(--charcoal);
+    }
+    .calc-rd .math-content sup, .calc-rd .math-content sub { font-size: 0.7em; }
+
+    .calc-rd .formula-block {
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--emerald);
+      padding: 14px 20px;
+      margin: 14px 0 18px;
+      border-radius: 6px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      text-align: center;
+      color: var(--charcoal);
+      overflow-x: auto;
+    }
+    .calc-rd .formula-note {
+      font-size: 0.88rem;
+      color: var(--gray-text);
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin: 10px 0 18px;
+    }
+    .calc-rd .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      line-height: 1.1;
+    }
+    .calc-rd .frac-top { padding: 0 6px 2px; border-bottom: 1.5px solid var(--charcoal); }
+    .calc-rd .frac-bottom { padding: 2px 6px 0; }
+
+    /* CTA */
+    .calc-rd .cta-section {
+      text-align: center;
+      margin: 40px 0 30px;
+      padding: 35px 25px;
+    }
+    .calc-rd .cta-section .eyebrow {
+      color: var(--ochre-dark);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+    }
+    .calc-rd .cta-section h2 {
+      font-family: var(--aw-font-heading, 'Manrope', sans-serif);
+      font-size: clamp(1.5rem, 3.5vw, 1.85rem);
+      color: var(--sage-dark);
+      margin-bottom: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .calc-rd .cta-section p {
+      color: var(--gray-text);
+      max-width: 640px;
+      margin: 0 auto 25px;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+    .calc-rd .cta-buttons {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .calc-rd .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+    }
+    .calc-rd .btn-primary { background: var(--sage); color: var(--ivory); }
+    .calc-rd .btn-primary:hover { background: var(--sage-dark); }
+    .calc-rd .btn-secondary {
+      background: transparent;
+      color: var(--sage);
+      border: 1.5px solid var(--sage);
+    }
+    .calc-rd .btn-secondary:hover { background: var(--sage); color: var(--ivory); }
+
+    .calc-rd .final-disclaimer {
+      margin-top: 24px;
+      padding: 18px 22px;
+      background: var(--ivory-warm);
+      border-left: 3px solid var(--ochre);
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+    .calc-rd .final-disclaimer strong { color: var(--charcoal); }
+
+    /* RESPONSIVE / MOBILE */
+    @media (max-width: 880px) {
+      .calc-rd { padding: 22px 14px 36px; }
+      .calc-rd .modal-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--ivory-warm);
+        padding: 10px 14px;
+        margin: 0 -14px 18px;
+        border-bottom: 1px solid var(--gray-soft);
+      }
+      .calc-rd .tab-pill { padding: 12px 14px; }
+      .calc-rd .tab-desc { font-size: 0.78rem; }
+      .calc-rd .main-grid { grid-template-columns: 1fr; gap: 16px; }
+      .calc-rd .card { padding: 20px 18px; }
+      .calc-rd .anni-row { grid-template-columns: 1fr 70px; }
+      .calc-rd .rule-grid { grid-template-columns: 1fr; gap: 10px; }
+      .calc-rd .math-content,
+      .calc-rd .rendita-content { padding: 4px 18px 24px; }
+      .calc-rd .btn { width: 100%; }
+      .calc-rd .cta-buttons { flex-direction: column; }
+      .calc-rd .chart-wrap { height: 280px; padding: 6px 0 0; }
+      .calc-rd .chart-wrap-secondary { height: 240px; }
+      .calc-rd .chart-toggle-pill { font-size: 0.78rem; padding: 6px 12px; }
+    }
+  </style>
+
+  <script>
+    import { calcolaRendita } from '~/lib/calcolatori/rendita';
+    import type {
+      ModalitaRendita,
+      AndamentoAnnuo,
+      OutputRendita,
+    } from '~/lib/calcolatori/rendita';
+    import {
+      Chart,
+      LineController,
+      LineElement,
+      PointElement,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Filler,
+    } from 'chart.js';
+
+    Chart.register(
+      LineController,
+      LineElement,
+      PointElement,
+      BarController,
+      BarElement,
+      CategoryScale,
+      LinearScale,
+      Tooltip,
+      Filler
+    );
+
+    // -------------------- FORMATTERS --------------------
+    const fmtEuro = new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    });
+    const fmtEuroShort = (v: number): string => {
+      if (!Number.isFinite(v)) return '';
+      const a = Math.abs(v);
+      if (a >= 1_000_000) {
+        const m = v / 1_000_000;
+        return (Number.isInteger(m) ? m.toString() : m.toFixed(1).replace('.', ',')) + 'M €';
+      }
+      if (a >= 1_000) return Math.round(v / 1000) + 'K €';
+      return Math.round(v) + ' €';
+    };
+    const fmtPct = (v: number, digits = 2): string => {
+      if (!Number.isFinite(v)) return '—';
+      return v.toFixed(digits).replace('.', ',') + '%';
+    };
+    const fmtPctSigned = (v: number, digits = 1): string => {
+      if (!Number.isFinite(v)) return '—';
+      const sign = v >= 0 ? '+' : '';
+      return sign + v.toFixed(digits).replace('.', ',') + '%';
+    };
+    const parseNum = (v: string): number => {
+      if (!v) return NaN;
+      return parseFloat(v.replace(',', '.'));
+    };
+
+    // -------------------- DOM REFS --------------------
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+      document.getElementById(id) as T;
+    const inputs = {
+      modalitaRadios: document.querySelectorAll<HTMLInputElement>('input[name="rd-modalita"]'),
+      vistaRadios: document.querySelectorAll<HTMLInputElement>('input[name="rd-vista"]'),
+      spese: $<HTMLInputElement>('rd-spese'),
+      capitale: $<HTMLInputElement>('rd-capitale'),
+      anni: $<HTMLInputElement>('rd-anni'),
+      anniSlider: $<HTMLInputElement>('rd-anni-slider'),
+      rendimento: $<HTMLInputElement>('rd-rendimento'),
+      inflazione: $<HTMLInputElement>('rd-inflazione'),
+      ereditaToggle: $<HTMLInputElement>('rd-eredita-toggle'),
+      ereditaTarget: $<HTMLInputElement>('rd-eredita-target'),
+    };
+
+    // -------------------- VISIBILITY --------------------
+    function getModalita(): ModalitaRendita {
+      const r = document.querySelector<HTMLInputElement>('input[name="rd-modalita"]:checked');
+      return (r?.value === 'rendita-sostenibile'
+        ? 'rendita-sostenibile'
+        : 'capitale-necessario') as ModalitaRendita;
+    }
+    function getVista(): 'nominale' | 'reale' {
+      const r = document.querySelector<HTMLInputElement>('input[name="rd-vista"]:checked');
+      return r?.value === 'reale' ? 'reale' : 'nominale';
+    }
+
+    function setVisibility(): void {
+      const modalita = getModalita();
+      const modeA = document.querySelector<HTMLElement>('.mode-a');
+      const modeB = document.querySelector<HTMLElement>('.mode-b');
+      if (modeA) modeA.hidden = modalita !== 'capitale-necessario';
+      if (modeB) modeB.hidden = modalita !== 'rendita-sostenibile';
+
+      const ereditaSec = $('rd-eredita-section');
+      if (ereditaSec) ereditaSec.hidden = !inputs.ereditaToggle.checked;
+
+      const renditaSec = $('rd-rendita-section');
+      if (renditaSec) renditaSec.hidden = modalita !== 'rendita-sostenibile';
+
+      const tassoPrelRow = $('rd-row-tasso-prelievo');
+      if (tassoPrelRow) tassoPrelRow.hidden = modalita !== 'rendita-sostenibile';
+    }
+
+    // -------------------- CHART 1: DECUMULAZIONE --------------------
+    const COLORS = {
+      capitale: '#373D42',
+      area: 'rgba(0, 166, 82, 0.15)',
+      ereditaRef: '#166963',
+      esaurito: '#c0392b',
+    };
+
+    let chart1: import('chart.js').Chart | null = null;
+    let chart2: import('chart.js').Chart | null = null;
+    let firstRender1 = true;
+    let firstRender2 = true;
+    const currentChart: {
+      andamento: AndamentoAnnuo[];
+      vista: 'nominale' | 'reale';
+      capitaleEsauritoAnno: number | null;
+    } = { andamento: [], vista: 'nominale', capitaleEsauritoAnno: null };
+
+    function disegnaChart1(
+      andamento: AndamentoAnnuo[],
+      vista: 'nominale' | 'reale',
+      ereditaTargetReale: number,
+      ereditaAttiva: boolean,
+      capitaleEsauritoAnno: number | null,
+      inflazione: number
+    ): void {
+      const canvas = $('rd-chart') as unknown as HTMLCanvasElement;
+      if (!canvas || !andamento.length) return;
+
+      currentChart.andamento = andamento;
+      currentChart.vista = vista;
+      currentChart.capitaleEsauritoAnno = capitaleEsauritoAnno;
+
+      const labels = andamento.map((a) => `Anno ${a.anno}`);
+      const dataCap = andamento.map((a) =>
+        vista === 'nominale' ? a.capitaleNominale : a.capitaleReale
+      );
+
+      const dataEredita = ereditaAttiva
+        ? andamento.map((a) =>
+            vista === 'nominale'
+              ? ereditaTargetReale * Math.pow(1 + inflazione / 100, a.anno)
+              : ereditaTargetReale
+          )
+        : null;
+
+      const datasets: any[] = [
+        {
+          label: 'Capitale residuo',
+          data: dataCap,
+          borderColor: COLORS.capitale,
+          backgroundColor: COLORS.area,
+          borderWidth: 3,
+          pointRadius: (ctx: any) => {
+            const idx = ctx.dataIndex;
+            const lastIdx = andamento.length - 1;
+            if (idx === 0 || idx === lastIdx) return 6;
+            if (capitaleEsauritoAnno !== null && andamento[idx]?.anno === capitaleEsauritoAnno) return 7;
+            return 0;
+          },
+          pointBackgroundColor: (ctx: any) => {
+            const idx = ctx.dataIndex;
+            if (capitaleEsauritoAnno !== null && andamento[idx]?.anno === capitaleEsauritoAnno) {
+              return COLORS.esaurito;
+            }
+            return '#00A652';
+          },
+          pointBorderColor: '#FFFFFF',
+          pointBorderWidth: 2,
+          pointHoverRadius: 8,
+          fill: 'origin',
+          tension: 0.18,
+        },
+      ];
+      if (dataEredita) {
+        datasets.push({
+          label: 'Eredità target',
+          data: dataEredita,
+          borderColor: COLORS.ereditaRef,
+          borderDash: [6, 4],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          fill: false,
+          tension: 0,
+        });
+      }
+
+      const N = andamento.length;
+      const showXTick = (idx: number): boolean =>
+        N > 30 ? idx % 5 === 0 || idx === N - 1
+        : N > 15 ? idx % 3 === 0 || idx === N - 1
+        : true;
+
+      if (chart1) {
+        chart1.data.labels = labels;
+        chart1.data.datasets = datasets;
+        chart1.setActiveElements([]);
+        if (chart1.tooltip) chart1.tooltip.setActiveElements([], { x: 0, y: 0 });
+        const xs = chart1.options.scales?.x as any;
+        if (xs?.ticks) {
+          xs.ticks.callback = function (_v: unknown, idx: number) {
+            return showXTick(idx) ? labels[idx] : '';
+          };
+        }
+        chart1.update('none');
+        return;
+      }
+
+      chart1 = new Chart(canvas, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender1 ? { duration: 800, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                title: (items) => {
+                  const idx = items[0].dataIndex;
+                  const a = currentChart.andamento[idx];
+                  return a ? `Anno ${a.anno}` : '';
+                },
+                label: (ctx) => {
+                  const idx = ctx.dataIndex;
+                  const a = currentChart.andamento[idx];
+                  if (!a) return '';
+                  if (ctx.datasetIndex === 1) {
+                    return `Eredità target: ${fmtEuro.format(Number(ctx.parsed.y))}`;
+                  }
+                  const lines: string[] = [];
+                  const cap = currentChart.vista === 'nominale' ? a.capitaleNominale : a.capitaleReale;
+                  lines.push(`Capitale residuo: ${fmtEuro.format(cap)}`);
+                  if (a.anno > 0) {
+                    const prelievo = currentChart.vista === 'nominale' ? a.prelievoNominale : a.prelievoReale;
+                    lines.push(`Prelievo dell'anno: ${fmtEuro.format(prelievo)}`);
+                    lines.push(`Inflazione cumulata: ${fmtPct(a.inflazioneCumulata, 1)}`);
+                  }
+                  if (currentChart.capitaleEsauritoAnno !== null && a.anno === currentChart.capitaleEsauritoAnno) {
+                    lines.push('⚠ Capitale esaurito qui');
+                  }
+                  return lines;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                autoSkip: false,
+                callback: function (_v: any, idx: number) {
+                  return showXTick(idx) ? labels[idx] : '';
+                },
+              },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+      requestAnimationFrame(() => {
+        if (chart1 && chart1.options) (chart1.options as any).animation = false;
+      });
+      firstRender1 = false;
+    }
+
+    // -------------------- CHART 2: POTERE D'ACQUISTO --------------------
+    function disegnaChart2(andamento: AndamentoAnnuo[]): void {
+      const canvas = $('rd-chart-acquisto') as unknown as HTMLCanvasElement;
+      if (!canvas || !andamento.length) return;
+
+      const N = andamento.length - 1;
+      const step = N <= 10 ? 1 : N <= 25 ? 5 : 10;
+      const punti = andamento.filter((a) => a.anno > 0 && (a.anno % step === 0 || a.anno === N));
+
+      const labels = punti.map((p) => `Anno ${p.anno}`);
+      const dataNom = punti.map((p) => p.prelievoNominale);
+      const dataReale = punti.map((p) => p.prelievoReale);
+
+      if (chart2) {
+        chart2.data.labels = labels;
+        chart2.data.datasets[0].data = dataNom;
+        chart2.data.datasets[1].data = dataReale;
+        chart2.setActiveElements([]);
+        if (chart2.tooltip) chart2.tooltip.setActiveElements([], { x: 0, y: 0 });
+        chart2.update('none');
+        return;
+      }
+
+      chart2 = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Rendita nominale', data: dataNom, backgroundColor: '#79B9AD', borderWidth: 0, borderRadius: 4 },
+            { label: 'Rendita reale (€ di oggi)', data: dataReale, backgroundColor: '#373D42', borderWidth: 0, borderRadius: 4 },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: firstRender2 ? { duration: 600, easing: 'easeOutQuart' } : false,
+          layout: { padding: { top: 8, right: 8, bottom: 4, left: 4 } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              borderColor: 'rgba(22, 105, 99, 0.25)',
+              borderWidth: 1,
+              titleColor: '#0F4F4A',
+              titleFont: { family: 'Manrope, sans-serif', weight: 700, size: 13 },
+              bodyColor: '#373D42',
+              bodyFont: { family: 'Manrope, sans-serif', size: 12 },
+              padding: 12,
+              cornerRadius: 8,
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${fmtEuro.format(Number(ctx.parsed.y))}`,
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { color: '#6B7672', font: { family: 'Manrope, sans-serif', size: 11 } },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(22, 105, 99, 0.15)', lineWidth: 1 },
+              border: { display: false },
+              ticks: {
+                color: '#6B7672',
+                font: { family: 'Manrope, sans-serif', size: 11 },
+                callback: (v) => fmtEuroShort(v as number),
+              },
+            },
+          },
+        },
+      });
+      requestAnimationFrame(() => {
+        if (chart2 && chart2.options) (chart2.options as any).animation = false;
+      });
+      firstRender2 = false;
+    }
+
+    // -------------------- MAIN --------------------
+    let lastResult: OutputRendita | null = null;
+    let chart2WhenOpen = false;
+
+    function aggiorna(): void {
+      setVisibility();
+
+      const modalita = getModalita();
+      const anni = parseNum(inputs.anni.value);
+      const rendimento = parseNum(inputs.rendimento.value);
+      const inflazione = parseNum(inputs.inflazione.value);
+      const ereditaToggle = inputs.ereditaToggle.checked;
+      const ereditaTarget = parseNum(inputs.ereditaTarget.value);
+
+      const anniDisp = $('rd-anni-display');
+      if (anniDisp && Number.isFinite(anni)) {
+        const v = Math.round(anni);
+        anniDisp.textContent = `${v} ann${v === 1 ? 'o' : 'i'}`;
+      }
+
+      const blocking = $('rd-blocking');
+      if (!Number.isFinite(anni) || anni < 1) {
+        blocking.textContent = 'Inserisci almeno 1 anno di rendita.';
+        return;
+      }
+      if (anni > 60) {
+        blocking.textContent = 'La durata massima è 60 anni.';
+        return;
+      }
+      if (!Number.isFinite(rendimento)) {
+        blocking.textContent = 'Inserisci un rendimento valido.';
+        return;
+      }
+      if (!Number.isFinite(inflazione)) {
+        blocking.textContent = "Inserisci un valore valido per l'inflazione.";
+        return;
+      }
+      blocking.textContent = '';
+
+      let speseAnnueDesiderate: number | undefined;
+      let capitaleDisponibile: number | undefined;
+      if (modalita === 'capitale-necessario') {
+        const v = parseNum(inputs.spese.value);
+        if (!Number.isFinite(v) || v <= 0) {
+          blocking.textContent = 'Inserisci spese annue maggiori di zero.';
+          return;
+        }
+        speseAnnueDesiderate = v;
+      } else {
+        const v = parseNum(inputs.capitale.value);
+        if (!Number.isFinite(v) || v <= 0) {
+          blocking.textContent = 'Inserisci un capitale disponibile maggiore di zero.';
+          return;
+        }
+        capitaleDisponibile = v;
+      }
+
+      const result = calcolaRendita({
+        modalita,
+        speseAnnueDesiderate,
+        capitaleDisponibile,
+        anni,
+        rendimentoNettoPerc: rendimento,
+        inflazionePerc: inflazione,
+        lasciareEredita: ereditaToggle,
+        ereditaTarget: Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0,
+      });
+
+      if (!result.ok) {
+        blocking.textContent = result.errore ?? 'Dati non validi.';
+        return;
+      }
+
+      lastResult = result;
+
+      // ----- Output principale -----
+      const primaryLabel = $('rd-out-primary-label');
+      const primaryVal = $('rd-out-primary');
+      const secondary = $('rd-out-secondary');
+
+      if (modalita === 'capitale-necessario') {
+        primaryLabel.textContent = 'Capitale necessario oggi';
+        primaryVal.textContent = fmtEuro.format(result.capitaleNecessario ?? 0);
+        secondary.textContent = '';
+      } else {
+        primaryLabel.textContent = 'Rendita annua sostenibile';
+        primaryVal.textContent = fmtEuro.format(result.renditaSostenibileAnnua ?? 0);
+        secondary.textContent = `Corrispondono a ${fmtEuro.format(result.renditaSostenibileMensile ?? 0)} al mese`;
+      }
+
+      // ----- Dettaglio -----
+      $('rd-out-rendimento-reale').textContent = fmtPct(result.rendimentoRealePerc, 2);
+      $('rd-out-totale-prelevato').textContent = fmtEuro.format(result.totalePrelevato);
+      $('rd-out-inflazione-cum').textContent = fmtPct(result.inflazioneCumulataFinale, 1);
+      $('rd-out-residuo').textContent = fmtEuro.format(result.capitaleResiduoNominale);
+
+      const tassoRow = $('rd-row-tasso-prelievo');
+      if (modalita === 'rendita-sostenibile') {
+        tassoRow.hidden = false;
+        const t = result.tassoPrelevamentoIniziale;
+        $('rd-out-tasso-prelievo').textContent = fmtPct(t, 2);
+        const badge = $('rd-out-tasso-prelievo-badge');
+        badge.classList.remove('badge-prudente', 'badge-linea', 'badge-aggressivo');
+        if (t < 4) {
+          badge.textContent = 'prudente';
+          badge.classList.add('badge', 'badge-prudente');
+        } else if (t <= 5) {
+          badge.textContent = 'in linea';
+          badge.classList.add('badge', 'badge-linea');
+        } else {
+          badge.textContent = 'aggressivo';
+          badge.classList.add('badge', 'badge-aggressivo');
+        }
+      } else {
+        tassoRow.hidden = true;
+      }
+
+      // ----- Regola del 4% -----
+      const ruleLabel1 = $('rd-rule-label-1');
+      const ruleVal1 = $('rd-rule-value-1');
+      const ruleLabel2 = $('rd-rule-label-2');
+      const ruleVal2 = $('rd-rule-value-2');
+      const ruleDiff = $('rd-rule-diff');
+      const conf = result.confrontoRegola4Percento;
+      if (modalita === 'capitale-necessario') {
+        ruleLabel1.textContent = 'Regola 4% (spese × 25)';
+        ruleVal1.textContent = fmtEuro.format(conf.capitaleSecondoRegola);
+        ruleLabel2.textContent = 'Il tuo calcolo';
+        ruleVal2.textContent = fmtEuro.format(result.capitaleNecessario ?? 0);
+      } else {
+        ruleLabel1.textContent = 'Regola 4% (capitale × 4%)';
+        ruleVal1.textContent = fmtEuro.format(conf.renditaSecondoRegola);
+        ruleLabel2.textContent = 'Il tuo calcolo';
+        ruleVal2.textContent = fmtEuro.format(result.renditaSostenibileAnnua ?? 0);
+      }
+      ruleDiff.textContent = fmtPctSigned(conf.differenzaPerc, 1);
+
+      // ----- Warnings -----
+      const warnEl = $('rd-warnings');
+      while (warnEl.firstChild) warnEl.removeChild(warnEl.firstChild);
+      if (result.warning.length) {
+        const ul = document.createElement('ul');
+        for (const w of result.warning) {
+          const li = document.createElement('li');
+          if (w.startsWith('ATTENZIONE')) li.classList.add('warn-critical');
+          li.textContent = w;
+          ul.appendChild(li);
+        }
+        warnEl.appendChild(ul);
+      }
+
+      // ----- Subtitle grafico -----
+      const subtitle = $('rd-chart-subtitle');
+      if (subtitle) {
+        if (result.capitaleEsauritoAnno !== null) {
+          subtitle.textContent = `⚠ Il capitale si esaurisce all'anno ${result.capitaleEsauritoAnno} (su ${anni} richiesti).`;
+        } else if (modalita === 'capitale-necessario') {
+          subtitle.textContent = `Capitale che dura ${anni} anni di rendita${ereditaToggle ? `, lasciando ${fmtEuro.format(ereditaTarget)} di eredità reale` : ''}.`;
+        } else {
+          subtitle.textContent = `Rendita ${fmtEuro.format(result.renditaSostenibileAnnua ?? 0)}/anno per ${anni} anni${ereditaToggle ? `, con eredità ${fmtEuro.format(ereditaTarget)}` : ''}.`;
+        }
+      }
+
+      // ----- Disegna grafici -----
+      const ereditaTargetReale = ereditaToggle && Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0;
+      disegnaChart1(result.andamento, getVista(), ereditaTargetReale, ereditaToggle, result.capitaleEsauritoAnno, inflazione);
+
+      if (modalita === 'rendita-sostenibile' && chart2WhenOpen) {
+        disegnaChart2(result.andamento);
+      }
+    }
+
+    // -------------------- DEBOUNCE + WIRING --------------------
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    function schedule(): void {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(aggiorna, 200);
+    }
+
+    inputs.anniSlider.addEventListener('input', () => {
+      inputs.anni.value = inputs.anniSlider.value;
+      schedule();
+    });
+    inputs.anni.addEventListener('input', () => {
+      const v = parseNum(inputs.anni.value);
+      if (Number.isFinite(v) && v >= 1 && v <= 60) {
+        inputs.anniSlider.value = String(Math.round(v));
+      }
+      schedule();
+    });
+
+    const altri: Array<HTMLInputElement> = [
+      inputs.spese,
+      inputs.capitale,
+      inputs.rendimento,
+      inputs.inflazione,
+      inputs.ereditaTarget,
+    ];
+    for (const el of altri) {
+      el.addEventListener('input', schedule);
+      el.addEventListener('change', schedule);
+    }
+    inputs.ereditaToggle.addEventListener('change', schedule);
+    inputs.modalitaRadios.forEach((el) => el.addEventListener('change', schedule));
+
+    inputs.vistaRadios.forEach((el) =>
+      el.addEventListener('change', () => {
+        if (lastResult) {
+          const ereditaToggle = inputs.ereditaToggle.checked;
+          const ereditaTarget = parseNum(inputs.ereditaTarget.value);
+          const inflazione = parseNum(inputs.inflazione.value) || 0;
+          const ereditaTargetReale = ereditaToggle && Number.isFinite(ereditaTarget) ? Math.max(0, ereditaTarget) : 0;
+          disegnaChart1(
+            lastResult.andamento,
+            getVista(),
+            ereditaTargetReale,
+            ereditaToggle,
+            lastResult.capitaleEsauritoAnno,
+            inflazione
+          );
+        }
+      })
+    );
+
+    const renditaDetails = document.querySelector<HTMLDetailsElement>('#rd-rendita-section details');
+    if (renditaDetails) {
+      renditaDetails.addEventListener('toggle', () => {
+        if (renditaDetails.open && lastResult && getModalita() === 'rendita-sostenibile') {
+          chart2WhenOpen = true;
+          disegnaChart2(lastResult.andamento);
+        }
+      });
+    }
+
+    aggiorna();
+  </script>
 </Layout>
