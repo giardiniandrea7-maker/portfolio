@@ -277,84 +277,75 @@ import Logo from '~/components/Logo.astro';
 <!-- ============================================= -->
 <!-- JAVASCRIPT MENU MOBILE                         -->
 <!-- ============================================= -->
-<!-- data-astro-rerun: ri-esegue questo script ad ogni navigazione
-     View Transitions, cosi' i listener vengono riagganciati ai
-     nuovi elementi DOM (hamburger, sidebar, overlay) dopo lo swap. -->
-<script data-astro-rerun>
-  // I listener locali agli elementi (hamburger, closeBtn, overlay,
-  // submenu, menu-link, nav-trigger) sono attaccati ad elementi che
-  // vengono ri-creati ad ogni navigazione: niente leak, ogni rerun
-  // li riaggancia ai nuovi nodi.
-  // I listener su `document` (keydown Escape) invece persistono fra
-  // rerun: per evitarne l'accumulo, smonto quello precedente prima
-  // di registrarne uno nuovo.
+<!-- Lo script gira una sola volta (Astro deduplica i moduli) ma
+     registra una funzione che si ri-esegue su ogni astro:page-load,
+     anche al primo caricamento. Questo riaggancia i listener ai
+     nuovi elementi DOM dopo che ClientRouter ha fatto lo swap. -->
+<script>
+  function initMobileMenu() {
+    const hamburger = document.getElementById('hamburger-btn');
+    const closeBtn  = document.getElementById('close-btn');
+    const sidebar   = document.getElementById('sidebar-menu');
+    const overlay   = document.getElementById('menu-overlay');
 
-  const hamburger = document.getElementById('hamburger-btn');
-  const closeBtn  = document.getElementById('close-btn');
-  const sidebar   = document.getElementById('sidebar-menu');
-  const overlay   = document.getElementById('menu-overlay');
-
-  function closeMenu() {
-    sidebar?.classList.add('translate-x-full');
-    overlay?.classList.add('opacity-0', 'pointer-events-none');
-    overlay?.classList.remove('opacity-100');
-    document.body.style.overflow = '';
-  }
-  function openMenu() {
-    sidebar?.classList.remove('translate-x-full');
-    overlay?.classList.remove('opacity-0', 'pointer-events-none');
-    overlay?.classList.add('opacity-100');
-    document.body.style.overflow = 'hidden';
-  }
-
-  hamburger?.addEventListener('click', openMenu);
-  closeBtn?.addEventListener('click', closeMenu);
-  overlay?.addEventListener('click', closeMenu);
-
-  // Escape chiude il menu — listener globale "singleton".
-  // Rimuovo l'eventuale precedente per non duplicare ad ogni navigazione.
-  // @ts-ignore - chiave non standard, intenzionale per la persistenza fra rerun
-  if (window.__giardiniEscapeHandler) {
-    // @ts-ignore
-    document.removeEventListener('keydown', window.__giardiniEscapeHandler);
-  }
-  const escapeHandler = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      // Re-query per usare gli elementi correnti (post-swap)
-      const sb = document.getElementById('sidebar-menu');
-      const ov = document.getElementById('menu-overlay');
-      if (sb && ov && !sb.classList.contains('translate-x-full')) {
-        sb.classList.add('translate-x-full');
-        ov.classList.add('opacity-0', 'pointer-events-none');
-        ov.classList.remove('opacity-100');
-        document.body.style.overflow = '';
-      }
+    function closeMenu() {
+      sidebar?.classList.add('translate-x-full');
+      overlay?.classList.add('opacity-0', 'pointer-events-none');
+      overlay?.classList.remove('opacity-100');
+      document.body.style.overflow = '';
     }
-  };
-  document.addEventListener('keydown', escapeHandler);
-  // @ts-ignore
-  window.__giardiniEscapeHandler = escapeHandler;
+    function openMenu() {
+      sidebar?.classList.remove('translate-x-full');
+      overlay?.classList.remove('opacity-0', 'pointer-events-none');
+      overlay?.classList.add('opacity-100');
+      document.body.style.overflow = 'hidden';
+    }
 
-  document.querySelectorAll('.submenu-toggle').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const list  = btn.nextElementSibling;
-      const arrow = btn.querySelector('.submenu-arrow');
-      list?.classList.toggle('hidden');
-      arrow?.classList.toggle('rotate-180');
+    hamburger?.addEventListener('click', openMenu);
+    closeBtn?.addEventListener('click', closeMenu);
+    overlay?.addEventListener('click', closeMenu);
+
+    document.querySelectorAll('.submenu-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const list  = btn.nextElementSibling;
+        const arrow = btn.querySelector('.submenu-arrow');
+        list?.classList.toggle('hidden');
+        arrow?.classList.toggle('rotate-180');
+      });
     });
+
+    document.querySelectorAll('.menu-link').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.querySelectorAll('.nav-trigger').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        (e.currentTarget as HTMLElement).blur();
+      });
+      btn.addEventListener('mouseleave', (e) => {
+        (e.currentTarget as HTMLElement).blur();
+      });
+    });
+  }
+
+  // Escape chiude il menu — listener globale registrato UNA volta
+  // per sessione (modulo deduplicato), interroga il DOM corrente
+  // ad ogni evento per usare gli elementi post-swap.
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const sb = document.getElementById('sidebar-menu');
+    const ov = document.getElementById('menu-overlay');
+    if (sb && ov && !sb.classList.contains('translate-x-full')) {
+      sb.classList.add('translate-x-full');
+      ov.classList.add('opacity-0', 'pointer-events-none');
+      ov.classList.remove('opacity-100');
+      document.body.style.overflow = '';
+    }
   });
 
-  document.querySelectorAll('.menu-link').forEach((link) => {
-    link.addEventListener('click', closeMenu);
-  });
-
-  document.querySelectorAll('.nav-trigger').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      (e.currentTarget as HTMLElement).blur();
-    });
-    btn.addEventListener('mouseleave', (e) => {
-      (e.currentTarget as HTMLElement).blur();
-    });
-  });
+  // astro:page-load fira al primo caricamento E ad ogni navigazione
+  // View Transitions: re-aggancia i listener del menu agli elementi
+  // freschi dopo lo swap del body.
+  document.addEventListener('astro:page-load', initMobileMenu);
 </script>
