@@ -3,25 +3,46 @@ import { CATEGORIE, LIVELLI, type VoceGlossario } from '~/data/glossario';
 
 interface Props {
   voce: VoceGlossario;
-  /** Mostra il badge categoria (in basso). Default: true. */
+  /** Mostra il badge categoria. Default: true. */
   showCategoria?: boolean;
+  /** Numero progressivo della voce (1-based) nell'ordine alfabetico globale. */
+  numero?: number;
+  /** Totale di voci pianificate per il glossario (es. 100). */
+  totale?: number;
 }
 
-const { voce, showCategoria = true } = Astro.props;
+const {
+  voce,
+  showCategoria = true,
+  numero,
+  totale = 100,
+} = Astro.props;
+
 const liv = LIVELLI[voce.livello];
 
-// Trafiletto della frase essenziale: prime 2 righe ~ 160 caratteri.
-function trafiletto(text: string, max = 160): string {
-  // Strippa il markdown inline per l'anteprima.
-  const stripped = text
+// Strippa il markdown inline per anteprime testuali pulite.
+function stripMarkdown(text: string): string {
+  return text
     .replace(/\*\*([^*]+)\*\*/g, '$1')
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
+// Trafiletto della frase essenziale (ca. 3 righe per la card chiusa).
+function trafiletto(text: string, max = 130): string {
+  const stripped = stripMarkdown(text);
   if (stripped.length <= max) return stripped;
-  // Tronca all'ultimo spazio prima del limite per non spezzare a metà parola.
   const truncated = stripped.slice(0, max);
   const lastSpace = truncated.lastIndexOf(' ');
   return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
+}
+
+// Anticipazione dell'esempio concreto per l'overlay hover (~50 parole).
+function snippet(text: string, words = 35): string {
+  const stripped = stripMarkdown(text);
+  const arr = stripped.split(/\s+/);
+  if (arr.length <= words) return stripped;
+  return arr.slice(0, words).join(' ') + '…';
 }
 
 const livelloClass = {
@@ -29,6 +50,14 @@ const livelloClass = {
   ochre: 'bg-[var(--aw-color-accent)]/15 text-[var(--aw-color-accent)] border-[var(--aw-color-accent)]/30',
   red:   'bg-[rgba(192,57,43,0.10)] text-[#A04032] border-[#c0392b]/30',
 }[liv.color];
+
+const numeroFormatted = numero
+  ? `${String(numero).padStart(2, '0')} / ${totale}`
+  : null;
+
+const fraseFull = stripMarkdown(voce.fraseEssenziale);
+const fraseShort = trafiletto(voce.fraseEssenziale);
+const esempioSnippet = snippet(voce.esempioConcreto);
 ---
 
 <a
@@ -38,41 +67,85 @@ const livelloClass = {
   data-sigla={voce.sigla?.toLowerCase() ?? ''}
   data-categoria={voce.categoria}
   data-livello={voce.livello}
-  class="group relative flex flex-col bg-white rounded-2xl border border-[var(--aw-color-primary)]/15 hover:border-[var(--aw-color-primary)]/50 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 p-6 h-full focus:outline-none focus:ring-2 focus:ring-[var(--aw-color-primary)]/40 focus:ring-offset-2"
+  class="vc-card group relative flex flex-col bg-white rounded-2xl border border-[var(--aw-color-primary)]/15 shadow-sm transition-all duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-[var(--aw-color-primary)]/40 focus:ring-offset-2 motion-safe:hover:-translate-y-1.5 motion-safe:hover:shadow-lg motion-safe:focus-visible:-translate-y-1.5 motion-safe:focus-visible:shadow-lg"
   aria-label={`Apri voce: ${voce.titolo}${voce.sigla ? ` (${voce.sigla})` : ''}`}
 >
-  <!-- Badge livello in alto a destra -->
-  <span class:list={['absolute top-4 right-4 inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full border', livelloClass]}>
-    <span aria-hidden="true">{liv.emoji}</span>
-    <span>{liv.label}</span>
-  </span>
+  <!-- Effetto schedario: bordo inferiore decorativo che simula
+       altre carte sotto la corrente. -->
+  <span aria-hidden="true" class="vc-shelf absolute left-3 right-3 -bottom-1 h-1 rounded-b-2xl bg-[var(--aw-color-primary)]/20"></span>
 
-  <!-- Titolo -->
-  <h3 class="font-heading text-xl md:text-2xl font-semibold text-[var(--aw-color-text-heading)] leading-snug pr-20 mb-1">
-    {voce.titolo}
-  </h3>
+  <!-- Contenuto della card -->
+  <div class="relative flex flex-col h-full p-6 lg:p-7 gap-3 z-[1]">
 
-  <!-- Sigla (se presente) -->
-  {voce.sigla && (
-    <p class="text-sm text-[var(--aw-color-primary)] font-medium mb-3">
-      {voce.sigla}
-    </p>
-  )}
-
-  <!-- Trafiletto della frase essenziale -->
-  <p class="text-base text-[var(--aw-color-text-muted)] leading-relaxed mb-5 flex-grow">
-    {trafiletto(voce.fraseEssenziale)}
-  </p>
-
-  <!-- Categoria badge in basso + freccia -->
-  <div class="flex items-center justify-between mt-auto pt-3 border-t border-[var(--aw-color-primary)]/10">
-    {showCategoria ? (
-      <span class="inline-block text-xs font-semibold tracking-[0.08em] uppercase text-[var(--aw-color-primary)]/80 bg-[var(--aw-color-primary)]/8 px-2.5 py-1 rounded-full">
-        {CATEGORIE[voce.categoria]}
+    <!-- Header: numerazione progressiva + badge livello -->
+    <div class="flex items-start justify-between gap-3">
+      {numeroFormatted && (
+        <span
+          class="font-display text-sm font-medium tracking-wider text-[var(--aw-color-primary)]/70 tabular-nums"
+          aria-hidden="true"
+        >
+          {numeroFormatted}
+        </span>
+      )}
+      <span class:list={['inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full border', livelloClass]}>
+        <span aria-hidden="true">{liv.emoji}</span>
+        <span>{liv.label}</span>
       </span>
-    ) : <span></span>}
-    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)] group-hover:gap-2.5 transition-all">
-      Apri
+    </div>
+
+    <!-- Titolo + sottotitolo categoria -->
+    <div class="mt-2">
+      <h3 class="font-display text-xl lg:text-2xl font-semibold leading-snug text-[var(--aw-color-text-heading)]">
+        {voce.titolo}
+      </h3>
+      {showCategoria && (
+        <p class="mt-1 text-sm text-[var(--aw-color-primary)] font-medium">
+          {CATEGORIE[voce.categoria]}
+        </p>
+      )}
+      {voce.sigla && (
+        <p class="mt-1 text-xs text-[var(--aw-color-primary)]/80 font-medium">
+          {voce.sigla}
+        </p>
+      )}
+    </div>
+
+    <!-- Trafiletto della frase essenziale (ca. 3 righe troncate) -->
+    <p class="mt-3 text-[15px] leading-relaxed text-[var(--aw-color-text-muted)] line-clamp-4 flex-grow">
+      {fraseShort}
+    </p>
+
+    <!-- Linea decorativa sage -->
+    <div aria-hidden="true" class="mt-4 h-px bg-[var(--aw-color-primary)]/15"></div>
+
+    <!-- Footer: link "Apri" -->
+    <div class="mt-3 flex items-center justify-end">
+      <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)] motion-safe:group-hover:gap-2.5 transition-all">
+        Apri
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Hover overlay: anteprima estesa.
+       Visibile su :hover desktop (motion-safe) e :focus-within da tastiera.
+       Disattivata su prefers-reduced-motion (sostituita da semplice link).
+       Su mobile (no hover) non viene mostrata: la card resta pulita. -->
+  <div
+    aria-hidden="true"
+    class="vc-overlay absolute inset-x-0 bottom-0 px-6 lg:px-7 py-5 bg-[rgba(238,247,246,0.96)] backdrop-blur-sm border-t border-[var(--aw-color-primary)]/25 opacity-0 translate-y-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:group-hover:opacity-100 motion-safe:group-hover:translate-y-0 motion-safe:group-focus-visible:opacity-100 motion-safe:group-focus-visible:translate-y-0 pointer-events-none rounded-b-2xl"
+  >
+    <p class="text-[13px] leading-relaxed text-[var(--aw-color-text-heading)] line-clamp-3 mb-2">
+      {fraseFull}
+    </p>
+    <p class="text-[12px] leading-relaxed text-[var(--aw-color-text-muted)] italic line-clamp-3 mb-3">
+      {esempioSnippet}
+    </p>
+    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)]">
+      Leggi tutto
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="5" y1="12" x2="19" y2="12"/>
         <polyline points="12 5 19 12 12 19"/>
@@ -80,3 +153,42 @@ const livelloClass = {
     </span>
   </div>
 </a>
+
+<style>
+  /* Aspect ratio "carta da gioco" su desktop (md+).
+     Su mobile la card e' a larghezza piena con altezza naturale. */
+  @media (min-width: 768px) {
+    .vc-card {
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  /* Micro-rotation alternata su hover: nelle griglie a piu' colonne
+     il pattern visivo crea l'effetto "carte distribuite". Solo per
+     posizioni dispari/pari, sottile, solo su hover desktop. */
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    .vc-card:nth-child(odd):hover,
+    .vc-card:nth-child(odd):focus-visible {
+      transform: translateY(-6px) rotate(-0.5deg);
+    }
+    .vc-card:nth-child(even):hover,
+    .vc-card:nth-child(even):focus-visible {
+      transform: translateY(-6px) rotate(0.5deg);
+    }
+  }
+
+  /* Overlay hover: aumenta il bordo inferiore per dare profondita' */
+  .vc-card:hover .vc-shelf,
+  .vc-card:focus-within .vc-shelf {
+    height: 6px;
+    bottom: -3px;
+  }
+
+  /* Su touch device niente hover overlay (verrebbe attivato dal tap
+     bloccando la navigazione). */
+  @media (hover: none) {
+    .vc-overlay {
+      display: none;
+    }
+  }
+</style>

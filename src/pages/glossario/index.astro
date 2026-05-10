@@ -5,6 +5,7 @@ import {
   CATEGORIE,
   LIVELLI,
   getVociPubblicate,
+  getVociAlfabetiche,
   getVociByCategoria,
   getVociByLivello,
   getVociPerLettera,
@@ -16,6 +17,28 @@ const totale = getVociPubblicate().length;
 const perCategoria = getVociByCategoria();
 const perLivello = getVociByLivello();
 const perLettera = getVociPerLettera();
+
+// Numerazione progressiva: ogni voce ottiene un numero (1-based) basato
+// sull'ordine alfabetico globale. Il numero NON cambia quando l'utente
+// passa da una vista all'altra (categoria/alfabetico/livello).
+const TOTALE_PIANIFICATE = 100;
+const numerazione = new Map<string, number>();
+getVociAlfabetiche().forEach((v, i) => numerazione.set(v.slug, i + 1));
+
+// Copertura A-Z: tutte le 26 lettere dell'alfabeto, con voci o senza.
+// Per le lettere scoperte mostriamo un placeholder elegante "Suggerisci".
+const LETTERE_AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const lettereMappa = new Map<string, typeof perLettera[number]['voci']>();
+for (const { lettera, voci } of perLettera) {
+  lettereMappa.set(lettera, voci);
+}
+const coperturaAlfabeto = LETTERE_AZ.map((lettera) => ({
+  lettera,
+  voci: lettereMappa.get(lettera) ?? [],
+}));
+
+// Barra progresso glossario
+const progressoPct = Math.round((totale / TOTALE_PIANIFICATE) * 100);
 
 const metadata = {
   title: 'Glossario finanziario | Andrea Giardini',
@@ -36,6 +59,34 @@ const metadata = {
         I concetti finanziari più importanti, spiegati con chiarezza. Nessun gergo inutile,
         tanti esempi concreti, e per ogni voce gli errori più comuni che vedo nei miei clienti.
       </p>
+
+      <!-- Barra progresso "trasparenza editoriale": indica quanto è cresciuto
+           il glossario rispetto al traguardo finale di 100 voci. -->
+      {totale > 0 && totale < TOTALE_PIANIFICATE && (
+        <div class="mt-10 max-w-md mx-auto">
+          <p class="text-sm text-[var(--aw-color-text-heading)]/70 mb-2">
+            Glossario in costruzione: <strong class="text-[var(--aw-color-text-heading)]">{totale} voci</strong> su {TOTALE_PIANIFICATE} pianificate
+          </p>
+          <div
+            class="h-2 w-full rounded-full bg-[var(--aw-color-primary)]/20 overflow-hidden"
+            role="progressbar"
+            aria-valuenow={totale}
+            aria-valuemin="0"
+            aria-valuemax={TOTALE_PIANIFICATE}
+            aria-label={`${totale} voci su ${TOTALE_PIANIFICATE} pianificate`}
+          >
+            <div
+              class="h-full bg-[#00A652] rounded-full transition-[width] duration-500"
+              style={`width: ${progressoPct}%`}
+            ></div>
+          </div>
+        </div>
+      )}
+      {totale >= TOTALE_PIANIFICATE && (
+        <p class="mt-10 text-sm font-semibold text-[#00A652]">
+          Glossario completo: {totale} voci.
+        </p>
+      )}
     </div>
   </section>
 
@@ -128,23 +179,58 @@ const metadata = {
                   {voci.length} {voci.length === 1 ? 'voce' : 'voci'}
                 </span>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {voci.map((v) => <VoceCard voce={v} showCategoria={false} />)}
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                {voci.map((v) => (
+                  <VoceCard
+                    voce={v}
+                    showCategoria={false}
+                    numero={numerazione.get(v.slug)}
+                    totale={TOTALE_PIANIFICATE}
+                  />
+                ))}
               </div>
             </div>
           ))}
         </div>
 
-        <!-- VISTA "Alfabetico A-Z" (hidden) -->
+        <!-- VISTA "Alfabetico A-Z" (hidden): copre TUTTE le 26 lettere,
+             con placeholder elegante per quelle ancora senza voci. -->
         <div id="view-alfabetico" role="tabpanel" aria-labelledby="tab-alfabetico" data-view="alfabetico" hidden>
-          {perLettera.map(({ lettera, voci }) => (
-            <div class="mb-10 last:mb-0" data-group data-group-key={`alpha-${lettera}`}>
+          {coperturaAlfabeto.map(({ lettera, voci }) => (
+            <div class="mb-10 last:mb-0" data-group data-group-key={`alpha-${lettera}`} data-empty={voci.length === 0 ? 'true' : 'false'}>
               <h2 id={`lettera-${lettera}`} class="font-heading text-3xl md:text-4xl font-semibold text-[var(--aw-color-primary)] mb-5">
                 {lettera}
               </h2>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {voci.map((v) => <VoceCard voce={v} />)}
-              </div>
+              {voci.length > 0 ? (
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                  {voci.map((v) => (
+                    <VoceCard
+                      voce={v}
+                      numero={numerazione.get(v.slug)}
+                      totale={TOTALE_PIANIFICATE}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div class="rounded-2xl border border-dashed border-[var(--aw-color-primary)]/30 bg-[rgb(238_247_246)]/40 p-8 md:p-10 max-w-2xl">
+                  <p class="text-base text-[var(--aw-color-text-default)] leading-relaxed mb-3">
+                    Nessuna voce per questa lettera al momento.
+                  </p>
+                  <p class="text-base text-[var(--aw-color-text-muted)] leading-relaxed mb-4">
+                    Hai un termine in <strong class="text-[var(--aw-color-text-heading)]">{lettera}</strong> che vuoi vedere spiegato?
+                  </p>
+                  <a
+                    href={`/contatti?topic=glossario-${lettera}`}
+                    class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)] hover:text-[var(--aw-color-accent)] transition-colors"
+                  >
+                    Suggerisci un termine
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -164,8 +250,14 @@ const metadata = {
                     {voci.length} {voci.length === 1 ? 'voce' : 'voci'}
                   </span>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {voci.map((v) => <VoceCard voce={v} />)}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                  {voci.map((v) => (
+                    <VoceCard
+                      voce={v}
+                      numero={numerazione.get(v.slug)}
+                      totale={TOTALE_PIANIFICATE}
+                    />
+                  ))}
                 </div>
               </div>
             );

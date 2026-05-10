@@ -7,10 +7,16 @@ import {
   CATEGORIE,
   LIVELLI,
   getVociPubblicate,
+  getVociAlfabetiche,
   getNeighbors,
   getCorrelate,
   type VoceGlossario,
 } from '~/data/glossario';
+
+// Numerazione progressiva globale (stessa logica del hub).
+const TOTALE_PIANIFICATE = 100;
+const numerazione = new Map<string, number>();
+getVociAlfabetiche().forEach((v, i) => numerazione.set(v.slug, i + 1));
 
 export async function getStaticPaths() {
   return getVociPubblicate().map((voce) => ({
@@ -27,6 +33,10 @@ const { voce } = Astro.props;
 const liv = LIVELLI[voce.livello];
 const { prev, next } = getNeighbors(voce.slug);
 const correlate = getCorrelate(voce.slug);
+const numeroVoce = numerazione.get(voce.slug);
+const numeroFormatted = numeroVoce
+  ? `${String(numeroVoce).padStart(2, '0')} / ${TOTALE_PIANIFICATE}`
+  : null;
 
 const canonicalUrl = `https://giardiniconsulenza.it/glossario/${voce.slug}`;
 const metadata = {
@@ -87,6 +97,11 @@ const livelloBadgeClass = {
     <!-- ===================== HEADER VOCE ===================== -->
     <header class="bg-white pt-10 md:pt-14 pb-6">
       <div class="reveal max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        {numeroFormatted && (
+          <p class="font-heading text-sm tracking-wider text-[var(--aw-color-primary)]/70 tabular-nums mb-3">
+            {numeroFormatted}
+          </p>
+        )}
         <div class="flex flex-wrap items-center gap-2 mb-5">
           <span class:list={['inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2.5 py-1 rounded-full border', livelloBadgeClass]}>
             <span aria-hidden="true">{liv.emoji}</span>
@@ -176,7 +191,13 @@ const livelloBadgeClass = {
             Termini correlati
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {correlate.map((c) => <VoceCard voce={c} />)}
+            {correlate.map((c) => (
+              <VoceCard
+                voce={c}
+                numero={numerazione.get(c.slug)}
+                totale={TOTALE_PIANIFICATE}
+              />
+            ))}
           </div>
         </div>
       </section>
