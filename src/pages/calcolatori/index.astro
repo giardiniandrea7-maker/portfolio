@@ -16,7 +16,7 @@ const metadata = {
        HERO — titolo + sottotitolo
        ====================================================== -->
   <section class="bg-white py-16 md:py-24">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="reveal max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-4">Strumenti</p>
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.1] font-heading">
         Calcolatori e strumenti
@@ -32,13 +32,13 @@ const metadata = {
        ====================================================== -->
   <section class="bg-cream py-16 md:py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+      <div class="reveal-stagger grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
 
         {calcolatori.map((c) => (
           c.disponibile ? (
             <a
               href={c.href}
-              class="group flex flex-col bg-white rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 border border-[var(--aw-color-accent)]/20 hover:border-[var(--aw-color-accent)]/60 hover:-translate-y-1 overflow-hidden"
+              class="reveal group flex flex-col bg-white rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 border border-[var(--aw-color-accent)]/20 hover:border-[var(--aw-color-accent)]/60 hover:-translate-y-1 overflow-hidden"
             >
               <div class="p-8 flex flex-col h-full">
                 {c.icona && (
@@ -63,7 +63,7 @@ const metadata = {
             </a>
           ) : (
             <div
-              class="relative flex flex-col bg-white rounded-sm border border-[var(--aw-color-accent)]/15 overflow-hidden opacity-60 cursor-not-allowed"
+              class="reveal relative flex flex-col bg-white rounded-sm border border-[var(--aw-color-accent)]/15 overflow-hidden opacity-60 cursor-not-allowed"
               aria-disabled="true"
             >
               <span class="absolute top-4 right-4 text-[10px] tracking-[0.15em] uppercase font-semibold text-[var(--aw-color-accent)] bg-[var(--aw-color-accent)]/10 px-2.5 py-1 rounded-sm">
@@ -97,7 +97,7 @@ const metadata = {
        CTA finale
        ====================================================== -->
   <section class="bg-white py-16 md:py-20">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="reveal max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-tight">
         Vuoi un'analisi precisa, non una stima?
       </h2>
