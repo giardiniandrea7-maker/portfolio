@@ -182,6 +182,59 @@ export function animateCountUp(
   });
 }
 
+/**
+ * Crea un updater stateful per un singolo elemento DOM:
+ * - primo render → testo settato istantaneamente (no count-up)
+ * - successivi → count-up da valore precedente al nuovo
+ * - se l'utente lancia un nuovo update mentre uno è in corso, l'animazione
+ *   precedente viene cancellata e ne parte una nuova dal frame corrente
+ * - rispetta prefers-reduced-motion (sempre istantaneo)
+ */
+export function createSmartCountUp(
+  element: HTMLElement,
+  formatter: (n: number) => string,
+  duration = 0.7
+): (value: number) => void {
+  let prev: number | null = null;
+  let ctrl: ReturnType<typeof animate> | null = null;
+
+  return (value: number) => {
+    if (!Number.isFinite(value)) {
+      element.textContent = formatter(value);
+      return;
+    }
+
+    if (prev === null || prefersReducedMotion()) {
+      element.textContent = formatter(value);
+      prev = value;
+      return;
+    }
+
+    if (prev === value) {
+      element.textContent = formatter(value);
+      return;
+    }
+
+    if (ctrl) {
+      try {
+        ctrl.stop();
+      } catch {
+        /* ignore */
+      }
+      ctrl = null;
+    }
+
+    ctrl = animate(prev, value, {
+      duration,
+      ease: EASE_OUT,
+      onUpdate: (v: number) => {
+        element.textContent = formatter(v);
+      },
+    });
+    prev = value;
+  };
+}
+
 // ---------- ORCHESTRATOR ----------
 
 function cleanupAll(): void {

@@ -1247,6 +1247,7 @@ const metadata = {
       OutputRendita,
       ScenarioCurva,
     } from '~/lib/calcolatori/rendita';
+    import { createSmartCountUp } from '~/scripts/animations';
     import {
       Chart,
       LineController,
@@ -1315,6 +1316,13 @@ const metadata = {
       ereditaToggle: $<HTMLInputElement>('rd-eredita-toggle'),
       ereditaTarget: $<HTMLInputElement>('rd-eredita-target'),
     };
+
+    // Count-up sul risultato principale. Due updaters separati per le due
+    // modalita': "capitale-necessario" e "rendita-sostenibile". Cosi' lo
+    // stato interno (valore precedente) e' indipendente fra le due.
+    const outPrimaryEl = $('rd-out-primary');
+    const updateCapitale = createSmartCountUp(outPrimaryEl, (n) => fmtEuro.format(n));
+    const updateRendita = createSmartCountUp(outPrimaryEl, (n) => fmtEuro.format(n));
 
     // -------------------- VISIBILITY --------------------
     function getModalita(): ModalitaRendita {
@@ -1981,11 +1989,11 @@ const metadata = {
 
       if (modalita === 'capitale-necessario') {
         primaryLabel.textContent = 'Capitale necessario oggi';
-        primaryVal.textContent = fmtEuro.format(result.capitaleNecessario ?? 0);
+        updateCapitale(result.capitaleNecessario ?? 0);
         secondary.textContent = '';
       } else {
         primaryLabel.textContent = 'Rendita annua sostenibile';
-        primaryVal.textContent = fmtEuro.format(result.renditaSostenibileAnnua ?? 0);
+        updateRendita(result.renditaSostenibileAnnua ?? 0);
         secondary.textContent = `Corrispondono a ${fmtEuro.format(result.renditaSostenibileMensile ?? 0)} al mese`;
       }
 

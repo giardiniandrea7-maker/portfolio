@@ -1395,6 +1395,7 @@ const metadata = {
       Filler,
     } from 'chart.js';
     import { CountUp } from 'countup.js';
+    import { createSmartCountUp } from '~/scripts/animations';
 
     Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Filler);
 
@@ -1435,6 +1436,15 @@ const metadata = {
       anniSlider: $<HTMLInputElement>('svc-anni-slider'),
       tasso: $<HTMLInputElement>('svc-tasso'),
     };
+
+    // Count-up sul risultato principale del form classico in cima
+    // (capitale finale composto). Le animazioni CountUp.js degli "atti"
+    // narrativi (Marco/Luca, time-machine) restano intoccate: usano altri
+    // elementi DOM e la libreria CountUp.js gia' importata.
+    const updateComposto = createSmartCountUp(
+      $('svc-out-composto'),
+      (n) => fmtEuro.format(n)
+    );
 
     // -------------------- COLORS --------------------
     const COLORS = {
@@ -2124,7 +2134,7 @@ const metadata = {
 
       // Output principale
       $('svc-out-semplice').textContent = fmtEuro.format(out.finaleSemplice);
-      $('svc-out-composto').textContent = fmtEuro.format(out.finaleComposto);
+      updateComposto(out.finaleComposto);
       $('svc-out-magia').textContent = `+${fmtEuro.format(Math.max(0, out.magiaTotale))}`;
       $('svc-out-versato').textContent = fmtEuro.format(out.versamentoTotale);
       $('svc-out-incrocio').textContent =

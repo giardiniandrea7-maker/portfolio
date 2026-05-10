@@ -1026,6 +1026,7 @@ const metadata = {
       DatoAnnuale,
       RigaAmmortamento,
     } from '~/lib/calcolatori/mutuo';
+    import { createSmartCountUp } from '~/scripts/animations';
     import {
       Chart,
       BarController,
@@ -1090,6 +1091,14 @@ const metadata = {
       polizzaVita: $<HTMLInputElement>('mu-polizza-vita'),
       incasso: $<HTMLInputElement>('mu-incasso'),
     };
+
+    // Count-up animato per il risultato principale.
+    // Updaters separati per modalita': "rata" (rata periodica con 2 decimali)
+    // e "sostenibilita" (importo finanziabile, intero). Cosi' lo state interno
+    // di ciascuno non si confonde quando l'utente passa da una modalita' all'altra.
+    const outPrimaryEl = $('mu-out-primary');
+    const updateRata = createSmartCountUp(outPrimaryEl, (n) => fmtEuro.format(n));
+    const updateImporto = createSmartCountUp(outPrimaryEl, (n) => fmtEuroNoCents.format(n));
 
     // -------------------- VISIBILITÀ --------------------
     function getModalita(): ModalitaMutuo {
@@ -1468,11 +1477,11 @@ const metadata = {
 
       if (modalita === 'rata') {
         primaryLabel.textContent = rataLabel;
-        primaryVal.textContent = fmtEuro.format(result.rataPeriodica);
+        updateRata(result.rataPeriodica);
         rowImmobile.hidden = true;
       } else {
         primaryLabel.textContent = 'Importo finanziabile';
-        primaryVal.textContent = fmtEuroNoCents.format(result.importoMutuo);
+        updateImporto(result.importoMutuo);
         rowImmobile.hidden = false;
         outImmobile.textContent =
           result.valoreImmobileCalcolato !== undefined

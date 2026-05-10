@@ -1502,6 +1502,7 @@ const metadata = {
       LinearScale,
       Tooltip,
     } from 'chart.js';
+    import { createSmartCountUp } from '~/scripts/animations';
 
     Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -1535,6 +1536,9 @@ const metadata = {
     const $$ = <T extends HTMLElement = HTMLElement>(sel: string) =>
       document.querySelectorAll<T>(sel);
     const root = document.querySelector<HTMLElement>('.calc-isee')!;
+
+    // Count-up sul risultato principale ISEE.
+    const updateIsee = createSmartCountUp($('is-out-isee'), (n) => fmtEuro.format(n));
 
     // -------------------- READ INPUT --------------------
     function getTipologia(): TipologiaIsee {
@@ -1930,7 +1934,7 @@ const metadata = {
       blocking.textContent = '';
 
       // Output principale
-      $('is-out-isee').textContent = fmtEuro.format(out.iseeStimato);
+      updateIsee(out.iseeStimato);
       const fascia = fasciaIsee(out.iseeStimato);
       const badge = $('is-fascia-badge');
       badge.textContent = fascia.label;

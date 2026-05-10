@@ -778,6 +778,7 @@ const metadata = {
   <script>
     import { calcolaInteresseComposto } from '~/lib/calcolatori/interesse-composto';
     import type { Frequenza } from '~/lib/calcolatori/interesse-composto';
+    import { createSmartCountUp } from '~/scripts/animations';
     import {
       Chart,
       BarController,
@@ -832,6 +833,10 @@ const metadata = {
       interessi: $('ic-out-interessi'),
       pct: $('ic-out-pct'),
     };
+
+    // Count-up animato per il risultato principale (capitale finale).
+    // Primo render istantaneo, poi anima il delta ad ogni nuovo calcolo.
+    const updateFinale = createSmartCountUp(out.finale, (n) => fmtEuro.format(n));
 
     // -------------------- VALIDATION --------------------
     type Range = { min: number; max: number; label: string; warnIfZero?: boolean };
@@ -1107,7 +1112,7 @@ const metadata = {
         anni,
         tasso,
       });
-      out.finale.textContent = fmtEuro.format(result.capitaleFinale);
+      updateFinale(result.capitaleFinale);
       out.investito.textContent = fmtEuro.format(result.capitaleInvestito);
       out.interessi.textContent = fmtEuro.format(result.interessiMaturati);
 
