@@ -16,7 +16,10 @@ export type Categoria =
   | 'casa-mutuo'
   | 'pensione'
   | 'lavoro-pensione'
-  | 'capire-economia';
+  | 'capire-economia'
+  | 'fiscalita'
+  | 'protezione-assicurazioni'
+  | 'liquidita-conti';
 
 export type Livello = 'base' | 'intermedio' | 'avanzato';
 
@@ -60,6 +63,9 @@ export const CATEGORIE: Record<Categoria, string> = {
   'pensione': 'Pensione',
   'lavoro-pensione': 'Lavoro e pensione',
   'capire-economia': "Capire l'economia",
+  'fiscalita': 'Fiscalità',
+  'protezione-assicurazioni': 'Protezione e assicurazioni',
+  'liquidita-conti': 'Liquidità e conti',
 };
 
 /**
@@ -384,6 +390,316 @@ export const voci: VoceGlossario[] = [
     },
     metaDescription:
       `BTP: cosa sono, come funzionano, vantaggi fiscali, rischi e ruolo nel portafoglio. Con calcolatore di rendimento.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 11. AFFITTO VS ACQUISTO
+  // -------------------------------------------------------------------------
+  {
+    slug: 'affitto-vs-acquisto',
+    titolo: 'Affitto vs acquisto',
+    categoria: 'casa-mutuo',
+    livello: 'base',
+    fraseEssenziale:
+      `La scelta tra affittare e comprare casa non ha una risposta universale: dipende dai tuoi anni di permanenza prevista nella casa, dal mercato immobiliare locale e dal costo opportunità del capitale che useresti per la caparra.`,
+    esempioConcreto:
+      `Marco sta valutando se comprare un appartamento da 250.000 euro a Milano o continuare ad affittarne uno equivalente a 1.200 euro al mese. Comprando dovrebbe versare 50.000 euro di caparra, 15.000 euro di costi di acquisto (notaio, imposte, agenzia) e pagare circa 1.100 euro al mese di mutuo per 25 anni. Affittando, mantiene i 50.000 euro investiti in un portafoglio diversificato. Dopo 7 anni le due strade si equivalgono economicamente: prima di quel periodo l'affitto è più conveniente, dopo lo è l'acquisto. Se Marco non è sicuro di restare a Milano per più di 7 anni, l'affitto è la scelta razionale.`,
+    perchéTiRiguarda:
+      `La cultura italiana spinge verso l'acquisto come scelta 'saggia per definizione', ma matematicamente non è quasi mai così automatico. Comprare casa è una decisione finanziaria irreversibile che blocca il tuo capitale per decenni, riduce la tua mobilità lavorativa e ti espone al rischio del mercato immobiliare locale. Affittare non è 'buttare soldi': è pagare per la flessibilità e per un servizio (l'abitazione) senza assumere rischi. La scelta giusta dipende da chi sei, dove sei nella vita e cosa vuoi fare nei prossimi 10-15 anni, non da quello che hanno fatto i tuoi genitori.`,
+    definizioneTecnica:
+      `Il calcolo del break-even (punto di pareggio) tra affitto e acquisto considera: costo totale dell'acquisto (mutuo + interessi + manutenzione + IMU + assicurazione + costi di transazione), costo opportunità del capitale immobilizzato (rendimento atteso del portafoglio alternativo, tipicamente 4-6% annuo netto), apprezzamento o deprezzamento atteso dell'immobile, costo dell'affitto comparabile e sua inflazione attesa. Il calcolatore 'Affitto vs Acquisto' del New York Times è il più rigoroso disponibile pubblicamente.`,
+    erroriComuni: [
+      `Considerare l'affitto come 'soldi buttati' senza calcolare il costo opportunità della caparra`,
+      `Ignorare i costi di acquisto (notaio, imposte, agenzia: circa 8-10% del valore)`,
+      `Sottovalutare le manutenzioni straordinarie (mediamente 1% del valore immobile l'anno)`,
+      `Considerare l'apprezzamento immobiliare degli ultimi 20 anni come garantito anche per i prossimi 20`,
+      `Non considerare la perdita di mobilità lavorativa come un costo reale`,
+    ],
+    correlate: ['estinzione-anticipata-mutuo', 'taeg', 'inflazione', 'fondo-emergenza'],
+    calcolatoreCorrelato: {
+      titolo: 'Calcolatore Rata Mutuo',
+      slug: '/calcolatori/mutuo',
+    },
+    metaDescription:
+      `Affitto o acquisto? Il calcolo onesto: anni di permanenza, costo opportunità della caparra, costi nascosti. Senza luoghi comuni.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 12. ASSET ALLOCATION
+  // -------------------------------------------------------------------------
+  {
+    slug: 'asset-allocation',
+    titolo: 'Asset allocation',
+    categoria: 'investire',
+    livello: 'intermedio',
+    fraseEssenziale:
+      `L'asset allocation è la decisione su come dividere il tuo patrimonio tra le grandi categorie di investimento (azioni, obbligazioni, liquidità, immobili). È la scelta più importante che fai come investitore, più importante di quale specifico fondo o azione comprare.`,
+    esempioConcreto:
+      `Laura ha 100.000 euro da investire e ha 35 anni. Una asset allocation possibile per lei è: 70% in azioni globali (70.000 euro), 20% in obbligazioni governative (20.000 euro), 10% in liquidità per imprevisti (10.000 euro). La stessa Laura a 60 anni, con 5 anni alla pensione, avrà probabilmente un'allocazione molto diversa: 40% azioni, 50% obbligazioni, 10% liquidità. Stessa persona, stessa cifra: ma asset allocation diverse perché l'orizzonte temporale e la tolleranza al rischio sono cambiati.`,
+    perchéTiRiguarda:
+      `Studi accademici dimostrano che l'asset allocation determina circa il 90% della variabilità dei rendimenti di un portafoglio di lungo periodo. Tradotto: cambia molto di più scegliere '70% azioni, 30% obbligazioni' rispetto a '60% azioni, 40% obbligazioni' che non cambiare l'ETF specifico al suo interno. Eppure la maggior parte degli investitori italiani spende ore a scegliere il singolo fondo e zero minuti a decidere coscientemente la propria asset allocation. Se non hai mai pensato esplicitamente a 'quanto del mio denaro è in azioni e quanto in obbligazioni', probabilmente l'allocazione che hai oggi è figlia del caso, non di una decisione strategica.`,
+    definizioneTecnica:
+      `L'asset allocation strategica definisce le percentuali di lungo periodo tra le classi di asset principali (equity, fixed income, real estate, cash, alternativi) basandosi su tre fattori: orizzonte temporale dell'investitore, capacità oggettiva di sopportare perdite (riserve liquide, reddito stabile), tolleranza emotiva alla volatilità. L'asset allocation tattica, opzionale, è l'introduzione di deviazioni temporanee dalla strategica per cogliere opportunità di mercato. La modello classica di allocazione decrescente delle azioni con l'età ('100 meno la tua età = % azioni') è semplificata e sostituita oggi da approcci più sofisticati basati sul ciclo di vita.`,
+    erroriComuni: [
+      `Non avere mai deciso esplicitamente la propria asset allocation`,
+      `Cambiare allocazione frequentemente in base alle notizie di mercato`,
+      `Confondere diversificazione tra strumenti (10 ETF azionari diversi) con vera asset allocation (azioni vs obbligazioni vs liquidità)`,
+      `Tenere troppa liquidità sul conto 'per sicurezza' senza considerare l'erosione dell'inflazione`,
+      `Mantenere la stessa allocazione per 20 anni senza adeguarla all'invecchiamento e ai cambiamenti di vita`,
+    ],
+    correlate: ['diversificazione', 'etf', 'volatilita', 'gestione-attiva-vs-passiva'],
+    metaDescription:
+      `Asset allocation: la decisione più importante che fai come investitore. Cos'è, perché conta più della scelta del singolo fondo.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 13. CAPITAL GAIN
+  // -------------------------------------------------------------------------
+  {
+    slug: 'capital-gain',
+    titolo: 'Capital gain',
+    categoria: 'investire',
+    livello: 'intermedio',
+    fraseEssenziale:
+      `Il capital gain è il guadagno realizzato quando vendi uno strumento finanziario a un prezzo superiore a quello di acquisto. In Italia è tassato al 26% per la maggior parte degli strumenti, al 12,5% per titoli di Stato italiani e di paesi white list.`,
+    esempioConcreto:
+      `Marco ha comprato 100 azioni di una società a 50 euro l'una (5.000 euro totali). Dopo due anni le vende a 70 euro l'una (7.000 euro totali). Il suo capital gain è 2.000 euro. Su questi 2.000 euro paga il 26% di imposta sostitutiva, ovvero 520 euro. Il suo guadagno netto è quindi 1.480 euro. Se invece avesse comprato BTP italiani con lo stesso schema, sui 2.000 euro di guadagno avrebbe pagato il 12,5%, cioè 250 euro, con un guadagno netto di 1.750 euro. La fiscalità non è un dettaglio: in 30 anni di investimento può cambiare il risultato finale di decine di migliaia di euro.`,
+    perchéTiRiguarda:
+      `La fiscalità è la 'tassa nascosta' più sottovalutata negli investimenti. Molti investitori italiani guardano solo al rendimento lordo dichiarato dai prodotti finanziari, dimenticando che il rendimento netto può essere significativamente inferiore. Capire le differenze tra le aliquote fiscali (26% standard, 12,5% titoli di Stato, 26% sui dividendi) ti permette di costruire un portafoglio fiscalmente efficiente, dove la stessa esposizione al mercato genera più rendimento netto a parità di rischio. È uno degli ambiti dove la consulenza professionale ripaga il proprio costo decine di volte nel tempo.`,
+    definizioneTecnica:
+      `Il capital gain (plusvalenza) si calcola come differenza tra prezzo di vendita e prezzo medio ponderato di acquisto, al netto delle commissioni. In Italia rientra nella categoria dei 'redditi diversi' ed è soggetto a imposta sostitutiva. Le aliquote sono: 26% sulla maggior parte degli strumenti finanziari (azioni, ETF azionari, obbligazioni corporate, dividendi), 12,5% sui titoli di Stato italiani, sovranazionali (BEI, BIRS) e di paesi white list, 26% sui guadagni cripto. Le minusvalenze (perdite realizzate) possono essere compensate con plusvalenze entro 4 anni successivi. I regimi possibili sono: amministrato (la banca trattiene), gestito (il gestore trattiene), dichiarativo (te ne occupi tu in dichiarazione).`,
+    erroriComuni: [
+      `Vendere e ricomprare lo stesso strumento per 'monetizzare' un guadagno, pagando inutilmente le tasse`,
+      `Non usare le minusvalenze pregresse prima della loro scadenza quadriennale`,
+      `Confondere il rendimento lordo con quello netto quando si confrontano strumenti`,
+      `Ignorare l'esistenza del 12,5% su titoli di Stato, che li rende più convenienti di quanto sembri`,
+      `Tenere ETF a distribuzione dei dividendi quando uno ad accumulazione sarebbe fiscalmente più efficiente`,
+    ],
+    correlate: ['btp', 'etf', 'fondo-comune-investimento'],
+    metaDescription:
+      `Capital gain: cos'è, le aliquote italiane (26% e 12,5%), come compensare le minusvalenze e ottimizzare la fiscalità degli investimenti.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 14. CONTO DEPOSITO
+  // -------------------------------------------------------------------------
+  {
+    slug: 'conto-deposito',
+    titolo: 'Conto deposito',
+    categoria: 'liquidita-conti',
+    livello: 'base',
+    fraseEssenziale:
+      `Il conto deposito è uno strumento di risparmio che offre un tasso di interesse garantito, in cambio del vincolo di lasciare il denaro per un periodo definito (tipicamente 6, 12, 24 o 36 mesi). È protetto dal Fondo Interbancario di Tutela dei Depositi fino a 100.000 euro per intestatario.`,
+    esempioConcreto:
+      `Anna ha 30.000 euro che le serviranno tra esattamente 24 mesi per la caparra di una casa. Lasciarli sul conto corrente significa erosione certa per inflazione. Investirli in azioni ha rendimento atteso superiore ma con rischio di perdita nel breve periodo. Un conto deposito vincolato a 24 mesi al 3% annuo lordo le garantisce alla scadenza esattamente 31.346 euro lordi, 31.000 euro netti. È rendimento certo, importo certo, scadenza certa. Per un obiettivo a tempo definito e somma definita, è lo strumento giusto.`,
+    perchéTiRiguarda:
+      `Negli ultimi 15 anni il conto deposito è stato spesso ignorato perché i tassi erano vicini allo zero. Oggi (2026) molte banche offrono 2,5-4% annuo lordo su vincoli di 12-24 mesi, una situazione che non si vedeva dal 2008. Per somme che ti serviranno con certezza in un orizzonte definito (caparra casa, spese mediche programmate, regalo importante), il conto deposito è probabilmente lo strumento più adatto. Non sostituisce gli investimenti di lungo periodo, ma è uno strumento complementare che molti italiani trascurano per disinformazione o pigrizia.`,
+    definizioneTecnica:
+      `Il conto deposito è un contratto bancario regolato dall'art. 1834 del Codice Civile. Le caratteristiche principali sono: tasso di interesse fisso garantito per la durata del vincolo, garanzia FITD fino a 100.000 euro per depositante per banca (in caso di fallimento dell'istituto), imposta di bollo dello 0,2% annuo sulla giacenza media, ritenuta del 26% sugli interessi maturati. I conti deposito si distinguono in svincolabili (puoi ritirare prima ma perdi gli interessi maturati) e non svincolabili (denaro bloccato fino a scadenza). Il tasso offerto è generalmente più alto sui non svincolabili e su durate più lunghe.`,
+    erroriComuni: [
+      `Mettere sul conto deposito somme che potrebbero servire per emergenze (devono restare liquide)`,
+      `Vincolare denaro che servirà prima della scadenza (perdita degli interessi)`,
+      `Confrontare solo i tassi lordi senza calcolare il netto dopo bollo e ritenuta`,
+      `Aprire conti deposito presso banche con rating creditizio basso senza considerare il rischio (la garanzia FITD è solida ma ha tempi di rimborso non immediati)`,
+      `Ignorare il conto deposito per principio 'le banche italiane non rendono nulla' senza verificare le offerte attuali`,
+    ],
+    correlate: ['fondo-emergenza', 'inflazione', 'btp'],
+    metaDescription:
+      `Conto deposito: come funziona, garanzia FITD, calcolo del netto, quando ha senso e quando no. Esempi pratici aggiornati al 2026.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 15. DEDUZIONE FISCALE
+  // -------------------------------------------------------------------------
+  {
+    slug: 'deduzione-fiscale',
+    titolo: 'Deduzione fiscale',
+    categoria: 'fiscalita',
+    livello: 'base',
+    fraseEssenziale:
+      `La deduzione fiscale riduce il tuo reddito imponibile, cioè la base su cui si calcolano le tasse. Diversa dalla detrazione, che invece riduce direttamente l'imposta da pagare. La deduzione vale di più per chi ha un reddito alto, perché si applica all'aliquota marginale.`,
+    esempioConcreto:
+      `Roberto ha un reddito di 50.000 euro e versa 4.000 euro all'anno in un fondo pensione, somma deducibile. Il suo reddito imponibile diventa 46.000 euro. Trovandosi nello scaglione del 38% (aliquota marginale tra 28.000 e 50.000 euro), risparmia 4.000 × 38% = 1.520 euro di IRPEF. In pratica, il suo versamento netto al fondo pensione è 4.000 - 1.520 = 2.480 euro. La stessa deduzione, fatta da una persona con reddito di 20.000 euro (aliquota 23%), gli farebbe risparmiare solo 4.000 × 23% = 920 euro: la deduzione vale di più chi ha un reddito alto.`,
+    perchéTiRiguarda:
+      `Le deduzioni fiscali sono uno degli strumenti più potenti per ottimizzare la propria posizione fiscale, ma molti italiani non le sfruttano per disinformazione. Le principali deduzioni includono: contributi alla previdenza complementare (fino a 5.300 euro annui dal 2026), contributi previdenziali e assistenziali obbligatori, assegni periodici al coniuge separato, donazioni a ONG e ONLUS riconosciute. Capire la differenza tra deduzioni e detrazioni e sfruttarle correttamente può ridurre la tua imposta annuale di centinaia o migliaia di euro, soldi che restano nel tuo patrimonio.`,
+    definizioneTecnica:
+      `Le deduzioni fiscali (art. 10 del TUIR) sono importi sottratti dal reddito complessivo prima del calcolo dell'imposta lorda. Riducono quindi la base imponibile su cui si applicano le aliquote IRPEF (23%, 35%, 43% nel 2026). Il vantaggio fiscale reale di una deduzione è quindi pari all'importo dedotto moltiplicato per l'aliquota marginale del contribuente. Le detrazioni invece sono importi sottratti dall'imposta lorda dopo il calcolo, e hanno un valore fiscale pari al 19% (la maggior parte) o al 50%/65%/110% (interventi edilizi specifici) dell'importo speso. La distinzione è fondamentale perché con lo stesso importo speso, una deduzione vale più di una detrazione per redditi medio-alti, viceversa per redditi bassi.`,
+    erroriComuni: [
+      `Confondere deduzione e detrazione, sottostimando il vantaggio della prima per redditi alti`,
+      `Non versare alla previdenza complementare per 'non avere tempo di pensarci', perdendo migliaia di euro all'anno`,
+      `Non conservare i giustificativi delle spese deducibili (rischio in caso di accertamento)`,
+      `Versare al fondo pensione importi superiori al tetto di deducibilità annua (5.300 euro nel 2026): l'eccedenza non gode del beneficio fiscale`,
+      `Aspettare il commercialista invece di pianificare le deduzioni nell'anno fiscale (a dicembre è troppo tardi)`,
+    ],
+    correlate: ['detrazione-fiscale', 'previdenza-complementare', 'tfr'],
+    calcolatoreCorrelato: {
+      titolo: 'Calcolatore Pensione Integrativa',
+      slug: '/calcolatori/pensione-integrativa',
+    },
+    metaDescription:
+      `Deduzione fiscale: come riduce il reddito imponibile e perché vale di più per i redditi alti. Esempi numerici concreti.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 16. DETRAZIONE FISCALE
+  // -------------------------------------------------------------------------
+  {
+    slug: 'detrazione-fiscale',
+    titolo: 'Detrazione fiscale',
+    categoria: 'fiscalita',
+    livello: 'base',
+    fraseEssenziale:
+      `La detrazione fiscale riduce direttamente l'imposta da pagare, dopo che è stata calcolata sul reddito. Diversamente dalla deduzione, ha lo stesso valore per tutti (tipicamente 19% della spesa sostenuta), indipendentemente dall'aliquota marginale.`,
+    esempioConcreto:
+      `Sara ha sostenuto 1.000 euro di spese mediche detraibili al 19%. La sua imposta lorda IRPEF, calcolata sul suo reddito, era 8.500 euro. Grazie alla detrazione, l'imposta effettiva da pagare diventa 8.500 - (1.000 × 19%) = 8.500 - 190 = 8.310 euro. Sara ha quindi recuperato 190 euro grazie alla detrazione. La stessa detrazione vale 190 euro sia per Sara (reddito 30.000 euro) sia per Marco (reddito 80.000 euro): a differenza della deduzione, la detrazione ha lo stesso impatto economico per tutti.`,
+    perchéTiRiguarda:
+      `Le detrazioni fiscali sono il meccanismo più diffuso di agevolazione per i redditi italiani: spese mediche, mutuo prima casa, ristrutturazioni edilizie, scuola dei figli, attività sportive dei minori, spese funebri, assicurazione vita. Molti italiani perdono migliaia di euro l'anno semplicemente perché non conservano gli scontrini medici, non chiedono al proprio gestore di mutuo l'attestazione degli interessi pagati, o non sanno che certe spese sono detraibili. Una buona pianificazione fiscale annuale include la mappatura sistematica di tutte le detrazioni a cui hai diritto.`,
+    definizioneTecnica:
+      `Le detrazioni fiscali (artt. 13-16 del TUIR) sono importi che riducono l'imposta lorda calcolata sul reddito imponibile. Le principali categorie sono: detrazioni per familiari a carico, detrazioni per tipologia di reddito (lavoro dipendente, pensione, autonomo), detrazioni del 19% per oneri detraibili (spese mediche, interessi mutuo prima casa, assicurazione vita, scuola, attività sportive minori), detrazioni del 19-90% per interventi edilizi (ecobonus, sismabonus, ristrutturazione). Le detrazioni sono soggette a tracciabilità del pagamento dal 2020: pagamenti in contanti per importi non strettamente di prima necessità non sono detraibili. L'eccedenza di detrazioni rispetto all'imposta lorda non è rimborsabile per la maggior parte delle categorie (incapienza fiscale).`,
+    erroriComuni: [
+      `Non conservare gli scontrini medici e farmaceutici durante l'anno`,
+      `Non chiedere alla banca l'attestazione degli interessi mutuo entro la dichiarazione dei redditi`,
+      `Pagare in contanti spese che richiederebbero tracciabilità per essere detraibili`,
+      `Confondere le detrazioni con le deduzioni e sottostimare l'impatto delle scelte fiscali`,
+      `Non sfruttare le detrazioni edilizie quando si fanno comunque dei lavori (cessione del credito, sconto in fattura)`,
+    ],
+    correlate: ['deduzione-fiscale', 'estinzione-anticipata-mutuo'],
+    metaDescription:
+      `Detrazione fiscale: come riduce direttamente l'imposta, le detrazioni più diffuse e gli errori comuni da evitare ogni anno.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 17. ESTINZIONE ANTICIPATA MUTUO
+  // -------------------------------------------------------------------------
+  {
+    slug: 'estinzione-anticipata-mutuo',
+    titolo: 'Estinzione anticipata mutuo',
+    categoria: 'casa-mutuo',
+    livello: 'intermedio',
+    fraseEssenziale:
+      `L'estinzione anticipata del mutuo è la facoltà del mutuatario di restituire alla banca, in tutto o in parte, il debito residuo prima della scadenza naturale del piano di ammortamento. Per i mutui prima casa stipulati dopo il 2007, l'estinzione totale o parziale è gratuita per legge.`,
+    esempioConcreto:
+      `Giovanni ha un mutuo da 200.000 euro a 25 anni, di cui ha pagato 8 anni. Il suo debito residuo è di circa 145.000 euro. Riceve un'eredità di 80.000 euro e si chiede: estinguere parzialmente il mutuo o investire? Se il tasso del mutuo è 2,5% fisso e il rendimento atteso del portafoglio è 4-5%, matematicamente conviene investire. Se il tasso del mutuo è 5% variabile e il rendimento atteso è 4%, conviene quasi certamente estinguere. La risposta non è universale: dipende dal tasso del mutuo, dall'orizzonte temporale residuo, dalla tua tolleranza al rischio e dal valore psicologico che dai al 'non avere debiti'.`,
+    perchéTiRiguarda:
+      `L'estinzione anticipata è una delle decisioni finanziarie più importanti che molte famiglie italiane affrontano nella vita, eppure viene quasi sempre presa 'di pancia' anziché con un calcolo razionale. La risposta giusta dipende da una combinazione di matematica (confronto tra tasso del mutuo e rendimento atteso degli investimenti alternativi), psicologia (quanto pesa per te il debito residuo) e situazione personale (hai un fondo emergenza? Hai liquidità per imprevisti?). Una consulenza professionale ti aiuta a fare il calcolo onesto e a decidere con tutti gli elementi sul tavolo.`,
+    definizioneTecnica:
+      `L'estinzione anticipata è disciplinata dal D.L. 7/2007 (decreto Bersani) per i mutui prima casa contratti da persone fisiche, che ne stabilisce la gratuità totale (nessuna penale ammessa). Per altre tipologie di mutuo (seconda casa, mutui aziendali) la penale può variare ma è soggetta a tetti normativi. L'estinzione può essere totale (chiusura completa del debito residuo) o parziale (riduzione di una porzione del debito, con possibilità di scegliere se ridurre la rata o accorciare la durata). Per richiedere l'estinzione serve presentare richiesta scritta alla banca, che ha 30 giorni per fornire il conteggio esatto. Il pagamento avviene tramite bonifico bancario tracciato.`,
+    erroriComuni: [
+      `Estinguere il mutuo senza prima costituire un fondo emergenza adeguato`,
+      `Estinguere mutui a tasso molto basso (sotto il 2%) quando si potrebbe ottenere di più investendo`,
+      `Non valutare l'opzione 'estinzione parziale con riduzione durata' che ha effetti molto diversi da 'riduzione rata'`,
+      `Considerare l'estinzione solo come scelta finanziaria, ignorando l'impatto psicologico positivo del 'non avere debiti'`,
+      `Non sfruttare la surroga (cambio banca a costo zero) come alternativa all'estinzione quando il problema vero è il tasso troppo alto`,
+    ],
+    correlate: ['affitto-vs-acquisto', 'taeg', 'asset-allocation', 'fondo-emergenza'],
+    calcolatoreCorrelato: {
+      titolo: 'Calcolatore Rata Mutuo',
+      slug: '/calcolatori/mutuo',
+    },
+    metaDescription:
+      `Estinzione anticipata mutuo: conviene? Quando, come, gratuita per legge. Confronto matematico tra estinzione e investimento alternativo.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 18. FONDO COMUNE DI INVESTIMENTO
+  // -------------------------------------------------------------------------
+  {
+    slug: 'fondo-comune-investimento',
+    titolo: 'Fondo comune di investimento',
+    categoria: 'investire',
+    livello: 'base',
+    fraseEssenziale:
+      `Il fondo comune di investimento è uno strumento finanziario che raccoglie il denaro di molti risparmiatori per investirlo collettivamente in un portafoglio di azioni, obbligazioni o altri strumenti, gestito da una società di gestione professionale. Permette anche con piccole somme di accedere a una diversificazione che da soli sarebbe impossibile.`,
+    esempioConcreto:
+      `Laura vuole investire 5.000 euro in azioni globali ma non sa quali società comprare. Acquista quote di un fondo comune azionario globale che investe in 1.500 società diverse in tutto il mondo. Con i suoi 5.000 euro Laura partecipa proporzionalmente al patrimonio del fondo, beneficia della diversificazione massima e dell'esperienza dei gestori. In cambio paga una commissione annua (TER) che varia tipicamente dall'1,5% al 2,5% per i fondi attivi italiani. Su 5.000 euro investiti, una commissione del 2% significa 100 euro all'anno sottratti al rendimento.`,
+    perchéTiRiguarda:
+      `I fondi comuni sono lo strumento di investimento più diffuso in Italia: oltre 1.500 miliardi di euro sono investiti nei fondi italiani e oltre 600 miliardi in fondi esteri commercializzati nel paese. Ma sono anche uno degli strumenti più costosi sul mercato, e spesso sotto-performano rispetto a strumenti più semplici come gli ETF a parità di esposizione. Capire come funziona un fondo, quali sono i suoi costi reali e quando ha davvero senso preferirlo a un ETF è fondamentale per non finire intrappolati in prodotti che erodono silenziosamente il rendimento per decenni. Molti portafogli italiani contengono fondi attivi costosi quando ETF passivi equivalenti farebbero il lavoro a un quinto del costo.`,
+    definizioneTecnica:
+      `Un fondo comune di investimento è regolato in Italia dal Testo Unico della Finanza (TUF). È costituito da una società di gestione del risparmio (SGR) che raccoglie il patrimonio dei sottoscrittori e lo investe secondo le politiche dichiarate nel prospetto informativo. Si distinguono in: fondi aperti (sottoscrizione e rimborso possibili in qualsiasi momento, valutazione giornaliera del NAV), fondi chiusi (sottoscrizione solo all'inizio, rimborso solo a scadenza), fondi armonizzati UCITS (rispettano normativa europea, commercializzabili in tutta Europa). Per categoria di investimento si distinguono in azionari, obbligazionari, bilanciati, monetari, flessibili. La commissione totale annua è espressa nel TER (Total Expense Ratio).`,
+    erroriComuni: [
+      `Non leggere il TER prima di sottoscrivere e scoprire dopo anni di pagare commissioni elevate`,
+      `Confondere il rendimento dichiarato (lordo, di periodi favorevoli) con il rendimento netto effettivo`,
+      `Sottoscrivere fondi proposti dalla banca senza confrontarli con alternative ETF`,
+      `Spostare denaro da un fondo all'altro frequentemente, generando costi di entrata/uscita inutili`,
+      `Non controllare periodicamente la performance del fondo rispetto al benchmark di riferimento`,
+    ],
+    correlate: ['etf', 'gestione-attiva-vs-passiva', 'diversificazione', 'capital-gain'],
+    calcolatoreCorrelato: {
+      titolo: 'Calcolatore Interesse Composto',
+      slug: '/calcolatori/interesse-composto',
+    },
+    metaDescription:
+      `Fondi comuni di investimento: cosa sono, come funzionano, costi nascosti (TER) e perché sono spesso meno efficienti degli ETF.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 19. FONDO EMERGENZA
+  // -------------------------------------------------------------------------
+  {
+    slug: 'fondo-emergenza',
+    titolo: 'Fondo emergenza',
+    categoria: 'liquidita-conti',
+    livello: 'base',
+    fraseEssenziale:
+      `Il fondo emergenza è una somma di denaro liquida e immediatamente disponibile, da usare solo per imprevisti significativi: perdita del lavoro, spese mediche urgenti, riparazioni domestiche o automobilistiche non rinviabili. La regola più diffusa è coprire 3-6 mesi di spese essenziali.`,
+    esempioConcreto:
+      `Marco e Giulia spendono mediamente 3.000 euro al mese per le spese essenziali (mutuo, bollette, spesa, scuola dei figli). Il loro fondo emergenza ideale è quindi tra 9.000 e 18.000 euro. Lo tengono su un conto deposito svincolabile, separato dal conto corrente quotidiano per non spenderlo per impulsi. Quando l'azienda di Marco annuncia una ristrutturazione, sanno di avere 6 mesi di tranquillità per cercare un nuovo lavoro senza dover svendere investimenti o accendere prestiti. Quel fondo non rende molto (forse 2-3% all'anno), ma è la base che permette al resto del patrimonio di poter rimanere investito anche in momenti difficili.`,
+    perchéTiRiguarda:
+      `Senza fondo emergenza, ogni imprevisto si trasforma in una piccola crisi finanziaria che ti costringe a prendere decisioni sub-ottimali: vendere investimenti nel momento sbagliato (quando i mercati sono in ribasso), accendere un prestito personale a tasso elevato (8-12%), chiedere aiuto a familiari, andare in scoperto sul conto corrente. Il fondo emergenza non è un investimento: è la fondazione che permette tutto il resto. Costruirlo è il primo passo concreto di qualsiasi pianificazione finanziaria seria, prima ancora di parlare di investimenti, fondi pensione o altri strumenti.`,
+    definizioneTecnica:
+      `Il fondo emergenza è una riserva di liquidità accessibile, dimensionata in base alle spese essenziali mensili dell'individuo o della famiglia. La dimensione raccomandata varia in funzione di stabilità del reddito (lavoratore dipendente vs autonomo), composizione del nucleo familiare (single vs famiglia con figli), patrimonio già costituito, presenza di altre forme di copertura (TFR maturato disponibile, copertura disoccupazione). Le forme tecniche tipiche sono: conto corrente (massima liquidità, rendimento nullo), conto deposito svincolabile (rendimento moderato, liquidità in 24-48 ore), fondi monetari (rendimento simile al conto deposito, liquidità immediata). Va tenuto rigorosamente separato dai capitali destinati agli investimenti di lungo periodo.`,
+    erroriComuni: [
+      `Iniziare a investire senza prima costituire un fondo emergenza adeguato`,
+      `Tenere il fondo emergenza sul conto corrente quotidiano dove rischi di spenderlo per spese non emergenziali`,
+      `Sovradimensionare il fondo (12+ mesi di spese) rinunciando a rendimenti significativi nel lungo periodo`,
+      `Considerare la carta di credito come alternativa al fondo emergenza (i tassi sono proibitivi)`,
+      `Non rifornire il fondo dopo averlo utilizzato, lasciandolo inadeguato per la prossima emergenza`,
+    ],
+    correlate: ['conto-deposito', 'inflazione', 'asset-allocation'],
+    metaDescription:
+      `Fondo emergenza: quanto serve, dove tenerlo, perché è la fondazione di ogni piano finanziario. Esempi pratici e formule semplici.`,
+    pubblicata: true,
+  },
+
+  // -------------------------------------------------------------------------
+  // 20. GESTIONE ATTIVA VS PASSIVA
+  // -------------------------------------------------------------------------
+  {
+    slug: 'gestione-attiva-vs-passiva',
+    titolo: 'Gestione attiva vs passiva',
+    categoria: 'investire',
+    livello: 'intermedio',
+    fraseEssenziale:
+      `La gestione attiva cerca di battere il mercato attraverso la selezione di singoli titoli o tempistiche di acquisto e vendita, applicando commissioni più alte. La gestione passiva si limita a replicare un indice di mercato (es. S&P 500), accettando il rendimento medio in cambio di costi minimi. Empiricamente, nel lungo periodo la gestione passiva batte quella attiva nella maggioranza dei casi.`,
+    esempioConcreto:
+      `Marco investe 10.000 euro in un fondo azionario attivo italiano con TER del 2,2% annuo. Luca investe gli stessi 10.000 euro in un ETF passivo che replica lo stesso mercato con TER dello 0,15% annuo. Dopo 30 anni, ipotizzando lo stesso rendimento lordo del 7% annuo, Marco si ritrova con circa 41.000 euro, Luca con circa 73.000 euro. La differenza di 32.000 euro non deriva da scelte di investimento migliori, ma esclusivamente dal divario di costi che si accumula attraverso l'interesse composto. E questo nell'ipotesi che il fondo attivo replichi il mercato: dati storici mostrano che la maggior parte dei fondi attivi sotto-performa il proprio benchmark al netto dei costi.`,
+    perchéTiRiguarda:
+      `La distinzione tra gestione attiva e passiva è una delle più importanti del mondo degli investimenti, ma in Italia è ancora poco compresa. Lo studio annuale SPIVA (S&P Indices Versus Active) dimostra che a 10 anni il 90% dei fondi azionari attivi italiani sotto-performa il proprio benchmark di riferimento. Questo non significa che la gestione attiva sia sempre sbagliata, ma significa che nella maggior parte dei casi un investitore italiano paga commissioni alte per un risultato peggiore del semplice ETF passivo. Capire questa dinamica è essenziale per costruire un portafoglio fiscalmente ed economicamente efficiente.`,
+    definizioneTecnica:
+      `La gestione attiva si basa sul tentativo di generare alpha (rendimento aggiuntivo rispetto al benchmark) tramite security selection (scelta dei titoli), market timing (tempistica di acquisto/vendita), asset allocation tattica. Comporta costi più alti (TER tipico 1,5-2,5%) per remunerare il team di analisti e gestori. La gestione passiva o indicizzata replica meccanicamente la composizione di un indice di riferimento (S&P 500, MSCI World, FTSE MIB), accettando per definizione il rendimento medio del mercato e azzerando i costi di gestione attiva. Il TER tipico di un ETF passivo è 0,05-0,30%. Esistono forme intermedie: smart beta (regole sistematiche non discrezionali), gestione fattoriale (esposizione a fattori di rischio specifici come value, momentum, quality).`,
+    erroriComuni: [
+      `Scegliere il fondo attivo guardando solo le performance passate (che non si ripeteranno con la stessa probabilità)`,
+      `Sottostimare l'impatto di commissioni dell'1-2% all'anno nel lungo periodo`,
+      `Pensare che 'il mio gestore' sia diverso e batterà il mercato (statisticamente, non lo farà)`,
+      `Confondere la gestione attiva di alta qualità (rara, costosa, accessibile a pochi) con la gestione attiva mainstream venduta dalle banche`,
+      `Mescolare in portafoglio molti fondi attivi diversi pensando di 'diversificare', quando in realtà si moltiplicano solo i costi`,
+    ],
+    correlate: ['etf', 'fondo-comune-investimento', 'diversificazione', 'asset-allocation'],
+    calcolatoreCorrelato: {
+      titolo: 'Calcolatore Interesse Composto',
+      slug: '/calcolatori/interesse-composto',
+    },
+    metaDescription:
+      `Gestione attiva vs passiva degli investimenti: cosa cambia in 30 anni, dati SPIVA, perché conviene quasi sempre la passiva.`,
     pubblicata: true,
   },
 ];
