@@ -80,6 +80,49 @@ export const LIVELLI: Record<Livello, { label: string; emoji: string; color: 'sa
   'avanzato':   { label: 'Avanzato',   emoji: '🔴', color: 'red' },
 };
 
+/**
+ * Identita' visiva per categoria: colore accento + key dell'icona.
+ * Il colore e' espresso come stringa CSS (hex o rgba), perche' Tailwind
+ * non genera classi dinamiche: l'accento viene applicato via
+ * inline style (border-color, color) nei componenti che consumano
+ * questa mappa.
+ *
+ * Tutti i colori sono varianti di sage/emerald/ochre/charcoal del brand
+ * (nessun colore nuovo introdotto).
+ *
+ * Le icone sono Heroicons-style (line, stroke 1.5) renderizzate dal
+ * componente CategoriaIcon.astro tramite `iconKey`.
+ */
+export type IconaCategoria =
+  | 'chart-bar'
+  | 'home'
+  | 'clock'
+  | 'briefcase'
+  | 'globe-alt'
+  | 'document-text'
+  | 'banknotes'
+  | 'shield-check';
+
+export interface IdentitaCategoria {
+  /** Colore accento espresso come CSS color string (hex o rgba). */
+  accent: string;
+  /** Versione "soft" del colore accento, per sfondi sottili (5-10% opacity). */
+  accentSoft: string;
+  /** Chiave dell'icona Heroicons-style. */
+  iconKey: IconaCategoria;
+}
+
+export const CATEGORIE_VISUAL_IDENTITY: Record<Categoria, IdentitaCategoria> = {
+  'investire':                { accent: '#0F4F4A',                  accentSoft: 'rgba(15, 79, 74, 0.08)',   iconKey: 'chart-bar' },
+  'casa-mutuo':               { accent: '#AB7F62',                  accentSoft: 'rgba(171, 127, 98, 0.10)', iconKey: 'home' },
+  'pensione':                 { accent: '#00A652',                  accentSoft: 'rgba(0, 166, 82, 0.10)',   iconKey: 'clock' },
+  'lavoro-pensione':          { accent: 'rgba(55, 61, 66, 0.60)',   accentSoft: 'rgba(55, 61, 66, 0.06)',   iconKey: 'briefcase' },
+  'capire-economia':          { accent: '#166963',                  accentSoft: 'rgba(22, 105, 99, 0.08)',  iconKey: 'globe-alt' },
+  'fiscalita':                { accent: '#8A6449',                  accentSoft: 'rgba(138, 100, 73, 0.10)', iconKey: 'document-text' },
+  'liquidita-conti':          { accent: 'rgba(0, 166, 82, 0.75)',   accentSoft: 'rgba(0, 166, 82, 0.08)',   iconKey: 'banknotes' },
+  'protezione-assicurazioni': { accent: '#0F4F4A',                  accentSoft: 'rgba(15, 79, 74, 0.08)',   iconKey: 'shield-check' },
+};
+
 // -------------------- VOCI --------------------
 //
 // I testi sono trascrizione fedele di quanto fornito da Andrea Giardini.

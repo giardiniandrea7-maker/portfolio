@@ -1,9 +1,15 @@
 ---
-import { CATEGORIE, LIVELLI, type VoceGlossario } from '~/data/glossario';
+import {
+  CATEGORIE,
+  CATEGORIE_VISUAL_IDENTITY,
+  LIVELLI,
+  type VoceGlossario,
+} from '~/data/glossario';
+import CategoriaIcon from './CategoriaIcon.astro';
 
 interface Props {
   voce: VoceGlossario;
-  /** Mostra il badge categoria. Default: true. */
+  /** Mostra il tag categoria. Default: true. */
   showCategoria?: boolean;
   /** Numero progressivo della voce (1-based) nell'ordine alfabetico globale. */
   numero?: number;
@@ -19,6 +25,7 @@ const {
 } = Astro.props;
 
 const liv = LIVELLI[voce.livello];
+const ident = CATEGORIE_VISUAL_IDENTITY[voce.categoria];
 
 // Strippa il markdown inline per anteprime testuali pulite.
 function stripMarkdown(text: string): string {
@@ -28,7 +35,7 @@ function stripMarkdown(text: string): string {
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
 }
 
-// Trafiletto della frase essenziale (ca. 3 righe per la card chiusa).
+// Trafiletto della frase essenziale per la card chiusa (~3 righe).
 function trafiletto(text: string, max = 130): string {
   const stripped = stripMarkdown(text);
   if (stripped.length <= max) return stripped;
@@ -37,8 +44,8 @@ function trafiletto(text: string, max = 130): string {
   return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + '…';
 }
 
-// Anticipazione dell'esempio concreto per l'overlay hover (~50 parole).
-function snippet(text: string, words = 35): string {
+// Anticipazione dell'esempio concreto per l'overlay hover (~30 parole).
+function snippet(text: string, words = 30): string {
   const stripped = stripMarkdown(text);
   const arr = stripped.split(/\s+/);
   if (arr.length <= words) return stripped;
@@ -67,42 +74,55 @@ const esempioSnippet = snippet(voce.esempioConcreto);
   data-sigla={voce.sigla?.toLowerCase() ?? ''}
   data-categoria={voce.categoria}
   data-livello={voce.livello}
-  class="vc-card group relative flex flex-col bg-white rounded-2xl border border-[var(--aw-color-primary)]/15 shadow-sm transition-all duration-300 overflow-hidden focus:outline-none focus:ring-2 focus:ring-[var(--aw-color-primary)]/40 focus:ring-offset-2 motion-safe:hover:-translate-y-1.5 motion-safe:hover:shadow-lg motion-safe:focus-visible:-translate-y-1.5 motion-safe:focus-visible:shadow-lg"
+  class="vc-card group relative flex flex-col bg-white rounded-2xl border border-[var(--aw-color-primary)]/15 shadow-sm overflow-hidden focus:outline-none focus-visible:outline-none"
+  style={`--cat-accent: ${ident.accent}; --cat-accent-soft: ${ident.accentSoft};`}
   aria-label={`Apri voce: ${voce.titolo}${voce.sigla ? ` (${voce.sigla})` : ''}`}
 >
-  <!-- Effetto schedario: bordo inferiore decorativo che simula
-       altre carte sotto la corrente. -->
-  <span aria-hidden="true" class="vc-shelf absolute left-3 right-3 -bottom-1 h-1 rounded-b-2xl bg-[var(--aw-color-primary)]/20"></span>
+  <!-- Bordo superiore 3px nel colore accento della categoria -->
+  <span
+    aria-hidden="true"
+    class="absolute top-0 inset-x-0 h-[3px] z-[2]"
+    style={`background-color: var(--cat-accent);`}
+  ></span>
 
-  <!-- Contenuto della card -->
-  <div class="relative flex flex-col h-full p-6 lg:p-7 gap-3 z-[1]">
+  <!-- Effetto "schedario": sottile bordo inferiore decorativo -->
+  <span aria-hidden="true" class="vc-shelf absolute left-3 right-3 -bottom-1 h-1 rounded-b-2xl bg-[var(--aw-color-primary)]/15"></span>
 
-    <!-- Header: numerazione progressiva + badge livello -->
+  <!-- Contenuto della card (stato normale) -->
+  <div class="vc-content relative flex flex-col h-full p-6 lg:p-7 gap-3 z-[1]">
+
+    <!-- Header: numerazione + icona categoria + badge livello -->
     <div class="flex items-start justify-between gap-3">
-      {numeroFormatted && (
+      <div class="flex items-center gap-3 min-w-0">
+        {numeroFormatted && (
+          <span
+            class="font-display text-sm font-medium tracking-wider text-[var(--aw-color-primary)]/70 tabular-nums"
+            aria-hidden="true"
+          >
+            {numeroFormatted}
+          </span>
+        )}
+      </div>
+      <div class="flex items-start gap-2">
         <span
-          class="font-display text-sm font-medium tracking-wider text-[var(--aw-color-primary)]/70 tabular-nums"
           aria-hidden="true"
+          class="flex items-center justify-center"
+          style={`color: var(--cat-accent);`}
         >
-          {numeroFormatted}
+          <CategoriaIcon iconKey={ident.iconKey} size={22} />
         </span>
-      )}
-      <span class:list={['inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full border', livelloClass]}>
-        <span aria-hidden="true">{liv.emoji}</span>
-        <span>{liv.label}</span>
-      </span>
+        <span class:list={['inline-flex items-center gap-1 text-[11px] font-semibold tracking-wide px-2 py-0.5 rounded-full border', livelloClass]}>
+          <span aria-hidden="true">{liv.emoji}</span>
+          <span>{liv.label}</span>
+        </span>
+      </div>
     </div>
 
-    <!-- Titolo + sottotitolo categoria -->
+    <!-- Titolo -->
     <div class="mt-2">
       <h3 class="font-display text-xl lg:text-2xl font-semibold leading-snug text-[var(--aw-color-text-heading)]">
         {voce.titolo}
       </h3>
-      {showCategoria && (
-        <p class="mt-1 text-sm text-[var(--aw-color-primary)] font-medium">
-          {CATEGORIE[voce.categoria]}
-        </p>
-      )}
       {voce.sigla && (
         <p class="mt-1 text-xs text-[var(--aw-color-primary)]/80 font-medium">
           {voce.sigla}
@@ -110,16 +130,21 @@ const esempioSnippet = snippet(voce.esempioConcreto);
       )}
     </div>
 
-    <!-- Trafiletto della frase essenziale (ca. 3 righe troncate) -->
+    <!-- Trafiletto della frase essenziale (3-4 righe troncate) -->
     <p class="mt-3 text-[15px] leading-relaxed text-[var(--aw-color-text-muted)] line-clamp-4 flex-grow">
       {fraseShort}
     </p>
 
-    <!-- Linea decorativa sage -->
-    <div aria-hidden="true" class="mt-4 h-px bg-[var(--aw-color-primary)]/15"></div>
-
-    <!-- Footer: link "Apri" -->
-    <div class="mt-3 flex items-center justify-end">
+    <!-- Footer: pillola categoria (se richiesta) + freccia "Apri" -->
+    <div class="mt-4 flex items-center justify-between gap-3">
+      {showCategoria ? (
+        <span
+          class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border"
+          style={`background-color: var(--cat-accent-soft); border-color: var(--cat-accent); color: var(--cat-accent);`}
+        >
+          {CATEGORIE[voce.categoria]}
+        </span>
+      ) : <span></span>}
       <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)] motion-safe:group-hover:gap-2.5 transition-all">
         Apri
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -130,21 +155,55 @@ const esempioSnippet = snippet(voce.esempioConcreto);
     </div>
   </div>
 
-  <!-- Hover overlay: anteprima estesa.
-       Visibile su :hover desktop (motion-safe) e :focus-within da tastiera.
-       Disattivata su prefers-reduced-motion (sostituita da semplice link).
-       Su mobile (no hover) non viene mostrata: la card resta pulita. -->
+  <!-- Hover overlay: copre l'INTERA card con sfondo OPACO ivory.
+       Sostituisce il contenuto sottostante invece di sovrapporsi.
+       z-20 garantisce che stia sopra contenuto + bordo top + shelf.
+       Disattivata su touch e prefers-reduced-motion. -->
   <div
     aria-hidden="true"
-    class="vc-overlay absolute inset-x-0 bottom-0 px-6 lg:px-7 py-5 bg-[rgba(238,247,246,0.96)] backdrop-blur-sm border-t border-[var(--aw-color-primary)]/25 opacity-0 translate-y-2 motion-safe:transition-all motion-safe:duration-200 motion-safe:group-hover:opacity-100 motion-safe:group-hover:translate-y-0 motion-safe:group-focus-visible:opacity-100 motion-safe:group-focus-visible:translate-y-0 pointer-events-none rounded-b-2xl"
+    class="vc-overlay absolute inset-0 z-20 flex flex-col p-6 lg:p-7 gap-3 bg-[rgb(238_247_246)] opacity-0 motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-out motion-safe:group-hover:opacity-100 motion-safe:group-focus-visible:opacity-100 pointer-events-none rounded-2xl"
   >
-    <p class="text-[13px] leading-relaxed text-[var(--aw-color-text-heading)] line-clamp-3 mb-2">
-      {fraseFull}
+    <!-- Bordo superiore categoria duplicato sull'overlay (uniforma look) -->
+    <span
+      aria-hidden="true"
+      class="absolute top-0 inset-x-0 h-[3px]"
+      style={`background-color: var(--cat-accent);`}
+    ></span>
+
+    <div class="flex items-start justify-between gap-3">
+      {numeroFormatted && (
+        <span class="font-display text-sm font-medium tracking-wider text-[var(--aw-color-primary)]/70 tabular-nums">
+          {numeroFormatted}
+        </span>
+      )}
+      <span aria-hidden="true" class="flex items-center justify-center" style={`color: var(--cat-accent);`}>
+        <CategoriaIcon iconKey={ident.iconKey} size={20} />
+      </span>
+    </div>
+
+    <h4 class="font-display text-lg lg:text-xl font-semibold leading-snug text-[var(--aw-color-text-heading)]">
+      {voce.titolo}
+    </h4>
+    <p class="text-xs font-medium" style={`color: var(--cat-accent);`}>
+      {CATEGORIE[voce.categoria]}
     </p>
-    <p class="text-[12px] leading-relaxed text-[var(--aw-color-text-muted)] italic line-clamp-3 mb-3">
+
+    <!-- Box ivory chiaro per la frase essenziale completa -->
+    <div class="mt-1 rounded-xl bg-white border border-[var(--aw-color-primary)]/10 px-4 py-3">
+      <p class="text-[13px] leading-relaxed text-[var(--aw-color-text-heading)] line-clamp-5">
+        {fraseFull}
+      </p>
+    </div>
+
+    <!-- Anticipazione esempio concreto -->
+    <p class="text-[12px] leading-relaxed text-[var(--aw-color-text-muted)] italic line-clamp-3 flex-grow">
       {esempioSnippet}
     </p>
-    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--aw-color-primary)]">
+
+    <!-- Bottone "Leggi tutto" emerald (è uno span perché la card è già un anchor) -->
+    <span
+      class="self-start inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#00A652] text-white text-sm font-medium shadow-sm"
+    >
       Leggi tutto
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="5" y1="12" x2="19" y2="12"/>
@@ -163,29 +222,56 @@ const esempioSnippet = snippet(voce.esempioConcreto);
     }
   }
 
-  /* Micro-rotation alternata su hover: nelle griglie a piu' colonne
-     il pattern visivo crea l'effetto "carte distribuite". Solo per
-     posizioni dispari/pari, sottile, solo su hover desktop. */
-  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  /* HOVER STATE — molto deciso, percepibile (brief explicit).
+     Lift di 8px, shadow-2xl equivalente, bordo emerald acceso.
+     Cubic bezier "ease-out morbido" per chi sente la transizione. */
+  .vc-card {
+    transition:
+      transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) {
+    .vc-card:hover,
+    .vc-card:focus-visible {
+      transform: translateY(-8px);
+      box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.18),
+        0 0 0 1px rgba(0, 166, 82, 0.45);
+      border-color: rgba(0, 166, 82, 0.6);
+    }
+
+    /* Micro-rotation alternata per dare effetto "carte distribuite". */
     .vc-card:nth-child(odd):hover,
     .vc-card:nth-child(odd):focus-visible {
-      transform: translateY(-6px) rotate(-0.5deg);
+      transform: translateY(-8px) rotate(-0.5deg);
     }
     .vc-card:nth-child(even):hover,
     .vc-card:nth-child(even):focus-visible {
-      transform: translateY(-6px) rotate(0.5deg);
+      transform: translateY(-8px) rotate(0.5deg);
     }
   }
 
-  /* Overlay hover: aumenta il bordo inferiore per dare profondita' */
+  /* Bordo schedario si ingrossa leggermente al hover */
   .vc-card:hover .vc-shelf,
   .vc-card:focus-within .vc-shelf {
     height: 6px;
     bottom: -3px;
   }
 
-  /* Su touch device niente hover overlay (verrebbe attivato dal tap
-     bloccando la navigazione). */
+  /* Su prefers-reduced-motion: niente animazioni di entrata/uscita. */
+  @media (prefers-reduced-motion: reduce) {
+    .vc-card {
+      transition: none !important;
+    }
+    .vc-overlay {
+      transition: none !important;
+    }
+  }
+
+  /* Su touch device: niente overlay (verrebbe attivato dal tap
+     bloccando la navigazione). Hover state non si attiva nativo. */
   @media (hover: none) {
     .vc-overlay {
       display: none;
