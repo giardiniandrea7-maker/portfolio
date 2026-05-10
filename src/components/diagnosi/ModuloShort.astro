@@ -1,0 +1,160 @@
+---
+// Modulo SHORT (4 campi) per la pagina /richiedi-diagnosi.
+// IDs prefissati con "diagnosi-" cosi' il handler dedicato in
+// src/utils/web3forms.ts (initDiagnosiForm) puo' agganciarsi senza
+// collidere col form lungo del ServiceLayout (#service-form).
+//
+// Backend: stesso endpoint Web3Forms del form esteso. I name dei
+// campi (name, email, phone, investment_date) sono mantenuti
+// compatibili: l'email che riceve Andrea conserva la stessa struttura
+// della richiesta-diagnosi precedente, con tre differenze:
+//  - "name" ora contiene Nome+Cognome unito (campo "surname" rimosso)
+//  - "phone" e' obbligatorio (era opzionale)
+//  - "investment_date" e' una select con 4 opzioni standard, non testo libero
+// Niente piu' campi "message" e "files" sulla pagina diagnosi.
+---
+
+<section
+  id="form-richiesta"
+  aria-labelledby="diagnosi-form-title"
+  class="reveal bg-[var(--aw-color-bg-cream,rgb(238_247_246))] py-20 scroll-mt-24"
+>
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <h2
+        id="diagnosi-form-title"
+        class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-4"
+      >
+        Richiedi la tua diagnosi
+      </h2>
+      <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+        Compila i quattro campi qui sotto. Ti rispondo personalmente entro 24 ore con i prossimi passi.
+      </p>
+    </div>
+
+    <div class="bg-white border border-[var(--aw-color-primary)]/15 rounded-2xl shadow-sm p-7 md:p-10">
+      <form
+        id="diagnosi-form"
+        class="space-y-6"
+        action="https://api.web3forms.com/submit"
+        method="POST"
+      >
+        <input type="hidden" name="access_key" value="0d00a04d-f883-4684-ba20-f0f134c63d36" />
+        <input type="hidden" name="subject" value="Nuova richiesta diagnosi gratuita da giardiniconsulenza.it" />
+        <input type="hidden" name="from_name" value="giardiniconsulenza.it" />
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <!-- Campo 1 — Nome e cognome -->
+        <div>
+          <label for="diagnosi-name" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+            Nome e cognome <span class="text-[rgb(160_50_50)]">*</span>
+          </label>
+          <input
+            type="text"
+            id="diagnosi-name"
+            name="name"
+            required
+            placeholder="Mario Rossi"
+            autocomplete="name"
+            class="w-full h-12 px-4 border border-[var(--aw-color-primary)]/30 rounded-lg bg-white text-base text-[var(--aw-color-text-heading)] placeholder:text-[var(--aw-color-text-muted)] focus:outline-none focus:border-[#00A652] focus:ring-2 focus:ring-[#00A652]/20 transition-colors"
+          />
+        </div>
+
+        <!-- Campo 2 — Email -->
+        <div>
+          <label for="diagnosi-email" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+            Email <span class="text-[rgb(160_50_50)]">*</span>
+          </label>
+          <input
+            type="email"
+            id="diagnosi-email"
+            name="email"
+            required
+            placeholder="mario@esempio.it"
+            autocomplete="email"
+            class="w-full h-12 px-4 border border-[var(--aw-color-primary)]/30 rounded-lg bg-white text-base text-[var(--aw-color-text-heading)] placeholder:text-[var(--aw-color-text-muted)] focus:outline-none focus:border-[#00A652] focus:ring-2 focus:ring-[#00A652]/20 transition-colors"
+          />
+        </div>
+
+        <!-- Campo 3 — Numero di telefono -->
+        <div>
+          <label for="diagnosi-phone" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+            Numero di telefono <span class="text-[rgb(160_50_50)]">*</span>
+          </label>
+          <input
+            type="tel"
+            id="diagnosi-phone"
+            name="phone"
+            required
+            placeholder="+39 ..."
+            autocomplete="tel"
+            class="w-full h-12 px-4 border border-[var(--aw-color-primary)]/30 rounded-lg bg-white text-base text-[var(--aw-color-text-heading)] placeholder:text-[var(--aw-color-text-muted)] focus:outline-none focus:border-[#00A652] focus:ring-2 focus:ring-[#00A652]/20 transition-colors"
+          />
+          <p class="mt-2 text-xs text-[var(--aw-color-text-heading)]/60 leading-relaxed">
+            Lo uso solo per coordinare l'eventuale call. Niente spam, mai.
+          </p>
+        </div>
+
+        <!-- Campo 4 — Da quanto investi (select) -->
+        <div>
+          <label for="diagnosi-investment" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+            Da quanto tempo investi? <span class="text-[rgb(160_50_50)]">*</span>
+          </label>
+          <select
+            id="diagnosi-investment"
+            name="investment_date"
+            required
+            class="w-full h-12 px-4 border border-[var(--aw-color-primary)]/30 rounded-lg bg-white text-base text-[var(--aw-color-text-heading)] focus:outline-none focus:border-[#00A652] focus:ring-2 focus:ring-[#00A652]/20 transition-colors"
+          >
+            <option value="" selected disabled>Seleziona...</option>
+            <option value="Non ho ancora investito niente">Non ho ancora investito niente</option>
+            <option value="Da meno di 2 anni">Da meno di 2 anni</option>
+            <option value="Tra 2 e 10 anni">Tra 2 e 10 anni</option>
+            <option value="Da più di 10 anni">Da più di 10 anni</option>
+          </select>
+        </div>
+
+        <!-- Privacy -->
+        <div class="pt-2">
+          <label class="flex items-start gap-3 text-sm text-[var(--aw-color-text-default)] cursor-pointer leading-relaxed">
+            <input
+              type="checkbox"
+              name="privacy"
+              required
+              class="mt-1 w-4 h-4 text-[#00A652] border-[var(--aw-color-primary)]/30 rounded focus:ring-[#00A652]"
+            />
+            <span>
+              Dichiaro di aver letto la
+              <a href="/privacy" class="text-[var(--aw-color-primary)] underline underline-offset-2 hover:text-[var(--aw-color-accent)]">privacy policy</a>
+              e acconsento al trattamento dei dati. <span class="text-[rgb(160_50_50)]">*</span>
+            </span>
+          </label>
+          <p class="mt-3 text-xs text-[var(--aw-color-text-heading)]/60 leading-relaxed">
+            I tuoi dati sono trattati con riservatezza assoluta e non condivisi con terzi. Per saperne di più leggi la nostra privacy policy.
+          </p>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          id="diagnosi-submit"
+          data-magnetic
+          class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#00A652] hover:bg-[#0F4F4A] text-white text-base md:text-lg font-medium rounded-lg transition-colors hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A652]/30 focus-visible:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          Richiedi la diagnosi
+        </button>
+
+        <!-- Messaggio post-invio (gestito da web3forms.ts) -->
+        <div
+          id="diagnosi-result"
+          class="hidden rounded-lg p-5 text-sm md:text-base leading-relaxed border whitespace-pre-line"
+        ></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Handler form: stesso file utility usato da contatti e ServiceLayout. -->
+<script>
+  import '~/utils/web3forms';
+</script>

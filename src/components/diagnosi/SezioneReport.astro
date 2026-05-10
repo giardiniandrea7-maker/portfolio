@@ -1,0 +1,28 @@
+---
+// Item della lista 1-6 nella Sezione 3 "Cosa trovi nel report".
+// Numero grande sage Playfair + titolo + paragrafo, layout orizzontale
+// (numero a sinistra, contenuto a destra) con allineamento su top.
+interface Props {
+  numero: number;
+  titolo: string;
+  testo: string;
+}
+const { numero, titolo, testo } = Astro.props;
+---
+
+<li class="reveal flex gap-5 md:gap-6">
+  <span
+    class="font-display flex-shrink-0 text-4xl md:text-5xl font-semibold leading-none text-[var(--aw-color-primary)]/85 tabular-nums w-10 md:w-12 pt-1"
+    aria-hidden="true"
+  >
+    {numero}
+  </span>
+  <div class="flex-1 pt-1">
+    <h3 class="font-display text-xl md:text-2xl font-medium leading-snug text-[var(--aw-color-text-heading)] mb-2">
+      {titolo}
+    </h3>
+    <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+      {testo}
+    </p>
+  </div>
+</li>

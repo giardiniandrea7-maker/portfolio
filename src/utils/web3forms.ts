@@ -97,5 +97,75 @@ function showError(el: HTMLElement) {
   el.className = 'rounded-sm p-4 text-sm font-semibold text-center bg-red-50 text-red-700 border border-red-200';
 }
 
+// ===========================================================
+// Form SHORT della pagina /richiedi-diagnosi (4 campi).
+// Stesso endpoint Web3Forms dei form esistenti, IDs prefissati
+// con "diagnosi-" per non collidere col form lungo del ServiceLayout.
+// Messaggio di successo custom (testo definitivo dal cliente).
+// ===========================================================
+
+const DIAGNOSI_SUCCESS_MESSAGE =
+  `Grazie. Ho ricevuto la tua richiesta.
+
+Entro 24 ore ti scriverò personalmente per spiegarti come inviarmi i tuoi documenti. Niente di complicato: bastano gli ultimi estratti conto o screenshot dell'home banking.
+
+Se nel frattempo hai domande, puoi scrivermi a info@giardiniconsulenza.it o mandarmi un WhatsApp al +39 351 545 6845.
+
+A presto,
+Andrea`;
+
+function initDiagnosiForm() {
+  const form = document.getElementById('diagnosi-form') as HTMLFormElement | null;
+  const result = document.getElementById('diagnosi-result') as HTMLElement | null;
+  const btn = document.getElementById('diagnosi-submit') as HTMLButtonElement | null;
+
+  if (!form || !result || !btn) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Invio in corso...';
+    result.classList.add('hidden');
+
+    const fd = new FormData(form);
+    fd.delete('privacy'); // checkbox UI, non inviata al backend
+
+    const jsonBody: Record<string, string> = {};
+    for (const [key, val] of [...fd.entries()]) {
+      if (typeof val === 'string') jsonBody[key] = val;
+    }
+
+    try {
+      const res = await fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jsonBody),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        result.textContent = DIAGNOSI_SUCCESS_MESSAGE;
+        result.className =
+          'rounded-lg p-5 text-sm md:text-base leading-relaxed border bg-[rgba(0,166,82,0.08)] text-[var(--aw-color-text-heading)] border-[rgba(0,166,82,0.35)] whitespace-pre-line';
+        form.reset();
+        // Nasconde il form dopo invio: l'utente vede solo il messaggio
+        form.querySelectorAll<HTMLElement>(':scope > div, :scope > button').forEach((el) => {
+          el.classList.add('hidden');
+        });
+      } else {
+        showError(result);
+      }
+    } catch {
+      showError(result);
+    }
+
+    result.classList.remove('hidden');
+    btn.disabled = false;
+    if (originalLabel) btn.textContent = originalLabel;
+  });
+}
+
 initServiceForm();
 initContactForm();
+initDiagnosiForm();
