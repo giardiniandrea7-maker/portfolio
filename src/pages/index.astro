@@ -155,7 +155,7 @@ const servizi = [
   <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div class="max-w-3xl mx-auto text-center mb-14">
+      <div class="reveal max-w-3xl mx-auto text-center mb-14">
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-tight font-heading">
           Il progetto
         </h2>
@@ -167,11 +167,11 @@ const servizi = [
         </p>
       </div>
 
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+      <div class="reveal-stagger grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
         {pilastri.map((p) => (
           <a
             href={p.href}
-            class="group flex flex-col items-center text-center p-6 md:p-8 bg-white rounded-md shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
+            class="reveal group flex flex-col items-center text-center p-6 md:p-8 bg-white rounded-md shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
           >
             <!-- Icona -->
             <div class="mb-5 w-16 h-16 md:w-20 md:h-20 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center group-hover:bg-[var(--aw-color-primary)]/20 transition-colors">
@@ -224,7 +224,7 @@ const servizi = [
       </div>
 
       <!-- CTA Inizia ora -->
-      <div class="text-center">
+      <div class="reveal text-center">
         <a
           href="/richiedi-diagnosi"
           class="inline-block px-10 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-lg font-bold rounded-sm transition-all hover:shadow-xl hover:-translate-y-0.5 font-heading"
@@ -244,7 +244,7 @@ const servizi = [
       <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
         <!-- Testo sx -->
-        <div>
+        <div class="reveal">
           <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-3 leading-tight font-heading">
             Andrea Giardini
           </h2>
@@ -274,7 +274,7 @@ const servizi = [
         </div>
 
         <!-- Foto placeholder dx -->
-        <div class="flex items-center justify-center">
+        <div class="reveal flex items-center justify-center">
           <div class="relative w-full max-w-sm aspect-[3/4] rounded-md overflow-hidden shadow-xl bg-gradient-to-br from-[var(--aw-color-primary)] to-[rgb(22_105_99)]">
             <div class="absolute inset-0 flex flex-col items-center justify-center text-white/70 p-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-4">
@@ -298,13 +298,13 @@ const servizi = [
   <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+      <h2 class="reveal text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
         Servizi
       </h2>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+      <div class="reveal-stagger grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
         {servizi.map((s) => (
-          <div class="flex flex-col bg-white rounded-md p-7 md:p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+          <div class="reveal flex flex-col bg-white rounded-md p-7 md:p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
             <!-- Icona -->
             <div class="w-14 h-14 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mb-5">
               {s.icon === 'search' && (
@@ -367,7 +367,7 @@ const servizi = [
        ========================================================= -->
   <section class="bg-[var(--aw-color-primary)] py-14 md:py-20">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-[1fr_auto] gap-8 items-center">
+      <div class="reveal grid md:grid-cols-[1fr_auto] gap-8 items-center">
 
         <div class="text-center md:text-left">
           <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight font-heading">
@@ -394,7 +394,7 @@ const servizi = [
       <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
         <!-- Testo sx -->
-        <div>
+        <div class="reveal">
           <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
             Mettiti in contatto
           </h2>
@@ -426,7 +426,7 @@ const servizi = [
         </div>
 
         <!-- Mappa/foto studio placeholder dx -->
-        <div class="flex items-center justify-center">
+        <div class="reveal flex items-center justify-center">
           <div class="relative w-full aspect-[4/3] rounded-md overflow-hidden shadow-xl bg-gradient-to-br from-[rgb(238_247_246)] to-[rgb(221_240_238)]">
             <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--aw-color-primary)]/40 p-4">
               <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
