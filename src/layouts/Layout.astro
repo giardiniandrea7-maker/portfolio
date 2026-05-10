@@ -72,9 +72,12 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <!-- Scroll reveal globale (Intersection Observer) -->
+    <!-- Smooth scroll desktop (Lenis) + animazioni Motion (scroll
+         reveal, hero sequence, magnetic buttons). Disabilitati su
+         mobile e con prefers-reduced-motion. -->
     <script>
-      import '~/scripts/scroll-reveal.ts';
+      import '~/scripts/smooth-scroll.ts';
+      import '~/scripts/animations.ts';
     </script>
 
     <!-- Calendly badge widget (bottone fluttuante "Prenota una call") -->

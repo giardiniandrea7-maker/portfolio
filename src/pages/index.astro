@@ -71,7 +71,7 @@ const servizi = [
       <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
         <!-- Video placeholder sx -->
-        <div class="hero-anim hero-anim-4 relative aspect-video bg-gradient-to-br from-[rgb(22_105_99)] to-[rgb(14_74_69)] rounded-md overflow-hidden shadow-xl group cursor-pointer">
+        <div data-hero-element class="relative aspect-video bg-gradient-to-br from-[rgb(22_105_99)] to-[rgb(14_74_69)] rounded-md overflow-hidden shadow-xl group cursor-pointer">
           <div class="absolute top-4 left-4 right-4 flex items-start gap-3 z-10">
             <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -108,11 +108,11 @@ const servizi = [
 
         <!-- Testo dx -->
         <div>
-          <h1 class="hero-anim hero-anim-1 text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.15] font-heading">
+          <h1 data-hero-element class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.15] font-heading">
             Il tuo futuro finanziario, costruito con metodo e chiarezza.
           </h1>
 
-          <div class="hero-anim hero-anim-2 space-y-4 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
+          <div data-hero-element class="space-y-4 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
             <p>
               Sono <strong class="text-[var(--aw-color-primary)]">Andrea Giardini</strong>, consulente finanziario.
               Aiuto persone e famiglie a mettere ordine nelle proprie finanze: ridurre i <strong class="text-[var(--aw-color-primary)]">costi nascosti</strong> del portafoglio,
@@ -125,10 +125,11 @@ const servizi = [
           </div>
 
           <!-- 2 CTA -->
-          <div class="hero-anim hero-anim-3 flex flex-col sm:flex-row gap-3">
+          <div data-hero-element class="flex flex-col sm:flex-row gap-3">
             <a
               href="/richiedi-diagnosi"
-              class="flex-1 px-6 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-base md:text-lg font-bold rounded-sm text-center transition-all hover:shadow-xl hover:-translate-y-0.5 font-heading"
+              data-magnetic
+              class="flex-1 px-6 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-base md:text-lg font-bold rounded-sm text-center transition-colors hover:shadow-xl font-heading"
             >
               Richiedi diagnosi gratuita
             </a>
@@ -140,7 +141,7 @@ const servizi = [
             </a>
           </div>
 
-          <p class="hero-anim hero-anim-3 text-xs text-[var(--aw-color-text-muted)] mt-5 leading-relaxed">
+          <p data-hero-element class="text-xs text-[var(--aw-color-text-muted)] mt-5 leading-relaxed">
             Consulente finanziario <strong class="text-[var(--aw-color-primary)]">abilitato</strong> <strong class="text-[var(--aw-color-primary)]">OCF</strong> n. 2965 · Soggetto autorizzato e vigilato.
           </p>
         </div>
@@ -227,7 +228,8 @@ const servizi = [
       <div class="reveal text-center">
         <a
           href="/richiedi-diagnosi"
-          class="inline-block px-10 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-lg font-bold rounded-sm transition-all hover:shadow-xl hover:-translate-y-0.5 font-heading"
+          data-magnetic
+          class="inline-block px-10 py-4 bg-[var(--aw-color-primary)] hover:bg-[var(--aw-color-secondary)] text-white text-lg font-bold rounded-sm transition-colors hover:shadow-xl font-heading"
         >
           Inizia ora!
         </a>
@@ -377,6 +379,7 @@ const servizi = [
 
         <a
           href="/richiedi-diagnosi"
+          data-magnetic
           class="px-10 py-5 bg-white text-[var(--aw-color-primary)] text-lg font-bold rounded-sm hover:bg-[var(--aw-color-accent)] hover:text-white transition-colors text-center font-heading shadow-lg"
         >
           Online e gratuita

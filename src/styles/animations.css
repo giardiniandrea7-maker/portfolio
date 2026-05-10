@@ -1,130 +1,136 @@
 /* =============================================================
    ANIMAZIONI GLOBALI — giardiniconsulenza.it
-   Fase 1: scroll reveal + sequenza ingresso hero
+   Layer "stato iniziale" + helper Lenis.
+   La logica di animazione è in src/scripts/animations.ts (Motion)
+   e src/scripts/smooth-scroll.ts (Lenis).
    ============================================================= */
 
 /* --------------------------------------------------------------
-   SCROLL REVEAL
-   Le classi si applicano solo se il <html> ha la classe `js`
-   (aggiunta da uno script inline in <head>): senza JS o prima
-   che JS sia pronto, gli elementi restano visibili.
+   STATO INIZIALE PRE-MOTION (anti-FOUC)
+   Le classi sono applicate solo se il <html> ha la classe `js`
+   (script inline in <head>): senza JS gli elementi restano
+   visibili. Motion poi le anima inline con animate().
    -------------------------------------------------------------- */
 
 html.js .reveal {
   opacity: 0;
   transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+/* I figli diretti di .reveal-stagger vengono nascosti finché Motion
+   non li gestisce: lo stato iniziale viene anche impostato inline da
+   animations.ts, ma questa regola fa da fallback anti-FOUC. */
+html.js .reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: opacity, transform;
+}
+
+/* Lo stato "visibile" usato dal vecchio scroll-reveal vanilla resta
+   attivo come fallback: se per qualche motivo Motion non gira (es.
+   bundle fallito), la classe applicata da CSS keep-alive porterà
+   comunque l'elemento allo stato finale. */
+html.js .reveal.reveal-visible,
+html.js .reveal-stagger > .reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
   transition:
     opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
 }
 
-html.js .reveal.reveal-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger: i figli diretti di .reveal-stagger ricevono delay
-   incrementali quando ottengono la classe .reveal-visible.
-   Funziona sia che i figli abbiano .reveal sia che lo stagger
-   venga applicato direttamente ai figli. */
-html.js .reveal-stagger > *:nth-child(1).reveal-visible { transition-delay: 0ms; }
-html.js .reveal-stagger > *:nth-child(2).reveal-visible { transition-delay: 90ms; }
-html.js .reveal-stagger > *:nth-child(3).reveal-visible { transition-delay: 180ms; }
-html.js .reveal-stagger > *:nth-child(4).reveal-visible { transition-delay: 270ms; }
-html.js .reveal-stagger > *:nth-child(5).reveal-visible { transition-delay: 360ms; }
-html.js .reveal-stagger > *:nth-child(6).reveal-visible { transition-delay: 450ms; }
-html.js .reveal-stagger > *:nth-child(7).reveal-visible { transition-delay: 500ms; }
-html.js .reveal-stagger > *:nth-child(n+8).reveal-visible { transition-delay: 500ms; }
-
-/* --------------------------------------------------------------
-   HERO ENTRANCE — sequenza di ingresso al caricamento pagina
-   Usa CSS animations native con animation-delay.
-   Le classi vanno applicate direttamente agli elementi della hero.
-   -------------------------------------------------------------- */
-
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes hero-rise-scale {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-html.js .hero-anim {
+/* Hero: gli elementi marcati con [data-hero-element] partono nascosti.
+   Motion li anima in cascata appena monta. */
+html.js [data-hero-element] {
   opacity: 0;
-  animation: hero-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: var(--hero-delay, 0ms);
   will-change: opacity, transform;
 }
 
-html.js .hero-anim-1 { --hero-delay: 100ms; }
-html.js .hero-anim-2 { --hero-delay: 300ms; }
-html.js .hero-anim-3 { --hero-delay: 500ms; }
-html.js .hero-anim-4 {
-  --hero-delay: 700ms;
-  animation-name: hero-rise-scale;
-  animation-duration: 700ms;
+/* --------------------------------------------------------------
+   LENIS (smooth scroll desktop)
+   -------------------------------------------------------------- */
+
+html.lenis,
+html.lenis body {
+  height: auto;
 }
-html.js .hero-anim-5 {
-  --hero-delay: 900ms;
-  animation-name: hero-rise-scale;
-  animation-duration: 700ms;
+
+html.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+html.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+html.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* I canvas dei calcolatori (Chart.js) e i container con scroll
+   interno devono avere data-lenis-prevent per non rubare lo scroll
+   alla pagina. Aggiunto preventivo qui per sicurezza. */
+.chart-card,
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 /* --------------------------------------------------------------
-   MICRO-MOVIMENTO ("respiro") per elementi decorativi
-   Da applicare solo a elementi non testuali, dopo l'entrance.
+   VIEW TRANSITIONS (fade + slide soft)
+   Astro 5 usa View Transitions del browser per le navigazioni.
+   Personalizziamo le animazioni di default per renderle coerenti
+   col tono brand: niente flash, solo un fade leggero.
    -------------------------------------------------------------- */
 
-@keyframes hero-breathe {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+@view-transition {
+  navigation: auto;
 }
 
-html.js .hero-breathe {
-  animation: hero-breathe 8s ease-in-out infinite;
-  animation-delay: 1.8s;
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 350ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: aw-fade-out;
+}
+
+::view-transition-new(root) {
+  animation-name: aw-fade-in;
+}
+
+@keyframes aw-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes aw-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
 /* --------------------------------------------------------------
-   MOBILE: animazioni più veloci e con minor escursione
+   MAGNETIC BUTTONS — solo desktop
+   Motion gestisce il transform, qui solo l'hover state visivo.
    -------------------------------------------------------------- */
+
+[data-magnetic] {
+  display: inline-flex;
+  will-change: transform;
+}
 
 @media (max-width: 768px) {
-  html.js .reveal {
-    transform: translateY(20px);
-    transition-duration: 500ms;
+  [data-magnetic] {
+    /* Su mobile l'effetto è disattivato lato JS, ma per sicurezza
+       reset visivo */
+    transform: none !important;
   }
-
-  html.js .hero-anim {
-    animation-duration: 500ms;
-  }
-  html.js .hero-anim-4,
-  html.js .hero-anim-5 {
-    animation-duration: 600ms;
-  }
-
-  /* Riduci leggermente i delay su mobile per percezione di reattività */
-  html.js .hero-anim-1 { --hero-delay: 80ms; }
-  html.js .hero-anim-2 { --hero-delay: 220ms; }
-  html.js .hero-anim-3 { --hero-delay: 380ms; }
-  html.js .hero-anim-4 { --hero-delay: 540ms; }
-  html.js .hero-anim-5 { --hero-delay: 700ms; }
 }
 
 /* --------------------------------------------------------------
@@ -134,16 +140,14 @@ html.js .hero-breathe {
 
 @media (prefers-reduced-motion: reduce) {
   html.js .reveal,
-  html.js .reveal-stagger > * {
+  html.js .reveal-stagger > *,
+  html.js [data-hero-element] {
     opacity: 1 !important;
     transform: none !important;
-    transition: none !important;
   }
 
-  html.js .hero-anim,
-  html.js .hero-breathe {
-    opacity: 1 !important;
-    transform: none !important;
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation: none !important;
   }
 }
