@@ -1,0 +1,149 @@
+/* =============================================================
+   ANIMAZIONI GLOBALI — giardiniconsulenza.it
+   Fase 1: scroll reveal + sequenza ingresso hero
+   ============================================================= */
+
+/* --------------------------------------------------------------
+   SCROLL REVEAL
+   Le classi si applicano solo se il <html> ha la classe `js`
+   (aggiunta da uno script inline in <head>): senza JS o prima
+   che JS sia pronto, gli elementi restano visibili.
+   -------------------------------------------------------------- */
+
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+html.js .reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger: i figli diretti di .reveal-stagger ricevono delay
+   incrementali quando ottengono la classe .reveal-visible.
+   Funziona sia che i figli abbiano .reveal sia che lo stagger
+   venga applicato direttamente ai figli. */
+html.js .reveal-stagger > *:nth-child(1).reveal-visible { transition-delay: 0ms; }
+html.js .reveal-stagger > *:nth-child(2).reveal-visible { transition-delay: 90ms; }
+html.js .reveal-stagger > *:nth-child(3).reveal-visible { transition-delay: 180ms; }
+html.js .reveal-stagger > *:nth-child(4).reveal-visible { transition-delay: 270ms; }
+html.js .reveal-stagger > *:nth-child(5).reveal-visible { transition-delay: 360ms; }
+html.js .reveal-stagger > *:nth-child(6).reveal-visible { transition-delay: 450ms; }
+html.js .reveal-stagger > *:nth-child(7).reveal-visible { transition-delay: 500ms; }
+html.js .reveal-stagger > *:nth-child(n+8).reveal-visible { transition-delay: 500ms; }
+
+/* --------------------------------------------------------------
+   HERO ENTRANCE — sequenza di ingresso al caricamento pagina
+   Usa CSS animations native con animation-delay.
+   Le classi vanno applicate direttamente agli elementi della hero.
+   -------------------------------------------------------------- */
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-rise-scale {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+html.js .hero-anim {
+  opacity: 0;
+  animation: hero-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--hero-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+html.js .hero-anim-1 { --hero-delay: 100ms; }
+html.js .hero-anim-2 { --hero-delay: 300ms; }
+html.js .hero-anim-3 { --hero-delay: 500ms; }
+html.js .hero-anim-4 {
+  --hero-delay: 700ms;
+  animation-name: hero-rise-scale;
+  animation-duration: 700ms;
+}
+html.js .hero-anim-5 {
+  --hero-delay: 900ms;
+  animation-name: hero-rise-scale;
+  animation-duration: 700ms;
+}
+
+/* --------------------------------------------------------------
+   MICRO-MOVIMENTO ("respiro") per elementi decorativi
+   Da applicare solo a elementi non testuali, dopo l'entrance.
+   -------------------------------------------------------------- */
+
+@keyframes hero-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+html.js .hero-breathe {
+  animation: hero-breathe 8s ease-in-out infinite;
+  animation-delay: 1.8s;
+}
+
+/* --------------------------------------------------------------
+   MOBILE: animazioni più veloci e con minor escursione
+   -------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  html.js .reveal {
+    transform: translateY(20px);
+    transition-duration: 500ms;
+  }
+
+  html.js .hero-anim {
+    animation-duration: 500ms;
+  }
+  html.js .hero-anim-4,
+  html.js .hero-anim-5 {
+    animation-duration: 600ms;
+  }
+
+  /* Riduci leggermente i delay su mobile per percezione di reattività */
+  html.js .hero-anim-1 { --hero-delay: 80ms; }
+  html.js .hero-anim-2 { --hero-delay: 220ms; }
+  html.js .hero-anim-3 { --hero-delay: 380ms; }
+  html.js .hero-anim-4 { --hero-delay: 540ms; }
+  html.js .hero-anim-5 { --hero-delay: 700ms; }
+}
+
+/* --------------------------------------------------------------
+   ACCESSIBILITÀ: prefers-reduced-motion
+   Disabilita ogni animazione per chi ha richiesto motion ridotto.
+   -------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal,
+  html.js .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  html.js .hero-anim,
+  html.js .hero-breathe {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

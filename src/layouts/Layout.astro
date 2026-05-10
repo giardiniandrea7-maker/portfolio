@@ -1,5 +1,6 @@
 ---
 import '~/assets/styles/tailwind.css';
+import '~/styles/animations.css';
 
 import { I18N } from 'astrowind:config';
 
@@ -28,6 +29,10 @@ const { language, textDirection } = I18N;
 <!doctype html>
 <html lang={language} dir={textDirection} class="2xl:text-[20px]">
   <head>
+    <!-- Marca subito che JS è disponibile: gli stili .reveal e .hero-anim
+         (nascosti di default) si attivano solo se html.js è presente.
+         Senza JS gli elementi restano visibili. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <CommonMeta />
     <Favicons />
     <CustomStyles />
@@ -66,6 +71,11 @@ const { language, textDirection } = I18N;
     <slot />
 
     <BasicScripts />
+
+    <!-- Scroll reveal globale (Intersection Observer) -->
+    <script>
+      import '~/scripts/scroll-reveal.ts';
+    </script>
 
     <!-- Calendly badge widget (bottone fluttuante "Prenota una call") -->
     <script is:inline>
