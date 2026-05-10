@@ -277,32 +277,63 @@ import Logo from '~/components/Logo.astro';
 <!-- ============================================= -->
 <!-- JAVASCRIPT MENU MOBILE                         -->
 <!-- ============================================= -->
-<script>
+<!-- data-astro-rerun: ri-esegue questo script ad ogni navigazione
+     View Transitions, cosi' i listener vengono riagganciati ai
+     nuovi elementi DOM (hamburger, sidebar, overlay) dopo lo swap. -->
+<script data-astro-rerun>
+  // I listener locali agli elementi (hamburger, closeBtn, overlay,
+  // submenu, menu-link, nav-trigger) sono attaccati ad elementi che
+  // vengono ri-creati ad ogni navigazione: niente leak, ogni rerun
+  // li riaggancia ai nuovi nodi.
+  // I listener su `document` (keydown Escape) invece persistono fra
+  // rerun: per evitarne l'accumulo, smonto quello precedente prima
+  // di registrarne uno nuovo.
+
   const hamburger = document.getElementById('hamburger-btn');
   const closeBtn  = document.getElementById('close-btn');
   const sidebar   = document.getElementById('sidebar-menu');
   const overlay   = document.getElementById('menu-overlay');
 
-  function openMenu() {
-    sidebar?.classList.remove('translate-x-full');
-    overlay?.classList.remove('opacity-0', 'pointer-events-none');
-    overlay?.classList.add('opacity-100');
-    document.body.style.overflow = 'hidden';
-  }
   function closeMenu() {
     sidebar?.classList.add('translate-x-full');
     overlay?.classList.add('opacity-0', 'pointer-events-none');
     overlay?.classList.remove('opacity-100');
     document.body.style.overflow = '';
   }
+  function openMenu() {
+    sidebar?.classList.remove('translate-x-full');
+    overlay?.classList.remove('opacity-0', 'pointer-events-none');
+    overlay?.classList.add('opacity-100');
+    document.body.style.overflow = 'hidden';
+  }
 
   hamburger?.addEventListener('click', openMenu);
   closeBtn?.addEventListener('click', closeMenu);
   overlay?.addEventListener('click', closeMenu);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
-  });
+  // Escape chiude il menu — listener globale "singleton".
+  // Rimuovo l'eventuale precedente per non duplicare ad ogni navigazione.
+  // @ts-ignore - chiave non standard, intenzionale per la persistenza fra rerun
+  if (window.__giardiniEscapeHandler) {
+    // @ts-ignore
+    document.removeEventListener('keydown', window.__giardiniEscapeHandler);
+  }
+  const escapeHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      // Re-query per usare gli elementi correnti (post-swap)
+      const sb = document.getElementById('sidebar-menu');
+      const ov = document.getElementById('menu-overlay');
+      if (sb && ov && !sb.classList.contains('translate-x-full')) {
+        sb.classList.add('translate-x-full');
+        ov.classList.add('opacity-0', 'pointer-events-none');
+        ov.classList.remove('opacity-100');
+        document.body.style.overflow = '';
+      }
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
+  // @ts-ignore
+  window.__giardiniEscapeHandler = escapeHandler;
 
   document.querySelectorAll('.submenu-toggle').forEach((btn) => {
     btn.addEventListener('click', () => {
