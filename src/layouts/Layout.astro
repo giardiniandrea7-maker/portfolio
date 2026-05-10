@@ -72,11 +72,13 @@ const { language, textDirection } = I18N;
 
     <BasicScripts />
 
-    <!-- Smooth scroll desktop (Lenis) + animazioni Motion (scroll
-         reveal, hero sequence, magnetic buttons). Disabilitati su
-         mobile e con prefers-reduced-motion. -->
+    <!-- Smooth scroll desktop (Lenis) — DEVE caricare prima di Motion
+         per evitare che il modify del layout post-init scompagini gli
+         observer. Script separato per garantire l'ordine. -->
     <script>
       import '~/scripts/smooth-scroll.ts';
+    </script>
+    <script>
       import '~/scripts/animations.ts';
     </script>
 
