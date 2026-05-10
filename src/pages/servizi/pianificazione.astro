@@ -1,85 +1,466 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import ServiceLayout from '~/components/ServiceLayout.astro';
+import MotivoNonPianifica from '~/components/pianificazione/MotivoNonPianifica.astro';
+import SituazioneVita from '~/components/pianificazione/SituazioneVita.astro';
+import MomentoPercorso from '~/components/pianificazione/MomentoPercorso.astro';
+import ListaCriteri from '~/components/pianificazione/ListaCriteri.astro';
+import CardContatto from '~/components/pianificazione/CardContatto.astro';
 
 const metadata = {
-  title: 'Pianificazione Finanziaria — Analisi dei bisogni | Andrea Giardini',
+  title: 'Pianificazione finanziaria | Andrea Giardini',
   description:
-    'La pianificazione finanziaria è il processo in cui analizzo i tuoi bisogni, quelli della tua famiglia e le tue aspettative di vita nel modo più oggettivo possibile.',
+    "Pianificazione finanziaria personalizzata per persone e famiglie. Analisi dei tuoi obiettivi, definizione delle priorità e strumenti su misura per il tuo futuro. Primo incontro gratuito.",
+  canonical: 'https://giardiniconsulenza.it/servizi/pianificazione',
 };
+
+// ====== TESTI (Momento 2 — perche' non pianificano) ======
+const motivi = [
+  {
+    numero: 1,
+    titolo: '"Non ho abbastanza per pianificare"',
+    testo:
+      "È la convinzione più diffusa, e quasi sempre falsa. Pianificare non significa avere un patrimonio importante. Significa decidere consapevolmente cosa fare con quello che hai, qualunque sia la cifra. Chi inizia a 35 anni con poche migliaia di euro spesso arriva alla pensione meglio di chi ne ha centomila ma li lascia fermi sul conto.",
+  },
+  {
+    numero: 2,
+    titolo: '"Ci penserò più avanti"',
+    testo:
+      "Ogni anno rimandato ha un costo nascosto enorme. Per ragioni matematiche legate all'interesse composto, una decisione presa a 30 anni vale il doppio della stessa decisione presa a 40. Non si tratta di urgenza, si tratta di tempo che non torna indietro.",
+  },
+  {
+    numero: 3,
+    titolo: '"È troppo complicato, non ci capisco niente"',
+    testo:
+      "Il sistema finanziario italiano è effettivamente complesso, e raramente trasparente. Ma il mio lavoro non è renderti un esperto. È spiegarti quello che serve sapere a te, in un linguaggio che capisci, e prendere insieme le decisioni che ti riguardano.",
+  },
+  {
+    numero: 4,
+    titolo: '"Non mi fido"',
+    testo:
+      "È una preoccupazione legittima. Per anni il settore della consulenza finanziaria in Italia ha sofferto di conflitti di interesse e venditori travestiti da consulenti. Per questo l'Albo OCF, al quale sono iscritto, esiste per garantire competenze certificate e trasparenza nei rapporti.",
+  },
+];
+
+// ====== TESTI (Momento 3 — cosa cambia con un piano) ======
+const situazioni = [
+  {
+    titolo: 'Quando arriva una decisione importante',
+    testo:
+      "Senza un piano, ogni decisione finanziaria importante diventa una piccola crisi: comprare casa, cambiare lavoro, mandare il figlio all'estero per gli studi. Con un piano, queste decisioni diventano semplicemente passaggi previsti, da gestire con i numeri già pronti sul tavolo.",
+    immagine: 'decisione-importante.webp',
+    posizione: 'left' as const,
+  },
+  {
+    titolo: 'Quando i mercati vanno male',
+    testo:
+      'Senza un piano, una correzione del mercato del 20% diventa una notte insonne e la tentazione di vendere tutto. Con un piano, sai esattamente che ruolo ha quella parte del tuo patrimonio, in quanto tempo si è ripresa storicamente, e perché è giusto restare investito.',
+    immagine: 'mercati-discesa.webp',
+    posizione: 'right' as const,
+  },
+  {
+    titolo: 'Quando si avvicina la pensione',
+    testo:
+      "Senza un piano, la pensione è un'incognita gestita all'ultimo momento. Con un piano, sai quanto avrai realmente da vivere, hai integrato la pensione pubblica con strumenti complementari, e hai costruito un percorso di decumulazione sostenibile.",
+    immagine: 'pensione-vicina.webp',
+    posizione: 'left' as const,
+  },
+  {
+    titolo: 'Quando devi proteggere chi ami',
+    testo:
+      "Senza un piano, in caso di imprevisti la tua famiglia rischia di trovarsi in difficoltà. Con un piano, le coperture giuste sono già attive e adeguate alla tua situazione, e c'è una direzione chiara su come proseguire anche senza di te.",
+    immagine: 'proteggere-famiglia.webp',
+    posizione: 'right' as const,
+  },
+];
+
+// ====== TESTI (Momento 4 — come lavoro io) ======
+const tappe = [
+  {
+    numero: 1,
+    titolo: "Il primo incontro: un'ora di domande che nessuno ti ha mai fatto",
+    testo:
+      "Non parliamo di soldi. Parliamo di te. Della tua famiglia, di cosa ti tiene sveglio la notte, di cosa vorresti che fosse vero della tua vita tra dieci anni. Le scelte finanziarie giuste partono da qui, non dai numeri. Se al termine di questo incontro decidiamo che non c'è affinità di metodo, ci salutiamo da amici e ognuno per la sua strada. Non costa nulla, non vincola a nulla.",
+  },
+  {
+    numero: 2,
+    titolo: "L'analisi della situazione attuale: una fotografia senza giudizio",
+    testo:
+      'Se decidiamo di proseguire, ti chiedo una fotografia della tua situazione attuale: cosa possiedi, cosa devi, cosa entra ed esce ogni mese. Non serve documentazione complessa: bastano gli estratti conto, le buste paga, una panoramica del patrimonio. Da qui costruisco una mappa chiara della tua situazione, senza giudicare quello che hai fatto fino a oggi. Il punto non è il passato, è dove vuoi andare.',
+  },
+  {
+    numero: 3,
+    titolo: 'La definizione degli obiettivi: dare un nome ai sogni',
+    testo:
+      'Insieme trasformiamo i tuoi desideri in obiettivi concreti, con cifre e tempi. "Vorrei essere tranquillo per la pensione" diventa "ho bisogno di X € all\'anno aggiuntivi rispetto alla pensione pubblica, a partire dai 67 anni". "Vorrei aiutare i miei figli" diventa "voglio avere Y € disponibili tra 15 anni per l\'università". È in questo passaggio che la nebbia inizia a diradarsi.',
+  },
+  {
+    numero: 4,
+    titolo: 'Le soluzioni operative: scelte semplici per problemi complessi',
+    testo:
+      'Solo a questo punto entriamo nel concreto degli strumenti: come investire, come proteggerti, come ottimizzare la fiscalità, come strutturare la previdenza complementare. Le soluzioni che propongo sono sempre quelle più semplici possibili che risolvono il problema. Niente prodotti complessi se uno semplice basta. Niente diversificazione eccessiva se non aggiunge valore. La sofisticazione, quando serve, deve avere una ragione precisa.',
+  },
+  {
+    numero: 5,
+    titolo: 'Il monitoraggio nel tempo: il piano è vivo, non un documento',
+    testo:
+      'Ci vediamo almeno una volta all\'anno per fare il punto, e tutte le volte che la tua vita cambia in modo significativo: un nuovo lavoro, un figlio in arrivo, un\'eredità, un divorzio. Il piano si adegua a te, non viceversa. Sei tu a guidare, io a tenere la rotta dei numeri.',
+  },
+];
+
+// ====== TESTI (Momento 5 — per chi e' / per chi non e') ======
+const lavoriamoBene = [
+  'Vuoi capire le scelte che facciamo, non solo delegarle',
+  "Sei disposto a guardare la tua situazione con onestà, anche dove c'è da migliorare",
+  'Pensi a orizzonti di anni, non di mesi',
+  'Cerchi un consulente che ti dica anche le cose scomode, non solo quelle che vuoi sentire',
+  'Hai obiettivi reali, non l\'ambizione di "battere il mercato"',
+];
+
+const nonCercaMioMetodo = [
+  'Vuoi qualcuno che ti consigli azioni speculative o investimenti tattici di breve periodo',
+  'Cerchi rendimenti garantiti elevati, scollegati dalla realtà dei mercati',
+  'Non sei disposto a condividere le informazioni necessarie per una pianificazione seria',
+  'Vuoi delegare completamente senza essere coinvolto nelle decisioni',
+];
 ---
 
 <Layout metadata={metadata}>
 
+  <!-- =================================================================
+       MOMENTO 1 — HERO
+       ================================================================= -->
+  <section class="bg-[var(--aw-color-bg-cream,rgb(238_247_246))] py-20 lg:py-32">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-10 lg:gap-16 items-center">
+
+        <div class="order-2 lg:order-1">
+          <h1
+            data-hero-element
+            class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight text-[var(--aw-color-text-heading)] mb-5"
+          >
+            Pianificazione finanziaria
+          </h1>
+
+          <p
+            data-hero-element
+            class="font-display text-xl md:text-2xl font-medium leading-snug text-[var(--aw-color-primary)] mb-8"
+          >
+            Per chi vuole smettere di pensare ai soldi all'ultimo momento e iniziare a costruire qualcosa che duri.
+          </p>
+
+          <p
+            data-hero-element
+            class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)] mb-10"
+          >
+            Forse hai un mutuo da gestire, dei figli a cui pensare, una pensione che senti sempre più lontana. Forse hai messo da parte qualcosa ma non sai bene cosa farne, oppure stai investendo da anni senza essere sicuro di farlo nel modo giusto. Quello che hai in comune con la maggior parte delle persone che incontro è una sensazione: che le decisioni finanziarie importanti vengano sempre rimandate, perché sono complicate, perché manca il tempo, perché non si sa da dove iniziare.
+          </p>
+
+          <div data-hero-element>
+            <a
+              href="#form-richiesta"
+              data-magnetic
+              class="inline-flex items-center justify-center px-8 py-4 bg-[#00A652] hover:bg-[#0F4F4A] text-white text-base md:text-lg font-medium rounded-lg transition-colors hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A652]/30 focus-visible:ring-offset-2"
+            >
+              Parliamone — primo incontro gratuito
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero image (right). TODO: caricare hero-mattino.webp in /src/assets/images/pianificazione/ -->
+        <div data-hero-element class="order-1 lg:order-2">
+          <div
+            class="aspect-[4/5] w-full max-w-md mx-auto overflow-hidden rounded-2xl bg-gray-200 shadow-lg flex items-center justify-center"
+            role="img"
+            aria-label="Pianificazione finanziaria"
+          >
+            <span class="text-xs tracking-[0.2em] uppercase text-gray-500 px-4 text-center">
+              Immagine: hero-mattino.webp
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 2 — PERCHE' MOLTI NON PIANIFICANO
+       ================================================================= -->
+  <section class="bg-white py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="reveal max-w-3xl mb-14">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-6">
+          Perché in molti non pianificano davvero
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+          Nella mia esperienza, le ragioni per cui le persone non si fermano mai a pianificare seriamente la propria vita finanziaria sono quasi sempre le stesse quattro. Forse riconoscerai te stesso in una di queste.
+        </p>
+      </div>
+
+      <div class="reveal-stagger grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        {motivi.map((m) => (
+          <MotivoNonPianifica numero={m.numero} titolo={m.titolo} testo={m.testo} />
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 3 — COSA CAMBIA CON UN PIANO
+       ================================================================= -->
+  <section class="bg-[var(--aw-color-bg-cream,rgb(238_247_246))] py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="reveal max-w-3xl mb-16">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-6">
+          Cosa cambia davvero quando hai un piano
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+          La differenza tra avere un piano finanziario e non averlo non si misura solo in euro. Si misura in tranquillità, in chiarezza, in capacità di prendere decisioni senza ansia. Ecco cosa cambia, concretamente, nella vita di chi ha pianificato.
+        </p>
+      </div>
+
+      <div class="space-y-16 md:space-y-24">
+        {situazioni.map((s) => (
+          <SituazioneVita
+            titolo={s.titolo}
+            testo={s.testo}
+            immagine={s.immagine}
+            posizione={s.posizione}
+          />
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 4 — COME LAVORO IO
+       ================================================================= -->
+  <section class="bg-white py-24">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="reveal max-w-3xl mb-12">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-6">
+          Come lavoro con te
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+          La pianificazione finanziaria non è un prodotto che si acquista. È un percorso che costruiamo insieme. Ti racconto come funziona davvero, dal primo contatto alla revisione annuale.
+        </p>
+      </div>
+
+      <!-- Immagine in cima alla sezione. TODO: caricare consulenza-conversazione.webp -->
+      <div class="reveal max-w-4xl mx-auto mb-16">
+        <div
+          class="aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-200 shadow-md flex items-center justify-center"
+          role="img"
+          aria-label="Una conversazione di consulenza intorno a un tavolo"
+        >
+          <span class="text-xs tracking-[0.2em] uppercase text-gray-500 px-4 text-center">
+            Immagine: consulenza-conversazione.webp
+          </span>
+        </div>
+      </div>
+
+      <!-- Timeline verticale: linea centrale + 5 tappe -->
+      <ol class="relative max-w-3xl mx-auto pi-timeline">
+        {tappe.map((t, i) => (
+          <MomentoPercorso
+            numero={t.numero}
+            titolo={t.titolo}
+            testo={t.testo}
+            ultimo={i === tappe.length - 1}
+          />
+        ))}
+      </ol>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 5 — PER CHI E' / PER CHI NON E'
+       ================================================================= -->
+  <section class="bg-white py-20 border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="reveal max-w-3xl mb-12">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-6">
+          Per chi ha senso lavorare con me
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+          Non sono il consulente giusto per tutti. Preferisco essere onesto da subito su chi trovo bene con il mio metodo e chi probabilmente no. Risparmia tempo a entrambi.
+        </p>
+      </div>
+
+      <div class="reveal-stagger grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <ListaCriteri
+          titolo="Lavoriamo bene insieme se:"
+          items={lavoriamoBene}
+          variante="emerald"
+        />
+        <ListaCriteri
+          titolo="Probabilmente non ho il metodo che cerchi se:"
+          items={nonCercaMioMetodo}
+          variante="ochre"
+        />
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 6A — STORIA (charcoal scuro / testo ivory)
+       ================================================================= -->
+  <section class="bg-[var(--aw-color-text-heading)] py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Immagine decorativa sopra il testo. TODO: caricare storia-pomeriggio.webp -->
+      <div class="reveal mb-12">
+        <div
+          class="aspect-[16/9] w-full max-w-md mx-auto overflow-hidden rounded-2xl bg-gray-700/50 shadow-lg flex items-center justify-center"
+          role="img"
+          aria-label="Pomeriggio di consulenza, una storia che si ripete"
+        >
+          <span class="text-xs tracking-[0.2em] uppercase text-gray-300 px-4 text-center">
+            Immagine: storia-pomeriggio.webp
+          </span>
+        </div>
+      </div>
+
+      <div class="reveal text-[rgb(238_247_246)]">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight mb-10">
+          Una storia, prima di salutarci
+        </h2>
+
+        <div class="space-y-7 text-lg leading-[1.8]">
+          <p>
+            Una delle situazioni che incontro più spesso è questa. Una coppia sui quarant'anni, due stipendi dignitosi, una figlia di otto anni. Hanno messo da parte negli anni una cifra rispettabile, ma ferma sul conto corrente. "Aspettiamo il momento giusto per investire", mi dicono al primo incontro. Quel momento, in dieci anni di lavoro, non è mai arrivato. Nel frattempo, l'inflazione ha eroso silenziosamente il potere d'acquisto di quei risparmi, e l'università della figlia, che sembrava lontana, ora è a meno di dieci anni.
+          </p>
+          <p>
+            Quando facciamo la prima fotografia della loro situazione, la prima reazione è spesso di sollievo. Non perché i numeri siano spettacolari — non lo sono mai — ma perché finalmente vedono la realtà con chiarezza. Da lì in poi, tutto diventa più semplice: ci sono priorità chiare, scadenze precise, scelte concrete da fare. La nebbia si dirada.
+          </p>
+          <p>
+            Non è un caso unico. È quello che succede praticamente sempre quando qualcuno decide di smettere di rimandare e di guardare in faccia la propria vita finanziaria con un metodo serio.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 6B — CTA FINALE (ivory chiaro)
+       ================================================================= -->
+  <section class="bg-[var(--aw-color-bg-cream,rgb(238_247_246))] py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="reveal max-w-3xl mx-auto text-center mb-12">
+        <h2 class="font-display text-3xl lg:text-4xl font-medium leading-snug tracking-tight text-[var(--aw-color-text-heading)] mb-6">
+          Il primo passo è una conversazione
+        </h2>
+        <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+          Il primo incontro dura circa un'ora, è gratuito e senza alcun impegno. Ci si conosce, si capisce se c'è affinità di metodo, si fanno le domande giuste. Non servono documenti particolari, basta la voglia di metterti in gioco sul serio.
+        </p>
+      </div>
+
+      <div class="reveal-stagger grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10">
+        <CardContatto
+          titolo="Modulo"
+          testo="Compila il modulo qui sotto"
+          href="#form-richiesta"
+          icona="modulo"
+          sameTab={true}
+        />
+        <CardContatto
+          titolo="Email"
+          testo="info@giardiniconsulenza.it"
+          href="mailto:info@giardiniconsulenza.it"
+          icona="email"
+        />
+        <CardContatto
+          titolo="WhatsApp"
+          testo="+39 351 545 6845"
+          href="https://wa.me/393515456845"
+          icona="whatsapp"
+        />
+      </div>
+
+      <p class="reveal text-center text-base md:text-lg text-[var(--aw-color-text-muted)] italic mb-10">
+        Risponderò personalmente entro 24 ore.
+      </p>
+
+      <div class="reveal text-center">
+        <a
+          href="#form-richiesta"
+          data-magnetic
+          class="inline-flex items-center justify-center px-8 py-4 bg-[#00A652] hover:bg-[#0F4F4A] text-white text-base md:text-lg font-medium rounded-lg transition-colors hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00A652]/30 focus-visible:ring-offset-2"
+        >
+          Compila il modulo
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =================================================================
+       MOMENTO 7 — MODULO DI CONTATTO (riusa il form esistente)
+       Tutte le sezioni di ServiceLayout sono disabilitate tranne il form,
+       che mantiene la sua logica e gli endpoint Web3Forms intatti.
+       ================================================================= -->
   <ServiceLayout
-    heroTitle="Pianificazione finanziaria"
-    heroParagraphs={[
-      `È quel processo in cui analizzo i tuoi bisogni, inclusi quelli della tua famiglia, e le tue aspettative di vita nel modo più oggettivo possibile. <strong class="text-[var(--aw-color-primary)]">Analizzeremo insieme la tua situazione e valuteremo quali siano gli obiettivi e le migliori scelte economiche per il futuro tuo e della tua famiglia.</strong>`,
-    ]}
-    heroCtaText="Prendi un appuntamento!"
-    heroCtaHref="#come-ricevere"
-    heroVideoLabel="Pianificazione Finanziaria"
-
+    heroTitle=""
+    showHero={false}
     showExample={false}
-
-    showRiskSection={true}
-    riskTitle="Non pianificare significa rischiare"
-    riskParagraphs={[
-      `In ogni ambito della propria vita è <strong>necessario essere adeguatamente preparati</strong>. Una <strong class="text-[var(--aw-color-primary)]">pianificazione finanziaria</strong> ci permette di raggiungere i nostri <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> e ci protegge da situazioni di difficoltà finanziarie.`,
-    ]}
-    riskBlocks={['Risk Management', 'Acquisto Casa', 'Obiettivi di Vita', 'Pensione']}
-
-    showStepsSection={true}
-    stepsItems={[
-      { number: '1', title: 'Analisi Obiettivi', icon: 'target' },
-      { number: '2', title: 'Esame del budgeting', icon: 'books' },
-      { number: '3', title: 'Valutazione profilo di rischio', icon: 'shield' },
-      { number: '4', title: 'Soluzioni di investimento', icon: 'chart' },
-      { number: '5', title: 'Monitoraggio', icon: 'search' },
-    ]}
-
-    detailTitle="Più nel dettaglio"
-    detailIntro={[
-      `Tra gli obiettivi più classici trovo:`,
-    ]}
-    advantagesTitle=""
-    advantages={[
-      `La gestione del <strong class="text-[var(--aw-color-primary)]">rischio</strong> per le varie attività con l'analisi degli <strong class="text-[var(--aw-color-primary)]">investimenti</strong> o degli indebitamenti (prestiti, mutui);`,
-      `La possibile creazione di un capitale da usare per l'istruzione dei tuoi figli;`,
-      `La valutazione di come gestire il denaro ad esempio per l'acquisto di una casa (sia per viverci sia per investimento);`,
-      `La <strong class="text-[var(--aw-color-primary)]">previdenza complementare</strong> per la tua pensione.`,
-    ]}
-    analysisItems={[]}
-    detailOutro={[
-      `Raggiungerli è complesso e, poiché ti riguarda direttamente, io posso aiutarti in questo, <strong class="text-[var(--aw-color-primary)]">fornendoti una valutazione oggettiva e professionale</strong> della tua situazione e definendo assieme a te quali siano gli obiettivi e le migliori scelte economiche per il futuro tuo e della tua famiglia.`,
-    ]}
-
-    faqTitle="Risolvi i tuoi dubbi"
-    faqParagraphs={[
-      `In cosa consiste la pianificazione? Perché effettuare una pianificazione? Quali obiettivi si possono raggiungere grazie ad una corretta gestione delle proprie risorse?`,
-      `Rispondo alle domande più frequenti in un video dedicato: chiaro, completo e senza giri di parole.`,
-    ]}
-    faqVideoLabel="Rispondo alle domande sulla pianificazione finanziaria"
-
-    bannerTitle="Prendi un appuntamento"
-    bannerSubtitle={`il primo incontro è <strong class="text-[var(--aw-color-primary)]">gratuito</strong> e <strong class="text-[var(--aw-color-primary)]">senza impegno</strong>`}
-
-    receiveTitle="Come richiedere la pianificazione"
-    receiveParagraphs={[
-      `Per avviare un percorso di pianificazione finanziaria, compila la form qui sotto, manda una mail a <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] underline font-semibold">andrea@giardiniconsulenza.it</a> o manda un messaggio WhatsApp al numero <strong class="text-[var(--aw-color-primary)]">+39 351 545 6845</strong>.`,
-      `Nel primo incontro (in presenza o da remoto) ci conosciamo e capiamo se c'è affinità di <strong class="text-[var(--aw-color-primary)]">metodo</strong>. Se decidiamo di procedere, avvio l'analisi della tua situazione e preparo una prima bozza di piano <strong class="text-[var(--aw-color-primary)]">personalizzato</strong> da discutere insieme.`,
-      `Non servono documenti particolari all'inizio — bastano una panoramica generale della tua situazione e la voglia di metterti in gioco sul serio.`,
-    ]}
-    receiveCtaText="Istruzioni per la compilazione della richiesta"
-
+    showDetail={false}
+    showRiskSection={false}
+    showStepsSection={false}
+    showPensionSection={false}
+    showSimulatorBanner={false}
+    showSolutionsSection={false}
+    showProblemsSection={false}
+    showTimelineSection={false}
+    showBenefitsSection={false}
+    showBanner={false}
+    showReceive={false}
+    showSimpleReceive={false}
     showForm={true}
     formTitle="Modulo di richiesta"
     formSubtitle={[
-      `Compila la form per prenotare il primo incontro <strong class="text-[var(--aw-color-primary)]">gratuito</strong> e <strong class="text-[var(--aw-color-primary)]">senza impegno</strong>.`,
-      `Se vuoi, puoi già allegare documenti utili per un'analisi più approfondita.`,
+      `Raccontami brevemente la tua situazione e cosa ti spinge a cercare un consulente. Risponderò personalmente entro 24 ore per fissare il primo incontro.`,
     ]}
     showFileUpload={true}
     showInvestmentDate={false}
+    uploadMessage="Se ti fa piacere, puoi già allegare uno screenshot del tuo portafoglio, l'ultima dichiarazione dei redditi, o qualsiasi documento che ti aiuti a darmi un'idea della tua situazione. Non è obbligatorio. Tutto ciò che condividi è trattato con riservatezza assoluta."
   />
 
 </Layout>
+
+<style>
+  /* Font display per i titoli — Playfair Display se installato,
+     altrimenti fallback eleganti su Georgia. La nuova pagina onora
+     l'intento del brief brand senza richiedere font globali. */
+  .font-display {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+
+  /* Linea verticale della timeline Sezione 4: parte dal centro del
+     primo cerchio e termina nel centro dell'ultimo. Il cerchio ha
+     diametro 48px (h-12 w-12), quindi linea a left:24px. */
+  .pi-timeline {
+    position: relative;
+  }
+  .pi-timeline::before {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: rgba(22, 105, 99, 0.18);
+    pointer-events: none;
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+// Card con lista di criteri per Sezione 5 "Per chi e' / per chi non e'".
+// Due varianti di colore: 'emerald' (positivi) e 'ochre' (negativi).
+
+interface Props {
+  titolo: string;
+  items: string[];
+  variante: 'emerald' | 'ochre';
+}
+
+const { titolo, items, variante } = Astro.props;
+
+const styles = {
+  emerald: {
+    container: 'bg-[rgba(0,166,82,0.06)] border-[rgba(0,166,82,0.35)]',
+    icon: 'text-[#00A652]',
+    label: 'text-[#0F4F4A]',
+  },
+  ochre: {
+    container: 'bg-[rgba(171,127,98,0.07)] border-[rgba(171,127,98,0.35)]',
+    icon: 'text-[var(--aw-color-accent)]',
+    label: 'text-[#6B4F38]',
+  },
+}[variante];
+---
+
+<section
+  class={`reveal rounded-2xl border ${styles.container} p-7 md:p-9 shadow-sm`}
+>
+  <h3 class={`font-display text-xl md:text-2xl font-medium leading-snug mb-6 ${styles.label}`}>
+    {titolo}
+  </h3>
+  <ul class="space-y-4">
+    {items.map((item) => (
+      <li class="flex gap-3 text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+        <span
+          class={`flex-shrink-0 mt-1 ${styles.icon}`}
+          aria-hidden="true"
+        >
+          {variante === 'emerald' ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          )}
+        </span>
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+</section>

@@ -1,0 +1,35 @@
+---
+// Singola tappa della timeline verticale Sezione 4 "Come lavoro io".
+// La linea verticale e il cerchio numerato sono parte del componente:
+// per il rendering corretto, il container parent deve avere `relative`
+// e una pseudo-linea CSS che gestiamo a livello di pagina.
+
+interface Props {
+  numero: number;
+  titolo: string;
+  testo: string;
+  /** True se e' l'ultima tappa: niente linea sotto. */
+  ultimo?: boolean;
+}
+
+const { numero, titolo, testo, ultimo = false } = Astro.props;
+---
+
+<li class="reveal relative pl-16 md:pl-20" data-ultimo={ultimo}>
+  {/* Cerchio numerato (allineato con l'asse della linea verticale del parent) */}
+  <span
+    class="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--aw-color-primary)] text-white font-display text-lg font-semibold shadow-md ring-4 ring-white"
+    aria-hidden="true"
+  >
+    {numero}
+  </span>
+
+  <div class={ultimo ? '' : 'pb-12 md:pb-14'}>
+    <h3 class="font-display text-xl md:text-2xl font-medium leading-snug text-[var(--aw-color-text-heading)] mb-3">
+      {titolo}
+    </h3>
+    <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+      {testo}
+    </p>
+  </div>
+</li>

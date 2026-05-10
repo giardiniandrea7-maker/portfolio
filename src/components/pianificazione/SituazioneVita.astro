@@ -1,0 +1,48 @@
+---
+// Blocco testo+immagine alternato per la Sezione 3 "Cosa cambia con un piano".
+// Su desktop: testo a sx o dx in base a `posizione`; immagine sull'altro lato.
+// Su mobile: stack verticale, immagine sopra il testo (sempre).
+// L'immagine se non ancora caricata viene resa come placeholder grigio con TODO.
+
+interface Props {
+  titolo: string;
+  testo: string;
+  /** Nome del file immagine in /src/assets/images/pianificazione/ */
+  immagine: string;
+  /** Lato del testo su desktop. Su mobile e' sempre stack verticale. */
+  posizione: 'left' | 'right';
+  /** Alt text per l'immagine. */
+  alt?: string;
+}
+
+const { titolo, testo, immagine, posizione, alt = '' } = Astro.props;
+const ordineTestoMd = posizione === 'left' ? 'md:order-1' : 'md:order-2';
+const ordineImgMd = posizione === 'left' ? 'md:order-2' : 'md:order-1';
+---
+
+<article
+  class="reveal grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center"
+>
+  <div class={`order-2 ${ordineTestoMd}`}>
+    <h3 class="font-display text-2xl md:text-3xl font-medium leading-snug text-[var(--aw-color-text-heading)] mb-5">
+      {titolo}
+    </h3>
+    <p class="text-base md:text-lg leading-relaxed text-[var(--aw-color-text-default)]">
+      {testo}
+    </p>
+  </div>
+
+  <div class={`order-1 ${ordineImgMd}`}>
+    {/* TODO: caricare immagine /src/assets/images/pianificazione/{immagine} */}
+    <div
+      class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gray-200 shadow-sm flex items-center justify-center"
+      data-parallax="0.3"
+      role="img"
+      aria-label={alt || titolo}
+    >
+      <span class="text-xs tracking-[0.2em] uppercase text-gray-500 px-4 text-center">
+        Immagine: {immagine}
+      </span>
+    </div>
+  </div>
+</article>

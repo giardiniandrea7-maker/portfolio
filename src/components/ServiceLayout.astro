@@ -53,6 +53,9 @@ export interface Props {
   formSubtitle?: string[];
   showFileUpload?: boolean;
   showInvestmentDate?: boolean;
+  /** Messaggio facoltativo sopra l'area di upload del form (standard).
+   *  Se vuoto: niente messaggio (retrocompatibile per le altre pagine /servizi/*). */
+  uploadMessage?: string;
 
   // ==== EXTRA SECTIONS (Pianificazione style) ====
 
@@ -160,6 +163,7 @@ const {
   formSubtitle = [],
   showFileUpload = true,
   showInvestmentDate = false,
+  uploadMessage = '',
 
   // Sezioni extra (default: disattivate)
   showRiskSection = false,
@@ -1273,6 +1277,9 @@ const {
               <label class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
                 {showInvestmentDate ? '7.' : '6.'} Carica i file qui sotto
               </label>
+              {uploadMessage && (
+                <p class="mb-3 text-sm md:text-base text-[var(--aw-color-text-muted)] leading-relaxed">{uploadMessage}</p>
+              )}
               <div class="relative border-2 border-dashed border-gray-300 rounded-md p-8 text-center hover:border-[var(--aw-color-primary)] transition-colors bg-[rgb(238_247_246)]/30">
                 <input type="file" id="svc-files" name="files" multiple
                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
