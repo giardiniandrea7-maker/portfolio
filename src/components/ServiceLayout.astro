@@ -1,0 +1,1376 @@
+---
+// ========================================================
+// SERVICE LAYOUT — Componente riutilizzabile per pagine servizio
+// Struttura replicata da davideberti.it/servizi/[slug]
+// Sezioni:
+//   1. Hero (split: video + testo + CTA)
+//   2. Box "Guarda esempio" (PDF)
+//   3. Più nel dettaglio (testo + liste)
+//   4. Risolvi i tuoi dubbi (split: testo + video FAQ)
+//   5. Banner + Come ricevere + Form richiesta
+// ========================================================
+
+export interface Props {
+  // HERO
+  heroTitle: string;
+  heroParagraphs?: string[];
+  heroCtaText?: string;
+  heroCtaHref?: string;
+  heroVideoLabel?: string;
+
+  // ESEMPIO PDF
+  showExample?: boolean;
+  exampleLabel?: string;
+  exampleNote?: string;
+  examplePdfHref?: string;
+
+  // PIU' NEL DETTAGLIO
+  detailTitle?: string;
+  detailIntro?: string[];
+  advantagesTitle?: string;
+  advantages?: string[];
+  analysisTitle?: string;
+  analysisItems?: string[];
+  detailOutro?: string[];
+
+  // FAQ
+  faqTitle?: string;
+  faqParagraphs?: string[];
+  faqVideoLabel?: string;
+
+  // BANNER
+  bannerTitle?: string;
+  bannerSubtitle?: string;
+
+  // COME RICEVERE
+  receiveTitle?: string;
+  receiveParagraphs?: string[];
+  receiveCtaText?: string;
+
+  // FORM
+  showForm?: boolean;
+  formTitle?: string;
+  formSubtitle?: string[];
+  showFileUpload?: boolean;
+  showInvestmentDate?: boolean;
+
+  // ==== EXTRA SECTIONS (Pianificazione style) ====
+
+  // Sezione "Non pianificare significa rischiare" con illustrazione LEGO
+  showRiskSection?: boolean;
+  riskTitle?: string;
+  riskParagraphs?: string[];
+  riskBlocks?: string[]; // 4 etichette per i blocchi LEGO (es. ['Risk Management', 'Acquisto Casa', 'Obiettivi di Vita', 'Pensione'])
+
+  // Sezione 5 step con icone grandi
+  showStepsSection?: boolean;
+  stepsSectionTitle?: string;
+  stepsItems?: Array<{ number: string; title: string; icon?: string }>;
+
+  // ==== EXTRA SECTIONS (Previdenza style) ====
+
+  // Sezione "La pensione deve essere un traguardo" con curva SVG
+  showPensionSection?: boolean;
+  pensionTitle?: string;
+  pensionParagraphs?: string[];
+
+  // Banner inline "Puoi simulare" con link testuale
+  showSimulatorBanner?: boolean;
+  simulatorTitle?: string;
+  simulatorLinkText?: string;
+  simulatorLinkHref?: string;
+  simulatorSuffix?: string;
+
+  // Sezione "Ma quali soluzioni per te?" con slogan retorico
+  showSolutionsSection?: boolean;
+  solutionsTitle?: string;
+  solutionsParagraphs?: string[];
+  solutionsLinkText?: string;
+  solutionsLinkHref?: string;
+  solutionsSlogan?: string;
+
+  // Flag per nascondere sezioni esistenti
+  showBanner?: boolean;  // il banner sage "Ottienila online..."
+  showReceive?: boolean; // sezione "Come ricevere" con Excel mockup
+
+  // ==== EXTRA SECTIONS (Rolling style) ====
+
+  // Sezione "Liberati dalle proposte..." con 3 card problemi laterali
+  showProblemsSection?: boolean;
+  problemsTitle?: string;
+  problemsParagraphs?: string[];
+  problemsCards?: Array<{ icon?: string; title: string; description: string }>;
+
+  // Sezione "Liquidità remunerata" con timeline 12 mesi
+  showTimelineSection?: boolean;
+  timelineTitle?: string;
+  timelineParagraphs?: string[];
+
+  // Sezione "I vantaggi" 2 colonne
+  showBenefitsSection?: boolean;
+  benefitsTitle?: string;
+  benefitsItems?: string[];
+
+  // Form mode: 'standard' o 'business' (form esteso aziendale)
+  formMode?: 'standard' | 'business';
+
+  // Versione semplice di "Come richiedere" (solo testo, niente mockup Excel)
+  showSimpleReceive?: boolean;
+  simpleReceiveTitle?: string;
+  simpleReceiveParagraphs?: string[];
+
+  // Flag per nascondere sezioni standard (utile per landing ibride)
+  showHero?: boolean;
+  showDetail?: boolean;
+}
+
+const {
+  heroTitle,
+  heroParagraphs = [],
+  heroCtaText = 'Richiedila Ora!',
+  heroCtaHref = '#come-ricevere',
+  heroVideoLabel = 'Video di presentazione',
+
+  showExample = true,
+  exampleLabel = 'Guarda un esempio',
+  exampleNote = '',
+  examplePdfHref = '#',
+
+  detailTitle = 'Più nel dettaglio',
+  detailIntro = [],
+  advantagesTitle = 'I vantaggi:',
+  advantages = [],
+  analysisTitle = '',
+  analysisItems = [],
+  detailOutro = [],
+
+  faqTitle = 'Risolvi i tuoi dubbi',
+  faqParagraphs = [],
+  faqVideoLabel = 'Domande frequenti',
+
+  bannerTitle = '',
+  bannerSubtitle = '',
+
+  receiveTitle = 'Come ricevere il servizio',
+  receiveParagraphs = [],
+  receiveCtaText = 'Istruzioni per la compilazione della richiesta',
+
+  showForm = true,
+  formTitle = 'Modulo di richiesta',
+  formSubtitle = [],
+  showFileUpload = true,
+  showInvestmentDate = false,
+
+  // Sezioni extra (default: disattivate)
+  showRiskSection = false,
+  riskTitle = '',
+  riskParagraphs = [],
+  riskBlocks = [],
+
+  showStepsSection = false,
+  stepsSectionTitle = '',
+  stepsItems = [],
+
+  // Previdenza-style sections
+  showPensionSection = false,
+  pensionTitle = '',
+  pensionParagraphs = [],
+
+  showSimulatorBanner = false,
+  simulatorTitle = '',
+  simulatorLinkText = '',
+  simulatorLinkHref = '#',
+  simulatorSuffix = '',
+
+  showSolutionsSection = false,
+  solutionsTitle = '',
+  solutionsParagraphs = [],
+  solutionsLinkText = '',
+  solutionsLinkHref = '#',
+  solutionsSlogan = '',
+
+  // Flag per nascondere sezioni esistenti (default: visibili)
+  showBanner = true,
+  showReceive = true,
+
+  // Rolling-style sections
+  showProblemsSection = false,
+  problemsTitle = '',
+  problemsParagraphs = [],
+  problemsCards = [],
+
+  showTimelineSection = false,
+  timelineTitle = '',
+  timelineParagraphs = [],
+
+  showBenefitsSection = false,
+  benefitsTitle = 'I vantaggi',
+  benefitsItems = [],
+
+  formMode = 'standard',
+
+  showSimpleReceive = false,
+  simpleReceiveTitle = 'Come richiedere il servizio',
+  simpleReceiveParagraphs = [],
+
+  showHero = true,
+  showDetail = true,
+} = Astro.props;
+---
+
+<!-- ======================================================
+     1. HERO — video sx + testo dx
+     ====================================================== -->
+{showHero && (
+<section class="bg-[rgb(238_247_246)] py-12 md:py-20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+      <!-- Video placeholder sx -->
+      <div class="relative aspect-video bg-gradient-to-br from-[rgb(22_105_99)] to-[rgb(14_74_69)] rounded-md overflow-hidden shadow-xl group cursor-pointer">
+        <!-- Overlay titolo video -->
+        <div class="absolute top-4 left-4 right-4 flex items-start gap-3 z-10">
+          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            </svg>
+          </div>
+          <div class="text-white">
+            <p class="text-sm font-bold font-heading leading-tight">{heroVideoLabel}</p>
+            <p class="text-xs opacity-75">Andrea Giardini | Consulente Finanziario</p>
+          </div>
+        </div>
+
+        <!-- Play icon centrato -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-600 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="white">
+              <polygon points="6 4 20 12 6 20 6 4"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Bottom bar "Guarda su YouTube" -->
+        <div class="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+          <span class="opacity-80">Guarda su</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#FF0000">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>YouTube</span>
+        </div>
+
+        <!-- Watermark "Video" -->
+        <div class="absolute inset-0 flex items-end justify-start p-4 pointer-events-none">
+          <span class="text-[10px] tracking-[0.3em] uppercase text-white/50">Video placeholder</span>
+        </div>
+      </div>
+
+      <!-- Testo dx -->
+      <div>
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-[1.1] font-heading">
+          {heroTitle}
+        </h1>
+
+        <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10">
+          {heroParagraphs.map((p) => (
+            <p set:html={p} />
+          ))}
+        </div>
+
+        <a
+          href={heroCtaHref}
+          class="btn-brand--primary w-full px-8 py-5 md:py-6 text-xl md:text-2xl"
+        >
+          {heroCtaText}
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+)}
+
+<!-- ======================================================
+     2. GUARDA UN ESEMPIO (PDF)
+     ====================================================== -->
+{showExample && (
+  <section class="bg-[rgb(238_247_246)] py-10 md:py-14">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <a
+        href={examplePdfHref}
+        target="_blank"
+        rel="noopener"
+        class="block bg-white rounded-md shadow-md hover:shadow-xl transition-all p-8 md:p-10 text-center group cursor-pointer"
+      >
+        <div class="flex items-center justify-center gap-5 flex-wrap">
+          <!-- Icona PDF -->
+          <div class="relative w-16 h-20 bg-[var(--aw-color-primary)] rounded-sm flex flex-col items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-1">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span class="text-[10px] font-bold text-white tracking-wider">PDF</span>
+          </div>
+          <!-- Label -->
+          <span class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] font-heading">
+            {exampleLabel}*
+          </span>
+        </div>
+
+        <!-- Badge "in arrivo" -->
+        <div class="mt-4">
+          <span class="inline-block px-3 py-1 bg-[var(--aw-color-accent)]/20 text-[var(--aw-color-primary)] text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm">
+            PDF di esempio in arrivo
+          </span>
+        </div>
+      </a>
+
+      {exampleNote && (
+        <p class="text-center text-xs md:text-sm text-[var(--aw-color-text-muted)] italic mt-6 max-w-2xl mx-auto leading-relaxed" set:html={`*${exampleNote}`} />
+      )}
+
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 1. SEZIONE RISK / LEGO (Pianificazione)
+     ====================================================== -->
+{showRiskSection && (
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            {riskTitle}
+          </h2>
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            {riskParagraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+        </div>
+
+        <!-- Illustrazione LEGO dx -->
+        <div class="relative">
+          <svg viewBox="0 0 480 420" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Filtro per un lieve shadow -->
+              <filter id="lego-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.08"/>
+              </filter>
+            </defs>
+
+            <g stroke="var(--aw-color-text-heading)" stroke-width="2" fill="none" stroke-linejoin="round" filter="url(#lego-shadow)">
+
+              <!-- BLOCCO 1: Risk Management (in alto-sinistra) -->
+              <g>
+                <!-- bottoni -->
+                {[0,1,2,3].map((i) => (
+                  <g>
+                    <ellipse cx={50 + i*30} cy="30" rx="14" ry="6" fill="white"/>
+                    <line x1={50 + i*30 - 14} y1="30" x2={50 + i*30 - 14} y2="40"/>
+                    <line x1={50 + i*30 + 14} y1="30" x2={50 + i*30 + 14} y2="40"/>
+                    <ellipse cx={50 + i*30} cy="40" rx="14" ry="6" fill="white"/>
+                  </g>
+                ))}
+                <!-- corpo blocco -->
+                <path d="M 35 45 L 35 130 L 185 130 L 185 45" fill="white"/>
+                <!-- dettaglio frontale 3D -->
+                <path d="M 35 45 L 45 55 L 45 140 L 35 130" fill="#F5F1E8" fill-opacity="0.6"/>
+                <path d="M 185 45 L 195 55 L 195 140 L 185 130" fill="#F5F1E8" fill-opacity="0.4"/>
+                <path d="M 45 55 L 195 55" />
+              </g>
+
+              <!-- Icona scudo in Risk Management -->
+              <g transform="translate(62, 70)" stroke-width="1.8">
+                <path d="M 20 0 L 0 8 L 0 24 C 0 34 8 42 20 46 C 32 42 40 34 40 24 L 40 8 Z" fill="none"/>
+                <path d="M 14 22 L 18 26 L 26 16" stroke-linecap="round"/>
+              </g>
+
+              <!-- Testo Risk Management -->
+              <text x="110" y="82" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Risk</text>
+              <text x="110" y="98" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Management</text>
+
+              <!-- BLOCCO 2: Acquisto Casa (in alto-destra) -->
+              <g>
+                {[0,1,2,3].map((i) => (
+                  <g>
+                    <ellipse cx={270 + i*30} cy="30" rx="14" ry="6" fill="white"/>
+                    <line x1={270 + i*30 - 14} y1="30" x2={270 + i*30 - 14} y2="40"/>
+                    <line x1={270 + i*30 + 14} y1="30" x2={270 + i*30 + 14} y2="40"/>
+                    <ellipse cx={270 + i*30} cy="40" rx="14" ry="6" fill="white"/>
+                  </g>
+                ))}
+                <path d="M 255 45 L 255 130 L 405 130 L 405 45" fill="white"/>
+                <path d="M 255 45 L 265 55 L 265 140 L 255 130" fill="#F5F1E8" fill-opacity="0.6"/>
+                <path d="M 405 45 L 415 55 L 415 140 L 405 130" fill="#F5F1E8" fill-opacity="0.4"/>
+                <path d="M 265 55 L 415 55" />
+              </g>
+
+              <!-- Icona casa -->
+              <g transform="translate(290, 70)" stroke-width="1.8">
+                <path d="M 0 20 L 20 2 L 40 20 L 40 40 L 0 40 Z" fill="none"/>
+                <path d="M 15 40 L 15 28 L 25 28 L 25 40"/>
+              </g>
+
+              <text x="330" y="82" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Acquisto</text>
+              <text x="330" y="98" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Casa</text>
+
+              <!-- BLOCCO 3: Obiettivi di Vita (in basso-sinistra) -->
+              <g>
+                {[0,1,2,3].map((i) => (
+                  <g>
+                    <ellipse cx={50 + i*30} cy="175" rx="14" ry="6" fill="white"/>
+                    <line x1={50 + i*30 - 14} y1="175" x2={50 + i*30 - 14} y2="185"/>
+                    <line x1={50 + i*30 + 14} y1="175" x2={50 + i*30 + 14} y2="185"/>
+                    <ellipse cx={50 + i*30} cy="185" rx="14" ry="6" fill="white"/>
+                  </g>
+                ))}
+                <path d="M 35 190 L 35 275 L 185 275 L 185 190" fill="white"/>
+                <path d="M 35 190 L 45 200 L 45 285 L 35 275" fill="#F5F1E8" fill-opacity="0.6"/>
+                <path d="M 185 190 L 195 200 L 195 285 L 185 275" fill="#F5F1E8" fill-opacity="0.4"/>
+                <path d="M 45 200 L 195 200" />
+              </g>
+
+              <!-- Icona cappello laurea -->
+              <g transform="translate(75, 217)" stroke-width="1.8">
+                <path d="M 20 0 L 0 8 L 20 16 L 40 8 Z" fill="none"/>
+                <path d="M 5 10 L 5 24 C 5 30 15 32 20 32 C 25 32 35 30 35 24 L 35 10"/>
+                <line x1="40" y1="8" x2="40" y2="20" stroke-linecap="round"/>
+              </g>
+
+              <text x="110" y="232" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Obiettivi</text>
+              <text x="110" y="248" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">di Vita</text>
+
+              <!-- BLOCCO 4: Pensione (in basso-destra) -->
+              <g>
+                {[0,1,2,3].map((i) => (
+                  <g>
+                    <ellipse cx={270 + i*30} cy="175" rx="14" ry="6" fill="white"/>
+                    <line x1={270 + i*30 - 14} y1="175" x2={270 + i*30 - 14} y2="185"/>
+                    <line x1={270 + i*30 + 14} y1="175" x2={270 + i*30 + 14} y2="185"/>
+                    <ellipse cx={270 + i*30} cy="185" rx="14" ry="6" fill="white"/>
+                  </g>
+                ))}
+                <path d="M 255 190 L 255 275 L 405 275 L 405 190" fill="white"/>
+                <path d="M 255 190 L 265 200 L 265 285 L 255 275" fill="#F5F1E8" fill-opacity="0.6"/>
+                <path d="M 405 190 L 415 200 L 415 285 L 405 275" fill="#F5F1E8" fill-opacity="0.4"/>
+                <path d="M 265 200 L 415 200" />
+              </g>
+
+              <!-- Icona sacco soldi -->
+              <g transform="translate(295, 215)" stroke-width="1.8">
+                <path d="M 10 8 C 10 4 14 0 20 0 C 26 0 30 4 30 8 L 34 12 C 38 18 40 26 40 32 C 40 38 32 40 20 40 C 8 40 0 38 0 32 C 0 26 2 18 6 12 Z" fill="none"/>
+                <text x="20" y="28" text-anchor="middle" font-size="14" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">€</text>
+              </g>
+
+              <text x="330" y="232" text-anchor="middle" font-family="Manrope, sans-serif" font-size="14" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">Pensione</text>
+
+            </g>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 2. SEZIONE 5 STEP CON ICONE (Pianificazione)
+     ====================================================== -->
+{showStepsSection && (
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      {stepsSectionTitle && (
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+          {stepsSectionTitle}
+        </h2>
+      )}
+
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-4">
+        {stepsItems.map((step) => (
+          <div class="text-center">
+            <div class="flex justify-center mb-6">
+              <!-- Icona dinamica in base a step.icon -->
+              {step.icon === 'target' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="6"/>
+                  <circle cx="12" cy="12" r="2" fill="var(--aw-color-text-heading)"/>
+                </svg>
+              )}
+              {step.icon === 'books' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  <line x1="8" y1="6" x2="16" y2="6"/>
+                  <line x1="8" y1="10" x2="14" y2="10"/>
+                </svg>
+              )}
+              {step.icon === 'shield' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              )}
+              {step.icon === 'chart' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 17 9 11 13 15 21 7"/>
+                  <polyline points="14 7 21 7 21 14"/>
+                </svg>
+              )}
+              {step.icon === 'search' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+                </svg>
+              )}
+            </div>
+            <h3 class="text-base md:text-lg font-bold text-[var(--aw-color-text-heading)] font-heading leading-tight">
+              <span class="text-[var(--aw-color-primary)]">{step.number}.</span> {step.title}
+            </h3>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 3. SEZIONE "La pensione deve essere un traguardo" (Previdenza)
+     Split: testo sx + curva SVG dx
+     ====================================================== -->
+{showPensionSection && (
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            {pensionTitle}
+          </h2>
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            {pensionParagraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+        </div>
+
+        <!-- Illustrazione curva pensione dx -->
+        <div class="relative">
+          <svg viewBox="0 0 480 300" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- Linea base orizzontale (reddito/tenore di vita attuale) -->
+            <line x1="30" y1="220" x2="300" y2="220"
+                  stroke="var(--aw-color-text-heading)" stroke-width="4" stroke-linecap="round"/>
+
+            <!-- Curva ascendente (il reddito da pensionato che deve mantenere il tenore di vita) -->
+            <path d="M 300 220 Q 370 220 400 180 T 450 60"
+                  stroke="var(--aw-color-accent)" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+            <!-- Tratteggio (ciò che NON è coperto dalla pensione pubblica = il "salto nel vuoto") -->
+            <line x1="300" y1="220" x2="450" y2="220"
+                  stroke="var(--aw-color-text-heading)" stroke-width="4" stroke-linecap="round"
+                  stroke-dasharray="6 10"/>
+
+            <!-- Punto di inflessione "oggi" -->
+            <circle cx="300" cy="220" r="6" fill="var(--aw-color-text-heading)"/>
+
+            <!-- Label (opzionale, sottili) -->
+            <text x="30" y="255" font-family="Manrope, sans-serif" font-size="11" font-weight="600"
+                  fill="var(--aw-color-text-muted)" stroke="none">
+              Vita lavorativa
+            </text>
+            <text x="305" y="255" font-family="Manrope, sans-serif" font-size="11" font-weight="600"
+                  fill="var(--aw-color-text-muted)" stroke="none">
+              Pensione pubblica
+            </text>
+            <text x="390" y="50" font-family="Manrope, sans-serif" font-size="11" font-weight="700"
+                  fill="var(--aw-color-accent)" stroke="none">
+              Tenore di vita
+            </text>
+            <text x="390" y="65" font-family="Manrope, sans-serif" font-size="11" font-weight="700"
+                  fill="var(--aw-color-accent)" stroke="none">
+              necessario
+            </text>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 4. BANNER SIMULATORE (Previdenza)
+     Titolo centrato + link inline testuale
+     ====================================================== -->
+{showSimulatorBanner && (
+  <section class="bg-[rgb(238_247_246)] py-12 md:py-16 border-y border-gray-200/60">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] uppercase mb-4 leading-tight font-heading">
+        {simulatorTitle}
+      </h2>
+      <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+        Prova il <a href={simulatorLinkHref} class="text-[var(--aw-color-primary)] underline underline-offset-2 font-semibold hover:text-[var(--aw-color-accent)] transition-colors">{simulatorLinkText}</a> {simulatorSuffix}
+      </p>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 5. SEZIONE "Ma quali soluzioni per te?" (Previdenza)
+     Split: testo + domande sx + slogan retorico grande dx
+     ====================================================== -->
+{showSolutionsSection && (
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            {solutionsTitle}
+          </h2>
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-6">
+            {solutionsParagraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+
+          {solutionsLinkText && (
+            <a href={solutionsLinkHref} class="inline-block text-base md:text-lg text-[var(--aw-color-primary)] underline underline-offset-2 font-semibold hover:text-[var(--aw-color-accent)] transition-colors">
+              {solutionsLinkText}
+            </a>
+          )}
+        </div>
+
+        <!-- Slogan grande dx -->
+        <div class="flex items-center justify-center">
+          <h3 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-primary)] leading-[1.1] font-heading text-center md:text-left">
+            {solutionsSlogan}
+          </h3>
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 6. SEZIONE "Liberati dalle proposte..." (Rolling)
+     Split: testo sx + 3 card problemi dx (Fondi/Polizze/Conti deposito)
+     ====================================================== -->
+{showProblemsSection && (
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-start">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            {problemsTitle}
+          </h2>
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            {problemsParagraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+        </div>
+
+        <!-- 3 card problemi dx -->
+        <div class="space-y-8 md:space-y-10">
+          {problemsCards.map((card) => (
+            <div class="flex items-start gap-5">
+              <!-- Icona -->
+              <div class="shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+                {card.icon === 'banknote' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="6" width="20" height="12" rx="1"/>
+                    <path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/>
+                    <path d="M12 8v-1"/>
+                    <path d="M12 17v-1"/>
+                    <path d="m16 10 .5 1"/>
+                    <path d="m8 10-.5 1"/>
+                  </svg>
+                )}
+                {card.icon === 'document' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="8" y1="13" x2="16" y2="13"/>
+                    <line x1="8" y1="17" x2="14" y2="17"/>
+                  </svg>
+                )}
+                {card.icon === 'wallet' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/>
+                    <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/>
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                  </svg>
+                )}
+                {card.icon === 'coins' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="8" cy="8" r="6"/>
+                    <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
+                    <path d="M7 6h1v4"/>
+                    <path d="m16.71 13.88.7.71-2.82 2.82"/>
+                  </svg>
+                )}
+              </div>
+              <!-- Testo -->
+              <div class="flex-1 pt-1">
+                <h3 class="text-xl md:text-2xl font-bold text-[var(--aw-color-accent)] mb-2 font-heading leading-tight">
+                  {card.title}
+                </h3>
+                <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+                  {card.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 7. SEZIONE "Liquidità remunerata e disponibile" (Rolling)
+     Split: infografica timeline 12 mesi sx + testo dx
+     ====================================================== -->
+{showTimelineSection && (
+  <section class="bg-white py-16 md:py-24 border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Timeline SVG sx -->
+        <div class="relative">
+          <svg viewBox="0 0 560 420" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+
+            <!-- Totale in alto -->
+            <text x="30" y="30" font-family="Manrope, sans-serif" font-size="20" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">
+              1.200.000
+            </text>
+
+            <!-- COLONNA IMPORTI (stack verticale di scaglioni colorati) -->
+            <!-- 100.000 rosa -->
+            <rect x="30" y="50" width="110" height="32" fill="#E85A7C"/>
+            <text x="85" y="71" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="white" stroke="none">100.000</text>
+
+            <!-- 100.000 giallo -->
+            <rect x="30" y="82" width="110" height="32" fill="#F5C451"/>
+            <text x="85" y="103" text-anchor="middle" font-family="Manrope, sans-serif" font-size="12" font-weight="700" fill="white" stroke="none">100.000</text>
+
+            <!-- 200.000 verde -->
+            <rect x="30" y="114" width="110" height="52" fill="#3FB985"/>
+            <text x="85" y="145" text-anchor="middle" font-family="Manrope, sans-serif" font-size="13" font-weight="700" fill="white" stroke="none">200.000</text>
+
+            <!-- 400.000 azzurro -->
+            <rect x="30" y="166" width="110" height="92" fill="#2A90B8"/>
+            <text x="85" y="217" text-anchor="middle" font-family="Manrope, sans-serif" font-size="14" font-weight="700" fill="white" stroke="none">400.000</text>
+
+            <!-- 400.000 blu scuro -->
+            <rect x="30" y="258" width="110" height="92" fill="#1A3D52"/>
+            <text x="85" y="309" text-anchor="middle" font-family="Manrope, sans-serif" font-size="14" font-weight="700" fill="white" stroke="none">400.000</text>
+
+            <!-- CALENDARIO 12 MESI (2 righe da 6) -->
+            <!-- Riga 1: GEN-GIU -->
+            <line x1="170" y1="55" x2="540" y2="55" stroke="var(--aw-color-text-heading)" stroke-width="2.5"/>
+            <!-- Marker triangoli sulla linea -->
+            {[0,1,2,3,4,5].map((i) => (
+              <polygon points={`${175 + i*62},52 ${183 + i*62},48 ${183 + i*62},56`} fill="var(--aw-color-text-heading)"/>
+            ))}
+            <!-- Label mesi riga 1 -->
+            <text x="185" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">GEN</text>
+            <text x="247" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">FEB</text>
+            <text x="308" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">MAR</text>
+            <text x="370" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">APR</text>
+            <text x="432" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">MAG</text>
+            <text x="497" y="42" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">GIU</text>
+
+            <!-- Barrette scadenze riga 1 + frecce verso il basso -->
+            <!-- GEN: 100k rosa -->
+            <rect x="175" y="80" width="50" height="10" fill="#E85A7C"/>
+            <line x1="200" y1="95" x2="200" y2="130" stroke="var(--aw-color-text-heading)" stroke-width="2"/>
+            <polygon points="195,128 205,128 200,138" fill="var(--aw-color-text-heading)"/>
+
+            <!-- FEB: 100k giallo -->
+            <rect x="238" y="80" width="50" height="10" fill="#F5C451"/>
+            <line x1="263" y1="95" x2="263" y2="130" stroke="var(--aw-color-text-heading)" stroke-width="2"/>
+            <polygon points="258,128 268,128 263,138" fill="var(--aw-color-text-heading)"/>
+
+            <!-- MAR: 200k verde -->
+            <rect x="300" y="75" width="50" height="20" fill="#3FB985"/>
+            <line x1="325" y1="100" x2="325" y2="130" stroke="var(--aw-color-text-heading)" stroke-width="2"/>
+            <polygon points="320,128 330,128 325,138" fill="var(--aw-color-text-heading)"/>
+
+            <!-- APR: 400k azzurro -->
+            <rect x="362" y="70" width="50" height="30" fill="#2A90B8"/>
+            <line x1="387" y1="105" x2="387" y2="130" stroke="var(--aw-color-text-heading)" stroke-width="2"/>
+            <polygon points="382,128 392,128 387,138" fill="var(--aw-color-text-heading)"/>
+
+            <!-- MAG: 400k blu scuro -->
+            <rect x="425" y="70" width="50" height="30" fill="#1A3D52"/>
+            <line x1="450" y1="105" x2="450" y2="130" stroke="var(--aw-color-text-heading)" stroke-width="2"/>
+            <polygon points="445,128 455,128 450,138" fill="var(--aw-color-text-heading)"/>
+
+            <!-- Riga 2: LUG-DIC -->
+            <line x1="170" y1="280" x2="540" y2="280" stroke="var(--aw-color-text-heading)" stroke-width="2.5"/>
+            <!-- Marker triangoli -->
+            {[0,1,2,3,4,5].map((i) => (
+              <polygon points={`${175 + i*62},277 ${183 + i*62},273 ${183 + i*62},281`} fill="var(--aw-color-text-heading)"/>
+            ))}
+            <!-- Label mesi riga 2 -->
+            <text x="186" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">LUG</text>
+            <text x="247" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">AGO</text>
+            <text x="311" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">SET</text>
+            <text x="372" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">OTT</text>
+            <text x="432" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">NOV</text>
+            <text x="499" y="302" font-family="Manrope, sans-serif" font-size="11" font-weight="700" fill="var(--aw-color-text-heading)" stroke="none">DIC</text>
+
+          </svg>
+        </div>
+
+        <!-- Testo dx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            {timelineTitle}
+          </h2>
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            {timelineParagraphs.map((p) => (
+              <p set:html={p} />
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     EXTRA 8. SEZIONE "I vantaggi" 2 colonne (Rolling)
+     ====================================================== -->
+{showBenefitsSection && (
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-12 leading-tight font-heading">
+        {benefitsTitle}
+      </h2>
+
+      <ul class="grid md:grid-cols-2 gap-x-12 gap-y-8 list-disc pl-6 marker:text-[var(--aw-color-primary)]">
+        {benefitsItems.map((item) => (
+          <li class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed pl-2" set:html={item} />
+        ))}
+      </ul>
+
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     3. PIÙ NEL DETTAGLIO
+     ====================================================== -->
+{showDetail && (
+<section class="bg-white py-16 md:py-24">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-10 leading-tight font-heading">
+      {detailTitle}
+    </h2>
+
+    <!-- Intro -->
+    <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
+      {detailIntro.map((p) => (
+        <p set:html={p} />
+      ))}
+    </div>
+
+    <!-- Vantaggi -->
+    {advantages.length > 0 && (
+      <div class="mb-10">
+        <p class="text-base md:text-lg font-bold text-[var(--aw-color-text-heading)] mb-4">{advantagesTitle}</p>
+        <ul class="space-y-3 list-disc pl-6 marker:text-[var(--aw-color-primary)]">
+          {advantages.map((item) => (
+            <li class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed pl-2" set:html={item} />
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Cosa viene analizzato -->
+    {analysisItems.length > 0 && (
+      <div class="mb-10">
+        <p class="text-base md:text-lg font-bold text-[var(--aw-color-text-heading)] mb-4">{analysisTitle}</p>
+        <ul class="space-y-2 list-disc pl-6 marker:text-[var(--aw-color-primary)]">
+          {analysisItems.map((item) => (
+            <li class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed pl-2" set:html={item} />
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Outro -->
+    <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+      {detailOutro.map((p) => (
+        <p set:html={p} />
+      ))}
+    </div>
+
+  </div>
+</section>
+)}
+
+<!-- ======================================================
+     4. RISOLVI I TUOI DUBBI — testo sx + video dx
+     ====================================================== -->
+<section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+      <!-- Testo sx -->
+      <div>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+          {faqTitle}
+        </h2>
+        <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+          {faqParagraphs.map((p) => (
+            <p set:html={p} />
+          ))}
+        </div>
+      </div>
+
+      <!-- Video FAQ placeholder dx -->
+      <div class="relative aspect-video bg-gradient-to-br from-[rgb(22_105_99)] to-[rgb(14_74_69)] rounded-md overflow-hidden shadow-xl group cursor-pointer">
+        <div class="absolute top-4 left-4 right-4 flex items-start gap-3 z-10">
+          <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            </svg>
+          </div>
+          <div class="text-white">
+            <p class="text-sm font-bold font-heading leading-tight">{faqVideoLabel}</p>
+            <p class="text-xs opacity-75">Andrea Giardini | Consulente Finanziario</p>
+          </div>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-600 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="white">
+              <polygon points="6 4 20 12 6 20 6 4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+          <span class="opacity-80">Guarda su</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#FF0000">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span>YouTube</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     5. BANNER (sage) + Come ricevere + Form
+     ====================================================== -->
+
+<!-- Banner sage scuro -->
+{showBanner && (
+<section class="bg-[var(--aw-color-primary)] py-14 md:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4 leading-tight font-heading">
+      {bannerTitle}
+    </h2>
+    {bannerSubtitle && (
+      <p class="text-base md:text-xl text-white/90 leading-relaxed" set:html={bannerSubtitle} />
+    )}
+  </div>
+</section>
+)}
+<!-- Come ricevere -->
+{showReceive && (
+<section id="come-ricevere" class="bg-white py-16 md:py-24">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+      <!-- Testo sx -->
+      <div>
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+          {receiveTitle}
+        </h2>
+        <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10">
+          {receiveParagraphs.map((p) => (
+            <p set:html={p} />
+          ))}
+        </div>
+
+        {receiveCtaText && (
+          <a
+            href="#form-richiesta"
+            class="btn-brand--primary px-8 py-4 text-base"
+          >
+            {receiveCtaText}
+          </a>
+        )}
+      </div>
+
+      <!-- Illustrazione decorativa dx (Excel mockup) -->
+      <div class="relative">
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-[rgb(238_247_246)] to-[rgb(221_240_238)] rounded-md shadow-xl overflow-hidden">
+          <!-- Excel mockup -->
+          <div class="absolute inset-6 bg-white rounded-sm shadow-md overflow-hidden">
+            <!-- Header barra -->
+            <div class="h-6 bg-[var(--aw-color-primary)] flex items-center px-2 gap-1">
+              <div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+              <div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+            </div>
+            <!-- Tabella mockup -->
+            <div class="p-3">
+              <div class="text-[10px] font-bold text-center text-gray-500 mb-2">Percentuale</div>
+              <div class="space-y-1">
+                {['3%', '14%', '2%', '3%', '4%', '5%', '6%', '38%', '20%', '1%', '4%'].map((val) => (
+                  <div class="flex items-center gap-2 text-[10px]">
+                    <div class="h-3 bg-[var(--aw-color-primary)]/20 w-20 rounded-sm"></div>
+                    <span class="text-[var(--aw-color-primary)] font-bold font-mono">{val}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Lente d'ingrandimento decorativa -->
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full border-4 border-white shadow-2xl bg-white/20 backdrop-blur-[2px] flex items-center justify-center">
+            <div class="absolute inset-3 rounded-full bg-white/90 shadow-inner flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-40">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-6 text-center text-sm md:text-base text-[var(--aw-color-text-muted)] italic max-w-sm mx-auto leading-relaxed">
+          Basta uno screen o una foto del tuo <strong class="text-[var(--aw-color-primary)]">portafoglio</strong>.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+)}
+
+<!-- ======================================================
+     COME RICHIEDERE (versione semplice, solo testo)
+     ====================================================== -->
+{showSimpleReceive && (
+  <section class="bg-white py-16 md:py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+        {simpleReceiveTitle}
+      </h2>
+      <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+        {simpleReceiveParagraphs.map((p) => (
+          <p set:html={p} />
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- ======================================================
+     FORM RICHIESTA
+     ====================================================== -->
+{showForm && (
+  <section id="form-richiesta" class="bg-white pb-16 md:pb-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="bg-white border border-gray-200 rounded-md shadow-xl p-8 md:p-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading">
+          {formTitle}
+        </h2>
+
+        {formSubtitle.length > 0 && (
+          <div class="mb-10 space-y-2 text-sm md:text-base text-[var(--aw-color-text-muted)]">
+            {formSubtitle.map((s) => (
+              <p set:html={s} />
+            ))}
+          </div>
+        )}
+
+        <form class="space-y-6" action="#" method="POST" enctype="multipart/form-data">
+
+          <!-- Nome -->
+          <div>
+            <label for="svc-name" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              1. Nome <span class="text-[rgb(160_50_50)]">*</span>
+            </label>
+            <input type="text" id="svc-name" name="name" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <!-- Cognome -->
+          <div>
+            <label for="svc-surname" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              2. Cognome <span class="text-[rgb(160_50_50)]">*</span>
+            </label>
+            <input type="text" id="svc-surname" name="surname" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="svc-email" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              3. Email <span class="text-[rgb(160_50_50)]">*</span>
+            </label>
+            <input type="email" id="svc-email" name="email" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <!-- Inizio investimenti (opzionale) -->
+          {showInvestmentDate && (
+            <div>
+              <label for="svc-invdate" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                4. Indicativamente quando hai iniziato a investire?
+              </label>
+              <input type="text" id="svc-invdate" name="investment_date" placeholder="es. 2020, 5 anni fa, da poco..."
+                class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+            </div>
+          )}
+
+          <!-- Contatto telefonico -->
+          <div>
+            <label class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              {showInvestmentDate ? '5.' : '4.'} Contatto telefonico
+            </label>
+            <div class="grid grid-cols-[100px_1fr] gap-3">
+              <select name="phone_prefix" class="px-3 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] bg-white">
+                <option value="+39">🇮🇹 +39</option>
+                <option value="+41">🇨🇭 +41</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+34">🇪🇸 +34</option>
+              </select>
+              <input type="tel" name="phone"
+                class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+            </div>
+          </div>
+
+          {formMode === 'business' && (
+            <>
+              <!-- Ruolo in azienda -->
+              <div>
+                <label for="svc-role" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                  5. Qual è il tuo ruolo nell'azienda?
+                </label>
+                <select id="svc-role" name="role" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] bg-white transition-colors">
+                  <option value="">Seleziona...</option>
+                  <option value="titolare">Titolare / Legale rappresentante</option>
+                  <option value="amministratore">Amministratore / CEO</option>
+                  <option value="cfo">CFO / Direttore finanziario</option>
+                  <option value="socio">Socio</option>
+                  <option value="responsabile">Responsabile tesoreria</option>
+                  <option value="consulente">Commercialista / Consulente</option>
+                  <option value="altro">Altro</option>
+                </select>
+              </div>
+
+              <!-- Anni di attività -->
+              <div>
+                <label for="svc-years" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                  6. Da quanti anni è aperta l'azienda?
+                </label>
+                <select id="svc-years" name="company_age" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] bg-white transition-colors">
+                  <option value="">Seleziona...</option>
+                  <option value="0-2">Meno di 2 anni</option>
+                  <option value="2-5">Da 2 a 5 anni</option>
+                  <option value="5-10">Da 5 a 10 anni</option>
+                  <option value="10-20">Da 10 a 20 anni</option>
+                  <option value="20+">Oltre 20 anni</option>
+                </select>
+              </div>
+
+              <!-- Fatturato -->
+              <div>
+                <label for="svc-revenue" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                  7. A quanto ammonta il fatturato dell'azienda?
+                </label>
+                <select id="svc-revenue" name="revenue" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] bg-white transition-colors">
+                  <option value="">Seleziona...</option>
+                  <option value="0-500k">Fino a 500.000 €</option>
+                  <option value="500k-1m">Da 500.000 € a 1 milione €</option>
+                  <option value="1m-5m">Da 1 a 5 milioni €</option>
+                  <option value="5m-10m">Da 5 a 10 milioni €</option>
+                  <option value="10m+">Oltre 10 milioni €</option>
+                </select>
+              </div>
+
+              <!-- Liquidità disponibile -->
+              <div>
+                <label for="svc-liquidity" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                  8. A quanto ammonta la liquidità disponibile in azienda?
+                </label>
+                <select id="svc-liquidity" name="liquidity" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] bg-white transition-colors">
+                  <option value="">Seleziona...</option>
+                  <option value="0-100k">Fino a 100.000 €</option>
+                  <option value="100k-250k">Da 100.000 € a 250.000 €</option>
+                  <option value="250k-500k">Da 250.000 € a 500.000 €</option>
+                  <option value="500k-1m">Da 500.000 € a 1 milione €</option>
+                  <option value="1m+">Oltre 1 milione €</option>
+                </select>
+              </div>
+
+              <!-- Investimenti attivi -->
+              <div>
+                <label for="svc-investments" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                  9. L'azienda ha già degli investimenti attivi?
+                </label>
+                <select id="svc-investments" name="active_investments" class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] bg-white transition-colors">
+                  <option value="">Seleziona...</option>
+                  <option value="si">Sì</option>
+                  <option value="no">No</option>
+                  <option value="valutando">Stiamo valutando</option>
+                </select>
+              </div>
+            </>
+          )}
+
+          <!-- Messaggio -->
+          <div>
+            <label for="svc-message" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              {formMode === 'business' ? '10.' : (showInvestmentDate ? '6.' : '5.')}
+              {formMode === 'business' ? " Scrivi sinteticamente la situazione dell'azienda in questione. Nei box successivi carica eventuali file se necessari." : ' Messaggio'}
+              <span class="text-[rgb(160_50_50)]">*</span>
+            </label>
+            <p class="text-xs text-[var(--aw-color-text-muted)] mb-2">Ulteriori informazioni</p>
+            <textarea id="svc-message" name="message" rows="5" required maxlength="2000"
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors resize-y"></textarea>
+            <p class="text-xs text-right text-[var(--aw-color-text-muted)] mt-1">0/2000</p>
+          </div>
+
+          <!-- Upload file -->
+          {showFileUpload && formMode === 'standard' && (
+            <div>
+              <label class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                {showInvestmentDate ? '7.' : '6.'} Carica i file qui sotto
+              </label>
+              <div class="relative border-2 border-dashed border-gray-300 rounded-md p-8 text-center hover:border-[var(--aw-color-primary)] transition-colors bg-[rgb(238_247_246)]/30">
+                <input type="file" id="svc-files" name="files" multiple
+                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.csv"/>
+                <div class="flex flex-col items-center gap-3 pointer-events-none">
+                  <div class="w-14 h-14 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  </div>
+                  <p class="text-sm text-[var(--aw-color-text-default)]">
+                    <span class="text-[var(--aw-color-primary)] font-semibold underline">Scegli un file da caricare</span>
+                    <span class="text-[var(--aw-color-text-muted)]"> o trascinali e rilasciali qui</span>
+                  </p>
+                  <p class="text-xs text-[var(--aw-color-text-muted)]">PDF, immagini, Excel, CSV (max 10MB)</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <!-- 3 Upload file (business mode) -->
+          {showFileUpload && formMode === 'business' && (
+            <>
+              {[1, 2, 3].map((n) => (
+                <div>
+                  <label class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+                    {10 + n}. Carica File {n}
+                  </label>
+                  <div class="relative border-2 border-dashed border-gray-300 rounded-md p-6 text-center hover:border-[var(--aw-color-primary)] transition-colors bg-[rgb(238_247_246)]/30">
+                    <input type="file" name={`file_${n}`}
+                      class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.csv,.doc,.docx"/>
+                    <div class="flex flex-col items-center gap-2 pointer-events-none">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                      <p class="text-sm">
+                        <span class="text-[var(--aw-color-primary)] font-semibold underline">Scegli un file da caricare</span>
+                        <span class="text-[var(--aw-color-text-muted)]"> o trascinali e rilasciali qui</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
+          <!-- Privacy -->
+          <div>
+            <label class="flex items-start gap-3 text-sm text-[var(--aw-color-text-default)] cursor-pointer">
+              <input type="checkbox" required
+                class="mt-0.5 w-4 h-4 text-[var(--aw-color-primary)] border-gray-300 rounded focus:ring-[var(--aw-color-primary)]"/>
+              <span>
+                Dichiaro di aver letto la <a href="/privacy" class="text-[var(--aw-color-primary)] underline underline-offset-2 hover:text-[var(--aw-color-accent)]">privacy policy</a>
+                e acconsento al trattamento dei dati ivi indicato. <span class="text-[rgb(160_50_50)]">*</span>
+              </span>
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <div class="pt-4 flex justify-end">
+            <button type="submit"
+              class="btn-brand--primary px-10 py-3.5 text-base shadow-md hover:shadow-lg">
+              Invia
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+)}
+
+<script>
+  // Contatore caratteri messaggio
+  const textarea = document.querySelector('#svc-message') as HTMLTextAreaElement | null;
+  const counter = textarea?.parentElement?.querySelector('.text-xs.text-right') as HTMLElement | null;
+  if (textarea && counter) {
+    textarea.addEventListener('input', () => {
+      counter.textContent = `${textarea.value.length}/2000`;
+    });
+  }
+
+  // Mostra nome file caricato
+  const fileInput = document.querySelector('#svc-files') as HTMLInputElement | null;
+  if (fileInput) {
+    fileInput.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+      if (files && files.length > 0) {
+        const dropzone = target.parentElement;
+        if (dropzone) {
+          const label = dropzone.querySelector('p.text-sm') as HTMLElement | null;
+          if (label) {
+            const names = Array.from(files).map((f) => f.name).join(', ');
+            label.innerHTML = `<span class="text-[var(--aw-color-primary)] font-semibold">✓ ${files.length} file selezionati:</span> <span class="text-[var(--aw-color-text-default)]">${names}</span>`;
+          }
+        }
+      }
+    });
+  }
+</script>

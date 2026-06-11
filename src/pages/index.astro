@@ -1,321 +1,446 @@
----
+﻿---
 import Layout from '~/layouts/PageLayout.astro';
-
-import Header from '~/components/widgets/Header.astro';
-import Hero from '~/components/widgets/Hero.astro';
-import Content from '~/components/widgets/Content.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import Features3 from '~/components/widgets/Features3.astro';
-import Steps from '~/components/widgets/Steps.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
-import { getPermalink } from '~/utils/permalinks';
 
 const metadata = {
   title: 'Andrea Giardini — Consulente Finanziario',
+  description:
+    'Costruiamo insieme un piano finanziario chiaro e su misura. Diagnosi gratuita del portafoglio, pianificazione patrimoniale, previdenza. Iscritto OCF n. 2965.',
 };
+
+// 4 pilastri del progetto
+const pilastri = [
+  {
+    icon: 'file',
+    title: 'Articoli',
+    description: 'Approfondimenti scritti su temi di educazione finanziaria, mercati, strumenti.',
+    href: '#',
+  },
+  {
+    icon: 'calculator',
+    title: 'Calcolatori',
+    description: 'Strumenti interattivi per pensione, interesse composto, inflazione.',
+    href: '#',
+  },
+  {
+    icon: 'chart',
+    title: 'Diagnosi di portafoglio',
+    description: 'Analisi gratuita e imparziale del tuo portafoglio investimenti.',
+    href: '/richiedi-diagnosi',
+  },
+  {
+    icon: 'news',
+    title: 'News',
+    description: 'Aggiornamenti curati sui principali eventi di mercato ed economia.',
+    href: '#',
+  },
+];
+
+// Servizi (4 card)
+const servizi = [
+  {
+    icon: 'search',
+    title: 'Diagnosi di Portafoglio',
+    description: 'Analisi gratuita e imparziale dei tuoi investimenti. Costi, rischi, rendimenti attesi.',
+    href: '/servizi/diagnosi',
+    cta: 'Scopri di più',
+  },
+  {
+    icon: 'trending',
+    title: 'Pianificazione Finanziaria',
+    description: 'Un piano personalizzato per i tuoi obiettivi di vita: casa, figli, pensione.',
+    href: '/servizi/pianificazione',
+    cta: 'Scopri di più',
+  },
+  {
+    icon: 'clock',
+    title: 'Previdenza Complementare',
+    description: "L'evoluzione che sta subendo il mondo delle pensioni rende questo servizio necessario.",
+    href: '/servizi/previdenza',
+    cta: 'Scopri di più',
+  },
+];
 ---
 
 <Layout metadata={metadata}>
-  <Fragment slot="announcement"></Fragment>
-  <Fragment slot="header">
-    <Header
-      links={[
-        { text: 'Home', href: '#' },
-        { text: 'Chi sono', href: '#about' },
-        { text: 'Percorso', href: '#resume' },
-        { text: 'Servizi', href: '#portfolio' },
-        { text: 'Blog', href: '#blog' },
-      ]}
-      actions={[
-        {
-          text: 'Scrivimi',
-          href: '#contact',
-        },
-      ]}
-      isSticky
-      showToggleTheme
-    />
-  </Fragment>
 
-  <!-- Hero Widget ******************* -->
+  <!-- =========================================================
+       1. HERO CORTO — video sx + testo dx + 2 CTA
+       ========================================================= -->
+  <section class="bg-[rgb(238_247_246)] py-12 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
-  <Hero
-    id="hero"
-    title="Andrea Giardini"
-    tagline="Consulente Finanziario"
-    actions={[{ variant: 'primary', text: 'Scrivimi', href: getPermalink('/contact#form') }]}
-  >
-    <Fragment slot="subtitle">
-      Affianco persone e famiglie nella pianificazione finanziaria con un metodo basato sull&apos;ascolto,
-      sulla trasparenza e su competenze certificate. <br /> Investire bene è prima di tutto investire
-      con consapevolezza.
-    </Fragment>
-  </Hero>
+        <!-- Video placeholder sx -->
+        <div class="relative aspect-video bg-gradient-to-br from-[rgb(22_105_99)] to-[rgb(14_74_69)] rounded-md overflow-hidden shadow-xl group cursor-pointer">
+          <div class="absolute top-4 left-4 right-4 flex items-start gap-3 z-10">
+            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+              </svg>
+            </div>
+            <div class="text-white">
+              <p class="text-sm font-bold font-heading leading-tight">Benvenuto</p>
+              <p class="text-xs opacity-75">Andrea Giardini | Consulente Finanziario</p>
+            </div>
+          </div>
 
-  <!-- Content Widget **************** -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-red-600 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="white">
+                <polygon points="6 4 20 12 6 20 6 4"/>
+              </svg>
+            </div>
+          </div>
 
-  <Content
-    id="about"
-    columns={3}
-    items={[
-      {
-        icon: 'tabler:brand-linkedin',
-        callToAction: {
-          target: '_blank',
-          text: 'LinkedIn',
-          href: '#',
-        },
-      },
-      {
-        icon: 'tabler:brand-whatsapp',
-        callToAction: {
-          target: '_blank',
-          text: 'WhatsApp',
-          href: '#',
-        },
-      },
-      {
-        icon: 'tabler:mail',
-        callToAction: {
-          target: '_blank',
-          text: 'Email',
-          href: '#',
-        },
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=774&q=80',
-      alt: 'Immagine professionale',
-      loading: 'eager',
-    }}
-  >
-    <Fragment slot="content">
-      <h2 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Chi sono</h2>
-      <p>
-        Benvenuto. Sono un consulente finanziario abilitato, iscritto all&apos;Albo OCF, e accompagno
-        i miei clienti nella costruzione di percorsi finanziari personalizzati.
-      </p>
-      <br />
-      <p>
-        Credo che la consulenza vera nasca dal dialogo: capire chi ho davanti, quali sono i suoi
-        sogni e le sue preoccupazioni, prima ancora di parlare di prodotti o rendimenti.
-      </p>
-      <br />
-      <p>Per saperne di più, seguimi sui miei canali:</p>
-    </Fragment>
+          <div class="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span class="opacity-80">Guarda su</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#FF0000">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span>YouTube</span>
+          </div>
 
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+          <div class="absolute inset-0 flex items-end justify-start p-4 pointer-events-none">
+            <span class="text-[10px] tracking-[0.3em] uppercase text-white/50">Video placeholder</span>
+          </div>
+        </div>
 
-  <!-- Steps Widget: Percorso professionale ****************** -->
+        <!-- Testo dx -->
+        <div>
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-[1.15] font-heading">
+            Il tuo futuro finanziario, costruito con metodo e chiarezza.
+          </h1>
 
-  <Steps
-    id="resume"
-    title="Percorso professionale"
-    items={[
-      {
-        title:
-          'Consulente Finanziario <br /> <span class="font-normal">Iscritto Albo OCF</span> <br /> <span class="text-sm font-normal">2025 - Presente</span>',
-        description: `Consulente finanziario abilitato all'offerta fuori sede, iscritto all'Albo unico OCF. Accompagno persone e famiglie nella pianificazione patrimoniale, nella gestione del risparmio e nella costruzione di strategie di investimento personalizzate.`,
-        icon: 'tabler:briefcase',
-      },
-    ]}
-    classes={{ container: 'max-w-3xl' }}
-  />
+          <div class="space-y-4 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
+            <p>
+              Sono <strong class="text-[var(--aw-color-primary)]">Andrea Giardini</strong>, consulente finanziario.
+              Aiuto persone e famiglie a mettere ordine nelle proprie finanze: ridurre i <strong class="text-[var(--aw-color-primary)]">costi nascosti</strong> del portafoglio,
+              pianificare gli <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> di vita e costruire una strategia che regge nel tempo.
+            </p>
+            <p>
+              Il primo passo è una <a href="/servizi/diagnosi" class="text-[var(--aw-color-primary)] underline underline-offset-2 font-semibold hover:text-[var(--aw-color-accent)] transition-colors">diagnosi gratuita del tuo portafoglio</a> —
+              senza impegno, senza costi, con un report chiaro e comprensibile.
+            </p>
+          </div>
 
-  <!-- Steps Widget: Formazione ****************** -->
+          <!-- 2 CTA -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="/richiedi-diagnosi"
+              class="btn-brand--primary flex-1 px-6 py-4 text-base md:text-lg"
+            >
+              Richiedi diagnosi gratuita
+            </a>
+            <a
+              href="/chi-sono"
+              class="btn-brand--outline flex-1 px-6 py-4 text-base md:text-lg"
+            >
+              Scopri chi sono
+            </a>
+          </div>
 
-  <Steps
-    id="formazione"
-    title="Formazione e certificazioni"
-    items={[
-      {
-        title: `Abilitazione OCF <br /> <span class="font-normal">Organismo di vigilanza e tenuta dell'albo unico dei Consulenti Finanziari</span> <br /> <span class="text-sm font-normal">Superato esame di abilitazione</span>`,
-        icon: 'tabler:certificate',
-      },
-      {
-        title: `Formazione continua <br /> <span class="font-normal">Aggiornamento costante su mercati, normativa e strumenti finanziari</span>`,
-        icon: 'tabler:school',
-      },
-    ]}
-    classes={{ container: 'max-w-3xl' }}
-  />
+          <p class="text-xs text-[var(--aw-color-text-muted)] mt-5 leading-relaxed">
+            Consulente finanziario <strong class="text-[var(--aw-color-primary)]">abilitato</strong> <strong class="text-[var(--aw-color-primary)]">OCF</strong> n. 2965 · Soggetto autorizzato e vigilato.
+          </p>
+        </div>
 
-  <!-- Features3 Widget: Aree di specializzazione ************** -->
+      </div>
+    </div>
+  </section>
 
-  <Features3
-    title="Aree di specializzazione"
-    subtitle="Le competenze che metto al servizio dei miei clienti, con un approccio globale e personalizzato."
-    columns={3}
-    defaultIcon="tabler:point-filled"
-    items={[
-      {
-        title: 'Pianificazione finanziaria',
-        description: 'Costruzione di una strategia di lungo periodo allineata agli obiettivi della tua vita.',
-      },
-      {
-        title: 'Gestione patrimoniale',
-        description: 'Portafogli costruiti su misura, diversificati e con gestione attiva del rischio.',
-      },
-      {
-        title: 'Check-up finanziario',
-        description: 'Una fotografia chiara della tua situazione attuale, gratuita e senza impegno.',
-      },
-      {
-        title: 'Protezione e previdenza',
-        description: 'Soluzioni assicurative e previdenziali per tutelare te e la tua famiglia.',
-      },
-      {
-        title: 'Pianificazione fiscale',
-        description: 'Ottimizzazione patrimoniale in ottica fiscale e di passaggio generazionale.',
-      },
-      {
-        title: 'Educazione finanziaria',
-        description: 'Ti aiuto a capire cosa stai facendo, perché e come prendere decisioni consapevoli.',
-      },
-    ]}
-  />
+  <!-- =========================================================
+       3. IL PROGETTO — 4 pilastri icone
+       ========================================================= -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-  <!-- Content Widget: Come lavoro - Fase 1 **************** -->
+      <div class="max-w-3xl mx-auto text-center mb-14">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-tight font-heading">
+          Il progetto
+        </h2>
+        <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+          La finanza non dovrebbe essere un privilegio di pochi o un labirinto incomprensibile.
+          Questo progetto nasce per portare <strong class="text-[var(--aw-color-primary)]">educazione finanziaria</strong> concreta a chiunque voglia
+          capire come far lavorare i propri soldi — con strumenti pratici, contenuti chiari e
+          la possibilità di ricevere una guida professionale quando ne hai bisogno.
+        </p>
+      </div>
 
-  <Content
-    id="portfolio"
-    title="Come lavoro"
-    subtitle="Un metodo chiaro, trasparente e costruito intorno a te. Tre passaggi fondamentali per trasformare obiettivi in risultati."
-    isReversed
-    items={[
-      {
-        title: 'Cosa facciamo insieme:',
-        description:
-          'Analizziamo il tuo patrimonio attuale, le tue entrate, uscite, obiettivi di breve e lungo termine. Senza fretta, senza pressioni commerciali.',
-      },
-      {
-        title: 'Cosa ottieni:',
-        description: `Una fotografia chiara e onesta della tua situazione finanziaria, gratuita e senza impegno, che è già di per sé di grande valore.`,
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=928&q=80',
-      alt: 'Ascolto e analisi',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Scopri di più',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Fase 1: <br /><span class="text-2xl">Ascolto e analisi</span>
-      </h3>
-    </Fragment>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+        {pilastri.map((p) => (
+          <a
+            href={p.href}
+            class="group flex flex-col items-center text-center p-6 md:p-8 bg-white rounded-md shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
+          >
+            <!-- Icona -->
+            <div class="mb-5 w-16 h-16 md:w-20 md:h-20 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center group-hover:bg-[var(--aw-color-primary)]/20 transition-colors">
+              {p.icon === 'file' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="8" y1="13" x2="16" y2="13"/>
+                  <line x1="8" y1="17" x2="14" y2="17"/>
+                </svg>
+              )}
+              {p.icon === 'calculator' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2"/>
+                  <line x1="8" y1="6" x2="16" y2="6"/>
+                  <line x1="8" y1="10" x2="10" y2="10"/>
+                  <line x1="12" y1="10" x2="14" y2="10"/>
+                  <line x1="16" y1="10" x2="16" y2="10"/>
+                  <line x1="8" y1="14" x2="10" y2="14"/>
+                  <line x1="12" y1="14" x2="14" y2="14"/>
+                  <line x1="16" y1="14" x2="16" y2="14"/>
+                  <line x1="8" y1="18" x2="10" y2="18"/>
+                  <line x1="12" y1="18" x2="16" y2="18"/>
+                </svg>
+              )}
+              {p.icon === 'chart' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 17 9 11 13 15 21 7"/>
+                  <polyline points="14 7 21 7 21 14"/>
+                </svg>
+              )}
+              {p.icon === 'news' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
+                  <path d="M18 14h-8"/>
+                  <path d="M15 18h-5"/>
+                  <path d="M10 6h8v4h-8V6Z"/>
+                </svg>
+              )}
+            </div>
 
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+            <h3 class="text-base md:text-lg font-bold text-[var(--aw-color-text-heading)] mb-2 leading-tight font-heading">
+              {p.title}
+            </h3>
+            <p class="text-xs md:text-sm text-[var(--aw-color-text-muted)] leading-relaxed">
+              {p.description}
+            </p>
+          </a>
+        ))}
+      </div>
 
-  <!-- Content Widget: Come lavoro - Fase 2 **************** -->
+      <!-- CTA Inizia ora -->
+      <div class="text-center">
+        <a
+          href="/richiedi-diagnosi"
+          class="btn-brand--primary px-10 py-4 text-lg"
+        >
+          Inizia ora!
+        </a>
+      </div>
 
-  <Content
-    isReversed
-    isAfterContent={true}
-    items={[
-      {
-        title: 'Cosa facciamo insieme:',
-        description:
-          'Costruiamo insieme un piano finanziario personalizzato, con obiettivi realistici, tempi definiti e strumenti coerenti con il tuo profilo di rischio.',
-      },
-      {
-        title: 'Cosa ottieni:',
-        description: `Una strategia scritta, chiara, che puoi capire e condividere. Niente paroloni, niente trappole.`,
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1553484771-371a605b060b?ixlib=rb-4.0.3&auto=format&fit=crop&w=774&q=80',
-      alt: 'Piano su misura',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Scopri di più',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Fase 2: <br /><span class="text-2xl">Piano su misura</span>
-      </h3>
-    </Fragment>
+    </div>
+  </section>
 
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+  <!-- =========================================================
+       4. BIO BREVE — foto dx + testo sx
+       ========================================================= -->
+  <section class="bg-white py-12 md:py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
 
-  <!-- Content Widget: Come lavoro - Fase 3 **************** -->
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-3 leading-tight font-heading">
+            Andrea Giardini
+          </h2>
+          <p class="text-base md:text-lg font-semibold text-[var(--aw-color-accent)] mb-6 tracking-wide">
+            Consulente Finanziario
+          </p>
 
-  <Content
-    isReversed
-    isAfterContent={true}
-    items={[
-      {
-        title: 'Cosa facciamo insieme:',
-        description: `Incontri periodici per verificare i risultati, aggiornare il piano in base alle evoluzioni della tua vita e dei mercati.`,
-      },
-      {
-        title: 'Cosa ottieni:',
-        description: `Un punto di riferimento stabile nel tempo. Non mi limito a vendere prodotti: ti accompagno nel percorso.`,
-      },
-    ]}
-    image={{
-      src: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80',
-      alt: 'Monitoraggio e revisione',
-    }}
-    callToAction={{
-      target: '_blank',
-      text: 'Scopri di più',
-      icon: 'tabler:chevron-right',
-      href: '#',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-        Fase 3: <br /><span class="text-2xl">Monitoraggio e revisione</span>
-      </h3>
-    </Fragment>
+          <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
+            Affianco persone e famiglie nella <strong class="text-[var(--aw-color-primary)]">pianificazione finanziaria</strong> con un <strong class="text-[var(--aw-color-primary)]">metodo</strong> chiaro, <strong class="text-[var(--aw-color-primary)]">trasparente</strong> e costruito sui loro <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> di vita — proteggere il <strong class="text-[var(--aw-color-primary)]">patrimonio</strong>, pianificare il futuro, vivere con più <strong class="text-[var(--aw-color-primary)]">serenità</strong>.
+          </p>
 
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+          <!-- 2 CTA piccole -->
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/chi-sono"
+              class="btn-brand--primary px-6 py-3 text-base"
+            >
+              Chi sono
+            </a>
+            <a
+              href="/come-lavoro"
+              class="btn-brand--outline px-6 py-3 text-base"
+            >
+              Come lavoro
+            </a>
+          </div>
+        </div>
 
-  <!-- CallToAction Widget *********** -->
+        <!-- Foto placeholder dx -->
+        <div class="flex items-center justify-center">
+          <div class="relative w-full max-w-sm aspect-[3/4] rounded-md overflow-hidden shadow-xl bg-gradient-to-br from-[var(--aw-color-primary)] to-[rgb(22_105_99)]">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-white/70 p-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-4">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/>
+              </svg>
+              <p class="text-xs tracking-[0.3em] uppercase text-white/60">Foto Andrea Giardini</p>
+              <p class="text-[10px] tracking-[0.2em] uppercase text-white/40 mt-2">In arrivo</p>
+            </div>
+            <div class="absolute inset-0 border-2 border-[var(--aw-color-accent)]/30 rounded-md pointer-events-none"></div>
+          </div>
+        </div>
 
-  <CallToAction
-    title="Parliamone davanti a un caffè"
-    subtitle="Il primo incontro è sempre gratuito e senza impegno. Una chiacchierata per capire se posso esserti utile."
-    actions={[
-      {
-        variant: 'primary',
-        text: 'Scrivimi',
-        href: '/contact',
-      },
-    ]}
-  />
+      </div>
+    </div>
+  </section>
 
-  <!-- BlogLatestPost Widget **************** -->
+  <!-- =========================================================
+       6. 4 SERVIZI — grid cards con CTA
+       ========================================================= -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-  <BlogLatestPosts
-    id="blog"
-    title="Dal blog"
-    information={`Approfondimenti, analisi di mercato ed educazione finanziaria. Contenuti pensati per aiutarti a capire meglio il mondo degli investimenti e prendere decisioni più consapevoli.`}
-  >
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </BlogLatestPosts>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+        Servizi
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 max-w-4xl mx-auto">
+        {servizi.map((s) => (
+          <div class="flex flex-col bg-white rounded-md p-7 md:p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
+            <!-- Icona -->
+            <div class="w-14 h-14 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mb-5">
+              {s.icon === 'search' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+                  <text x="11" y="14" text-anchor="middle" font-size="8" font-weight="700" fill="var(--aw-color-primary)" stroke="none">€</text>
+                </svg>
+              )}
+              {s.icon === 'trending' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 17 9 11 13 15 21 7"/>
+                  <polyline points="14 7 21 7 21 14"/>
+                </svg>
+              )}
+              {s.icon === 'clock' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              )}
+              {s.icon === 'bank' && (
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="3 10 12 4 21 10 21 11 3 11 3 10"/>
+                  <line x1="6" y1="11" x2="6" y2="18"/>
+                  <line x1="10" y1="11" x2="10" y2="18"/>
+                  <line x1="14" y1="11" x2="14" y2="18"/>
+                  <line x1="18" y1="11" x2="18" y2="18"/>
+                  <line x1="3" y1="21" x2="21" y2="21"/>
+                </svg>
+              )}
+            </div>
+
+            <h3 class="text-lg md:text-xl font-bold text-[var(--aw-color-text-heading)] mb-3 leading-tight font-heading">
+              {s.title}
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed mb-6 flex-1">
+              {s.description}
+            </p>
+
+            <a
+              href={s.href}
+              class="inline-flex items-center gap-2 text-[var(--aw-color-primary)] font-semibold hover:text-[var(--aw-color-accent)] transition-colors"
+            >
+              <span>{s.cta}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================
+       7. BANNER DIAGNOSI — full width sage
+       ========================================================= -->
+  <section class="bg-[var(--aw-color-primary)] py-14 md:py-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1fr_auto] gap-8 items-center">
+
+        <div class="text-center md:text-left">
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3 leading-tight font-heading">
+            Richiedi una diagnosi di portafoglio
+          </h2>
+        </div>
+
+        <a
+          href="/richiedi-diagnosi"
+          class="btn-brand--light px-10 py-5 text-lg"
+        >
+          Online e gratuita
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       8. CONTATTI — split
+       ========================================================= -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Mettiti in contatto
+          </h2>
+
+          <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-8">
+            Per contattarmi visita la <a href="/contatti" class="text-[var(--aw-color-primary)] underline font-semibold hover:text-[var(--aw-color-accent)] transition-colors">sezione contatti</a> e compila la form oppure chiamami o mandami una mail.
+          </p>
+
+          <div class="space-y-4">
+            <a href="tel:+393515456845" class="flex items-center gap-3 text-base md:text-lg text-[var(--aw-color-text-default)] hover:text-[var(--aw-color-primary)] transition-colors">
+              <div class="w-10 h-10 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <span class="font-semibold">+39 351 545 6845</span>
+            </a>
+
+            <a href="mailto:andrea@giardiniconsulenza.it" class="flex items-center gap-3 text-base md:text-lg text-[var(--aw-color-text-default)] hover:text-[var(--aw-color-primary)] transition-colors">
+              <div class="w-10 h-10 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <span class="font-semibold break-all">andrea@giardiniconsulenza.it</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mappa/foto studio placeholder dx -->
+        <div class="flex items-center justify-center">
+          <div class="relative w-full aspect-[4/3] rounded-md overflow-hidden shadow-xl bg-gradient-to-br from-[rgb(238_247_246)] to-[rgb(221_240_238)]">
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--aw-color-primary)]/40 p-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <p class="text-xs tracking-[0.3em] uppercase text-[var(--aw-color-primary)]/50">Italia · Online</p>
+              <p class="text-[10px] tracking-[0.2em] uppercase text-[var(--aw-color-primary)]/30 mt-2">Foto studio in arrivo</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
 </Layout>

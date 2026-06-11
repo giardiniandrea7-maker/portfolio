@@ -1,0 +1,140 @@
+﻿---
+// ========================================================
+// DIAGNOSI POPUP — appare dopo 6 secondi su ogni caricamento di pagina
+// Si può chiudere con X o tasto Rinuncia
+// Lo scroll della pagina sotto rimane attivo
+// ========================================================
+---
+
+<!-- Overlay + Card popup (nascosto di default) -->
+<div
+  id="diagnosi-popup"
+  class="fixed inset-0 z-[100] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none"
+  role="dialog"
+  aria-modal="false"
+  aria-labelledby="diagnosi-popup-title"
+>
+  <!-- Overlay scuro (solo visivo, NON blocca lo scroll) -->
+  <div
+    id="diagnosi-popup-overlay"
+    class="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+  ></div>
+
+  <!-- Card -->
+  <div class="relative bg-white rounded-md shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border-2 border-[var(--aw-color-accent)]/40 pointer-events-auto">
+
+    <!-- Bottone chiudi -->
+    <button
+      id="diagnosi-popup-close"
+      type="button"
+      aria-label="Chiudi"
+      class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Layout: foto sx + contenuto dx -->
+    <div class="grid md:grid-cols-[auto_1fr] gap-0">
+
+      <!-- Foto Andrea placeholder sx -->
+      <div class="p-8 md:p-10 flex items-center justify-center">
+        <div class="relative w-48 md:w-56 aspect-[3/4] rounded-md overflow-hidden shadow-lg bg-gradient-to-br from-[var(--aw-color-primary)] to-[rgb(22_105_99)]">
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-white/70 p-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/>
+            </svg>
+            <p class="text-xs tracking-[0.3em] uppercase text-white/60">Foto Andrea</p>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-white/40 mt-1">In arrivo</p>
+          </div>
+          <div class="absolute inset-0 border-2 border-[var(--aw-color-accent)]/30 rounded-md pointer-events-none"></div>
+        </div>
+      </div>
+
+      <!-- Contenuto dx -->
+      <div class="p-8 md:p-10 md:pl-4 flex flex-col justify-center">
+
+        <h2 id="diagnosi-popup-title" class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-5 leading-tight font-heading">
+          Richiedimi un'analisi gratuita dei tuoi investimenti
+        </h2>
+
+        <div class="space-y-3 text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed mb-7">
+          <p>
+            Sei in grado di valutare la <strong>qualità</strong> dei tuoi <strong>strumenti</strong> finanziari? Conosci i <strong>costi</strong> dei tuoi investimenti?
+          </p>
+          <p>
+            Effettua oggi il tuo <strong>check-up</strong> finanziario <strong>gratuito</strong> e scopri come <strong>migliorare</strong> la composizione del tuo patrimonio.
+          </p>
+        </div>
+
+        <!-- Bottoni -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a
+            href="/richiedi-diagnosi"
+            class="btn-brand--primary flex-1 px-6 py-3.5 text-base"
+          >
+            Richiedi
+          </a>
+          <button
+            id="diagnosi-popup-rinuncia"
+            type="button"
+            class="btn-brand--outline flex-1 px-6 py-3.5 text-base"
+          >
+            Rinuncia
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const DELAY_MS = 6000; // 6 secondi
+
+    const popup   = document.getElementById('diagnosi-popup');
+    const overlay = document.getElementById('diagnosi-popup-overlay');
+    const closeBtn = document.getElementById('diagnosi-popup-close');
+    const rinunciaBtn = document.getElementById('diagnosi-popup-rinuncia');
+
+    if (!popup) return;
+
+    function openPopup() {
+      popup.classList.remove('hidden');
+      popup.classList.add('flex');
+      requestAnimationFrame(() => {
+        popup.classList.remove('opacity-0');
+        popup.classList.add('opacity-100');
+      });
+      // NO blocco scroll: la pagina sotto rimane scrollabile
+    }
+
+    function closePopup() {
+      popup.classList.remove('opacity-100');
+      popup.classList.add('opacity-0');
+      setTimeout(() => {
+        popup.classList.remove('flex');
+        popup.classList.add('hidden');
+      }, 300);
+    }
+
+    // Timer di apertura — riparte a ogni caricamento/refresh/cambio pagina
+    setTimeout(openPopup, DELAY_MS);
+
+    // Listener chiusura
+    closeBtn?.addEventListener('click', closePopup);
+    rinunciaBtn?.addEventListener('click', closePopup);
+    overlay?.addEventListener('click', closePopup);
+
+    // ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
+        closePopup();
+      }
+    });
+  })();
+</script>

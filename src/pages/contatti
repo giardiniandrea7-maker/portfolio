@@ -1,0 +1,287 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Contatti — Andrea Giardini, Consulente Finanziario',
+  description: 'Contattami per una diagnosi gratuita del tuo portafoglio o per un primo incontro. Il primo appuntamento è sempre gratuito e senza impegno.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <!-- ============================================== -->
+  <!-- HERO -->
+  <!-- ============================================== -->
+  <section class="bg-white py-14 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-xs font-semibold tracking-[0.25em] uppercase text-[var(--aw-color-accent)] mb-4">Contatti</p>
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] leading-[1.1] mb-5 font-heading">
+        Scegli per cosa contattarmi
+      </h1>
+      <p class="text-base md:text-lg text-[var(--aw-color-text-muted)] leading-relaxed">
+        Il primo incontro è sempre <strong class="text-[var(--aw-color-primary)]">gratuito e senza impegno</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- LE DUE OPZIONI -->
+  <!-- ============================================== -->
+  <section class="bg-[rgb(238_247_246)] py-12 md:py-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+
+        <!-- Opzione 1: Diagnosi -->
+        <a
+          href="/richiedi-diagnosi"
+          class="group flex flex-col bg-white rounded-md p-8 md:p-10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent hover:border-[var(--aw-color-primary)]/20"
+        >
+          <div class="w-14 h-14 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mb-6 group-hover:bg-[var(--aw-color-primary)]/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.5" y2="16.5"/>
+            </svg>
+          </div>
+
+          <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-[var(--aw-color-accent)] mb-2">Gratuita</p>
+          <h2 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-tight">
+            Diagnosi di Portafoglio
+          </h2>
+          <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed flex-1">
+            Se vuoi un'analisi gratuita dei tuoi investimenti puoi richiedermi una diagnosi di portafoglio.
+            Riceverai un <strong class="text-[var(--aw-color-primary)]">report completo</strong> su costi, rischi e rendimenti attesi — senza impegno.
+          </p>
+
+          <div class="mt-8 flex items-center gap-2 text-[var(--aw-color-primary)] font-semibold text-sm group-hover:gap-3 transition-all">
+            <span>Richiedi la diagnosi</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </div>
+        </a>
+
+        <!-- Opzione 2: Informazioni e Appuntamenti -->
+        <a
+          href="#form-contatto"
+          class="group flex flex-col bg-[var(--aw-color-primary)] rounded-md p-8 md:p-10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all"
+        >
+          <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center mb-6 group-hover:bg-white/30 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+
+          <p class="text-[11px] font-bold tracking-[0.2em] uppercase text-white/60 mb-2">Primo incontro gratuito</p>
+          <h2 class="text-xl md:text-2xl font-bold text-white mb-4 font-heading leading-tight">
+            Informazioni e Appuntamenti
+          </h2>
+          <p class="text-sm md:text-base text-white/85 leading-relaxed flex-1">
+            Per qualsiasi informazione o per prenotare un incontro puoi contattarmi tramite la form qui sul sito.
+            Ti rispondo personalmente entro <strong class="text-white">24 ore lavorative</strong>.
+          </p>
+
+          <div class="mt-8 flex items-center gap-2 text-white font-semibold text-sm group-hover:gap-3 transition-all">
+            <span>Scrivi un messaggio</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- FORM + INFO CONTATTI -->
+  <!-- ============================================== -->
+  <section id="form-contatto" class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="grid md:grid-cols-5 gap-8 md:gap-12">
+
+        <!-- FORM (3 col) -->
+        <div class="md:col-span-3">
+          <div class="bg-white border border-gray-200 rounded-md shadow-lg p-8 md:p-10">
+
+            <h2 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">
+              Scrivimi
+            </h2>
+            <p class="text-sm text-[var(--aw-color-text-muted)] mb-8">
+              Compila il form e ti rispondo entro 24 ore lavorative.
+            </p>
+
+            <form
+              action="https://formspree.io/f/YOUR_FORM_ID"
+              method="POST"
+              class="space-y-5"
+            >
+              <div>
+                <label for="name" class="block text-sm font-semibold text-[var(--aw-color-text-default)] mb-2">
+                  Nome e cognome <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text" id="name" name="name" required
+                  placeholder="Mario Rossi"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-semibold text-[var(--aw-color-text-default)] mb-2">
+                  Email <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="email" id="email" name="email" required
+                  placeholder="mario.rossi@email.it"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="phone" class="block text-sm font-semibold text-[var(--aw-color-text-default)] mb-2">
+                  Telefono <span class="text-[var(--aw-color-text-muted)] text-xs font-normal">(opzionale)</span>
+                </label>
+                <input
+                  type="tel" id="phone" name="phone"
+                  placeholder="+39 333 1234567"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="message" class="block text-sm font-semibold text-[var(--aw-color-text-default)] mb-2">
+                  Il tuo messaggio <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="message" name="message" required rows="5"
+                  placeholder="Raccontami brevemente cosa stai cercando o di cosa vorresti parlare..."
+                  class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors resize-none"
+                ></textarea>
+              </div>
+
+              <div class="flex items-start gap-3">
+                <input
+                  type="checkbox" id="privacy" name="privacy" required
+                  class="mt-1 w-4 h-4 rounded border-gray-300 text-[var(--aw-color-primary)] focus:ring-[var(--aw-color-primary)]"
+                />
+                <label for="privacy" class="text-xs text-[var(--aw-color-text-muted)] leading-relaxed">
+                  Ho letto e accetto la <a href="/privacy" class="text-[var(--aw-color-primary)] underline hover:text-[var(--aw-color-accent)]">Privacy Policy</a>
+                  e acconsento al trattamento dei miei dati personali. <span class="text-red-500">*</span>
+                </label>
+              </div>
+
+              <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+              <button
+                type="submit"
+                class="btn-brand--primary w-full px-6 py-4 text-base"
+              >
+                Invia messaggio
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+
+              <p class="text-xs text-center text-[var(--aw-color-text-muted)]">
+                I tuoi dati sono al sicuro e usati solo per ricontattarti.
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <!-- INFO CONTATTI (2 col) -->
+        <div class="md:col-span-2 space-y-4">
+
+          <a href="mailto:andrea@giardiniconsulenza.it" class="flex items-start gap-4 bg-[rgb(238_247_246)] rounded-md p-5 hover:shadow-md transition-all group">
+            <div class="w-11 h-11 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center text-[var(--aw-color-primary)] group-hover:bg-[var(--aw-color-primary)] group-hover:text-white transition-all shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <polyline points="3 7 12 13 21 7"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold tracking-wider uppercase text-[var(--aw-color-text-muted)] mb-0.5">Email</p>
+              <p class="text-sm font-semibold text-[var(--aw-color-primary)]">andrea@giardiniconsulenza.it</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)] mt-1">Risposta entro 24h lavorative</p>
+            </div>
+          </a>
+
+          <a href="tel:+393515456845" class="flex items-start gap-4 bg-[rgb(238_247_246)] rounded-md p-5 hover:shadow-md transition-all group">
+            <div class="w-11 h-11 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center text-[var(--aw-color-primary)] group-hover:bg-[var(--aw-color-primary)] group-hover:text-white transition-all shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold tracking-wider uppercase text-[var(--aw-color-text-muted)] mb-0.5">Telefono</p>
+              <p class="text-sm font-semibold text-[var(--aw-color-primary)]">+39 351 545 6845</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)] mt-1">Lun–Ven, 9:00–19:00</p>
+            </div>
+          </a>
+
+          <a href="https://it.linkedin.com/in/andrea-giardini-58923a268" target="_blank" rel="noopener" class="flex items-start gap-4 bg-[rgb(238_247_246)] rounded-md p-5 hover:shadow-md transition-all group">
+            <div class="w-11 h-11 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center text-[var(--aw-color-primary)] group-hover:bg-[var(--aw-color-primary)] group-hover:text-white transition-all shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold tracking-wider uppercase text-[var(--aw-color-text-muted)] mb-0.5">LinkedIn</p>
+              <p class="text-sm font-semibold text-[var(--aw-color-primary)]">Andrea Giardini</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)] mt-1">Connettiamoci</p>
+            </div>
+          </a>
+
+          <a href="https://www.instagram.com/andreagiardini.finanza/" target="_blank" rel="noopener" class="flex items-start gap-4 bg-[rgb(238_247_246)] rounded-md p-5 hover:shadow-md transition-all group">
+            <div class="w-11 h-11 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center text-[var(--aw-color-primary)] group-hover:bg-[var(--aw-color-primary)] group-hover:text-white transition-all shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[11px] font-semibold tracking-wider uppercase text-[var(--aw-color-text-muted)] mb-0.5">Instagram</p>
+              <p class="text-sm font-semibold text-[var(--aw-color-primary)]">@andreagiardini.finanza</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)] mt-1">Contenuti di educazione finanziaria</p>
+            </div>
+          </a>
+
+          <div class="bg-[var(--aw-color-primary)] rounded-md p-6 text-white">
+            <h3 class="font-bold text-base mb-2 flex items-center gap-2 font-heading">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              Tempi di risposta
+            </h3>
+            <p class="text-sm text-white/90 leading-relaxed">
+              Rispondo personalmente a ogni messaggio entro <strong>24 ore lavorative</strong>.
+              Per urgenze, chiamami direttamente.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- FOOTER LEGALE -->
+  <!-- ============================================== -->
+  <section class="bg-white py-10 border-t border-gray-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="text-xs leading-relaxed text-[var(--aw-color-text-muted)] text-center">
+        <strong class="text-[var(--aw-color-primary)]">Andrea Giardini</strong> · Consulente Finanziario abilitato all'offerta fuori sede ·
+        Iscritto all'Albo Unico dei Consulenti Finanziari (OCF) n. 2965
+      </p>
+    </div>
+  </section>
+
+</Layout>

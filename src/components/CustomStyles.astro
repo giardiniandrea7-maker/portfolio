@@ -1,63 +1,59 @@
 ---
-import '@fontsource-variable/inter';
-
-// 'DM Sans'
-// Nunito
-// Dosis
-// Outfit
-// Roboto
-// Literata
-// 'IBM Plex Sans'
-// Karla
-// Poppins
-// 'Fira Sans'
-// 'Libre Franklin'
-// Inconsolata
-// Raleway
-// Oswald
-// 'Space Grotesk'
-// Urbanist
+import '@fontsource-variable/manrope';
 ---
 
 <style is:inline>
   :root {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
+    --aw-font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+    --aw-font-serif: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+    --aw-font-heading: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
 
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
+    --aw-color-primary: rgb(22 105 99);       /* #166963 verde petrolio scuro */
+    --aw-color-secondary: rgb(121 185 173);   /* #79B9AD verde salvia/acqua */
+    --aw-color-accent: rgb(171 127 98);       /* #AB7F62 terracotta/cammello */
 
-    --aw-color-text-heading: rgb(0 0 0);
-    --aw-color-text-default: rgb(16 16 16);
-    --aw-color-text-muted: rgb(16 16 16 / 66%);
+    --aw-color-text-heading: rgb(55 61 66);   /* #373D42 antracite */
+    --aw-color-text-default: rgb(55 61 66);   /* #373D42 antracite */
+    --aw-color-text-muted: rgb(181 174 169);  /* #B5AEA9 tortora */
+
     --aw-color-bg-page: rgb(255 255 255);
-
-    --aw-color-bg-page-dark: rgb(3 6 32);
-
-    ::selection {
-      background-color: lavender;
-    }
+    --aw-color-bg-page-dark: rgb(22 105 99);  /* #166963 */
   }
 
   .dark {
-    --aw-font-sans: 'Inter Variable';
-    --aw-font-serif: 'Inter Variable';
-    --aw-font-heading: 'Inter Variable';
+    --aw-color-primary: rgb(121 185 173);    /* #79B9AD */
+    --aw-color-secondary: rgb(171 127 98);   /* #AB7F62 */
+    --aw-color-accent: rgb(228 228 228);     /* #E4E4E4 */
+    --aw-color-text-heading: rgb(238 247 246);
+    --aw-color-text-default: rgb(228 228 228);
+    --aw-color-text-muted: rgb(181 174 169);
+    --aw-color-bg-page: rgb(22 105 99);
+  }
+</style>
 
-    --aw-color-primary: rgb(1 97 239);
-    --aw-color-secondary: rgb(1 84 207);
-    --aw-color-accent: rgb(109 40 217);
+<style is:global>
+  body {
+    font-family: var(--aw-font-sans);
+    letter-spacing: -0.01em;
+  }
 
-    --aw-color-text-heading: rgb(247, 248, 248);
-    --aw-color-text-default: rgb(229 236 246);
-    --aw-color-text-muted: rgb(229 236 246 / 66%);
-    --aw-color-bg-page: rgb(3 6 32);
+  h1, h2, h3, h4, h5, h6,
+  .font-heading {
+    font-family: var(--aw-font-heading);
+    letter-spacing: -0.025em;
+    font-weight: 700;
+  }
 
-    ::selection {
-      background-color: black;
-      color: snow;
-    }
+  /* Sezioni alternate */
+  section.bg-cream {
+    background-color: rgb(238 247 246);
+  }
+
+  section.bg-dark-green,
+  section.bg-dark-green * {
+    color: rgb(238 247 246);
+  }
+  section.bg-dark-green {
+    background-color: rgb(22 105 99);
   }
 </style>

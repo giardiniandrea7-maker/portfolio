@@ -1,0 +1,272 @@
+---
+// Popup form contatto — si apre cliccando "Contattami" nell'header
+// Invia tramite Web3Forms (web3forms.com) alla mail andrea@giardiniconsulenza.it
+---
+
+<div
+  id="contact-popup"
+  class="fixed inset-0 z-[110] hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300 pointer-events-none"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="contact-popup-title"
+>
+  <!-- Overlay -->
+  <div
+    id="contact-popup-overlay"
+    class="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+  ></div>
+
+  <!-- Card -->
+  <div class="relative bg-white rounded-md shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border-t-4 border-[var(--aw-color-primary)] pointer-events-auto">
+
+    <!-- Bottone chiudi -->
+    <button
+      id="contact-popup-close"
+      type="button"
+      aria-label="Chiudi"
+      class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-text-heading)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="p-8">
+      <!-- Intestazione -->
+      <div class="mb-6">
+        <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--aw-color-accent)] mb-2">Scrivimi</p>
+        <h2 id="contact-popup-title" class="text-2xl font-bold text-[var(--aw-color-text-heading)] leading-tight font-heading">
+          Parliamo dei tuoi obiettivi finanziari
+        </h2>
+        <p class="mt-2 text-sm text-[var(--aw-color-text-muted)]">
+          Rispondo entro 24 ore. La consulenza iniziale è sempre gratuita.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form id="contact-form" novalidate>
+        <!-- Web3Forms access key — sostituisci con il tuo key da web3forms.com/create -->
+        <input type="hidden" name="access_key" value="0d00a04d-f883-4684-ba20-f0f134c63d36" />
+        <input type="hidden" name="subject" value="Nuovo messaggio dal sito — Andrea Giardini Consulenza" />
+        <input type="hidden" name="from_name" value="Sito Andrea Giardini" />
+        <input type="hidden" name="redirect" value="false" />
+        <!-- Honeypot anti-spam -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none" />
+
+        <div class="space-y-4">
+
+          <!-- Nome e Cognome -->
+          <div>
+            <label for="cp-nome" class="block text-xs font-semibold tracking-wide uppercase text-[var(--aw-color-text-muted)] mb-1.5">
+              Nome e Cognome <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="cp-nome"
+              type="text"
+              name="name"
+              required
+              autocomplete="name"
+              placeholder="Mario Rossi"
+              class="w-full px-4 py-3 border border-gray-200 rounded-sm text-sm text-[var(--aw-color-text-default)] placeholder-gray-400 focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-2 focus:ring-[var(--aw-color-primary)]/20 transition-all"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="cp-email" class="block text-xs font-semibold tracking-wide uppercase text-[var(--aw-color-text-muted)] mb-1.5">
+              Email <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="cp-email"
+              type="email"
+              name="email"
+              required
+              autocomplete="email"
+              placeholder="mario.rossi@email.it"
+              class="w-full px-4 py-3 border border-gray-200 rounded-sm text-sm text-[var(--aw-color-text-default)] placeholder-gray-400 focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-2 focus:ring-[var(--aw-color-primary)]/20 transition-all"
+            />
+          </div>
+
+          <!-- Telefono -->
+          <div>
+            <label for="cp-telefono" class="block text-xs font-semibold tracking-wide uppercase text-[var(--aw-color-text-muted)] mb-1.5">
+              Telefono <span class="text-gray-400 font-normal normal-case tracking-normal">(opzionale)</span>
+            </label>
+            <input
+              id="cp-telefono"
+              type="tel"
+              name="telefono"
+              autocomplete="tel"
+              placeholder="+39 333 000 0000"
+              class="w-full px-4 py-3 border border-gray-200 rounded-sm text-sm text-[var(--aw-color-text-default)] placeholder-gray-400 focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-2 focus:ring-[var(--aw-color-primary)]/20 transition-all"
+            />
+          </div>
+
+          <!-- Messaggio -->
+          <div>
+            <label for="cp-messaggio" class="block text-xs font-semibold tracking-wide uppercase text-[var(--aw-color-text-muted)] mb-1.5">
+              Messaggio <span class="text-red-500">*</span>
+            </label>
+            <textarea
+              id="cp-messaggio"
+              name="message"
+              required
+              rows="4"
+              placeholder="Raccontami brevemente la tua situazione o la tua domanda..."
+              class="w-full px-4 py-3 border border-gray-200 rounded-sm text-sm text-[var(--aw-color-text-default)] placeholder-gray-400 focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-2 focus:ring-[var(--aw-color-primary)]/20 transition-all resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Privacy -->
+          <div class="flex items-start gap-3">
+            <input
+              id="cp-privacy"
+              type="checkbox"
+              name="privacy"
+              required
+              class="mt-0.5 w-4 h-4 accent-[var(--aw-color-primary)] cursor-pointer flex-shrink-0"
+            />
+            <label for="cp-privacy" class="text-xs text-[var(--aw-color-text-muted)] cursor-pointer leading-relaxed">
+              Ho letto e accetto la <a href="/privacy" target="_blank" class="text-[var(--aw-color-accent)] underline hover:no-underline">Privacy Policy</a>. I dati saranno trattati ai soli fini di risposta alla richiesta.
+            </label>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          id="contact-submit-btn"
+          class="btn-brand--primary mt-6 w-full px-6 py-3.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          <span id="contact-btn-text" class="inline-flex items-center justify-center gap-x-2">
+            Invia messaggio
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </span>
+          <span id="contact-btn-loading" class="hidden items-center justify-center gap-2">
+            <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.37 0 0 5.37 0 12h4z"/>
+            </svg>
+            Invio in corso...
+          </span>
+        </button>
+
+      </form>
+
+      <!-- Messaggio successo -->
+      <div id="contact-success" class="hidden text-center py-6">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">Messaggio inviato!</h3>
+        <p class="text-sm text-[var(--aw-color-text-muted)]">Grazie per avermi contattato. Ti risponderò entro 24 ore.</p>
+        <button
+          id="contact-success-close"
+          type="button"
+          class="btn-brand--outline mt-5 px-6 py-2.5 text-sm"
+        >
+          Chiudi
+        </button>
+      </div>
+
+      <!-- Messaggio errore -->
+      <div id="contact-error" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-sm">
+        <p class="text-sm text-red-700 font-medium">Si è verificato un errore. Riprova o scrivimi direttamente a <a href="mailto:andrea@giardiniconsulenza.it" class="underline">andrea@giardiniconsulenza.it</a></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const popup     = document.getElementById('contact-popup');
+    const overlay   = document.getElementById('contact-popup-overlay');
+    const closeBtn  = document.getElementById('contact-popup-close');
+    const form      = document.getElementById('contact-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('contact-submit-btn') as HTMLButtonElement | null;
+    const btnText   = document.getElementById('contact-btn-text');
+    const btnLoading = document.getElementById('contact-btn-loading');
+    const successEl = document.getElementById('contact-success');
+    const errorEl   = document.getElementById('contact-error');
+    const successClose = document.getElementById('contact-success-close');
+
+    if (!popup) return;
+
+    window.openContactPopup = function () {
+      popup.classList.remove('hidden');
+      popup.classList.add('flex');
+      requestAnimationFrame(() => {
+        popup.classList.remove('opacity-0');
+        popup.classList.add('opacity-100');
+        popup.style.pointerEvents = 'auto';
+      });
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closePopup() {
+      popup.classList.remove('opacity-100');
+      popup.classList.add('opacity-0');
+      setTimeout(() => {
+        popup.classList.remove('flex');
+        popup.classList.add('hidden');
+        popup.style.pointerEvents = 'none';
+      }, 300);
+      document.body.style.overflow = '';
+    }
+
+    closeBtn?.addEventListener('click', closePopup);
+    overlay?.addEventListener('click', closePopup);
+    successClose?.addEventListener('click', closePopup);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !popup.classList.contains('hidden')) {
+        closePopup();
+      }
+    });
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // Mostra loading
+      if (submitBtn) submitBtn.disabled = true;
+      btnText?.classList.add('hidden');
+      btnLoading?.classList.remove('hidden');
+      btnLoading?.classList.add('flex');
+      errorEl?.classList.add('hidden');
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: data,
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          form.classList.add('hidden');
+          successEl?.classList.remove('hidden');
+        } else {
+          throw new Error(json.message || 'Errore sconosciuto');
+        }
+      } catch {
+        errorEl?.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = false;
+        btnText?.classList.remove('hidden');
+        btnLoading?.classList.add('hidden');
+        btnLoading?.classList.remove('flex');
+      }
+    });
+  })();
+</script>

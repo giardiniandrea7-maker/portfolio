@@ -1,0 +1,218 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Chi sono — Andrea Giardini, Consulente Finanziario',
+  description:
+    'Ingegnere del Politecnico di Torino, consulente finanziario iscritto OCF n. 2965. Scopri la mia storia, il mio metodo di lavoro e la mia formazione.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <!-- ======================================================
+       1. HERO CHI SONO — foto sinistra + bio destra
+       ====================================================== -->
+  <section class="bg-white py-12 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-14 items-center">
+
+        <!-- Foto Andrea (in arrivo) -->
+        <div class="relative aspect-[4/5] bg-gradient-to-br from-[rgb(22_105_99)] via-[rgb(14_74_69)] to-[rgb(10_58_55)] rounded-sm overflow-hidden shadow-xl">
+          <div class="absolute inset-6 border border-[var(--aw-color-accent)]/30 pointer-events-none"></div>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--aw-color-accent)] font-heading">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="mb-4 opacity-60">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Testo biografia -->
+        <div>
+          <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-4">Chi sono</p>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-2 leading-[1.1] font-heading">
+            Andrea Giardini
+          </h1>
+          <p class="text-lg md:text-xl text-[var(--aw-color-text-muted)] font-medium mb-8 tracking-wide">
+            Consulente Finanziario
+          </p>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Ho cominciato ad appassionarmi alla finanza durante gli anni dell'università. Non quella dei grafici frenetici e delle scommesse di breve periodo — ma quella che cambia davvero la vita delle persone: la <strong class="text-[var(--aw-color-primary)]">pianificazione del patrimonio</strong>, la protezione della famiglia, la costruzione di una <strong class="text-[var(--aw-color-primary)]">previdenza complementare</strong> dignitosa.
+            </p>
+
+            <p>
+              Ho capito presto che la maggior parte delle persone non ha accesso a una consulenza finanziaria chiara e costruita sui propri <strong class="text-[var(--aw-color-primary)]">obiettivi</strong>. Troppo spesso le decisioni più importanti vengono prese nell'incertezza, tra prodotti difficili da capire e informazioni incomplete.
+            </p>
+
+            <p>
+              Il mio lavoro è portare <strong class="text-[var(--aw-color-primary)]">chiarezza dove c'è confusione</strong>: <strong class="text-[var(--aw-color-primary)]">ascolto</strong>, analizzare e costruire con ogni cliente un piano finanziario solido, comprensibile e realmente <strong class="text-[var(--aw-color-primary)]">su misura</strong> — perché ogni decisione che riguarda il tuo futuro merita attenzione vera.
+            </p>
+          </div>
+
+          <!-- 2 CTA -->
+          <div class="flex flex-col sm:flex-row gap-3 mt-10">
+            <a
+              href="/richiedi-diagnosi"
+              class="btn-brand--primary px-8 py-4 text-base"
+            >
+              Richiedi diagnosi gratuita
+            </a>
+            <a
+              href="/come-lavoro"
+              class="btn-brand--outline px-8 py-4 text-base"
+            >
+              Come lavoro
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       2. COME AIUTO I MIEI CLIENTI — fondo ivory, reversed
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Come aiuto i miei clienti
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Ogni percorso inizia dall'<strong class="text-[var(--aw-color-primary)]">ascolto</strong>. Prima di analizzare qualsiasi numero, voglio capire dove sei oggi e dove vuoi arrivare: i tuoi obiettivi, le tue preoccupazioni, il tuo orizzonte temporale.
+            </p>
+
+            <p>
+              Da lì costruiamo insieme un piano concreto — che si tratti di proteggere i risparmi già accumulati, pianificare l'acquisto di una casa, costruire un fondo per i tuoi figli o prepararti a una <strong class="text-[var(--aw-color-primary)]">pensione serena</strong> con la <strong class="text-[var(--aw-color-primary)]">previdenza complementare</strong>.
+            </p>
+
+            <p>
+              Utilizzo strumenti di analisi professionali e un approccio basato sui dati per valutare ogni soluzione. Ma la cosa che cerco di fare con più cura è rendere ogni scelta <strong class="text-[var(--aw-color-primary)]">comprensibile</strong>: perché una decisione finanziaria è davvero tua solo se la capisci. Lavoro <strong class="text-[var(--aw-color-primary)]">senza conflitto di interessi</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Immagine decorativa (in arrivo) -->
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-[rgb(14_74_69)] to-[rgb(22_105_99)] rounded-sm overflow-hidden shadow-xl">
+          <div class="absolute inset-0 flex items-center justify-center gap-1.5 px-12">
+            {Array.from({ length: 18 }).map((_, i) => (
+              <div
+                class="w-0.5 bg-[var(--aw-color-accent)]/40"
+                style={`height: ${40 + (i % 5) * 12}%`}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       3. PER SEGUIRMI ONLINE — 2 card social
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+        Per seguirmi online
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-8 max-w-3xl mx-auto">
+
+        <!-- INSTAGRAM -->
+        <div class="bg-white rounded-sm shadow-md hover:shadow-2xl transition-shadow overflow-hidden group">
+          <div class="relative h-52 bg-gradient-to-br from-[rgb(238_247_246)] to-[rgb(221_240_238)] flex items-center justify-center overflow-hidden">
+            <div class="absolute top-4 right-8 w-14 h-14 rounded-xl bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF] flex items-center justify-center shadow-lg opacity-90">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </div>
+            <div class="relative w-20 h-32 bg-gray-800 rounded-2xl p-1 shadow-2xl mt-6 group-hover:-translate-y-1 group-hover:rotate-3 transition-transform">
+              <div class="w-full h-full bg-gradient-to-br from-pink-100 via-orange-100 to-purple-100 rounded-xl grid grid-cols-3 gap-0.5 p-1 overflow-hidden">
+                {Array.from({ length: 9 }).map((_, i) => (
+                  <div class="aspect-square bg-gradient-to-br from-pink-300 to-orange-300 rounded-sm opacity-60"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 md:p-7">
+            <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-3 font-heading">
+              Instagram
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed mb-6">
+              Contenuti quotidiani su finanza personale, <strong class="text-[var(--aw-color-primary)]">investimenti</strong> e <strong class="text-[var(--aw-color-primary)]">pianificazione finanziaria</strong>. Una community dove la complessità finanziaria diventa accessibile a tutti.
+            </p>
+            <a
+              href="https://www.instagram.com/andreagiardini.finanza/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-brand--primary px-6 py-3 text-sm"
+            >
+              Seguimi su Instagram
+            </a>
+          </div>
+        </div>
+
+        <!-- LINKEDIN -->
+        <div class="bg-white rounded-sm shadow-md hover:shadow-2xl transition-shadow overflow-hidden group">
+          <div class="relative h-52 bg-gradient-to-br from-[rgb(238_247_246)] to-[rgb(221_240_238)] flex items-center justify-center overflow-hidden">
+            <div class="absolute top-6 right-8 w-14 h-14 rounded-xl bg-[#0A66C2] flex items-center justify-center shadow-lg group-hover:-translate-y-1 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+              </svg>
+            </div>
+            <div class="relative w-48 mt-6 group-hover:-translate-y-1 transition-transform">
+              <div class="w-full h-28 bg-gray-800 rounded-t-md p-2 shadow-2xl">
+                <div class="w-full h-full bg-white rounded-sm flex flex-col overflow-hidden p-2 gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-6 h-6 rounded-full bg-[#0A66C2]/20 shrink-0"></div>
+                    <div class="flex-1 space-y-0.5">
+                      <div class="h-1 bg-gray-300 rounded w-3/4"></div>
+                      <div class="h-1 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                  <div class="h-1 bg-gray-100 rounded"></div>
+                  <div class="h-1 bg-gray-100 rounded w-5/6"></div>
+                  <div class="h-1 bg-gray-100 rounded w-4/6"></div>
+                </div>
+              </div>
+              <div class="h-1.5 bg-gray-700 rounded-b-lg shadow-md"></div>
+            </div>
+          </div>
+
+          <div class="p-6 md:p-7">
+            <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-3 font-heading">
+              LinkedIn
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed mb-6">
+              Aggiornamenti professionali, approfondimenti sui mercati e riflessioni sul mondo della consulenza finanziaria. Il canale giusto per chi vuole restare aggiornato con un taglio più tecnico.
+            </p>
+            <a
+              href="https://www.linkedin.com/in/andrea-giardini-58923a268"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-brand--primary px-6 py-3 text-sm"
+            >
+              Seguimi su LinkedIn
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</Layout>

@@ -16,51 +16,102 @@ interface Links {
 }
 
 export interface Props {
-  links: Array<Links>;
-  secondaryLinks: Array<Link>;
-  socialLinks: Array<Link>;
+  links?: Array<Links>;
+  secondaryLinks?: Array<Link>;
+  socialLinks?: Array<Link>;
   footNote?: string;
   theme?: string;
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
+const {
+  socialLinks = [
+    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: '#' },
+    { ariaLabel: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: '#' },
+    { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:andrea@giardiniconsulenza.it' },
+  ],
+  links = [
+    {
+      title: 'Naviga',
+      links: [
+        { text: 'Chi sono', href: '/#about' },
+        { text: 'Percorso', href: '/#resume' },
+        { text: 'Servizi', href: '/#portfolio' },
+        { text: 'Blog', href: '/blog' },
+      ],
+    },
+    {
+      title: 'Contatti',
+      links: [
+        { text: 'andrea@giardiniconsulenza.it', href: 'mailto:andrea@giardiniconsulenza.it' },
+        { text: 'LinkedIn', href: '#' },
+        { text: 'WhatsApp', href: '#' },
+      ],
+    },
+    {
+      title: 'Informazioni',
+      links: [
+        { text: 'Privacy Policy', href: '/privacy' },
+        { text: 'Cookie Policy', href: '/privacy' },
+        { text: 'Note legali', href: '/terms' },
+      ],
+    },
+  ],
+  footNote = '',
+  theme = 'light',
+} = Astro.props;
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'relative border-t border-gray-200 dark:border-slate-800 not-prose']}>
   <div class="dark:bg-dark absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-  <div
-    class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300 intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-  >
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 dark:text-slate-300">
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
-      <div class="col-span-12 lg:col-span-4">
-        <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+      <div class="col-span-12 lg:col-span-5">
+        <div class="mb-4">
+          <a class="inline-block font-heading text-2xl md:text-3xl tracking-tight" href={getHomePermalink()}>
+            Andrea Giardini
+          </a>
+          <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-text-muted)] mt-1 font-medium">
+            Consulente Finanziario
+          </p>
         </div>
-        <div class="text-sm text-muted flex gap-1">
-          {
-            secondaryLinks.map(({ text, href }, index) => (
-              <>
-                {index !== 0 ? ' · ' : ''}
-                <a
-                  class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out"
-                  href={href}
-                  set:html={text}
-                />
-              </>
-            ))
-          }
+        <p class="text-sm text-[var(--aw-color-text-muted)] leading-relaxed max-w-sm mb-5">
+          Affianco persone e famiglie nella pianificazione finanziaria con un metodo basato sull'ascolto,
+          sulla trasparenza e su competenze certificate.
+        </p>
+        <div class="space-y-1.5 text-xs text-[var(--aw-color-text-muted)]">
+          <p>
+            Iscritto all'Albo OCF — delibera n. <strong class="font-semibold text-[var(--aw-color-text-default)]">2965</strong> del <strong class="font-semibold text-[var(--aw-color-text-default)]">23/04/2026</strong>
+          </p>
+          <p>
+            Agente collegato di <strong class="font-semibold text-[var(--aw-color-text-default)]">[Nome Banca] S.p.A.</strong>
+          </p>
+          <a
+            href="https://www.organismocf.it/portal/web/portale-ocf/ricerca-nelle-sezioni-dell-albo"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1 text-[var(--aw-color-primary)] hover:underline mt-1"
+          >
+            Verifica le credenziali
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
         </div>
       </div>
       {
         links.map(({ title, links }) => (
           <div class="col-span-6 md:col-span-3 lg:col-span-2">
-            <div class="dark:text-gray-300 font-medium mb-2">{title}</div>
+            <div class="text-xs tracking-[0.15em] uppercase text-[var(--aw-color-accent)] font-medium mb-4">
+              {title}
+            </div>
             {links && Array.isArray(links) && links.length > 0 && (
               <ul class="text-sm">
                 {links.map(({ text, href, ariaLabel }) => (
                   <li class="mb-2">
                     <a
-                      class="text-muted hover:text-gray-700 hover:underline dark:text-gray-400 transition duration-150 ease-in-out"
+                      class="text-[var(--aw-color-text-default)] hover:text-[var(--aw-color-primary)] dark:text-gray-400 hover:underline transition duration-150 ease-in-out"
                       href={href}
                       aria-label={ariaLabel}
                     >
@@ -74,14 +125,14 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         ))
       }
     </div>
-    <div class="md:flex md:items-center md:justify-between py-6 md:py-8">
+    <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-gray-200 dark:border-slate-800">
       {
         socialLinks?.length ? (
           <ul class="flex mb-4 md:order-1 -ml-2 md:ml-4 md:mb-0 rtl:ml-0 rtl:-mr-2 rtl:md:ml-0 rtl:md:mr-4">
             {socialLinks.map(({ ariaLabel, href, text, icon }) => (
               <li>
                 <a
-                  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+                  class="text-[var(--aw-color-text-muted)] hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-gray-200 rounded-lg text-sm p-2.5 inline-flex items-center"
                   aria-label={ariaLabel}
                   href={href}
                 >
@@ -96,9 +147,20 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         )
       }
 
-      <div class="text-sm mr-4 dark:text-muted">
+      <div class="text-xs text-[var(--aw-color-text-muted)] mr-4 dark:text-slate-400">
+        © {new Date().getFullYear()} Andrea Giardini · P.IVA <strong>[da inserire]</strong>
         <Fragment set:html={footNote} />
       </div>
+    </div>
+
+    <div class="py-6 border-t border-gray-200 dark:border-slate-800">
+      <p class="text-[11px] leading-relaxed text-[var(--aw-color-text-muted)] dark:text-slate-500 max-w-5xl">
+        <strong class="font-medium">Disclaimer.</strong> Le informazioni contenute in questo sito hanno esclusivamente
+        finalità informative ed educative e non costituiscono in alcun modo raccomandazioni personalizzate, sollecitazione
+        all'investimento, offerta di prodotti o servizi finanziari, né ricerca in materia di investimenti. Prima di
+        effettuare qualsiasi operazione di investimento è necessario leggere la documentazione ufficiale e valutare
+        attentamente il proprio profilo di rischio. I rendimenti passati non sono indicativi di quelli futuri.
+      </p>
     </div>
   </div>
 </footer>

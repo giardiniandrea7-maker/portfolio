@@ -1,0 +1,788 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Come lavoro — Andrea Giardini, Consulente Finanziario',
+  description:
+    'Scopri il metodo di lavoro di Andrea Giardini: ascolto, pianificazione su misura e accompagnamento continuo lungo tutto il percorso finanziario.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <!-- ======================================================
+       1. HERO
+       ====================================================== -->
+  <section class="bg-white py-12 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-14 items-center">
+
+        <!-- Foto Andrea (placeholder) -->
+        <div class="relative aspect-square bg-gradient-to-br from-[rgb(22_105_99)] via-[rgb(14_74_69)] to-[rgb(10_58_55)] rounded-sm overflow-hidden shadow-xl">
+          <div class="absolute inset-6 border border-[var(--aw-color-accent)]/30 pointer-events-none"></div>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--aw-color-accent)]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="mb-4 opacity-60">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            </svg>
+            <span class="text-sm tracking-[0.2em] uppercase opacity-80">Foto Andrea</span>
+          </div>
+        </div>
+
+        <!-- Titolo + paragrafo + CTA -->
+        <div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-[1.1] font-heading">
+            Come funziona la mia consulenza
+          </h1>
+
+          <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10">
+            Il mio lavoro parte sempre da una conversazione. Capire chi sei, cosa vuoi costruire e quali paure o
+            dubbi hai verso gli investimenti è il primo passo per costruire insieme qualcosa che abbia davvero senso
+            per te — non un portafoglio standard, ma una strategia che rispecchia la tua vita.
+          </p>
+
+          <a
+            href="/contatti"
+            class="btn-brand--primary px-8 py-4 text-base"
+          >
+            Contattami
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       2. COME LAVORO — testo sx + grafico animato dx
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Come lavoro
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Il mio approccio si fonda su due obiettivi concreti:
+              <strong class="text-[var(--aw-color-primary)]">costruire capitale nel tempo</strong> e
+              <strong class="text-[var(--aw-color-primary)]">proteggere ciò che hai già</strong>.
+              Lavoro con clienti in tutta Italia, anche completamente da remoto, con la stessa attenzione
+              di un incontro in presenza.
+            </p>
+
+            <p>
+              Sono iscritto all'<strong class="text-[var(--aw-color-primary)]">Albo OCF</strong> e opero
+              in piena <strong class="text-[var(--aw-color-primary)]">trasparenza</strong>: non ricevo
+              commissioni dai prodotti che scelgo, non ho obiettivi commerciali da raggiungere. Il mio
+              unico interesse è il risultato del tuo portafoglio.
+            </p>
+
+            <p>
+              Al centro di tutto c'è la tua
+              <strong class="text-[var(--aw-color-primary)]">consapevolezza</strong>: voglio che tu
+              sappia sempre dov'è allocato il tuo denaro, perché, e cosa aspettarti. Un investitore
+              informato prende decisioni migliori — e affronta i mercati con più serenità.
+            </p>
+          </div>
+        </div>
+
+        <!-- Grafico animato -->
+        <div
+          class="relative aspect-[4/3] bg-[rgb(238_247_246)] rounded-sm p-6 md:p-8 shadow-md chart-reveal"
+          data-chart
+        >
+          <!-- Legenda -->
+          <div class="flex items-center gap-6 mb-4 text-xs md:text-sm">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-4 h-0.5 bg-[var(--aw-color-primary)]"></span>
+              <span class="font-semibold text-[var(--aw-color-text-heading)]">Portafoglio ottimizzato</span>
+            </div>
+          </div>
+
+          <!-- SVG grafico -->
+          <svg viewBox="0 0 400 240" class="w-full h-[calc(100%-2rem)]" preserveAspectRatio="none">
+            <g stroke="rgb(200 195 180)" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.5">
+              <line x1="30" y1="30" x2="400" y2="30"/>
+              <line x1="30" y1="80" x2="400" y2="80"/>
+              <line x1="30" y1="130" x2="400" y2="130"/>
+              <line x1="30" y1="180" x2="400" y2="180"/>
+            </g>
+            <g fill="rgb(95 95 95)" font-size="9" font-family="Manrope, sans-serif">
+              <text x="0" y="33">500k</text>
+              <text x="0" y="83">400k</text>
+              <text x="0" y="133">300k</text>
+              <text x="0" y="183">200k</text>
+              <text x="0" y="220">100k</text>
+            </g>
+            <line x1="200" y1="20" x2="200" y2="220" stroke="rgb(14 74 69)" stroke-width="1.5" />
+            <text x="185" y="15" fill="rgb(14 74 69)" font-size="9" font-weight="700" font-family="Manrope, sans-serif">OGGI</text>
+            <path
+              d="M 30 210 Q 100 200 200 180 T 400 150"
+              stroke="rgb(180 180 180)"
+              stroke-width="2"
+              fill="none"
+              class="chart-line chart-line--gray"
+            />
+            <path
+              d="M 30 210 Q 100 210 200 200 T 400 210"
+              stroke="rgb(160 50 50)"
+              stroke-width="2"
+              fill="none"
+              class="chart-line chart-line--red"
+            />
+            <path
+              d="M 30 210 Q 100 195 200 165 Q 280 135 400 55"
+              stroke="rgb(14 74 69)"
+              stroke-width="3"
+              fill="none"
+              class="chart-line chart-line--green"
+            />
+            <path
+              d="M 30 210 Q 100 195 200 165 Q 280 135 400 55 L 400 220 L 30 220 Z"
+              fill="rgb(14 74 69)"
+              fill-opacity="0.05"
+              class="chart-area"
+            />
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       3. RISPARMI DENARO E TEMPO — 3 card con icone
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+        Risparmi denaro (e tempo) con i tuoi investimenti
+      </h2>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+
+        <!-- Card 1 -->
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-8 md:p-10">
+          <div class="flex justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              <path d="M6 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-snug">
+            Collabori con chi non ha alcun conflitto di interessi
+          </h3>
+          <div class="space-y-3 text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Il modello di consulenza che ho adottato mi permette di lavorare con i miei clienti
+              <strong class="text-[var(--aw-color-primary)]">senza conflitto di interessi</strong>,
+              scegliendo strumenti efficienti che massimizzano la redditività e minimizzano i costi.
+            </p>
+            <p>
+              Non sono un venditore di prodotti: seleziono gli strumenti più adatti per te,
+              senza influenze esterne.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-8 md:p-10">
+          <div class="flex justify-center mb-8">
+            <div class="relative w-[90px] h-[90px] flex items-center justify-center">
+              <svg viewBox="0 0 100 100" class="absolute inset-0">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="rgb(220 210 195)" stroke-width="6"/>
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--aw-color-accent)" stroke-width="6"
+                        stroke-dasharray="5 246" stroke-dashoffset="-60" stroke-linecap="round"
+                        transform="rotate(-90 50 50)"/>
+              </svg>
+              <span class="text-2xl font-bold text-[var(--aw-color-primary)] font-heading">0,2%</span>
+            </div>
+          </div>
+          <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-snug">
+            Strumenti finanziari efficienti e a basso costo
+          </h3>
+          <div class="space-y-3 text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Lavoro con strumenti caratterizzati da
+              <strong class="text-[var(--aw-color-primary)]">costi contenuti</strong> come gli ETF,
+              privilegiando sempre l'efficienza del portafoglio.
+            </p>
+            <p>
+              Operando con me si
+              <strong class="text-[var(--aw-color-primary)]">azzerano le commissioni</strong>
+              di transazione per la compravendita degli strumenti finanziari.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-8 md:p-10">
+          <div class="flex justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="9 12 11 14 15 10"/>
+              <path d="M16 8l4-4"/>
+              <path d="M20 4l-2 0 0 2"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-snug">
+            Gestione operativa delegata
+          </h3>
+          <div class="space-y-3 text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Tutte le operazioni di investimento vengono
+              <strong class="text-[var(--aw-color-primary)]">predisposte da me</strong> senza che tu
+              debba dedicare tempo prezioso.
+            </p>
+            <p>
+              Ogni proposta viene conclusa solo con la tua
+              <strong class="text-[var(--aw-color-primary)]">approvazione esplicita</strong>.
+              Sei sempre al comando.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       4. PUOI CONTARE SU UN SUPPORTO QUOTIDIANO
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Puoi contare su un supporto quotidiano
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10">
+            <p>
+              Non sarai mai lasciato solo. Sono
+              <strong class="text-[var(--aw-color-primary)]">a disposizione</strong> per rispondere
+              alle tue domande, aiutarti a fare
+              <strong class="text-[var(--aw-color-primary)]">scelte consapevoli</strong> e
+              accompagnarti nei momenti di incertezza — soprattutto quando i mercati mettono alla prova
+              la tua disciplina.
+            </p>
+            <p>
+              Gestire i tuoi investimenti è il mio <strong>lavoro</strong>. Farlo con attenzione,
+              presenza e trasparenza è il mio
+              <strong class="text-[var(--aw-color-primary)]">impegno</strong>.
+            </p>
+          </div>
+
+          <a
+            href="/contatti"
+            class="btn-brand--primary px-8 py-4 text-base"
+          >
+            Contattami
+          </a>
+        </div>
+
+        <div class="relative aspect-[4/3] bg-gradient-to-br from-[rgb(14_74_69)] to-[rgb(22_105_99)] rounded-sm overflow-hidden shadow-xl">
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-accent)" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" class="opacity-30">
+              <circle cx="9" cy="7" r="4"/>
+              <circle cx="17" cy="7" r="4"/>
+              <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+              <path d="M13 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2"/>
+            </svg>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 p-6">
+            <span class="text-xs tracking-[0.2em] uppercase text-[var(--aw-color-accent)]/70">Foto Supporto</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       5. LAVORO PER LA CONSAPEVOLEZZA — 2 card mockup
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24 border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+        Lavoro per la consapevolezza del cliente
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-10">
+
+        <div class="bg-[rgb(238_247_246)] rounded-md p-8 md:p-10 hover:shadow-xl transition-shadow">
+          <div class="flex justify-center mb-10">
+            <div class="relative w-40 h-72 bg-gray-900 rounded-[2rem] p-2 shadow-2xl">
+              <div class="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-gray-900 rounded-full z-10"></div>
+              <div class="w-full h-full bg-gradient-to-br from-white to-[rgb(238_247_246)] rounded-[1.6rem] overflow-hidden flex flex-col">
+                <div class="h-8 bg-[var(--aw-color-primary)] flex items-center px-3 text-[8px] font-bold text-white uppercase tracking-wider">
+                  Andrea Giardini
+                </div>
+                <div class="flex-1 p-2 space-y-1.5 overflow-hidden">
+                  <div class="h-1.5 bg-gray-300 rounded w-3/4"></div>
+                  <div class="h-1.5 bg-gray-200 rounded w-full"></div>
+                  <div class="h-1.5 bg-gray-200 rounded w-5/6"></div>
+                  <div class="mt-2 bg-gradient-to-br from-[var(--aw-color-primary)] to-[var(--aw-color-secondary)] rounded aspect-video flex items-center justify-center">
+                    <div class="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
+                      <div class="w-0 h-0 border-l-[5px] border-l-[var(--aw-color-primary)] border-y-[3px] border-y-transparent ml-0.5"></div>
+                    </div>
+                  </div>
+                  <div class="h-1.5 bg-gray-300 rounded w-2/3 mt-2"></div>
+                  <div class="h-1.5 bg-gray-200 rounded w-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-snug">
+            La tua prima fonte di arricchimento personale
+          </h3>
+          <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+            Credo che un <strong class="text-[var(--aw-color-primary)]">cliente consapevole</strong> prenda
+            decisioni migliori. Per questo condivido contenuti su
+            <strong class="text-[var(--aw-color-primary)]">investimenti, risparmio e pianificazione</strong>
+            per chiunque voglia capirne di più. La consulenza funziona davvero solo quando
+            <strong class="text-[var(--aw-color-primary)]">entrambi sappiamo</strong> dove stiamo andando.
+          </p>
+        </div>
+
+        <div class="bg-[rgb(238_247_246)] rounded-md p-8 md:p-10 hover:shadow-xl transition-shadow">
+          <div class="flex justify-center mb-10">
+            <div class="relative w-full max-w-xs">
+              <div class="w-full h-44 bg-gray-900 rounded-t-lg p-1.5 shadow-2xl">
+                <div class="w-full h-full bg-white rounded-sm overflow-hidden flex flex-col">
+                  <div class="h-5 bg-gray-100 flex items-center px-2 gap-1 border-b border-gray-200">
+                    <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-yellow-400"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                  </div>
+                  <div class="flex-1 p-2 flex gap-2">
+                    <div class="flex-1 flex items-end gap-0.5">
+                      <div class="w-full bg-[var(--aw-color-primary)]/60" style="height:30%"></div>
+                      <div class="w-full bg-[var(--aw-color-primary)]/70" style="height:50%"></div>
+                      <div class="w-full bg-[var(--aw-color-primary)]/80" style="height:40%"></div>
+                      <div class="w-full bg-[var(--aw-color-primary)]" style="height:70%"></div>
+                      <div class="w-full bg-[var(--aw-color-primary)]" style="height:60%"></div>
+                      <div class="w-full bg-[var(--aw-color-accent)]" style="height:85%"></div>
+                    </div>
+                    <div class="w-16 space-y-1">
+                      <div class="h-1.5 bg-gray-300 rounded"></div>
+                      <div class="h-1.5 bg-gray-200 rounded w-3/4"></div>
+                      <div class="h-1.5 bg-gray-200 rounded w-5/6"></div>
+                      <div class="h-6 bg-[var(--aw-color-primary)]/10 rounded mt-2"></div>
+                      <div class="h-1.5 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="h-2 bg-gray-700 rounded-b-xl w-[110%] -ml-[5%] shadow-md"></div>
+            </div>
+          </div>
+
+          <h3 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading leading-snug">
+            Un aggiornamento costante e personalizzato
+          </h3>
+          <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+            Chi lavora con me non riceve solo un report a fine anno. Hai accesso ad
+            <strong class="text-[var(--aw-color-primary)]">aggiornamenti dedicati</strong> e un contatto diretto
+            per restare sempre informato sul tuo portafoglio e sull'andamento dei mercati.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       6. SERVIZI + STEP PER PARTIRE
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-6 leading-tight font-heading">
+        Servizi per il tuo patrimonio
+      </h2>
+
+      <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed max-w-4xl mb-14">
+        Ogni persona ha obiettivi diversi, orizzonti temporali differenti e una propria propensione al rischio.
+        Per questo non propongo soluzioni pre-confezionate. Ti aiuto a costruire una
+        <strong class="text-[var(--aw-color-primary)]">strategia coerente</strong> con la tua situazione:
+        dalla diagnosi del portafoglio alla pianificazione patrimoniale, fino alla previdenza integrativa.
+        Tutto pensato per evolversi insieme a te.
+      </p>
+
+      <div class="grid sm:grid-cols-3 gap-5 md:gap-6 mb-20">
+
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-6 md:p-8 flex flex-col text-center">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-[var(--aw-color-primary)] flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+              <text x="9" y="14" font-size="9" fill="white" stroke="none" font-weight="700">€</text>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-6 font-heading">Diagnosi di Portafoglio</h3>
+          <a href="/servizi/diagnosi" class="btn-brand--primary mt-auto px-5 py-2.5 text-xs">
+            Scopri di più
+          </a>
+        </div>
+
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-6 md:p-8 flex flex-col text-center">
+          <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 17 9 11 13 15 21 7"/>
+              <polyline points="14 7 21 7 21 14"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-6 font-heading">Pianificazione Finanziaria</h3>
+          <a href="/servizi/pianificazione" class="btn-brand--primary mt-auto px-5 py-2.5 text-xs">
+            Scopri di più
+          </a>
+        </div>
+
+        <div class="bg-white rounded-sm shadow-md hover:shadow-xl transition-shadow p-6 md:p-8 flex flex-col text-center">
+          <div class="w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-6 font-heading">Previdenza Complementare</h3>
+          <a href="/servizi/previdenza" class="btn-brand--primary mt-auto px-5 py-2.5 text-xs">
+            Scopri di più
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Step per partire -->
+      <div>
+        <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-12 font-heading">
+          Step per partire:
+        </h3>
+
+        <div class="relative max-w-3xl">
+          <div class="absolute left-8 top-0 bottom-0 w-px bg-[var(--aw-color-primary)]/40"></div>
+
+          <div class="relative flex gap-6 md:gap-10 mb-14 pl-0">
+            <div class="shrink-0 w-16 h-16 rounded-full bg-[var(--aw-color-primary)] text-white font-bold text-xl flex items-center justify-center font-heading shadow-lg z-10">01</div>
+            <div class="flex-1 pt-2">
+              <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--aw-color-text-muted)] mb-3">Ascolto</p>
+              <h4 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-3 font-heading leading-tight">
+                Raccontami i tuoi obiettivi e la tua storia da investitore
+              </h4>
+              <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+                Partiamo da te: capisco chi sei, cosa vuoi ottenere e quali esperienze hai avuto fino ad oggi
+                con gli investimenti. La valutazione iniziale è gratuita.
+              </p>
+            </div>
+          </div>
+
+          <div class="relative flex gap-6 md:gap-10 mb-14 pl-0">
+            <div class="shrink-0 w-16 h-16 rounded-full bg-[var(--aw-color-primary)] text-white font-bold text-xl flex items-center justify-center font-heading shadow-lg z-10">02</div>
+            <div class="flex-1 pt-2">
+              <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--aw-color-text-muted)] mb-3">Pianificazione</p>
+              <h4 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-3 font-heading leading-tight">
+                Impostiamo una strategia di investimento coerente con te
+              </h4>
+              <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+                Costruiamo un piano su misura, allineato ai tuoi obiettivi, alla tua propensione al rischio
+                e al tuo orizzonte temporale.
+              </p>
+            </div>
+          </div>
+
+          <div class="relative flex gap-6 md:gap-10 pl-0">
+            <div class="shrink-0 w-16 h-16 rounded-full bg-[var(--aw-color-primary)] text-white font-bold text-xl flex items-center justify-center font-heading shadow-lg z-10">03</div>
+            <div class="flex-1 pt-2">
+              <p class="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--aw-color-text-muted)] mb-3">Partenza!</p>
+              <h4 class="text-xl md:text-2xl font-bold text-[var(--aw-color-text-heading)] mb-3 font-heading leading-tight">
+                Percorriamo insieme il tuo percorso da investitore
+              </h4>
+              <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
+                Monitoriamo, aggiorniamo e gestiamo ogni fase insieme: ci sono, anche nei momenti più delicati.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================
+       7. IL MIO VALORE AGGIUNTO — 4 pilastri
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="max-w-3xl mx-auto text-center mb-14">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-5 leading-tight font-heading">
+          Cosa rende diverso lavorare con me
+        </h2>
+        <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+          Non sono un punto vendita. Sono un professionista iscritto all'albo il cui unico obiettivo è il tuo
+          risultato finanziario nel lungo periodo.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-6 md:gap-8">
+
+        <!-- Pilastro 1 -->
+        <div class="flex gap-5 p-7 md:p-8 border border-gray-100 rounded-md hover:shadow-lg transition-shadow">
+          <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">
+              Indipendenza totale dai prodotti
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+              Non guadagno commissioni sui prodotti che ti consiglio. Questo mi permette di scegliere
+              esclusivamente ciò che è giusto per te, senza pressioni commerciali di nessun tipo.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pilastro 2 -->
+        <div class="flex gap-5 p-7 md:p-8 border border-gray-100 rounded-md hover:shadow-lg transition-shadow">
+          <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">
+              Chiarezza, sempre
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+              Spiego ogni scelta con un linguaggio semplice. Niente tecnicismi inutili, niente opacità.
+              Vuoi capire perché hai in portafoglio un certo strumento? Te lo spiego.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pilastro 3 -->
+        <div class="flex gap-5 p-7 md:p-8 border border-gray-100 rounded-md hover:shadow-lg transition-shadow">
+          <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">
+              Un rapporto diretto, non una pratica
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+              Lavoro con un numero limitato di clienti proprio per garantire attenzione e continuità.
+              Quando mi scrivi, rispondo io — non un call center.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pilastro 4 -->
+        <div class="flex gap-5 p-7 md:p-8 border border-gray-100 rounded-md hover:shadow-lg transition-shadow">
+          <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--aw-color-primary)]/10 flex items-center justify-center mt-0.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-[var(--aw-color-text-heading)] mb-2 font-heading">
+              Visione di lungo periodo
+            </h3>
+            <p class="text-sm text-[var(--aw-color-text-default)] leading-relaxed">
+              Non inseguo i rendimenti del momento. Costruisco strategie solide pensate per durare nel tempo,
+              anche quando i mercati attraversano fasi difficili.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       8. RECENSIONI (placeholder) + FORM
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] text-center mb-14 leading-tight font-heading">
+        I primi clienti stanno già scegliendo di lavorare con me
+      </h2>
+
+      <div class="bg-white rounded-md p-8 md:p-12 text-center shadow-sm">
+        <div class="flex items-center justify-center gap-4 mb-6 flex-wrap">
+          <div class="flex items-center gap-1.5">
+            <span class="text-5xl font-bold text-[var(--aw-color-primary)] font-heading">—</span>
+          </div>
+          <div class="flex items-center gap-0.5">
+            {Array.from({ length: 5 }).map(() => (
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="rgb(220 210 195)" class="drop-shadow-sm">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            ))}
+          </div>
+          <span class="text-sm text-[var(--aw-color-text-muted)]">Recensioni in arrivo</span>
+          <div class="inline-flex items-center gap-1 px-3 py-1 rounded bg-white shadow-sm border border-gray-200">
+            <span class="text-[#4285F4] font-bold">G</span>
+            <span class="text-[#EA4335] font-bold">o</span>
+            <span class="text-[#FBBC05] font-bold">o</span>
+            <span class="text-[#4285F4] font-bold">g</span>
+            <span class="text-[#34A853] font-bold">l</span>
+            <span class="text-[#EA4335] font-bold">e</span>
+          </div>
+        </div>
+
+        <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] max-w-2xl mx-auto mb-6">
+          Le recensioni dei primi clienti saranno pubblicate qui non appena disponibili. Stiamo raccogliendo
+          feedback autentici da chi ha scelto di iniziare un percorso di consulenza con me.
+        </p>
+
+        <span class="inline-block px-4 py-2 bg-[var(--aw-color-accent)]/20 text-[var(--aw-color-primary)] text-xs font-semibold tracking-[0.15em] uppercase rounded-sm">
+          In arrivo
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FORM CONTATTO -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="max-w-3xl mb-10">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] leading-tight font-heading">
+          La valutazione è qualitativa, non quantitativa.<br/>
+          <span class="text-[var(--aw-color-primary)]">Candidati come cliente.</span>
+        </h2>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-md shadow-lg p-8 md:p-12">
+        <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] text-center mb-10 font-heading">
+          Mettiti in contatto
+        </h3>
+
+        <form class="space-y-6" action="#" method="POST">
+          <div>
+            <label for="name" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Nome e Cognome <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input type="text" id="name" name="name" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Email <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input type="email" id="email" name="email" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <div>
+            <label for="phone" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Telefono <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input type="tel" id="phone" name="phone" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"/>
+          </div>
+
+          <div>
+            <label for="message" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Messaggio <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <textarea id="message" name="message" rows="5" required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors resize-y"></textarea>
+          </div>
+
+          <div>
+            <p class="text-sm font-semibold text-[var(--aw-color-text-heading)] mb-3">
+              Trattamento dei dati <span class="text-[rgb(160_50_50)]">(*)</span>
+            </p>
+            <label class="flex items-start gap-3 text-sm text-[var(--aw-color-text-default)] cursor-pointer">
+              <input type="checkbox" required
+                class="mt-0.5 w-4 h-4 text-[var(--aw-color-primary)] border-gray-300 rounded focus:ring-[var(--aw-color-primary)]"/>
+              <span>
+                Dichiaro di aver letto la <a href="/privacy" class="text-[var(--aw-color-primary)] underline underline-offset-2 hover:text-[var(--aw-color-accent)]">privacy policy</a>
+                e acconsento al trattamento dei dati ivi indicato.
+              </span>
+            </label>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit"
+              class="btn-brand--dark px-8 py-3.5 text-base hover:bg-[var(--aw-color-primary)] hover:border-[var(--aw-color-primary)]">
+              Invia
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>
+
+<style>
+  .chart-reveal .chart-line {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  .chart-reveal .chart-area {
+    opacity: 0;
+  }
+  .chart-reveal.revealed .chart-line--gray {
+    animation: drawLine 1.6s ease-out 0.2s forwards;
+  }
+  .chart-reveal.revealed .chart-line--red {
+    animation: drawLine 1.6s ease-out 0.5s forwards;
+  }
+  .chart-reveal.revealed .chart-line--green {
+    animation: drawLine 2s ease-out 0.8s forwards;
+  }
+  .chart-reveal.revealed .chart-area {
+    animation: fadeArea 1.2s ease-out 1.8s forwards;
+  }
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes fadeArea {
+    to { opacity: 1; }
+  }
+</style>
+
+<script>
+  const chart = document.querySelector('[data-chart]');
+  if (chart) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(chart);
+  }
+</script>

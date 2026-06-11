@@ -1,0 +1,80 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import ServiceLayout from '~/components/ServiceLayout.astro';
+
+const metadata = {
+  title: 'Diagnosi di Portafoglio — Analisi gratuita | Andrea Giardini',
+  description:
+    'Richiedi una diagnosi gratuita del tuo portafoglio di investimenti. Analisi online, imparziale e completa in meno di una settimana.',
+};
+---
+
+<Layout metadata={metadata}>
+
+  <ServiceLayout
+    heroTitle="Analisi di portafoglio gratuita"
+    heroParagraphs={[
+      `Richiedere una <strong class="text-[var(--aw-color-primary)]">diagnosi di portafoglio</strong> significa fare chiarezza sul proprio <strong class="text-[var(--aw-color-primary)]">portafoglio</strong>: capire cosa si possiede, come è strutturato e se è coerente con i propri <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> e il proprio profilo di <strong class="text-[var(--aw-color-primary)]">rischio</strong>.`,
+      `Quali <strong class="text-[var(--aw-color-primary)]">rendimenti</strong> stai ottenendo? Quali <strong class="text-[var(--aw-color-primary)]">costi</strong> stai sostenendo? Il tuo portafoglio è adeguato al tuo orizzonte temporale? Sono domande legittime, ma non sempre facili a cui rispondere senza il supporto di un professionista.`,
+      `Se non hai risposte chiare, una <strong class="text-[var(--aw-color-primary)]">diagnosi gratuita</strong> è il primo passo per ottenerle.`,
+    ]}
+    heroCtaText="Richiedila Ora!"
+    heroCtaHref="#come-ricevere"
+    heroVideoLabel="Diagnosi di Portafoglio"
+
+    showExample={false}
+
+    detailTitle="Più nel dettaglio"
+    detailIntro={[
+      `La <strong class="text-[var(--aw-color-primary)]">diagnosi di portafoglio</strong> ti informa sullo stato di salute del tuo <strong class="text-[var(--aw-color-primary)]">patrimonio</strong>, direttamente online.`,
+    ]}
+    advantagesTitle="I vantaggi:"
+    advantages={[
+      `Calcolare le probabili evoluzioni del tuo <strong class="text-[var(--aw-color-primary)]">portafoglio</strong> come è attualmente strutturato;`,
+      `Confrontarlo con le reali potenzialità di reddito del tuo capitale;`,
+      `Sfruttare in modo professionale i modelli statistici a mia disposizione per ottimizzare i tuoi investimenti;`,
+      `Avere particolare riguardo al tuo orizzonte temporale, ai <strong class="text-[var(--aw-color-primary)]">rischi</strong> e alla coerenza con il tuo profilo di investitore.`,
+    ]}
+    analysisTitle="Cosa viene analizzato:"
+    analysisItems={[
+      `Fondi comuni di investimento`,
+      `Polizze assicurative`,
+      `Fondi pensione`,
+      `Azioni`,
+      `Obbligazioni`,
+      `Certificati`,
+      `<strong class="text-[var(--aw-color-primary)]">ETF</strong>`,
+    ]}
+    detailOutro={[
+      `e tutti gli strumenti proposti in banca, posta ed assicurazione.`,
+      `La <strong class="text-[var(--aw-color-primary)]">diagnosi è gratuita</strong> e ti informa sul reale stato di salute del tuo <strong class="text-[var(--aw-color-primary)]">patrimonio</strong>. Perché non approfittarne?`,
+    ]}
+
+    faqTitle="Risolvi i tuoi dubbi"
+    faqParagraphs={[
+      `Perché effettuare l'analisi gratuita? Quali sono i vantaggi? Cosa si rischia? Quanto tempo bisogna attendere per un riscontro?`,
+      `Rispondo alle domande più comuni con un semplice video a nome di tutto lo studio, che si impegnerà nel restituirti un output completo, chiaro e risolutivo.`,
+    ]}
+    faqVideoLabel="Rispondo alle domande sulla diagnosi gratuita"
+
+    bannerTitle="Ottienila online gratuitamente"
+    bannerSubtitle="pronta in meno di una settimana"
+
+    receiveTitle="Come ricevere la diagnosi"
+    receiveParagraphs={[
+      `Puoi richiedere la diagnosi compilando il modulo qui sotto, scrivendo a <a href="mailto:diagnosi@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] underline font-semibold">diagnosi@giardiniconsulenza.it</a> o inviando un messaggio WhatsApp al <strong class="text-[var(--aw-color-primary)]">+39 351 545 6845</strong>.`,
+      `Basta uno screen o una foto del tuo <strong class="text-[var(--aw-color-primary)]">portafoglio</strong>. Parto dalla visione d'insieme per capire se la struttura attuale è coerente con i tuoi <strong class="text-[var(--aw-color-primary)]">obiettivi</strong> e il tuo profilo — <strong class="text-[var(--aw-color-primary)]">senza costi</strong>, senza documenti complessi.`,
+    ]}
+    receiveCtaText="Come richiedere la diagnosi"
+
+    showForm={true}
+    formTitle="Modulo di richiesta"
+    formSubtitle={[
+      `Compila la form e carica i documenti o gli screen dei tuoi investimenti.`,
+      `È <strong class="text-[var(--aw-color-primary)]">gratis</strong> e <strong class="text-[var(--aw-color-primary)]">senza impegno</strong>.`,
+    ]}
+    showFileUpload={true}
+    showInvestmentDate={true}
+  />
+
+</Layout>

@@ -1,0 +1,541 @@
+﻿---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Perché scegliermi — Andrea Giardini, Consulente Finanziario',
+  description:
+    'I tre principali motivi per cui scegliere Andrea Giardini come consulente finanziario: preparazione, lungimiranza e risultati.',
+};
+
+// Card recensione placeholder (riusata)
+const reviewPlaceholder = 'Le recensioni dei primi clienti saranno pubblicate qui. Stiamo raccogliendo feedback autentici da chi ha scelto un percorso con noi.';
+---
+
+<Layout metadata={metadata}>
+
+  <!-- ======================================================
+       1. HERO — 3 pilastri con icone
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Intestazione centrata -->
+      <div class="text-center mb-16 md:mb-20">
+        <p class="text-sm md:text-base font-semibold tracking-[0.15em] uppercase text-[var(--aw-color-text-muted)] mb-3">
+          I tre principali motivi
+        </p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--aw-color-text-heading)] leading-[1.1] font-heading">
+          Per cui dovresti scegliermi
+        </h1>
+      </div>
+
+      <!-- 3 Pilastri -->
+      <div class="grid md:grid-cols-3 gap-10 md:gap-14">
+
+        <!-- Pilastro 1: Preparazione -->
+        <div class="text-center">
+          <div class="flex justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <line x1="8" y1="7" x2="16" y2="7"/>
+              <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading">
+            Preparazione
+          </h3>
+          <p class="text-base text-[var(--aw-color-text-default)] leading-relaxed max-w-xs mx-auto">
+            Scegliere il mio servizio significa affidarsi alle competenze di un intero team di consulenza.
+          </p>
+        </div>
+
+        <!-- Pilastro 2: Lungimiranza -->
+        <div class="text-center">
+          <div class="flex justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading">
+            Lungimiranza
+          </h3>
+          <p class="text-base text-[var(--aw-color-text-default)] leading-relaxed max-w-xs mx-auto">
+            Possibilità di accompagnarti a lungo nel tuo percorso, passione ed energia da vendere.
+          </p>
+        </div>
+
+        <!-- Pilastro 3: Risultati -->
+        <div class="text-center">
+          <div class="flex justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="var(--aw-color-primary)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6"/>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+              <circle cx="12" cy="8" r="3" stroke="var(--aw-color-accent)"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] mb-4 font-heading">
+            Risultati
+          </h3>
+          <p class="text-base text-[var(--aw-color-text-default)] leading-relaxed max-w-xs mx-auto">
+            Vari traguardi professionali raggiunti, ma soprattutto, clienti sempre molto soddisfatti.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       2. PREPARAZIONE — testo sx + 2 card recensioni dx
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1.1fr_1fr] gap-10 md:gap-14 items-start">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Preparazione
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Essere preparati è la chiave per gestire situazioni complesse ed essere capaci di affrontare ogni
+              situazione di mercato. Sono fermamente convinto che per risultare vincenti nel <strong class="text-[var(--aw-color-primary)]">lungo periodo</strong> si debba
+              studiare tutta la vita.
+            </p>
+            <p>
+              Affidarsi a me non significa solo riporre fiducia nelle mie competenze e conoscenza dei mercati
+              finanziari, bensì incaricare un
+              <strong class="text-[var(--aw-color-primary)]">intero team di professionisti</strong> che soddisfano le
+              più disparate aree di cui un cliente può aver bisogno.
+            </p>
+            <p>
+              Credo che per fornire un servizio a 360° non possa bastare, per quanto brillante, la preparazione di un
+              singolo. Per questo ritengo estremamente efficace la presenza di un team di analisti in mio supporto
+              nella gestione dei <strong class="text-[var(--aw-color-primary)]">portafogli</strong> della clientela.
+            </p>
+            <p>
+              <strong class="text-[var(--aw-color-primary)]">L'insieme delle competenze ed esperienze</strong> dei
+              singoli è ciò che costruisce il <strong>mio servizio di consulenza</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2 card recensioni placeholder -->
+        <div class="space-y-6 md:mt-12">
+
+          <!-- Card recensione 1 -->
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <!-- Freccetta verso il basso -->
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 1</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+          <!-- Card recensione 2 -->
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 2</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       3. LUNGIMIRANZA — 2 card recensioni sx + testo dx
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1fr_1.1fr] gap-10 md:gap-14 items-start">
+
+        <!-- 2 card recensioni sx -->
+        <div class="space-y-6 md:mt-12 md:order-1 order-2">
+
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 3</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 4</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Testo dx -->
+        <div class="md:order-2 order-1">
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Lungimiranza
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              Il mio più grande interesse è iniziare un <strong class="text-[var(--aw-color-primary)]">percorso</strong>
+              con un cliente e farlo durare a <strong>lungo</strong>, possibilmente
+              <strong class="text-[var(--aw-color-primary)]">un'intera vita</strong>.
+            </p>
+            <p>
+              Avendo davanti a me, mi auguro, ancora decine e decine di anni di attività, ho interesse a mantenere
+              attiva la relazione con il cliente.
+            </p>
+            <p>
+              <strong class="text-[var(--aw-color-primary)]">Il servizio che offro è di qualità e con dei costi,
+              rispetto alla media di mercato, assolutamente contenuti</strong>. Questo genera nell'arco di una vita
+              un risparmio per il cliente tale da raggiungere risultati davvero significativi.
+            </p>
+            <p>
+              Una piccola ottimizzazione, di anno in anno, cambia <em>un'intera vita</em>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       4. RISULTATI — testo sx + 2 card recensioni dx
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1.1fr_1fr] gap-10 md:gap-14 items-start">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+            Risultati
+          </h2>
+
+          <div class="space-y-5 text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            <p>
+              <strong class="text-[var(--aw-color-primary)]">I primi clienti stanno già scegliendo di lavorare con
+              me.</strong> Un team composto da persone selezionate mi aiuta ogni giorno per garantire una customer
+              experience di massimo livello.
+            </p>
+            <p>
+              La motivazione per cui sono stati raggiunti dei risultati così importanti è a sua volta tripartita:
+              <strong class="text-[var(--aw-color-primary)]">trasparenza, qualità ed efficienza</strong>. Sui mercati
+              finanziari non si può guadagnare sempre tutti gli anni. Tuttavia, investire con efficienza statistica ed
+              evitare errori comportamentali permette, nel <strong class="text-[var(--aw-color-primary)]">lungo periodo</strong>, di raggiungere <strong class="text-[var(--aw-color-primary)]">rendimenti</strong> sensibilmente
+              migliori rispetto agli investitori medi.
+            </p>
+            <p>
+              Un aspetto che amo del mio lavoro è il seguente: i risultati non si limitano solo ai traguardi della mia
+              attività, bensì ai passi avanti di tutte le famiglie che si appoggiano al servizio di consulenza.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2 card recensioni dx -->
+        <div class="space-y-6 md:mt-12">
+
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 5</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+          <div class="relative bg-[rgb(238_247_246)] rounded-md p-6 md:p-8">
+            <div class="flex items-center justify-center gap-0.5 mb-5">
+              {Array.from({ length: 5 }).map(() => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="rgb(220 210 195)">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              ))}
+            </div>
+            <p class="text-sm md:text-base text-[var(--aw-color-text-muted)] italic text-center mb-6 leading-relaxed">
+              {reviewPlaceholder}
+            </p>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-t-[12px] border-l-transparent border-r-transparent border-t-[rgb(238_247_246)]"></div>
+            <div class="mt-4 text-center">
+              <p class="font-bold text-[var(--aw-color-text-muted)]">— Cliente 6</p>
+              <p class="text-xs text-[var(--aw-color-text-muted)]">Recensione in arrivo</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       5. BANNER DIAGNOSI — split con CTA
+       ====================================================== -->
+  <section class="bg-[rgb(238_247_246)] py-14 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1.4fr_1fr] gap-8 md:gap-12 items-center">
+
+        <!-- Testo sx -->
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-5 leading-tight font-heading">
+            Analisi e diagnosi di portafoglio <em class="text-[var(--aw-color-primary)] not-italic font-bold">gratuita</em>
+          </h2>
+          <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            Per aiutare gli investitori a comprendere meglio la loro situazione attuale e renderli consapevoli della
+            qualità reale dei loro <strong class="text-[var(--aw-color-primary)]">investimenti</strong>, analizzo e commento il loro <strong class="text-[var(--aw-color-primary)]">portafoglio</strong>
+            <strong class="text-[var(--aw-color-primary)]">gratuitamente</strong>.
+          </p>
+        </div>
+
+        <!-- CTA grande dx -->
+        <div>
+          <a
+            href="/contatti"
+            class="btn-brand--primary w-full px-8 py-6 md:py-8 text-xl md:text-2xl"
+          >
+            Compila la richiesta!
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================
+       6. LUNGO TERMINE & DIVERSIFICAZIONE
+       ====================================================== -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <p class="text-sm md:text-base font-semibold tracking-[0.15em] uppercase text-[var(--aw-color-text-muted)] mb-3">
+        Gestione e investimenti basati su
+      </p>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+        Lungo termine &amp; Diversificazione
+      </h2>
+
+      <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+        Ogni persona rappresenta un caso unico e differente, ma, salvo casi particolari, i miei <strong class="text-[var(--aw-color-primary)]">portafogli</strong> hanno tutti
+        le stesse, solide, fondamenta:
+        <strong class="text-[var(--aw-color-primary)]">lungo termine e diversificazione</strong>. Su questi due concetti
+        di base io e i miei clienti andiamo a lavorare poi per ottenere la massima efficienza in funzione delle
+        esigenze individuate per ognuno.
+      </p>
+
+    </div>
+  </section>
+
+  <!-- ======================================================
+       7. APPRENDI + AREA CLIENTI + FORM
+       ====================================================== -->
+
+  <!-- Banner Apprendi -->
+  <section class="bg-[rgb(238_247_246)] py-14 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-[1.4fr_1fr] gap-8 md:gap-12 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-5 leading-tight font-heading">
+            Video, articoli, podcast, corsi
+          </h2>
+          <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed">
+            Nella sezione apprendi trovi moltissimi contenuti che ti aiuteranno a comprendere meglio il mondo della
+            finanza, dalla tua situazione alla qualità dei miei servizi.
+          </p>
+        </div>
+        <div>
+          <a
+            href="#"
+            class="btn-brand--primary w-full px-8 py-6 md:py-8 text-xl md:text-2xl"
+          >
+            Sezione Apprendi
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Area Clienti -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <p class="text-sm md:text-base font-semibold tracking-[0.15em] uppercase text-[var(--aw-color-text-muted)] mb-3">
+        Inoltre
+      </p>
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-8 leading-tight font-heading">
+        Per i miei clienti
+      </h2>
+
+      <p class="text-base md:text-lg text-[var(--aw-color-text-default)] leading-relaxed mb-10 max-w-3xl mx-auto">
+        Ogni mese nuovi contenuti extra accessibili nell'area riservata con la possibilità di dialogare e commentare
+        al fine di comprendere e assimilare meglio concetti e informazioni sulla <strong class="text-[var(--aw-color-primary)]">pianificazione finanziaria</strong>.
+      </p>
+
+      <a
+        href="#"
+        class="btn-brand--primary px-10 py-5 text-lg md:text-xl"
+      >
+        Vai all'area clienti!
+      </a>
+
+    </div>
+  </section>
+
+  <!-- FORM CONTATTO -->
+  <section class="bg-white pb-16 md:pb-24">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="bg-white border border-gray-200 rounded-md shadow-lg p-8 md:p-12">
+        <h3 class="text-2xl md:text-3xl font-bold text-[var(--aw-color-text-heading)] text-center mb-10 font-heading">
+          Mettiti in contatto
+        </h3>
+
+        <form class="space-y-6" action="#" method="POST">
+          <!-- Nome e Cognome -->
+          <div>
+            <label for="name-perche" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Nome e Cognome <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input
+              type="text"
+              id="name-perche"
+              name="name"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email-perche" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Email <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input
+              type="email"
+              id="email-perche"
+              name="email"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+            />
+          </div>
+
+          <!-- Telefono -->
+          <div>
+            <label for="phone-perche" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Telefono <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <input
+              type="tel"
+              id="phone-perche"
+              name="phone"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors"
+            />
+          </div>
+
+          <!-- Messaggio -->
+          <div>
+            <label for="message-perche" class="block text-sm font-semibold text-[var(--aw-color-text-heading)] mb-2">
+              Messaggio <span class="text-[rgb(160_50_50)]">(*)</span>
+            </label>
+            <textarea
+              id="message-perche"
+              name="message"
+              rows="5"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:border-[var(--aw-color-primary)] focus:ring-1 focus:ring-[var(--aw-color-primary)] transition-colors resize-y"
+            ></textarea>
+          </div>
+
+          <!-- Privacy -->
+          <div>
+            <p class="text-sm font-semibold text-[var(--aw-color-text-heading)] mb-3">
+              Trattamento dei dati <span class="text-[rgb(160_50_50)]">(*)</span>
+            </p>
+            <label class="flex items-start gap-3 text-sm text-[var(--aw-color-text-default)] cursor-pointer">
+              <input
+                type="checkbox"
+                required
+                class="mt-0.5 w-4 h-4 text-[var(--aw-color-primary)] border-gray-300 rounded focus:ring-[var(--aw-color-primary)]"
+              />
+              <span>
+                Dichiaro di aver letto la <a href="/privacy" class="text-[var(--aw-color-primary)] underline underline-offset-2 hover:text-[var(--aw-color-accent)]">privacy policy</a>
+                e acconsento al trattamento dei dati ivi indicato.
+              </span>
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <div class="pt-4">
+            <button
+              type="submit"
+              class="btn-brand--dark px-8 py-3.5 text-base hover:bg-[var(--aw-color-primary)] hover:border-[var(--aw-color-primary)]"
+            >
+              Invia
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

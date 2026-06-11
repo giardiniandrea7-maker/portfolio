@@ -1,0 +1,78 @@
+﻿---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'Email confermata | Andrea Giardini',
+  description: "Email confermata. L'amministratore verificherà e attiverà il tuo account.",
+};
+---
+
+<Layout metadata={metadata}>
+
+  <section class="bg-[rgb(238_247_246)] py-16 md:py-24 min-h-[calc(100vh-300px)]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Icona successo -->
+      <div class="text-center mb-8">
+        <div class="inline-flex w-20 h-20 md:w-24 md:h-24 rounded-full bg-[rgb(220_240_225)] items-center justify-center mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="rgb(50_130_80)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Banner verde -->
+      <div class="bg-[rgb(220_240_225)] border border-[rgb(150_200_170)] rounded-md p-6 md:p-8 mb-8">
+        <p class="text-base md:text-lg text-[rgb(30_80_50)] leading-relaxed text-center">
+          Grazie per aver confermato il tuo indirizzo e-mail! Un amministratore è stato informato e provvederà il prima possibile a verificare la tua identità e ad attivare il tuo account.
+        </p>
+      </div>
+
+      <!-- Timeline prossimi passi -->
+      <div class="bg-white rounded-md p-6 md:p-8 shadow-sm border border-gray-100 mb-8">
+        <h2 class="text-lg md:text-xl font-bold text-[var(--aw-color-text-heading)] mb-6 font-heading">
+          Cosa succede adesso?
+        </h2>
+
+        <ol class="space-y-4">
+          <li class="flex items-start gap-4">
+            <div class="shrink-0 w-8 h-8 rounded-full bg-[rgb(220_240_225)] flex items-center justify-center font-bold text-sm text-[rgb(50_130_80)]">✓</div>
+            <div class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed pt-1">
+              <strong class="text-[var(--aw-color-text-heading)]">Email confermata.</strong> Il tuo indirizzo è stato verificato correttamente.
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="shrink-0 w-8 h-8 rounded-full bg-[var(--aw-color-accent)]/20 flex items-center justify-center font-bold text-sm text-[var(--aw-color-primary)]">2</div>
+            <div class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed pt-1">
+              <strong class="text-[var(--aw-color-text-heading)]">Verifica manuale in corso.</strong> Controllerò personalmente la tua identità e attiverò il tuo account.
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="shrink-0 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm text-gray-400">3</div>
+            <div class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed pt-1">
+              <strong class="text-[var(--aw-color-text-heading)]">Conferma attivazione.</strong> Riceverai una seconda email quando l'account sarà pienamente attivo.
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Bottone Continua -->
+      <div class="text-center">
+        <a href="/"
+          class="btn-brand--dark px-10 py-3.5 text-base">
+          Torna alla Home
+        </a>
+      </div>
+
+      <!-- Info extra -->
+      <div class="mt-12 pt-8 border-t border-gray-200 text-center">
+        <p class="text-sm text-[var(--aw-color-text-default)]">
+          Per qualsiasi domanda <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] underline font-semibold hover:text-[var(--aw-color-accent)] transition-colors">scrivimi direttamente</a>.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>

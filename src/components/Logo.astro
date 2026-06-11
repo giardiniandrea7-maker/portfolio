@@ -1,9 +1,31 @@
 ---
-import { SITE } from 'astrowind:config';
+import { getHomePermalink } from '~/utils/permalinks';
+import logoSrc from '~/assets/images/logo.png';
+import { Image } from 'astro:assets';
 ---
 
-<span
-  class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white"
+<a
+  class="flex items-center gap-3 shrink-0"
+  href={getHomePermalink()}
+  aria-label="Andrea Giardini — Home"
 >
-  🚀 {SITE?.name}
-</span>
+  <div class="h-14 md:h-16 w-14 md:w-16 rounded-full bg-white flex items-center justify-center overflow-hidden">
+    <Image
+      src={logoSrc}
+      alt="Logo Giardini Consulenza"
+      height={64}
+      class="h-full w-full object-cover"
+    />
+  </div>
+
+  <span class="hidden sm:block w-px h-8 bg-gray-300"></span>
+
+  <span class="hidden sm:flex flex-col leading-tight">
+    <span class="text-sm md:text-base font-bold tracking-tight text-[var(--aw-color-text-heading)] whitespace-nowrap">
+      Andrea Giardini
+    </span>
+    <span class="text-[10px] md:text-[11px] font-medium tracking-[0.12em] uppercase text-[var(--aw-color-text-muted)] whitespace-nowrap">
+      Consulente Finanziario
+    </span>
+  </span>
+</a>

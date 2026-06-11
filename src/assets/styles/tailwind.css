@@ -36,6 +36,49 @@
   .btn-tertiary {
     @apply btn border-none shadow-none text-muted hover:text-gray-900 dark:text-gray-400 dark:hover:text-white;
   }
+
+  /* ============================================================
+     BRAND BUTTONS — layout condiviso per simmetria perfetta
+     desktop/mobile. Le pagine impostano solo dimensione
+     (px-*, py-*, text-*) e larghezza (w-full, flex-1, etc.).
+     border-2 border-transparent sui pieni: pareggia l'altezza
+     con gli outline (border-2) quando affiancati.
+     ============================================================ */
+  .btn-brand {
+    @apply inline-flex items-center justify-center text-center
+           font-bold font-heading leading-snug rounded-sm
+           border-2 border-transparent box-border
+           transition-all cursor-pointer select-none gap-x-2
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+           focus-visible:ring-[var(--aw-color-primary)];
+  }
+
+  .btn-brand--primary {
+    @apply btn-brand bg-[var(--aw-color-primary)] text-white
+           border-[var(--aw-color-primary)]
+           hover:bg-[var(--aw-color-secondary)]
+           hover:border-[var(--aw-color-secondary)]
+           hover:shadow-xl hover:-translate-y-0.5;
+  }
+
+  .btn-brand--outline {
+    @apply btn-brand bg-transparent text-[var(--aw-color-primary)]
+           border-[var(--aw-color-primary)]
+           hover:bg-[var(--aw-color-primary)] hover:text-white;
+  }
+
+  .btn-brand--dark {
+    @apply btn-brand bg-[var(--aw-color-text-heading)] text-white
+           border-[var(--aw-color-text-heading)]
+           hover:bg-black hover:border-black;
+  }
+
+  .btn-brand--light {
+    @apply btn-brand bg-white text-[var(--aw-color-primary)]
+           border-white shadow-lg
+           hover:bg-[var(--aw-color-accent)] hover:text-white
+           hover:border-[var(--aw-color-accent)];
+  }
 }
 
 #header.scroll > div:first-child {
