@@ -71,7 +71,7 @@ export const footerData = {
       title: 'Scopri',
       links: [
         { text: 'Chi sono', href: '/chi-sono' },
-        { text: 'Richiedi diagnosi gratuita', href: '/richiedi-diagnosi' },
+        { text: 'Richiedi una diagnosi del portafoglio', href: '/richiedi-diagnosi' },
       ],
     },
     {

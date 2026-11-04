@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '~/layouts/PageLayout.astro';
+import fotoAndrea from '~/assets/images/andrea-giardini.jpg';
 
 const metadata = {
   title: 'Come lavoro',
@@ -17,16 +19,9 @@ const metadata = {
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid md:grid-cols-[1fr_1.2fr] gap-10 md:gap-14 items-center">
 
-        <!-- Foto Andrea (placeholder) -->
-        <div class="relative aspect-square bg-gradient-to-br from-[rgb(22_105_99)] via-[rgb(14_74_69)] to-[rgb(10_58_55)] rounded-sm overflow-hidden shadow-xl">
-          <div class="absolute inset-6 border border-[var(--aw-color-accent)]/30 pointer-events-none"></div>
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--aw-color-accent)]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" class="mb-4 opacity-60">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
-            </svg>
-            <span class="text-sm tracking-[0.2em] uppercase opacity-80">Foto Andrea</span>
-          </div>
+        <!-- Foto Andrea -->
+        <div class="relative aspect-square bg-gray-200 rounded-sm overflow-hidden shadow-xl">
+          <Image src={fotoAndrea} alt="Andrea Giardini, consulente finanziario" widths={[400, 800]} sizes="(min-width: 768px) 40vw, 100vw" class="absolute inset-0 w-full h-full object-cover object-top" />
         </div>
 
         <!-- Titolo + paragrafo + CTA -->
@@ -483,7 +478,7 @@ const metadata = {
               </h4>
               <p class="text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed">
                 Partiamo da te: capisco chi sei, cosa vuoi ottenere e quali esperienze hai avuto fino ad oggi
-                con gli investimenti. La valutazione iniziale è gratuita.
+                con gli investimenti. La valutazione iniziale è senza impegno.
               </p>
             </div>
           </div>

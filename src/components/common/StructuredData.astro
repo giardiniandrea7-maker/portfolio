@@ -1,4 +1,6 @@
 ---
+import { getImage } from 'astro:assets';
+import fotoAndrea from '~/assets/images/andrea-giardini.jpg';
 /**
  * Schema.org JSON-LD — grafo coerente per il sito.
  *
@@ -34,8 +36,9 @@ const isHome = pathname === '/' || pathname === '';
 const idPerson = `${siteUrl}/#andrea-giardini`;
 const idService = `${siteUrl}/#giardini-consulenza`;
 const idWebsite = `${siteUrl}/#website`;
-// TODO: foto profilo definitiva di Andrea (oggi placeholder su og-image).
-const personImage = `${siteUrl}/og-image.jpg`;
+// Foto profilo: versione ottimizzata di src/assets/images/andrea-giardini.jpg
+const personPhoto = await getImage({ src: fotoAndrea, width: 800, format: 'jpg' });
+const personImage = String(new URL(personPhoto.src, `${siteUrl}/`));
 const logoUrl = `${siteUrl}/favicon.png`;
 
 // ── Breadcrumb auto da pathname ────────────────────────────────────────────

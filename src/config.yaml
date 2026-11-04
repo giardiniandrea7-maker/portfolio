@@ -11,16 +11,17 @@ metadata:
   title:
     default: 'Andrea Giardini | Consulente Finanziario'
     template: '%s — Andrea Giardini'
-  description: "Consulenza finanziaria su misura. Pianificazione patrimoniale, previdenziale e fiscale per privati e professionisti."
+  description: 'Consulente finanziario Fideuram. Ti affianco nella pianificazione dei tuoi obiettivi di vita, per te, la tua famiglia e la tua impresa.'
   robots:
     index: true
     follow: true
   openGraph:
     site_name: 'Andrea Giardini'
     images:
-      - url: '~/assets/images/og-image.jpg'
+      - url: '/og/og-home-v2.jpg'
         width: 1200
         height: 630
+        alt: 'Andrea Giardini, consulente finanziario'
     type: website
   twitter:
     handle: '@giardiniconsulenza'

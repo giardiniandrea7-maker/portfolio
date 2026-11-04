@@ -66,6 +66,12 @@ export const adaptOpenGraphImages = async (
 
   const adaptedImages = await Promise.all(
     images.map(async (image) => {
+      // File già pronti in public/ (es. /og/og-home-v2.jpg): URL assoluto, nome e dati invariati.
+      // Il nome versionato serve a far riscaricare l'anteprima a WhatsApp e ai social.
+      if (typeof image?.url === 'string' && image.url.startsWith('/') && !image.url.startsWith('/src/')) {
+        return { ...image, url: String(new URL(image.url, astroSite)) };
+      }
+
       if (image?.url) {
         const resolvedImage = (await findImage(image.url)) as ImageMetadata | string | undefined;
         if (!resolvedImage) {

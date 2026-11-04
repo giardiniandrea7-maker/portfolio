@@ -4,6 +4,8 @@
 // Si può chiudere con X o tasto Rinuncia
 // Lo scroll della pagina sotto rimane attivo
 // ========================================================
+import { Image } from 'astro:assets';
+import fotoAndrea from '~/assets/images/andrea-giardini.jpg';
 ---
 
 <!-- Overlay + Card popup (nascosto di default) -->
@@ -39,18 +41,10 @@
     <!-- Layout: foto sx + contenuto dx -->
     <div class="grid md:grid-cols-[auto_1fr] gap-0">
 
-      <!-- Foto Andrea placeholder sx -->
+      <!-- Foto Andrea sx -->
       <div class="p-8 md:p-10 flex items-center justify-center">
-        <div class="relative w-48 md:w-56 aspect-[3/4] rounded-md overflow-hidden shadow-lg bg-gradient-to-br from-[var(--aw-color-primary)] to-[rgb(22_105_99)]">
-          <div class="absolute inset-0 flex flex-col items-center justify-center text-white/70 p-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 22v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/>
-            </svg>
-            <p class="text-xs tracking-[0.3em] uppercase text-white/60">Foto Andrea</p>
-            <p class="text-[10px] tracking-[0.2em] uppercase text-white/40 mt-1">In arrivo</p>
-          </div>
-          <div class="absolute inset-0 border-2 border-[var(--aw-color-accent)]/30 rounded-md pointer-events-none"></div>
+        <div class="relative w-48 md:w-56 aspect-[3/4] rounded-md overflow-hidden shadow-lg bg-gray-200">
+          <Image src={fotoAndrea} alt="Andrea Giardini, consulente finanziario" widths={[240, 480]} sizes="224px" loading="lazy" class="absolute inset-0 w-full h-full object-cover object-top" />
         </div>
       </div>
 
@@ -58,7 +52,7 @@
       <div class="p-8 md:p-10 md:pl-4 flex flex-col justify-center">
 
         <h2 id="diagnosi-popup-title" class="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--aw-color-text-heading)] mb-5 leading-tight font-heading">
-          Richiedimi un'analisi gratuita dei tuoi investimenti
+          Richiedimi un'analisi dei tuoi investimenti
         </h2>
 
         <div class="space-y-3 text-sm md:text-base text-[var(--aw-color-text-default)] leading-relaxed mb-7">
@@ -66,7 +60,7 @@
             Sei in grado di valutare la <strong>qualità</strong> dei tuoi <strong>strumenti</strong> finanziari? Conosci i <strong>costi</strong> dei tuoi investimenti?
           </p>
           <p>
-            Effettua oggi il tuo <strong>check-up</strong> finanziario <strong>gratuito</strong> e scopri come <strong>migliorare</strong> la composizione del tuo patrimonio.
+            Effettua oggi il tuo <strong>check-up</strong> finanziario e scopri come <strong>migliorare</strong> la composizione del tuo patrimonio.
           </p>
         </div>
 

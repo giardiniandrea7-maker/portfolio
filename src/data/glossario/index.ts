@@ -627,13 +627,13 @@ export const voci: VoceGlossario[] = [
     categoria: 'casa-mutuo',
     livello: 'intermedio',
     fraseEssenziale:
-      `L'estinzione anticipata del mutuo è la facoltà del mutuatario di restituire alla banca, in tutto o in parte, il debito residuo prima della scadenza naturale del piano di ammortamento. Per i mutui prima casa stipulati dopo il 2007, l'estinzione totale o parziale è gratuita per legge.`,
+      `L'estinzione anticipata del mutuo è la facoltà del mutuatario di restituire alla banca, in tutto o in parte, il debito residuo prima della scadenza naturale del piano di ammortamento. Per i mutui prima casa stipulati dopo il 2007, l'estinzione totale o parziale avviene senza penali per legge.`,
     esempioConcreto:
       `Giovanni ha un mutuo da 200.000 euro a 25 anni, di cui ha pagato 8 anni. Il suo debito residuo è di circa 145.000 euro. Riceve un'eredità di 80.000 euro e si chiede: estinguere parzialmente il mutuo o investire? Se il tasso del mutuo è 2,5% fisso e il rendimento atteso del portafoglio è 4-5%, matematicamente conviene investire. Se il tasso del mutuo è 5% variabile e il rendimento atteso è 4%, conviene quasi certamente estinguere. La risposta non è universale: dipende dal tasso del mutuo, dall'orizzonte temporale residuo, dalla tua tolleranza al rischio e dal valore psicologico che dai al 'non avere debiti'.`,
     perchéTiRiguarda:
       `L'estinzione anticipata è una delle decisioni finanziarie più importanti che molte famiglie italiane affrontano nella vita, eppure viene quasi sempre presa 'di pancia' anziché con un calcolo razionale. La risposta giusta dipende da una combinazione di matematica (confronto tra tasso del mutuo e rendimento atteso degli investimenti alternativi), psicologia (quanto pesa per te il debito residuo) e situazione personale (hai un fondo emergenza? Hai liquidità per imprevisti?). Una consulenza professionale ti aiuta a fare il calcolo onesto e a decidere con tutti gli elementi sul tavolo.`,
     definizioneTecnica:
-      `L'estinzione anticipata è disciplinata dal D.L. 7/2007 (decreto Bersani) per i mutui prima casa contratti da persone fisiche, che ne stabilisce la gratuità totale (nessuna penale ammessa). Per altre tipologie di mutuo (seconda casa, mutui aziendali) la penale può variare ma è soggetta a tetti normativi. L'estinzione può essere totale (chiusura completa del debito residuo) o parziale (riduzione di una porzione del debito, con possibilità di scegliere se ridurre la rata o accorciare la durata). Per richiedere l'estinzione serve presentare richiesta scritta alla banca, che ha 30 giorni per fornire il conteggio esatto. Il pagamento avviene tramite bonifico bancario tracciato.`,
+      `L'estinzione anticipata è disciplinata dal D.L. 7/2007 (decreto Bersani) per i mutui prima casa contratti da persone fisiche, che esclude qualsiasi penale. Per altre tipologie di mutuo (seconda casa, mutui aziendali) la penale può variare ma è soggetta a tetti normativi. L'estinzione può essere totale (chiusura completa del debito residuo) o parziale (riduzione di una porzione del debito, con possibilità di scegliere se ridurre la rata o accorciare la durata). Per richiedere l'estinzione serve presentare richiesta scritta alla banca, che ha 30 giorni per fornire il conteggio esatto. Il pagamento avviene tramite bonifico bancario tracciato.`,
     erroriComuni: [
       `Estinguere il mutuo senza prima costituire un fondo emergenza adeguato`,
       `Estinguere mutui a tasso molto basso (sotto il 2%) quando si potrebbe ottenere di più investendo`,
@@ -647,7 +647,7 @@ export const voci: VoceGlossario[] = [
       slug: '/calcolatori/mutuo',
     },
     metaDescription:
-      `Estinzione anticipata mutuo: conviene? Quando, come, gratuita per legge. Confronto matematico tra estinzione e investimento alternativo.`,
+      `Estinzione anticipata mutuo: conviene? Quando, come, senza penali per legge. Confronto matematico tra estinzione e investimento alternativo.`,
     pubblicata: true,
   },
 
