@@ -1,0 +1,183 @@
+---
+import { Image } from 'astro:assets';
+
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import Placeholder from '~/components/site/Placeholder.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
+import PillarGrid from '~/components/site/PillarGrid.astro';
+import CtaBand from '~/components/site/CtaBand.astro';
+
+import { findAssetImage } from '~/utils/home-assets';
+
+const metadata = {
+  title: 'Servizi | Andrea Giardini — Consulente finanziario',
+  ignoreTitleTemplate: true,
+  description:
+    'Investimenti, consulenza patrimoniale, previdenza e protezione: un servizio completo costruito sui tuoi obiettivi di vita.',
+};
+
+const investimenti = [
+  {
+    icon: 'tabler:world-dollar',
+    title: 'Accesso ai mercati mondiali',
+    text: 'Soluzioni che guardano ai principali mercati azionari e obbligazionari del mondo.',
+  },
+  {
+    icon: 'tabler:device-mobile',
+    title: 'Sempre a portata di mano',
+    text: 'Segui la tua posizione da ogni dispositivo e firma le proposte in digitale. [TODO: verifica nome app/firma digitale Fideuram]',
+  },
+  {
+    icon: 'tabler:star',
+    title: 'Soluzioni su misura',
+    text: 'Strumenti scelti in base alle tue esigenze e alle tue priorità.',
+  },
+];
+
+const patrimonio = [
+  {
+    icon: 'tabler:users-group',
+    title: 'Pianificazione successoria',
+    text: 'Soluzioni per accompagnare con serenità il passaggio generazionale.',
+  },
+  {
+    icon: 'tabler:user-shield',
+    title: 'Tutela del patrimonio',
+    text: 'Strumenti per proteggere i beni di famiglia e organizzarne il futuro. [TODO: verifica servizi trust disponibili]',
+  },
+  {
+    icon: 'tabler:chart-bar',
+    title: 'Amministrazione fiduciaria',
+    text: 'Gestione del patrimonio con la massima riservatezza. [TODO: verifica società fiduciaria del Gruppo]',
+  },
+];
+
+const previdenza = [
+  {
+    icon: 'tabler:armchair',
+    title: 'Piani pensionistici',
+    text: 'Un piano di previdenza individuale per costruire con calma il tuo domani.',
+  },
+  {
+    icon: 'tabler:umbrella',
+    title: 'Fondi pensione',
+    text: 'Previdenza complementare per mantenere il tuo stile di vita anche dopo il lavoro.',
+  },
+  {
+    icon: 'tabler:heart',
+    title: 'Protezione vita',
+    text: 'Soluzioni assicurative per tutelare ciò che ami dagli imprevisti.',
+  },
+];
+
+const fascia = findAssetImage('servizi-patrimonio.jpg');
+
+const anchorOffset = 'scroll-mt-16 md:scroll-mt-20';
+---
+
+<SiteLayout metadata={metadata}>
+  <!-- 1. UNA CONSULENZA GLOBALE -->
+  <section class="bg-charcoal text-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+      <SectionTitle as="h1" size="lg" align="left" tone="white" class="mb-8 md:mb-10">
+        Una consulenza globale
+      </SectionTitle>
+      <div class="space-y-5 text-base md:text-lg leading-relaxed text-white/90">
+        <p>
+          Il mio servizio parte da una visione completa della tua vita: famiglia, lavoro, progetti. Costruiamo insieme
+          una pianificazione personalizzata, basata su un'analisi approfondita delle tue esigenze.
+        </p>
+        <p>
+          Grazie agli strumenti evoluti di Fideuram creo soluzioni su misura che tengono insieme tutti i tuoi obiettivi,
+          valutando scenari, rischi e opportunità di ogni scelta.
+        </p>
+        <p>
+          Guardo a ogni aspetto del tuo patrimonio: investimenti, passaggio generazionale, protezione e fiscalità. E
+          resto al tuo fianco con un monitoraggio costante, perché la strategia segua sempre i tuoi obiettivi.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. INVESTIMENTI -->
+  <section id="investimenti" class:list={['bg-linen py-16 md:py-24', anchorOffset]}>
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle size="lg" class="mb-6">Investimenti</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          Selezioniamo insieme le soluzioni più adatte ai tuoi obiettivi e al tuo orizzonte temporale.
+        </p>
+      </div>
+      <div class="mt-14 md:mt-20">
+        <PillarGrid items={investimenti} circleColor="ivory" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CAMBIARE È SEMPLICE -->
+  <section class="bg-charcoal text-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+      <SectionTitle size="lg" align="left" tone="white" class="mb-8">Cambiare è semplice.</SectionTitle>
+      <p class="text-base md:text-lg leading-relaxed text-white/90 max-w-2xl">
+        Ti accompagno passo dopo passo nel trasferimento dei tuoi investimenti da un altro intermediario. Seguo io le
+        pratiche, tu resti concentrato sui tuoi progetti.
+      </p>
+      <a
+        href="/#contatti"
+        class="inline-block mt-10 border border-white text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-white hover:text-charcoal transition-colors"
+      >
+        Parliamone
+      </a>
+    </div>
+  </section>
+
+  <!-- 4. FASCIA IMMAGINE -->
+  <section class="bg-gray-200 aspect-[16/9] md:aspect-[21/7] overflow-hidden">
+    {
+      fascia ? (
+        <Image
+          src={fascia}
+          alt="Una persona serena al lavoro con il proprio laptop"
+          widths={[640, 1280, 1920]}
+          sizes="100vw"
+          class="w-full h-full object-cover"
+        />
+      ) : (
+        <Placeholder label="foto persona serena con laptop (servizi-patrimonio.jpg)" class="w-full h-full border-0" />
+      )
+    }
+  </section>
+
+  <!-- 5. CONSULENZA PATRIMONIALE -->
+  <section id="patrimonio" class:list={['bg-linen py-16 md:py-24', anchorOffset]}>
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle size="lg" class="mb-6">Consulenza patrimoniale</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          Ti accompagno nella cura del patrimonio personale, familiare e aziendale, con servizi dedicati.
+        </p>
+      </div>
+      <div class="mt-14 md:mt-20">
+        <PillarGrid items={patrimonio} circleColor="ivory" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PREVIDENZA E PROTEZIONE -->
+  <section id="previdenza" class:list={['bg-ivory py-16 md:py-24', anchorOffset]}>
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle size="lg" class="mb-6">Previdenza e protezione</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          Sono al tuo fianco per proteggere il tuo futuro e quello di chi ami, in ogni fase della vita.
+        </p>
+      </div>
+      <div class="mt-14 md:mt-20">
+        <PillarGrid items={previdenza} circleColor="white" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FASCIA CTA (poi social, footer, disclaimer, WhatsApp dal layout) -->
+  <CtaBand separated />
+</SiteLayout>

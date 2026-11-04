@@ -8,7 +8,8 @@ import { Icon } from 'astro-icon/components';
 import SiteLayout from '~/components/site/SiteLayout.astro';
 import Placeholder from '~/components/site/Placeholder.astro';
 import SectionTitle from '~/components/site/SectionTitle.astro';
-import Pilastri from '~/components/consulenza/Pilastri.astro';
+import PillarGrid from '~/components/site/PillarGrid.astro';
+import CtaBand from '~/components/site/CtaBand.astro';
 
 import { findAssetImage } from '~/utils/home-assets';
 
@@ -82,7 +83,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
         </p>
       </div>
       <div class="mt-14 md:mt-20">
-        <Pilastri items={pilastriValore} circle="white" />
+        <PillarGrid items={pilastriValore} circleColor="white" />
       </div>
     </div>
   </section>
@@ -144,7 +145,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
         </p>
       </div>
       <div class="mt-14 md:mt-20">
-        <Pilastri items={pilastriModello} circle="ivory" />
+        <PillarGrid items={pilastriModello} circleColor="ivory" />
       </div>
       <div class="mt-16 md:mt-24 flex justify-center">
         {
@@ -199,15 +200,5 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
   </section>
 
   <!-- 6. FASCIA CTA -->
-  <section class="bg-ivory py-16 md:py-20">
-    <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
-      <p class="font-sans font-light text-xl md:text-3xl text-charcoal">Parliamo dei tuoi obiettivi.</p>
-      <a
-        href="/#contatti"
-        class="inline-block mt-8 bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-sage/90 transition-colors"
-      >
-        Prenota un incontro
-      </a>
-    </div>
-  </section>
+  <CtaBand />
 </SiteLayout>

@@ -4,10 +4,10 @@ import { Icon } from 'astro-icon/components';
 import SectionTitle from '~/components/site/SectionTitle.astro';
 
 const aree = [
-  { icon: 'tabler:list-check', label: 'Pianificazione finanziaria' },
-  { icon: 'tabler:chess', label: 'Gestioni patrimoniali' },
-  { icon: 'tabler:device-desktop-analytics', label: 'Checkup finanziario' },
-  { icon: 'tabler:user-check', label: 'Consulenza fiscale' },
+  { icon: 'tabler:list-check', label: 'Pianificazione finanziaria', href: '/servizi#investimenti' },
+  { icon: 'tabler:chess', label: 'Gestioni patrimoniali', href: '/servizi#patrimonio' },
+  { icon: 'tabler:device-desktop-analytics', label: 'Checkup finanziario', href: '/servizi#investimenti' },
+  { icon: 'tabler:user-check', label: 'Consulenza fiscale', href: '/servizi#patrimonio' },
 ];
 ---
 
@@ -18,9 +18,17 @@ const aree = [
     <ul class="grid grid-cols-2 gap-x-6 gap-y-12 md:gap-y-16">
       {
         aree.map((a) => (
-          <li class="flex flex-col items-center text-center">
-            <Icon name={a.icon} class="w-16 h-16 md:w-20 md:h-20 text-charcoal [&_*]:stroke-[1.25]" aria-hidden="true" />
-            <span class="mt-4 text-sm md:text-base text-charcoal">{a.label}</span>
+          <li>
+            <a href={a.href} class="group flex flex-col items-center text-center">
+              <Icon
+                name={a.icon}
+                class="w-16 h-16 md:w-20 md:h-20 text-charcoal group-hover:text-sage transition-colors [&_*]:stroke-[1.25]"
+                aria-hidden="true"
+              />
+              <span class="mt-4 text-sm md:text-base text-charcoal underline-offset-4 group-hover:underline group-hover:text-sage">
+                {a.label}
+              </span>
+            </a>
           </li>
         ))
       }

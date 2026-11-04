@@ -1,0 +1,29 @@
+---
+// Fascia CTA di chiusura pagina.
+export interface Props {
+  text?: string;
+  label?: string;
+  href?: string;
+  // Linea di separazione quando la fascia precedente è anch'essa avorio
+  separated?: boolean;
+}
+
+const {
+  text = 'Parliamo dei tuoi obiettivi.',
+  label = 'Prenota un incontro',
+  href = '/#contatti',
+  separated = false,
+} = Astro.props;
+---
+
+<section class:list={['bg-ivory py-16 md:py-20', separated && 'border-t border-charcoal/10']}>
+  <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
+    <p class="font-sans font-light text-xl md:text-3xl text-charcoal">{text}</p>
+    <a
+      href={href}
+      class="inline-block mt-8 bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-sage/90 transition-colors"
+    >
+      {label}
+    </a>
+  </div>
+</section>

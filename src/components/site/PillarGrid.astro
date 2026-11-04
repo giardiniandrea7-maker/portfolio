@@ -1,0 +1,15 @@
+---
+// Griglia di pilastri: colonna singola su mobile, 3 colonne da md in su.
+import Pillar from './Pillar.astro';
+
+export interface Props {
+  items: Array<{ icon: string; title: string; text: string }>;
+  circleColor?: 'white' | 'ivory';
+}
+
+const { items, circleColor = 'white' } = Astro.props;
+---
+
+<ul class="grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-8">
+  {items.map((item) => <Pillar {...item} circleColor={circleColor} />)}
+</ul>

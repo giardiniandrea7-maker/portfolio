@@ -20,7 +20,7 @@ export const headerData = {
 export const siteMenuLinks = [
   { text: 'Chi sono', href: '/#chi-sono' },
   { text: 'Consulenza', href: '/consulenza' },
-  { text: 'Servizi', href: '/#specializzazioni' },
+  { text: 'Servizi', href: '/servizi' },
   { text: 'Blog', href: '/blog' },
   { text: 'Contattami', href: '/#contatti' },
 ];
