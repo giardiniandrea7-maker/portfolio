@@ -1,0 +1,203 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Image from '~/components/common/Image.astro';
+import Placeholder from './Placeholder.astro';
+import type { Post } from '~/types';
+import { homeMenuLinks, homeContacts } from '~/navigation';
+import { findAssetImage } from '~/utils/home-assets';
+import { findImage } from '~/utils/images';
+import { getPermalink } from '~/utils/permalinks';
+
+export interface Props {
+  posts: Array<Post>;
+}
+
+const { posts } = Astro.props;
+
+const fideuram = findAssetImage('fideuram-logo.svg');
+
+const social = [
+  { label: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: homeContacts.whatsapp },
+  { label: 'LinkedIn', icon: 'tabler:brand-linkedin', href: homeContacts.linkedin },
+  { label: 'Instagram', icon: 'tabler:brand-instagram', href: homeContacts.instagram },
+];
+
+const pagineUtili = [
+  { text: 'Informativa privacy', href: '/privacy' },
+  { text: 'Cookie policy', href: '/cookie-policy' },
+  // [TODO: collegare al pannello di consenso cookie quando sarà installato]
+  { text: 'Rivedi il consenso cookie', href: '/cookie-policy' },
+];
+
+const blogItems = await Promise.all(
+  posts.map(async (post) => ({
+    post,
+    image: await findImage(post.image),
+    href: getPermalink(post.permalink, 'post'),
+  }))
+);
+
+const colTitle = 'uppercase tracking-[0.15em] text-xs font-semibold text-charcoal mb-5';
+const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
+---
+
+<!-- Fascia social -->
+<section class="bg-ochre">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-5 flex justify-end gap-5">
+    {
+      social.map((s) => (
+        <a href={s.href} target="_blank" rel="noopener" aria-label={s.label} class="text-charcoal hover:text-white transition-colors">
+          <Icon name={s.icon} class="w-7 h-7" />
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<!-- Footer / contatti -->
+<footer id="contatti" class="bg-ivory scroll-mt-16 md:scroll-mt-20">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-14 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+    <nav aria-label="Menu del footer">
+      <h2 class={colTitle}>Menù</h2>
+      <ul class="space-y-3">
+        {
+          homeMenuLinks.map((link) => (
+            <li>
+              <a href={link.href} class={`${linkClass} uppercase tracking-[0.1em]`}>
+                {link.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class={colTitle}>Contatti</h2>
+      <dl class="space-y-5 text-sm text-charcoal">
+        <div>
+          <dt class="font-semibold mb-1">Telefono</dt>
+          <dd>
+            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
+              Mostra numero di telefono
+            </button>
+            <a href={homeContacts.phoneHref} class={linkClass} hidden>{homeContacts.phone}</a>
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold mb-1">Email</dt>
+          <dd>
+            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
+              Mostra indirizzo email
+            </button>
+            <a href={`mailto:${homeContacts.email}`} class={`${linkClass} break-all`} hidden>{homeContacts.email}</a>
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold mb-1">Ufficio</dt>
+          <dd>[TODO: città]</dd>
+          <dd>[TODO: indirizzo]</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div>
+      <h2 class={colTitle}>Pagine utili</h2>
+      <ul class="space-y-3">
+        {
+          pagineUtili.map((p) => (
+            <li>
+              <a href={p.href} class={linkClass}>
+                {p.text}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class={colTitle}>Ultime dal blog</h2>
+      <ul class="space-y-4">
+        {
+          blogItems.map(({ post, image, href }) => (
+            <li>
+              <a href={href} class="flex gap-3 items-start group">
+                <span class="w-20 shrink-0 aspect-video bg-gray-200 overflow-hidden">
+                  {image && (
+                    <Image
+                      src={image}
+                      alt=""
+                      widths={[160]}
+                      width={160}
+                      aspectRatio="16:9"
+                      layout="cover"
+                      loading="lazy"
+                      decoding="async"
+                      class="w-full h-full object-cover"
+                    />
+                  )}
+                </span>
+                <span class="text-sm text-charcoal leading-snug line-clamp-3 group-hover:text-sage transition-colors">
+                  {post.title}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Disclaimer -->
+<section class="bg-ochre-dark">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-12 text-charcoal">
+    <p class="text-xs md:text-sm leading-relaxed max-w-4xl">
+      Le informazioni contenute nel presente sito, curate da Andrea Giardini, hanno finalità esclusivamente informative
+      e non costituiscono raccomandazioni personalizzate né ricerca in materia di investimenti. Prima di qualsiasi
+      operazione è necessario sottoscrivere l'apposito contratto e consultare la documentazione d'offerta disponibile
+      presso [TODO: società mandante] e presso i consulenti finanziari abilitati all'offerta fuori sede.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {
+        fideuram ? (
+          <img src={fideuram.src} alt="Fideuram" class="h-7 w-auto self-start" />
+        ) : (
+          <Placeholder label="logo Fideuram" class="h-9 w-36" />
+        )
+      }
+      <p class="text-xs">© 2026 Andrea Giardini</p>
+    </div>
+  </div>
+</section>
+
+<!-- WhatsApp flottante -->
+<a
+  href={homeContacts.whatsapp}
+  target="_blank"
+  rel="noopener"
+  aria-label="Scrivimi su WhatsApp"
+  class="fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-sage text-white shadow-lg flex items-center justify-center hover:bg-sage/90 transition-colors"
+>
+  <Icon name="tabler:brand-whatsapp" class="w-7 h-7" />
+</a>
+
+<script>
+  function initRevealContacts() {
+    document.querySelectorAll<HTMLButtonElement>('[data-reveal-contact]').forEach((btn) => {
+      if (btn.dataset.ready) return;
+      btn.dataset.ready = 'true';
+      btn.addEventListener('click', () => {
+        const link = btn.nextElementSibling as HTMLAnchorElement | null;
+        if (!link) return;
+        link.hidden = false;
+        btn.hidden = true;
+        link.focus();
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initRevealContacts);
+</script>

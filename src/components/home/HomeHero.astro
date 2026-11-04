@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets';
+
+import Placeholder from './Placeholder.astro';
+import { findAssetImage } from '~/utils/home-assets';
+
+const photo = findAssetImage('andrea-giardini.jpg');
+const fideuram = findAssetImage('fideuram-logo.svg');
+---
+
+<section class="grid grid-cols-2">
+  <!-- Sinistra: foto -->
+  <div class="bg-gray-200 aspect-[3/4] md:aspect-[4/5] lg:aspect-square overflow-hidden">
+    {
+      photo ? (
+        <Image
+          src={photo}
+          alt="Andrea Giardini, consulente finanziario"
+          widths={[400, 800, 1200]}
+          sizes="50vw"
+          loading="eager"
+          class="w-full h-full object-cover"
+        />
+      ) : (
+        <Placeholder label="foto Andrea" class="w-full h-full border-0" />
+      )
+    }
+  </div>
+
+  <!-- Destra: logo + slogan -->
+  <div class="bg-ivory flex flex-col items-center justify-center text-center px-3 md:px-12 py-6">
+    <span aria-hidden="true" class="block w-px h-10 md:h-20 bg-sage mb-5 md:mb-10"></span>
+    {
+      fideuram ? (
+        <img src={fideuram.src} alt="Fideuram" class="h-6 md:h-10 w-auto mb-5 md:mb-8" />
+      ) : (
+        <Placeholder label="logo Fideuram" class="h-8 md:h-12 w-28 md:w-48 mb-5 md:mb-8" />
+      )
+    }
+    <h1 class="font-sans font-normal uppercase tracking-[0.15em] text-charcoal text-[10px] leading-relaxed md:text-sm md:leading-loose max-w-[18rem]">
+      Ti aiuto a trasformare i tuoi desideri in traguardi raggiungibili
+    </h1>
+  </div>
+</section>

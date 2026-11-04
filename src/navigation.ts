@@ -15,6 +15,25 @@ export const headerData = {
   ],
 };
  
+// Menu della home a fasce (header a schermo intero + footer della home)
+export const homeMenuLinks = [
+  { text: 'Chi sono', href: '#chi-sono' },
+  { text: 'Consulenza', href: '#specializzazioni' },
+  { text: 'Servizi', href: '#specializzazioni' },
+  { text: 'Blog', href: '/blog' },
+  { text: 'Contattami', href: '#contatti' },
+];
+
+export const homeContacts = {
+  whatsapp: 'https://wa.me/393515456845',
+  phone: '+39 351 545 6845',
+  phoneHref: 'tel:+393515456845',
+  email: 'andrea@giardiniconsulenza.it',
+  linkedin: '#', // [TODO: URL profilo LinkedIn]
+  instagram: 'https://www.instagram.com/andreagiardini.finanza/',
+  areaClientiFideuram: '#', // [TODO: URL Area clienti Fideuram]
+};
+
 export const footerData = {
   links: [
     {

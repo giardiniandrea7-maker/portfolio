@@ -1,0 +1,20 @@
+---
+// Segnaposto evidente per immagini/loghi non ancora caricati.
+export interface Props {
+  label: string;
+  class?: string;
+  dark?: boolean;
+}
+
+const { label, class: className = '', dark = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex items-center justify-center text-center border border-dashed px-2 py-1 text-[10px] md:text-xs font-semibold uppercase tracking-wider',
+    dark ? 'border-white/50 text-white/70' : 'border-charcoal/40 text-charcoal/60',
+    className,
+  ]}
+>
+  [TODO: {label}]
+</div>

@@ -1,0 +1,29 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import SectionTitle from './SectionTitle.astro';
+
+const aree = [
+  { icon: 'tabler:list-check', label: 'Pianificazione finanziaria' },
+  { icon: 'tabler:chess', label: 'Gestioni patrimoniali' },
+  { icon: 'tabler:device-desktop-analytics', label: 'Checkup finanziario' },
+  { icon: 'tabler:user-check', label: 'Consulenza fiscale' },
+];
+---
+
+<section id="specializzazioni" class="bg-linen py-16 md:py-24 scroll-mt-16 md:scroll-mt-20">
+  <div class="max-w-4xl mx-auto px-4 md:px-8">
+    <SectionTitle class="mb-12 md:mb-16">Le mie aree di specializzazione</SectionTitle>
+
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-12 md:gap-y-16">
+      {
+        aree.map((a) => (
+          <li class="flex flex-col items-center text-center">
+            <Icon name={a.icon} class="w-16 h-16 md:w-20 md:h-20 text-charcoal [&_*]:stroke-[1.25]" aria-hidden="true" />
+            <span class="mt-4 text-sm md:text-base text-charcoal">{a.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
