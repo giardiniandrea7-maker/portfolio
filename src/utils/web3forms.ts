@@ -37,7 +37,7 @@ function initServiceForm() {
 
       if (data.success) {
         const fileNote = fileNames.length > 0
-          ? ' Per i file allegati, inviali a diagnosi@giardiniconsulenza.it o via WhatsApp.'
+          ? ' Per i file allegati, inviali a agiardini@fideuram.it o via WhatsApp.'
           : '';
         result.textContent = 'Richiesta inviata con successo! Ti ricontatteremo il prima possibile.' + fileNote;
         result.className = 'rounded-sm p-4 text-sm font-semibold text-center bg-green-50 text-green-700 border border-green-200';
@@ -56,7 +56,7 @@ function initServiceForm() {
 }
 
 function showError(el: HTMLElement) {
-  el.textContent = 'Si è verificato un errore. Riprova o scrivimi a andrea@giardiniconsulenza.it';
+  el.textContent = 'Si è verificato un errore. Riprova o scrivimi a agiardini@fideuram.it';
   el.className = 'rounded-sm p-4 text-sm font-semibold text-center bg-red-50 text-red-700 border border-red-200';
 }
 
@@ -72,7 +72,7 @@ const DIAGNOSI_SUCCESS_MESSAGE =
 
 Entro 24 ore ti scriverò personalmente per spiegarti come inviarmi i tuoi documenti. Niente di complicato: bastano gli ultimi estratti conto o screenshot dell'home banking.
 
-Se nel frattempo hai domande, puoi scrivermi a info@giardiniconsulenza.it o mandarmi un WhatsApp al +39 351 545 6845.
+Se nel frattempo hai domande, puoi scrivermi a agiardini@fideuram.it o mandarmi un WhatsApp al +39 351 545 6845.
 
 A presto,
 Andrea`;

@@ -51,8 +51,8 @@ const text = dark ? 'text-white' : 'text-charcoal';
     <label class="flex items-start gap-3 text-sm leading-relaxed cursor-pointer">
       <input type="checkbox" name="privacy" value="accettata" required class="mt-1 w-4 h-4 accent-[#4A5D4F] shrink-0" />
       <span>
-        Ho letto l'<a href="/privacy" target="_blank" class="underline underline-offset-4">informativa privacy</a> e acconsento
-        al trattamento dei miei dati. *
+        Ho letto l'<a href="/privacy" target="_blank" class="underline underline-offset-4">informativa privacy</a>. I miei dati
+        vengono usati per rispondere a questa richiesta. *
       </span>
     </label>
 
@@ -89,7 +89,8 @@ const text = dark ? 'text-white' : 'text-charcoal';
 </div>
 
 <script>
+  import { onPageLoad } from '~/scripts/page-load';
   import { initWeb3Forms } from '~/scripts/web3form';
 
-  document.addEventListener('astro:page-load', initWeb3Forms);
+  onPageLoad(initWeb3Forms);
 </script>

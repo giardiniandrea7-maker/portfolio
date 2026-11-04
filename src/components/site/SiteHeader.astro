@@ -112,6 +112,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
 </div>
 
 <script>
+  import { onPageLoad } from '~/scripts/page-load';
   function initHomeMenu() {
     const menu = document.querySelector<HTMLElement>('[data-home-menu]');
     const openBtn = document.querySelector<HTMLButtonElement>('[data-home-menu-open]');
@@ -161,7 +162,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
     });
   }
 
-  document.addEventListener('astro:page-load', initHomeMenu);
+  onPageLoad(initHomeMenu);
   document.addEventListener('astro:before-swap', () => {
     document.documentElement.style.overflow = '';
   });

@@ -1,131 +1,153 @@
 ﻿---
-import Layout from '~/layouts/PageLayout.astro';
+import LegalPage from '~/components/site/LegalPage.astro';
+import { siteContacts, siteOffice } from '~/navigation';
 
 const metadata = {
-  title: 'Privacy Policy',
-  description: 'Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR) per il sito giardiniconsulenza.it.',
+  title: 'Informativa privacy | Andrea Giardini — Consulente finanziario',
+  ignoreTitleTemplate: true,
+  description:
+    'Informativa sul trattamento dei dati personali raccolti dal sito giardiniconsulenza.it, ai sensi degli artt. 13 e 14 del Regolamento UE 2016/679 (GDPR).',
 };
 
-const lastUpdate = '30 aprile 2026';
+const lastUpdate = '4 novembre 2026';
 ---
 
-<Layout metadata={metadata}>
-  <section class="bg-white py-12 md:py-20">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+<LegalPage metadata={metadata} title="Informativa privacy" lastUpdate={lastUpdate}>
+  <p>
+    Questa informativa descrive come vengono trattati i dati personali di chi visita il sito
+    <strong>giardiniconsulenza.it</strong> e di chi mi contatta attraverso i suoi moduli, ai sensi degli artt. 13 e 14
+    del Regolamento (UE) 2016/679 («GDPR») e del D.Lgs. 196/2003 («Codice privacy»).
+  </p>
 
-      <!-- Intestazione -->
-      <div class="mb-10 pb-8 border-b border-gray-200">
-        <p class="text-xs tracking-[0.18em] uppercase text-[var(--aw-color-accent)] font-semibold mb-3">Documento legale</p>
-        <h1 class="text-3xl md:text-4xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">
-          Privacy Policy
-        </h1>
-        <p class="text-sm text-[var(--aw-color-text-muted)]">Ultimo aggiornamento: {lastUpdate}</p>
-      </div>
+  <h2>1. Titolare del trattamento</h2>
+  <p>
+    <strong>Andrea Giardini</strong>, consulente finanziario abilitato all'offerta fuori sede<br />
+    P.IVA {siteContacts.vatId}<br />
+    {siteOffice.address}<br />
+    Email: <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a><br />
+    Telefono: <a href={siteContacts.phoneHref}>{siteContacts.phone}</a>
+  </p>
+  <p>
+    Per i servizi di investimento, i contratti e la documentazione d'offerta, il titolare del trattamento è la società
+    mandante [TODO: ragione sociale della società mandante], che fornisce una propria informativa al momento della
+    sottoscrizione. Questa informativa riguarda esclusivamente i dati raccolti tramite il sito.
+  </p>
 
-      <!-- Corpo -->
-      <div class="prose prose-slate max-w-none text-[var(--aw-color-text-default)] text-base leading-relaxed space-y-8">
+  <h2>2. Quali dati tratto e perché</h2>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">1. Titolare del trattamento</h2>
-          <p>
-            Il titolare del trattamento dei dati personali raccolti tramite il sito <strong>giardiniconsulenza.it</strong> è:
-          </p>
-          <div class="mt-4 p-4 bg-[rgb(238_247_246)] rounded-sm border-l-4 border-[var(--aw-color-accent)] text-sm space-y-1">
-            <p><strong>Andrea Giardini</strong> — Consulente Finanziario</p>
-            <p>P.IVA: <strong>[P.IVA da inserire]</strong></p>
-            <p>Indirizzo: <strong>[Indirizzo da inserire]</strong></p>
-            <p>Email: <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] hover:underline">andrea@giardiniconsulenza.it</a></p>
-            <p>Telefono: <a href="tel:+393515456845" class="text-[var(--aw-color-primary)] hover:underline">+39 351 545 6845</a></p>
-          </div>
-        </div>
+  <h3>Dati di navigazione</h3>
+  <p>
+    I sistemi che fanno funzionare il sito acquisiscono, nel normale esercizio, alcuni dati tecnici (indirizzo IP, tipo di
+    browser, data e ora della richiesta, pagina visitata). Servono a garantire la sicurezza e il corretto funzionamento del
+    sito. <em>Base giuridica:</em> legittimo interesse del titolare (art. 6, par. 1, lett. f GDPR).
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">2. Dati raccolti e finalità</h2>
-          <p>Il sito raccoglie dati personali nelle seguenti modalità:</p>
-          <ul class="list-disc pl-6 mt-3 space-y-2">
-            <li>
-              <strong>Modulo "Richiedi diagnosi"</strong> — nome, cognome, email, telefono, breve descrizione della situazione patrimoniale. Finalità: rispondere alla richiesta di contatto e avviare un eventuale percorso di consulenza.
-            </li>
-            <li>
-              <strong>Modulo di contatto</strong> — nome, email, messaggio. Finalità: rispondere alle comunicazioni inviate dall'utente.
-            </li>
-            <li>
-              <strong>Registrazione area clienti</strong> — nome, cognome, email. Finalità: accesso all'area riservata e gestione del rapporto professionale.
-            </li>
-            <li>
-              <strong>Dati di navigazione</strong> — indirizzo IP, tipo di browser, pagine visitate. Raccolti automaticamente dal server. Finalità: sicurezza informatica e analisi aggregata del traffico.
-            </li>
-          </ul>
-        </div>
+  <h3>Moduli di contatto</h3>
+  <p>
+    Il sito offre alcuni moduli: richiesta di contatto (pagina Contatti), richiesta di approfondimento (pagina Blog),
+    richiesta di diagnosi del portafoglio e richiesta di contatto dai calcolatori. Raccolgono i dati che inserisci tu:
+    nome e cognome, email e/o telefono, preferenze su giorno e fascia oraria, argomento e testo della richiesta, eventuali
+    informazioni sulla tua situazione che scegli di condividere.
+  </p>
+  <ul>
+    <li>
+      <strong>Finalità:</strong> rispondere alla tua richiesta, fissare un incontro, inviarti la spiegazione o
+      l'approfondimento richiesto.
+    </li>
+    <li>
+      <strong>Base giuridica:</strong> esecuzione di misure precontrattuali adottate su tua richiesta (art. 6, par. 1,
+      lett. b GDPR).
+    </li>
+  </ul>
+  <p>
+    Nel modulo del blog puoi anche autorizzarmi, in modo facoltativo, a trattare l'argomento della tua domanda in un
+    articolo, in forma anonima. <em>Base giuridica:</em> consenso (art. 6, par. 1, lett. a GDPR), revocabile in ogni
+    momento scrivendomi.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">3. Base giuridica del trattamento</h2>
-          <p>Il trattamento dei dati avviene sulla base di:</p>
-          <ul class="list-disc pl-6 mt-3 space-y-2">
-            <li><strong>Consenso dell'interessato</strong> (art. 6, par. 1, lett. a GDPR) — per l'invio di comunicazioni commerciali e newsletter;</li>
-            <li><strong>Esecuzione di un contratto</strong> (art. 6, par. 1, lett. b GDPR) — per la gestione del rapporto di consulenza;</li>
-            <li><strong>Legittimo interesse</strong> (art. 6, par. 1, lett. f GDPR) — per la sicurezza del sito e la prevenzione di frodi;</li>
-            <li><strong>Obbligo legale</strong> (art. 6, par. 1, lett. c GDPR) — per adempimenti normativi previsti dalla disciplina MiFID II e OCF.</li>
-          </ul>
-        </div>
+  <h3>Contatti diretti</h3>
+  <p>
+    Se mi scrivi via email, mi chiami o mi contatti su WhatsApp, tratto i dati che mi comunichi per risponderti
+    (art. 6, par. 1, lett. b GDPR). Il bottone WhatsApp apre l'app o il sito di WhatsApp: da quel momento si applica anche
+    l'informativa di WhatsApp Ireland Ltd.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">4. Modalità di trattamento e conservazione</h2>
-          <p>
-            I dati sono trattati con strumenti informatici e telematici, con misure di sicurezza adeguate a prevenire accessi non autorizzati, perdita o distruzione. I dati raccolti tramite i moduli di contatto sono conservati per il tempo strettamente necessario a gestire la richiesta e, in caso di instaurazione di un rapporto professionale, per il periodo previsto dalla normativa fiscale e finanziaria applicabile (generalmente 10 anni).
-          </p>
-        </div>
+  <h3>Contenuti di servizi esterni</h3>
+  <p>
+    Con il tuo consenso (art. 6, par. 1, lett. a GDPR) il sito carica la mappa di Google Maps e il servizio di
+    prenotazione Calendly. Prima del consenso nessun dato viene inviato a questi servizi. I dettagli sono nella
+    <a href="/cookie-policy">cookie policy</a>.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">5. Comunicazione e diffusione dei dati</h2>
-          <p>
-            I dati personali non sono ceduti a terzi per finalità commerciali. Possono essere comunicati a:
-          </p>
-          <ul class="list-disc pl-6 mt-3 space-y-2">
-            <li><strong>[Nome Banca] S.p.A.</strong> — in qualità di banca mandante, per gli adempimenti contrattuali e normativi connessi all'attività di consulenza finanziaria;</li>
-            <li>Soggetti che forniscono servizi tecnici (hosting, posta elettronica), in qualità di responsabili del trattamento ex art. 28 GDPR;</li>
-            <li>Autorità competenti (Consob, OCF, Guardia di Finanza) nei casi previsti dalla legge.</li>
-          </ul>
-        </div>
+  <h2>3. Natura del conferimento</h2>
+  <p>
+    Il conferimento dei dati nei moduli è facoltativo. I campi contrassegnati con l'asterisco servono a risponderti:
+    senza di essi la richiesta resta incompleta.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">6. Diritti dell'interessato</h2>
-          <p>Ai sensi degli artt. 15-22 del GDPR, l'interessato ha il diritto di:</p>
-          <ul class="list-disc pl-6 mt-3 space-y-2">
-            <li>accedere ai propri dati personali;</li>
-            <li>richiederne la rettifica o la cancellazione ("diritto all'oblio");</li>
-            <li>opporsi al trattamento o richiederne la limitazione;</li>
-            <li>richiedere la portabilità dei dati;</li>
-            <li>revocare il consenso prestato in qualsiasi momento, senza pregiudizio per la liceità del trattamento anteriore alla revoca;</li>
-            <li>proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener noreferrer" class="text-[var(--aw-color-primary)] hover:underline">www.garanteprivacy.it</a>).</li>
-          </ul>
-          <p class="mt-4">
-            Per esercitare i propri diritti, scrivere a <a href="mailto:andrea@giardiniconsulenza.it" class="text-[var(--aw-color-primary)] hover:underline">andrea@giardiniconsulenza.it</a>.
-          </p>
-        </div>
+  <h2>4. Modalità del trattamento</h2>
+  <p>
+    I dati sono trattati con strumenti elettronici, con misure tecniche e organizzative adeguate a proteggerli da accessi
+    non autorizzati, perdita o divulgazione. Nessuna decisione viene presa in modo esclusivamente automatizzato e i dati
+    non vengono usati per profilazione.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">7. Cookie</h2>
-          <p>
-            Per informazioni dettagliate sui cookie utilizzati da questo sito, consulta la <a href="/cookie-policy" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Cookie Policy</a>.
-          </p>
-        </div>
+  <h2>5. A chi vengono comunicati i dati</h2>
+  <p>I dati possono essere trattati, per mio conto, da fornitori nominati responsabili del trattamento (art. 28 GDPR):</p>
+  <ul>
+    <li><strong>Cloudflare, Inc.</strong> — hosting e distribuzione del sito;</li>
+    <li><strong>Web3Forms</strong> — inoltro via email dei messaggi inviati con i moduli;</li>
+    <li>il fornitore del servizio di posta elettronica che riceve i messaggi.</li>
+  </ul>
+  <p>
+    Se dalla tua richiesta nasce un rapporto di consulenza, i dati vengono condivisi con la società mandante per gli
+    adempimenti contrattuali e normativi. Possono inoltre essere comunicati alle autorità competenti nei casi previsti
+    dalla legge. I dati non vengono diffusi né ceduti a terzi per finalità commerciali.
+  </p>
 
-        <div>
-          <h2 class="text-xl font-bold text-[var(--aw-color-text-heading)] font-heading mb-3">8. Modifiche alla presente informativa</h2>
-          <p>
-            Il titolare si riserva il diritto di modificare la presente informativa in qualsiasi momento. Le modifiche saranno pubblicate su questa pagina con indicazione della data di aggiornamento. Si consiglia di verificare periodicamente questa pagina.
-          </p>
-        </div>
+  <h2>6. Trasferimento fuori dall'Unione europea</h2>
+  <p>
+    Alcuni fornitori (Cloudflare, Web3Forms, Google, Calendly) possono trattare dati negli Stati Uniti o in altri paesi
+    extra UE. Il trasferimento avviene sulla base della decisione di adeguatezza della Commissione europea per i fornitori
+    aderenti all'EU-U.S. Data Privacy Framework o delle clausole contrattuali standard approvate dalla Commissione
+    (artt. 45 e 46 GDPR).
+  </p>
 
-      </div>
+  <h2>7. Per quanto tempo conservo i dati</h2>
+  <ul>
+    <li>
+      <strong>Richieste di contatto:</strong> per il tempo necessario a gestirle e comunque per un massimo di 24 mesi
+      dall'ultimo contatto, se non nasce un rapporto professionale;
+    </li>
+    <li>
+      <strong>Rapporto di consulenza avviato:</strong> per la durata del rapporto e, dopo la sua conclusione, per i tempi
+      previsti dalla normativa fiscale e di settore (di norma 10 anni);
+    </li>
+    <li>
+      <strong>Consenso all'uso anonimo della domanda nel blog:</strong> fino alla revoca;
+    </li>
+    <li><strong>Dati di navigazione:</strong> per i tempi tecnici definiti dal fornitore di hosting.</li>
+  </ul>
 
-      <!-- Link correlati -->
-      <div class="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-4 text-sm">
-        <a href="/cookie-policy" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Cookie Policy →</a>
-        <a href="/note-legali" class="text-[var(--aw-color-primary)] hover:underline font-semibold">Note legali →</a>
-      </div>
+  <h2>8. I tuoi diritti</h2>
+  <p>In ogni momento puoi chiedermi, ai sensi degli artt. 15-22 GDPR:</p>
+  <ul>
+    <li>l'accesso ai tuoi dati e una copia degli stessi;</li>
+    <li>la rettifica o l'integrazione dei dati;</li>
+    <li>la cancellazione dei dati o la limitazione del trattamento;</li>
+    <li>la portabilità dei dati che mi hai fornito;</li>
+    <li>di opporti al trattamento basato sul legittimo interesse;</li>
+    <li>di revocare il consenso prestato, senza effetti sui trattamenti svolti prima della revoca.</li>
+  </ul>
+  <p>
+    Per esercitarli scrivi a <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a>: ti rispondo entro un mese
+    dalla richiesta. Hai anche il diritto di proporre reclamo al Garante per la protezione dei dati personali
+    (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">www.garanteprivacy.it</a>).
+  </p>
 
-    </div>
-  </section>
-</Layout>
+  <h2>9. Aggiornamenti</h2>
+  <p>
+    Questa informativa può essere aggiornata, ad esempio per l'introduzione di nuovi servizi. La versione in vigore è
+    sempre pubblicata su questa pagina, con la data dell'ultimo aggiornamento.
+  </p>
+</LegalPage>

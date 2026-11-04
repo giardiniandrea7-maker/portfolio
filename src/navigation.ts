@@ -29,18 +29,23 @@ export const siteContacts = {
   whatsapp: 'https://wa.me/393515456845',
   phone: '+39 351 545 6845',
   phoneHref: 'tel:+393515456845',
-  email: 'andrea@giardiniconsulenza.it',
-  linkedin: '#', // [TODO: URL profilo LinkedIn]
+  email: 'agiardini@fideuram.it',
+  linkedin: 'https://www.linkedin.com/in/andrea-giardini-58923a268',
   instagram: 'https://www.instagram.com/andreagiardini.finanza/',
-  areaClientiFideuram: '#', // [TODO: URL Area clienti Fideuram]
+  areaClientiFideuram: 'https://alfabeto.fideuram.it/content/fideuram/it/login.html',
+  vatId: '13494670014',
 };
 
 // Ufficio: usato da footer, mappa e blocco ufficio di /contatti.
 // mapsQuery = indirizzo completo per Google Maps (vuoto finché manca l'indirizzo).
 export const siteOffice = {
-  city: '[TODO: città]',
-  address: '[TODO: indirizzo]',
-  mapsQuery: '', // [TODO: es. "Via Roma 1, 20121 Milano"]
+  city: 'Faenza',
+  street: 'Via Agostino Tolosano, 88',
+  postalCode: '48018',
+  locality: 'Faenza',
+  region: 'RA',
+  address: 'Via Agostino Tolosano, 88 — 48018 Faenza (RA)',
+  mapsQuery: 'Via Agostino Tolosano 88, 48018 Faenza RA',
 };
 
 export const footerData = {
@@ -62,7 +67,7 @@ export const footerData = {
     {
       title: 'Contatti',
       links: [
-        { text: 'andrea@giardiniconsulenza.it', href: 'mailto:andrea@giardiniconsulenza.it' },
+        { text: 'agiardini@fideuram.it', href: 'mailto:agiardini@fideuram.it' },
         { text: '+39 351 545 6845', href: 'tel:+393515456845' },
         { text: 'Instagram', href: 'https://www.instagram.com/andreagiardini.finanza/' },
       ],
@@ -73,14 +78,19 @@ export const footerData = {
         { text: 'Privacy Policy', href: '/privacy' },
         { text: 'Cookie Policy', href: '/cookie-policy' },
         { text: 'Note legali', href: '/note-legali' },
+        { text: 'Rivedi il consenso cookie', href: '#cookie-settings' },
       ],
     },
   ],
   secondaryLinks: [],
   socialLinks: [
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/andreagiardini.finanza/' },
-    { ariaLabel: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: '#' },
-    { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:andrea@giardiniconsulenza.it' },
+    { ariaLabel: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: 'https://wa.me/393515456845' },
+    { ariaLabel: 'LinkedIn', icon: 'tabler:brand-linkedin', href: 'https://www.linkedin.com/in/andrea-giardini-58923a268' },
+    { ariaLabel: 'Email', icon: 'tabler:mail', href: 'mailto:agiardini@fideuram.it' },
   ],
-  footNote: '',
+  footNote: 'Andrea Giardini · P.IVA 13494670014 · Via Agostino Tolosano, 88 — 48018 Faenza (RA)',
 };
+
+export const officeMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteOffice.mapsQuery)}`;
+export const officeDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(siteOffice.mapsQuery)}`;

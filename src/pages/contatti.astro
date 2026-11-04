@@ -9,7 +9,7 @@ import Placeholder from '~/components/site/Placeholder.astro';
 import FormField from '~/components/site/FormField.astro';
 import Web3Form from '~/components/site/Web3Form.astro';
 
-import { siteContacts, siteOffice } from '~/navigation';
+import { siteContacts, siteOffice, officeMapsUrl, officeDirectionsUrl } from '~/navigation';
 import { findAssetImage } from '~/utils/home-assets';
 
 const metadata = {
@@ -28,9 +28,6 @@ const qrSvg = await QRCode.toString(`https://giardiniconsulenza.it${vcardPath}`,
   color: { dark: '#2C2C2A', light: '#00000000' },
 });
 
-const directionsUrl = siteOffice.mapsQuery
-  ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(siteOffice.mapsQuery)}`
-  : '#';
 
 const giorni = ['In settimana', 'Nel weekend'];
 const fasce = ['09:00–11:00', '11:00–13:00', '14:00–16:00', '16:00–18:00'];
@@ -120,19 +117,36 @@ const revealBtn = 'mt-3 text-sm text-charcoal underline decoration-sage decorati
     </ul>
   </section>
 
-  <!-- 4. MAPPA (caricata solo su richiesta: nessun cookie di terze parti prima del clic) -->
+  <!-- 4. MAPPA: anteprima locale (nessuna richiesta a Google). La mappa Google si carica
+       solo con il consenso ai contenuti esterni o con il clic su «Mostra la mappa qui».
+       Un clic sulla mappa apre Google Maps in una nuova scheda. -->
   <section class="bg-gray-200">
-    <div data-map data-query={siteOffice.mapsQuery} class="relative h-[320px] md:h-[420px] flex items-center justify-center">
+    <div data-map data-query={siteOffice.mapsQuery} data-href={officeMapsUrl} class="relative h-[320px] md:h-[420px] overflow-hidden">
+      <a
+        href={officeMapsUrl}
+        target="_blank"
+        rel="noopener"
+        data-map-preview
+        aria-label={`Apri ${siteOffice.address} in Google Maps`}
+        class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-center px-4 text-charcoal bg-[linear-gradient(90deg,rgba(44,44,42,0.06)_1px,transparent_1px),linear-gradient(rgba(44,44,42,0.06)_1px,transparent_1px)] bg-[size:48px_48px] hover:text-sage transition-colors"
+      >
+        <Icon name="tabler:map-pin" class="w-12 h-12 [&_*]:stroke-[1.25]" aria-hidden="true" />
+        <span class="uppercase tracking-[0.15em] text-sm">{siteOffice.street}</span>
+        <span class="text-sm">{siteOffice.postalCode} {siteOffice.locality} ({siteOffice.region})</span>
+        <span class="mt-2 text-xs underline underline-offset-4">Apri in Google Maps</span>
+      </a>
       <button
         type="button"
         data-map-load
-        class="flex flex-col items-center gap-3 text-charcoal uppercase tracking-[0.15em] text-sm hover:text-sage transition-colors"
+        class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-charcoal text-xs uppercase tracking-[0.12em] py-3 px-5 shadow-sm hover:text-sage"
       >
-        <Icon name="tabler:map-pin" class="w-10 h-10 [&_*]:stroke-[1.25]" aria-hidden="true" />
-        Mostra la mappa
-        <span class="normal-case tracking-normal text-xs text-charcoal/60">Carica Google Maps</span>
+        Mostra la mappa qui
       </button>
     </div>
+    <p class="max-w-6xl mx-auto px-4 md:px-8 py-3 text-xs text-charcoal/70">
+      La mappa interattiva è fornita da Google Maps, che può impostare cookie propri: si attiva con il tuo consenso.
+      <button type="button" data-cookie-settings class="underline underline-offset-4">Gestisci le preferenze</button>
+    </p>
   </section>
 
   <!-- 5. BLOCCO UFFICIO -->
@@ -141,7 +155,7 @@ const revealBtn = 'mt-3 text-sm text-charcoal underline decoration-sage decorati
       <p class="font-playfair text-2xl md:text-3xl">Ufficio {siteOffice.city}</p>
       <p class="mt-3 text-base text-white/90">{siteOffice.address}</p>
       <a
-        href={directionsUrl}
+        href={officeDirectionsUrl}
         target="_blank"
         rel="noopener"
         class="inline-block mt-6 text-white underline underline-offset-4 hover:text-ochre transition-colors"
@@ -153,27 +167,37 @@ const revealBtn = 'mt-3 text-sm text-charcoal underline decoration-sage decorati
 </SiteLayout>
 
 <script>
+  import { onPageLoad } from '~/scripts/page-load';
+  import { onConsent } from '~/scripts/consent';
+
   function initMap() {
     const box = document.querySelector<HTMLElement>('[data-map]');
     const btn = box?.querySelector<HTMLButtonElement>('[data-map-load]');
     if (!box || !btn || box.dataset.ready) return;
     box.dataset.ready = 'true';
 
-    btn.addEventListener('click', () => {
-      const query = box.dataset.query ?? '';
-      if (!query) {
-        box.innerHTML = '<p class="px-4 text-center text-sm font-semibold uppercase tracking-wider text-charcoal/60">[TODO: indirizzo ufficio per la mappa]</p>';
-        return;
-      }
+    const load = () => {
+      if (box.querySelector('iframe')) return;
       const iframe = document.createElement('iframe');
-      iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+      iframe.src = `https://www.google.com/maps?q=${encodeURIComponent(box.dataset.query ?? '')}&output=embed`;
       iframe.title = 'Mappa dell’ufficio';
       iframe.loading = 'lazy';
       iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      iframe.className = 'absolute inset-0 w-full h-full border-0 grayscale';
-      box.replaceChildren(iframe);
-    });
+      iframe.tabIndex = -1;
+      iframe.className = 'absolute inset-0 w-full h-full border-0 grayscale pointer-events-none';
+      // Livello cliccabile sopra la mappa: apre Google Maps
+      const link = document.createElement('a');
+      link.href = box.dataset.href ?? '#';
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.className = 'absolute inset-0';
+      link.setAttribute('aria-label', 'Apri la posizione in Google Maps');
+      box.replaceChildren(iframe, link);
+    };
+
+    btn.addEventListener('click', load);
+    onConsent('esterni', load);
   }
 
-  document.addEventListener('astro:page-load', initMap);
+  onPageLoad(initMap);
 </script>

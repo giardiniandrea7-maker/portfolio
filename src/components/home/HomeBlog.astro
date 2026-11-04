@@ -95,6 +95,7 @@ const cards = await Promise.all(
 </section>
 
 <script>
+  import { onPageLoad } from '~/scripts/page-load';
   function initHomeCarousel() {
     document.querySelectorAll<HTMLElement>('[data-home-carousel]').forEach((root) => {
       const track = root.querySelector<HTMLElement>('[data-carousel-track]');
@@ -106,5 +107,5 @@ const cards = await Promise.all(
     });
   }
 
-  document.addEventListener('astro:page-load', initHomeCarousel);
+  onPageLoad(initHomeCarousel);
 </script>

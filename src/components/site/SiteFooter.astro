@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
-import { siteMenuLinks, siteContacts, siteOffice } from '~/navigation';
+import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
@@ -22,8 +22,7 @@ const social = [
 const pagineUtili = [
   { text: 'Informativa privacy', href: '/privacy' },
   { text: 'Cookie policy', href: '/cookie-policy' },
-  // [TODO: collegare al pannello di consenso cookie quando sarà installato]
-  { text: 'Rivedi il consenso cookie', href: '/cookie-policy' },
+  { text: 'Note legali', href: '/note-legali' },
 ];
 
 const blogItems = await Promise.all(
@@ -92,8 +91,12 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
         </div>
         <div>
           <dt class="font-semibold mb-1">Ufficio</dt>
-          <dd>{siteOffice.city}</dd>
-          <dd>{siteOffice.address}</dd>
+          <dd>
+            <a href={officeMapsUrl} target="_blank" rel="noopener" class={linkClass}>
+              {siteOffice.street}<br />
+              {siteOffice.postalCode} {siteOffice.locality} ({siteOffice.region})
+            </a>
+          </dd>
         </div>
       </dl>
     </div>
@@ -110,6 +113,9 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
             </li>
           ))
         }
+        <li>
+          <button type="button" data-cookie-settings class={`${linkClass} text-left`}>Rivedi il consenso cookie</button>
+        </li>
       </ul>
     </div>
 
@@ -164,7 +170,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
           <Placeholder label="logo Fideuram" class="h-9 w-36" />
         )
       }
-      <p class="text-xs">© 2026 Andrea Giardini</p>
+      <p class="text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
     </div>
   </div>
 </section>
@@ -181,6 +187,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
 </a>
 
 <script>
+  import { onPageLoad } from '~/scripts/page-load';
   function initRevealContacts() {
     document.querySelectorAll<HTMLButtonElement>('[data-reveal-contact]').forEach((btn) => {
       if (btn.dataset.ready) return;
@@ -195,5 +202,5 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
     });
   }
 
-  document.addEventListener('astro:page-load', initRevealContacts);
+  onPageLoad(initRevealContacts);
 </script>

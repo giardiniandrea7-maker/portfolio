@@ -1,0 +1,55 @@
+---
+// Pagina legale (privacy, cookie, note legali) nello stile delle pagine a fasce.
+import SiteLayout from './SiteLayout.astro';
+import SectionTitle from './SectionTitle.astro';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata: MetaData;
+  title: string;
+  lastUpdate: string;
+}
+
+const { metadata, title, lastUpdate } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '');
+
+const documenti = [
+  { text: 'Informativa privacy', href: '/privacy' },
+  { text: 'Cookie policy', href: '/cookie-policy' },
+  { text: 'Note legali', href: '/note-legali' },
+].filter((d) => d.href !== path);
+---
+
+<SiteLayout metadata={metadata}>
+  <section class="bg-charcoal text-white py-14 md:py-20">
+    <div class="max-w-prose mx-auto px-4 md:px-0">
+      <p class="text-xs uppercase tracking-[0.15em] text-white/70">Documento legale</p>
+      <SectionTitle as="h1" size="lg" align="left" tone="white" class="mt-4">{title}</SectionTitle>
+      <p class="mt-4 text-sm text-white/70">Ultimo aggiornamento: {lastUpdate}</p>
+    </div>
+  </section>
+
+  <section class="bg-white py-12 md:py-16">
+    <div
+      class="max-w-prose mx-auto px-4 md:px-0 prose text-charcoal prose-headings:font-sans prose-headings:font-medium prose-headings:uppercase prose-headings:tracking-[0.12em] prose-headings:text-charcoal prose-h2:text-base prose-h2:md:text-lg prose-h3:text-sm prose-a:text-sage prose-strong:text-charcoal prose-table:text-sm prose-th:text-left"
+    >
+      <slot />
+    </div>
+  </section>
+
+  <section class="bg-ivory py-10">
+    <div class="max-w-prose mx-auto px-4 md:px-0 flex flex-wrap gap-x-8 gap-y-3">
+      {
+        documenti.map((d) => (
+          <a href={d.href} class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-sage pb-1 hover:text-sage">
+            {d.text}
+          </a>
+        ))
+      }
+      <button type="button" data-cookie-settings class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-sage pb-1 hover:text-sage">
+        Rivedi il consenso cookie
+      </button>
+    </div>
+  </section>
+</SiteLayout>

@@ -13,6 +13,7 @@ import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
 import StructuredData from '~/components/common/StructuredData.astro';
+import CookieConsent from '~/components/site/CookieConsent.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -48,27 +49,6 @@ const { language, textDirection } = I18N;
     <ClientRouter fallback="swap" />
 
     <StructuredData breadcrumbs={breadcrumbs} disableBreadcrumb={disableBreadcrumb} />
-    <!-- LEGACY (disabilitato, sostituito da <StructuredData/>): -->
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Andrea Giardini",
-      "jobTitle": "Consulente Finanziario",
-      "url": "https://giardiniconsulenza.it",
-      "image": "https://giardiniconsulenza.it/favicon.png",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://giardiniconsulenza.it/favicon.png"
-      },
-      "sameAs": [
-        "https://www.instagram.com/andreagiardini.finanza/",
-        "https://www.youtube.com/@AlphaGiardini"
-      ]
-    })} />
-
-    <!-- Calendly assets (popup + badge widget) -->
-    <link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
-    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
@@ -86,31 +66,50 @@ const { language, textDirection } = I18N;
       import '~/scripts/animations.ts';
     </script>
 
-    <!-- Calendly badge widget (bottone fluttuante "Prenota una call") -->
-    <script is:inline>
-      (function () {
-        function initBadge() {
-          if (document.querySelector('.calendly-badge-widget')) return;
-          if (window.Calendly && typeof window.Calendly.initBadgeWidget === 'function') {
-            window.Calendly.initBadgeWidget({
-              url: 'https://calendly.com/giardiniandrea',
-              text: 'Prenota una call',
-              color: '#166963',
-              textColor: '#ffffff',
-              branding: false
-            });
-          } else {
-            setTimeout(initBadge, 250);
-          }
+    <CookieConsent />
+
+    <!-- Calendly (popup + badge "Prenota una call"): caricato solo dopo il consenso
+         ai contenuti di servizi esterni. Senza consenso i link aprono calendly.com in una nuova scheda. -->
+    <script>
+      import { onConsent } from '~/scripts/consent';
+      import { onPageLoad } from '~/scripts/page-load';
+
+      declare global {
+        interface Window {
+          Calendly?: { initBadgeWidget: (o: object) => void; initPopupWidget: (o: object) => void };
         }
-        // Init dopo il primo render e dopo ogni navigazione (Astro View Transitions)
-        document.addEventListener('astro:page-load', initBadge);
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-          initBadge();
-        } else {
-          document.addEventListener('DOMContentLoaded', initBadge);
-        }
-      })();
+      }
+
+      const CALENDLY_URL = 'https://calendly.com/giardiniandrea';
+
+      function initBadge() {
+        if (document.querySelector('.calendly-badge-widget') || !window.Calendly) return;
+        window.Calendly.initBadgeWidget({
+          url: CALENDLY_URL,
+          text: 'Prenota una call',
+          color: '#166963',
+          textColor: '#ffffff',
+          branding: false,
+        });
+      }
+
+      function loadCalendly() {
+        if (document.querySelector('script[data-calendly]')) return;
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'https://assets.calendly.com/assets/external/widget.css';
+        document.head.appendChild(css);
+        const js = document.createElement('script');
+        js.src = 'https://assets.calendly.com/assets/external/widget.js';
+        js.async = true;
+        js.dataset.calendly = 'true';
+        js.addEventListener('load', initBadge);
+        document.head.appendChild(js);
+      }
+
+      onConsent('esterni', loadCalendly);
+      // Dopo ogni navigazione (View Transitions) il body viene sostituito: ricreo il badge
+      onPageLoad(initBadge);
     </script>
   </body>
 </html>

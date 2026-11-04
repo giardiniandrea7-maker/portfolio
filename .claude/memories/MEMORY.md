@@ -13,7 +13,7 @@
 ## 2026-11-04
 **Tasks**:
 **Keywords**: restyle-home, home-a-fasce, branch-restyle-home, palette-sage-ochre, playfair
-**Riassunto**: Home rifatta da zero a fasce orizzontali (stile consulente istituzionale) sul branch `restyle-home`, commit locale `a592c5f`, nessun push.
+**Riassunto**: Restyle a fasce (home, /consulenza, /servizi, /blog, /contatti) sul branch `restyle-home`, poi unito in fast-forward su `main` e pubblicato (`b4d9df2`). Restano molti [TODO] di contenuto e la variabile `PUBLIC_WEB3FORMS_KEY` su Cloudflare.
 
 ### Dettaglio
 
