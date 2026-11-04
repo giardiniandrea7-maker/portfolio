@@ -4,6 +4,7 @@ import HomeHero from '~/components/home/HomeHero.astro';
 import HomeCertificazioni from '~/components/home/HomeCertificazioni.astro';
 import HomeSpecializzazioni from '~/components/home/HomeSpecializzazioni.astro';
 import HomeBlog from '~/components/home/HomeBlog.astro';
+import HomeImprese from '~/components/home/HomeImprese.astro';
 import SectionTitle from '~/components/site/SectionTitle.astro';
 
 import { findLatestPosts } from '~/utils/blog';
@@ -46,7 +47,10 @@ const latestPosts = await findLatestPosts({ count: 3 });
   <!-- 5. LE MIE AREE DI SPECIALIZZAZIONE -->
   <HomeSpecializzazioni />
 
-  <!-- 6. ULTIME NOTIZIE DAL BLOG -->
+  <!-- 6. FASCIA IMPRENDITORI -->
+  <HomeImprese />
+
+  <!-- 7. ULTIME NOTIZIE DAL BLOG -->
   <HomeBlog posts={latestPosts} />
 </SiteLayout>
 

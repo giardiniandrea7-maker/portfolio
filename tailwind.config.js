@@ -15,7 +15,7 @@ export default {
         // Palette pagine a fasce, dai colori del logo Fideuram: verde #006937 (principale)
         // e arancio #E04403 (accento, quasi complementare: solo linee, sottolineature, stati attivi).
         // Proporzioni indicative: 60% neutri caldi, 30% verde, 10% arancio.
-        brand: { DEFAULT: '#006937', light: '#1F7F4D', dark: '#00482A' },
+        brand: { DEFAULT: '#006937', light: '#1F7F4D', dark: '#00482A', soft: '#8CC3A4' },
         ember: { DEFAULT: '#E04403', light: '#F8DCCB', dark: '#B33602' },
         sand: '#ECE3D4',
         ivory: '#F6F3ED',

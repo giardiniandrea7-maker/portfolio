@@ -1,0 +1,51 @@
+---
+// Griglia di icone line-art grandi con etichetta sotto (specializzazioni home, ambiti imprese).
+// Con href la voce diventa un link con sollevamento al passaggio del mouse.
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  items: Array<{ icon: string; label: string; href?: string }>;
+  // Colonne da lg in su (mobile sempre 2)
+  desktopCols?: 3 | 4;
+}
+
+const { items, desktopCols = 4 } = Astro.props;
+
+const box = 'group flex flex-col items-center text-center rounded-[12px] py-6 px-2 transition-all duration-300';
+const hover = 'hover:bg-white hover:-translate-y-1 hover:shadow-[0_18px_40px_-26px_rgba(0,40,22,0.4)]';
+---
+
+<ul
+  class:list={[
+    'reveal-stagger grid grid-cols-2 gap-x-6 gap-y-12 md:gap-y-16',
+    desktopCols === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4',
+  ]}
+>
+  {
+    items.map((item) => {
+      const content = (
+        <>
+          <Icon
+            name={item.icon}
+            class="w-16 h-16 md:w-20 md:h-20 text-charcoal group-hover:text-brand transition-colors duration-300 [&_*]:stroke-[1.1]"
+            aria-hidden="true"
+          />
+          <span class="mt-4 text-sm md:text-base text-charcoal tracking-wide group-hover:text-brand transition-colors">
+            {item.label}
+          </span>
+        </>
+      );
+      return (
+        <li>
+          {item.href ? (
+            <a href={item.href} class:list={[box, hover]}>
+              {content}
+            </a>
+          ) : (
+            <div class={box}>{content}</div>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>

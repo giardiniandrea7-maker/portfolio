@@ -1,0 +1,72 @@
+---
+// Fascia a 2 colonne: foto a sinistra, contenuto a destra (hero home, hero imprese, fascia imprenditori).
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+import Placeholder from './Placeholder.astro';
+
+export interface Props {
+  image?: ImageMetadata;
+  alt: string;
+  placeholder: string;
+  // Fondo della colonna di destra
+  tone?: 'ivory' | 'brand';
+  // hero: alta come l'hero della home; band: fascia più bassa dentro una pagina
+  size?: 'hero' | 'band';
+  // Sotto 380px le colonne si impilano
+  stackOnNarrow?: boolean;
+  eager?: boolean;
+  class?: string;
+}
+
+const {
+  image,
+  alt,
+  placeholder,
+  tone = 'ivory',
+  size = 'hero',
+  stackOnNarrow = false,
+  eager = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<section
+  class:list={[
+    'grid',
+    stackOnNarrow ? 'grid-cols-1 min-[380px]:grid-cols-2' : 'grid-cols-2',
+    size === 'hero' ? 'lg:grid-cols-[5fr_7fr] lg:h-[min(76vh,620px)]' : 'lg:h-[460px]',
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      'bg-gray-200 overflow-hidden lg:aspect-auto lg:h-full',
+      size === 'hero' ? 'aspect-[3/4] md:aspect-[4/5]' : 'aspect-[4/3] min-[380px]:aspect-auto min-[380px]:min-h-[260px]',
+    ]}
+  >
+    {
+      image ? (
+        <Image
+          src={image}
+          alt={alt}
+          widths={[400, 800, 1200]}
+          sizes={size === 'hero' ? '(min-width: 1024px) 42vw, 50vw' : '50vw'}
+          loading={eager ? 'eager' : 'lazy'}
+          class="w-full h-full object-cover object-top"
+        />
+      ) : (
+        <Placeholder label={placeholder} class="w-full h-full border-0" />
+      )
+    }
+  </div>
+
+  <div
+    class:list={[
+      'relative flex flex-col justify-center overflow-hidden px-4 md:px-12 py-8',
+      tone === 'brand' ? 'bg-brand text-white' : 'bg-ivory text-charcoal items-center text-center',
+    ]}
+  >
+    <slot />
+  </div>
+</section>

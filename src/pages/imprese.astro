@@ -1,0 +1,162 @@
+---
+import { Image } from 'astro:assets';
+
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import SplitHero from '~/components/site/SplitHero.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
+import IconGrid from '~/components/site/IconGrid.astro';
+import Placeholder from '~/components/site/Placeholder.astro';
+import FormField from '~/components/site/FormField.astro';
+import Web3Form from '~/components/site/Web3Form.astro';
+
+import { findAssetImage } from '~/utils/home-assets';
+
+const metadata = {
+  title: 'Consulenza per imprenditori e aziende | Andrea Giardini',
+  ignoreTitleTemplate: true,
+  description:
+    'Affianco imprenditori e aziende con una visione d’insieme: liquidità aziendale, passaggio generazionale, welfare e patrimonio personale e aziendale.',
+};
+
+const hero = findAssetImage('imprese-hero.jpg');
+const fascia = findAssetImage('imprese-fascia.jpg');
+const fideuram = findAssetImage('fideuram-logo.svg');
+
+const ambiti = [
+  { icon: 'tabler:building-bank', label: 'Liquidità aziendale' },
+  { icon: 'tabler:shield-check', label: 'Protezione dell’impresa' },
+  { icon: 'tabler:hierarchy-2', label: 'Passaggio generazionale' },
+  { icon: 'tabler:receipt', label: 'TFM e TFR' },
+  { icon: 'tabler:users', label: 'Welfare aziendale' },
+  { icon: 'tabler:scale', label: 'Patrimonio personale e aziendale' },
+];
+
+const metodo = [
+  { title: 'Ascolto', text: 'Conosco l’azienda, il settore, i progetti e le persone che la guidano.' },
+  { title: 'Analisi', text: 'Leggiamo insieme bilancio, flussi e priorità dell’impresa e della famiglia.' },
+  { title: 'Affiancamento', text: 'Definiamo le priorità e le seguiamo nel tempo, con verifiche periodiche.' },
+];
+
+const ruoli = ['Titolare', 'Socio', 'Amministratore', 'Direttore finanziario', 'Altro'];
+const interessi = [...ambiti.map((a) => a.label), 'Una visione d’insieme'];
+---
+
+<SiteLayout metadata={metadata}>
+  <!-- 1. HERO -->
+  <SplitHero image={hero} alt="Un imprenditore al lavoro nella sua azienda" placeholder="foto imprese-hero.jpg" eager>
+    <span aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 w-72 h-72 lg:w-[28rem] lg:h-[28rem] rounded-full bg-ember/10 blur-3xl"></span>
+    <span aria-hidden="true" class="block w-px h-10 md:h-20 bg-brand mb-5 md:mb-10"></span>
+    <SectionTitle as="h1" class="relative max-w-[18rem] lg:max-w-xl lg:text-4xl">
+      Al fianco di chi fa impresa.
+    </SectionTitle>
+    <p class="relative mt-4 md:mt-6 text-[11px] md:text-sm uppercase tracking-[0.15em] text-charcoal/70">
+      Consulenza per imprenditori e aziende
+    </p>
+  </SplitHero>
+
+  <!-- 2. INTRO -->
+  <section class="bg-white py-16 md:py-24">
+    <div class="reveal max-w-2xl mx-auto px-4 md:px-8 text-center">
+      <SectionTitle size="lg" class="mb-8">Una visione d’insieme</SectionTitle>
+      <p class="text-base md:text-lg text-charcoal leading-relaxed">
+        Chi guida un’azienda sa che ogni decisione tocca più piani: l’impresa, le persone, la famiglia. Il mio lavoro è
+        aiutarti a guardarli insieme, con metodo, per affrontare ogni scelta con più chiarezza.
+      </p>
+    </div>
+  </section>
+
+  <!-- 3. GLI AMBITI IN CUI TI AFFIANCO -->
+  <section class="bg-linen py-16 md:py-24">
+    <div class="max-w-5xl mx-auto px-4 md:px-8">
+      <SectionTitle class="mb-12 md:mb-16">Gli ambiti in cui ti affianco</SectionTitle>
+      <IconGrid items={ambiti} desktopCols={3} />
+    </div>
+  </section>
+
+  <!-- 4. FASCIA IMMAGINE CON FRASE -->
+  <section class="relative bg-gray-300 aspect-[4/3] md:aspect-[21/8] overflow-hidden">
+    {
+      fascia ? (
+        <Image
+          src={fascia}
+          alt="Una riunione in azienda"
+          widths={[640, 1280, 1920]}
+          sizes="100vw"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <Placeholder label="foto riunione in azienda (imprese-fascia.jpg)" class="absolute inset-x-0 top-0 h-14 border-0" />
+      )
+    }
+    <div class="absolute inset-0 bg-black/45"></div>
+    <div class="absolute inset-0 flex items-center justify-center px-4">
+      <p class="reveal max-w-3xl text-center font-sans font-light uppercase tracking-[0.15em] text-white text-xl md:text-4xl leading-snug">
+        Decidere con chiarezza, guardando lontano.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. IL MIO METODO -->
+  <section class="bg-charcoal text-white py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <SectionTitle tone="white" class="mb-12 md:mb-16">Il mio metodo</SectionTitle>
+      <ol class="reveal-stagger grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10">
+        {
+          metodo.map((step, i) => (
+            <li class="text-center md:text-left">
+              <span class="block font-sans font-light text-6xl md:text-7xl leading-none text-brand-soft">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="mt-5 font-sans font-medium uppercase tracking-[0.15em] text-base md:text-lg">{step.title}</h3>
+              <p class="mt-3 text-sm md:text-base leading-relaxed text-white/80 max-w-xs mx-auto md:mx-0">{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6. LA FORZA DI UN GRUPPO -->
+  <section class="bg-ivory py-16 md:py-20">
+    <div class="reveal max-w-2xl mx-auto px-4 md:px-8 text-center flex flex-col items-center">
+      {
+        fideuram ? (
+          <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-8 md:h-10 w-auto" />
+        ) : (
+          <Placeholder label="logo Fideuram" class="h-10 w-40" />
+        )
+      }
+      <p class="mt-8 text-base md:text-lg text-charcoal leading-relaxed">
+        Accanto a te, la solidità del Gruppo Intesa Sanpaolo e competenze dedicate al mondo delle imprese. [TODO: verifica
+        formula con Fideuram]
+      </p>
+    </div>
+  </section>
+
+  <!-- 7. PARLIAMO DELLA TUA AZIENDA -->
+  <section id="richiesta" class="bg-charcoal text-white py-16 md:py-24 scroll-mt-16 md:scroll-mt-20">
+    <div class="max-w-3xl lg:max-w-2xl mx-auto px-4 md:px-8">
+      <SectionTitle size="lg" tone="white" class="mb-6">Parliamo della tua azienda</SectionTitle>
+      <p class="text-center text-base md:text-lg text-white/90 mb-10">Un primo incontro conoscitivo, in azienda o in ufficio.</p>
+
+      <Web3Form
+        id="form-imprese"
+        subject="Richiesta imprese — Sito"
+        successMessage="Grazie. Ti ricontatto per fissare il nostro incontro."
+        submitLabel="Richiedi un incontro"
+        submitAlign="right"
+        dark
+      >
+        <div class="grid sm:grid-cols-2 gap-5">
+          <FormField name="nome" label="Nome" required autocomplete="name" dark />
+          <FormField name="azienda" label="Azienda" required autocomplete="organization" dark />
+          <FormField as="select" name="ruolo" label="Ruolo" options={ruoli} dark />
+          <FormField name="telefono" type="tel" label="Telefono" required autocomplete="tel" dark />
+          <FormField name="email" type="email" label="Email" required autocomplete="email" dark class="sm:col-span-2" />
+          <FormField as="select" name="ambito" label="Ambito di interesse" options={interessi} dark class="sm:col-span-2" />
+        </div>
+        <FormField as="textarea" name="messaggio" label="Messaggio" dark />
+      </Web3Form>
+    </div>
+  </section>
+</SiteLayout>

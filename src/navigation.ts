@@ -21,6 +21,7 @@ export const siteMenuLinks = [
   { text: 'Chi sono', href: '/#chi-sono' },
   { text: 'Consulenza', href: '/consulenza' },
   { text: 'Servizi', href: '/servizi' },
+  { text: 'Imprese', href: '/imprese' },
   { text: 'Blog', href: '/blog' },
   { text: 'Contattami', href: '/contatti' },
 ];
