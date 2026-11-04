@@ -24,6 +24,12 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
   output: 'static',
 
+  // Pagine come file (consulenza.html): Cloudflare Pages le serve a /consulenza con 200,
+  // senza redirect verso la versione con barra finale. Coerente con sitemap e URL canonici.
+  build: {
+    format: 'file',
+  },
+
   integrations: [
     tailwind({
       applyBaseStyles: false,
