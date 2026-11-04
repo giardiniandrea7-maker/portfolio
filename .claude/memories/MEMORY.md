@@ -26,6 +26,8 @@
 - Pagina `/consulenza` (commit `331780d`): parti comuni estratte in `src/components/site/` (`SiteLayout`, `SiteHeader`, `SiteFooter`, `SectionTitle`, `Placeholder`); menu con ancore assolute (`/#...`) e voce attiva per pathname fuori dalla home.
 - Pagina `/servizi` (`src/pages/servizi/index.astro`, commit `ec86d27`): estratti `site/Pillar`, `site/PillarGrid`, `site/CtaBand` (rimosso `consulenza/Pilastri`); voci specializzazioni della home linkano a `/servizi#investimenti` e `/servizi#patrimonio`. Sottopagine `servizi/*.astro` hanno modifiche preesistenti non mie, lasciate fuori dai commit.
 - Pagine `/blog` (lista + singolo post) e `/contatti` rifatte (commit `9cb4d93`): form Web3Forms via `site/Web3Form` + `site/FormField` + `src/scripts/web3form.ts`, chiave da `PUBLIC_WEB3FORMS_KEY` (`.env` locale non versionato; va impostata anche su Cloudflare Pages). Ricerca blog client-side su `<template>` con tutti i post; 9 post/pagina. Dati ufficio centralizzati in `siteOffice` (`navigation.ts`). ContactPoint aggiunto in `StructuredData.astro`, file ancora untracked dell'utente, non committato.
+- Dati reali (commit `ecddfc1`): email agiardini@fideuram.it, P.IVA 13494670014, ufficio Via Agostino Tolosano 88 Faenza, LinkedIn, Area clienti alfabeto.fideuram.it. Consenso cookie proprio (`site/CookieConsent` + `scripts/consent.ts`, chiave `gc-consent`, 6 mesi): Calendly e Google Maps solo dopo consenso. Pagine legali riscritte con `site/LegalPage`.
+- Insidia: in produzione gli script possono perdere il primo `astro:page-load` → usare `onPageLoad` (`src/scripts/page-load.ts`).
 - Insidia ricorrente: classi `flex`/`grid`/`block` annullano l'attributo `hidden` → usare `[&:not([hidden])]:flex`.
 
 ---
