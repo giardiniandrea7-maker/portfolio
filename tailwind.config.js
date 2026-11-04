@@ -12,12 +12,15 @@ export default {
         accent: 'var(--aw-color-accent)',
         default: 'var(--aw-color-text-default)',
         muted: 'var(--aw-color-text-muted)',
-        // Palette home a fasce (restyle-home)
-        sage: '#4A5D4F',
-        ochre: { DEFAULT: '#D4A574', dark: '#B98A58' },
-        ivory: '#F5F1E8',
-        linen: '#FAF8F3',
-        charcoal: { DEFAULT: '#2C2C2A', light: '#3D3D3B' },
+        // Palette pagine a fasce, dai colori del logo Fideuram: verde #006937 (principale)
+        // e arancio #E04403 (accento, quasi complementare: solo linee, sottolineature, stati attivi).
+        // Proporzioni indicative: 60% neutri caldi, 30% verde, 10% arancio.
+        brand: { DEFAULT: '#006937', light: '#1F7F4D', dark: '#00482A' },
+        ember: { DEFAULT: '#E04403', light: '#F8DCCB', dark: '#B33602' },
+        sand: '#ECE3D4',
+        ivory: '#F6F3ED',
+        linen: '#FAF8F4',
+        charcoal: { DEFAULT: '#1E2421', light: '#2A322E' },
         'emerald-brand': '#00A652',
       },
       fontFamily: {

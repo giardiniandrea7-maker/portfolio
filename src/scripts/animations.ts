@@ -7,6 +7,7 @@
    Compatibile Astro View Transitions: cleanup su before-swap.
    ============================================================= */
 
+import { onPageLoad } from './page-load';
 import { animate, inView, stagger } from 'motion';
 
 // Set di elementi già animati: evita di ri-triggerare l'animazione
@@ -378,5 +379,6 @@ function safeInit(): void {
   });
 }
 
-document.addEventListener('astro:page-load', safeInit);
+// onPageLoad: parte anche se il primo astro:page-load è già passato quando il modulo viene valutato
+onPageLoad(safeInit);
 document.addEventListener('astro:before-swap', cleanupAll);

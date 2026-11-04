@@ -1,12 +1,13 @@
 ---
 import SectionTitle from '~/components/site/SectionTitle.astro';
 import Placeholder from '~/components/site/Placeholder.astro';
-import { findPublicFile } from '~/utils/home-assets';
+import { findPublicImage } from '~/utils/home-assets';
 
 const certificazioni = [
   {
     name: 'OCF',
-    logo: findPublicFile('images/certificazioni/ocf.svg'),
+    logo: findPublicImage('images/certificazioni/ocf'),
+    logoClass: 'h-full w-auto',
     bullets: [
       "Consulente finanziario abilitato all'offerta fuori sede, incaricato da [TODO: società mandante S.p.A.].",
       "Iscrizione all'Albo unico dei consulenti finanziari n. 2965.",
@@ -19,7 +20,9 @@ const certificazioni = [
   },
   {
     name: 'IVASS',
-    logo: findPublicFile('images/certificazioni/ivass.png'),
+    logo: findPublicImage('images/certificazioni/ivass'),
+    // Il file IVASS ha ampi margini bianchi: lo ingrandisco per compensare
+    logoClass: 'h-[180%] w-auto -ml-[6%]',
     bullets: [
       'Intermediario iscritto al RUI con numero [TODO].',
       'Sede legale: [TODO].',
@@ -31,50 +34,66 @@ const certificazioni = [
 ---
 
 <section class="bg-ivory py-16 md:py-24">
-  <div class="max-w-3xl mx-auto px-4 md:px-8">
+  <div class="max-w-5xl mx-auto px-4 md:px-8">
     <SectionTitle class="mb-10 md:mb-14">Le mie certificazioni</SectionTitle>
 
-    <div class="flex flex-col gap-5 md:gap-6">
+    <div class="reveal-stagger grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
       {
         certificazioni.map((c) => {
           const [first, ...rest] = c.bullets;
+          const linkEl = (
+            <a
+              href={c.link.href}
+              target="_blank"
+              rel="noopener"
+              class="inline-block mt-5 text-sm md:text-base text-brand underline underline-offset-4 decoration-ember hover:text-charcoal transition-colors"
+            >
+              {c.link.text}
+            </a>
+          );
           return (
-            <article class="bg-white p-6 md:p-10">
+            <article class="bg-white p-6 md:p-10 flex flex-col transition-shadow duration-300 hover:shadow-[0_18px_40px_-24px_rgba(0,40,22,0.35)]">
               <div class="h-12 md:h-14 mb-6 flex items-center">
                 {c.logo ? (
-                  <img src={c.logo} alt={`Logo ${c.name}`} class="h-full w-auto" />
+                  <img src={c.logo} alt={`Logo ${c.name}`} class={c.logoClass} />
                 ) : (
                   <Placeholder label={`logo ${c.name}`} class="h-full w-32" />
                 )}
               </div>
 
-              <ul class="list-disc pl-5 text-sm md:text-base text-charcoal leading-relaxed">
-                <li>{first}</li>
-              </ul>
-
-              <details class="group mt-4">
-                <summary class="flex items-center gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-sm uppercase tracking-[0.12em] text-charcoal select-none">
-                  <span class="w-8 h-8 rounded-full border border-charcoal/40 flex items-center justify-center transition-transform group-open:rotate-180">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                  </span>
-                  Scopri di più
-                </summary>
-                <ul class="list-disc pl-5 mt-4 space-y-2 text-sm md:text-base text-charcoal leading-relaxed">
-                  {rest.map((b) => (
+              <!-- Desktop: tutti i punti visibili -->
+              <div class="hidden lg:flex flex-col flex-1">
+                <ul class="list-disc pl-5 space-y-3 text-[15px] text-charcoal leading-relaxed marker:text-ember">
+                  {c.bullets.map((b) => (
                     <li>{b}</li>
                   ))}
                 </ul>
-                <a
-                  href={c.link.href}
-                  target="_blank"
-                  rel="noopener"
-                  class="inline-block mt-5 text-sm md:text-base text-sage underline underline-offset-4 hover:text-charcoal transition-colors"
-                >
-                  {c.link.text}
-                </a>
-              </details>
+                <div class="mt-auto pt-2">{linkEl}</div>
+              </div>
+
+              <!-- Mobile: primo punto + tendina -->
+              <div class="lg:hidden">
+                <ul class="list-disc pl-5 text-sm md:text-base text-charcoal leading-relaxed marker:text-ember">
+                  <li>{first}</li>
+                </ul>
+
+                <details class="group mt-4">
+                  <summary class="flex items-center gap-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-sm uppercase tracking-[0.12em] text-charcoal select-none">
+                    <span class="w-8 h-8 rounded-full border border-charcoal/40 flex items-center justify-center transition-transform group-open:rotate-180">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </span>
+                    Scopri di più
+                  </summary>
+                  <ul class="list-disc pl-5 mt-4 space-y-2 text-sm md:text-base text-charcoal leading-relaxed marker:text-ember">
+                    {rest.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                  {linkEl}
+                </details>
+              </div>
             </article>
           );
         })

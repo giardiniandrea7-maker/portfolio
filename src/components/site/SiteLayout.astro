@@ -27,4 +27,15 @@ const { metadata } = Astro.props;
   .calendly-badge-widget {
     display: none !important;
   }
+
+  /* Accessibilità: contorno visibile per la navigazione da tastiera */
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline: 2px solid #E04403;
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: #F8DCCB;
+    color: #00482A;
+  }
 </style>

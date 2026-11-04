@@ -7,27 +7,69 @@ import { siteMenuLinks, siteContacts } from '~/navigation';
 import { findAssetImage } from '~/utils/home-assets';
 
 const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="sticky top-0 z-40 bg-white border-b border-charcoal/10">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between">
-    <a href="/" class="flex flex-col leading-tight">
-      <span class="font-playfair uppercase tracking-[0.08em] text-sage text-lg md:text-xl">Andrea Giardini</span>
+<header
+  data-site-header
+  class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-charcoal/10 transition-shadow duration-300 [&.is-scrolled]:shadow-[0_6px_24px_-12px_rgba(0,40,22,0.25)]"
+>
+  <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
+    <a href="/" class="flex flex-col leading-tight shrink-0">
+      <span class="font-playfair uppercase tracking-[0.08em] text-brand text-lg md:text-xl">Andrea Giardini</span>
       <span class="font-sans text-xs md:text-sm text-charcoal">Consulente finanziario</span>
     </a>
 
-    <button
-      type="button"
-      data-home-menu-open
-      aria-controls="home-menu"
-      aria-expanded="false"
-      aria-label="Apri il menu"
-      class="w-11 h-11 -mr-2 flex flex-col items-center justify-center gap-[6px]"
-    >
-      <span class="block w-6 h-px bg-charcoal"></span>
-      <span class="block w-6 h-px bg-charcoal"></span>
-      <span class="block w-6 h-px bg-charcoal"></span>
-    </button>
+    <!-- Navigazione desktop -->
+    <nav aria-label="Menu principale" class="hidden lg:flex h-full items-stretch gap-1 xl:gap-3">
+      {
+        siteMenuLinks.map((link) => {
+          const active = !link.href.includes('#') && currentPath.startsWith(link.href);
+          return (
+            <a
+              href={link.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'relative flex items-center px-3 text-xs uppercase tracking-[0.15em] text-charcoal hover:text-brand transition-colors',
+                "after:absolute after:left-3 after:right-3 after:top-0 after:h-[3px] after:bg-ember after:origin-left after:transition-transform after:duration-300",
+                active ? 'after:scale-x-100 text-brand' : 'after:scale-x-0 hover:after:scale-x-100',
+              ]}
+            >
+              {link.text}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={siteContacts.areaClientiFideuram}
+        target="_blank"
+        rel="noopener"
+        class="hidden lg:inline-flex items-center border border-brand text-brand uppercase tracking-[0.12em] text-[11px] py-2.5 px-4 hover:bg-brand hover:text-white transition-colors"
+      >
+        Area clienti
+      </a>
+      <a
+        href="/contatti"
+        class="hidden lg:inline-flex items-center bg-brand text-white uppercase tracking-[0.12em] text-[11px] py-2.5 px-4 hover:bg-brand-light transition-colors"
+      >
+        Prenota un incontro
+      </a>
+      <button
+        type="button"
+        data-home-menu-open
+        aria-controls="home-menu"
+        aria-expanded="false"
+        aria-label="Apri il menu"
+        class="lg:hidden w-11 h-11 -mr-2 flex flex-col items-center justify-center gap-[6px]"
+      >
+        <span class="block w-6 h-px bg-charcoal"></span>
+        <span class="block w-6 h-px bg-charcoal"></span>
+        <span class="block w-6 h-px bg-charcoal"></span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -44,7 +86,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
 >
   <div class="max-w-6xl w-full mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between shrink-0">
     <span class="flex flex-col leading-tight">
-      <span class="font-playfair uppercase tracking-[0.08em] text-sage text-lg md:text-xl">Andrea Giardini</span>
+      <span class="font-playfair uppercase tracking-[0.08em] text-brand text-lg md:text-xl">Andrea Giardini</span>
       <span class="font-sans text-xs md:text-sm text-charcoal">Consulente finanziario</span>
     </span>
     <button
@@ -67,11 +109,11 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
             <a
               href={link.href}
               data-home-menu-link
-              class="group relative block py-3 pl-5 uppercase tracking-[0.15em] text-base md:text-lg text-charcoal hover:text-sage transition-colors"
+              class="group relative block py-3 pl-5 uppercase tracking-[0.15em] text-base md:text-lg text-charcoal hover:text-brand transition-colors"
             >
               <span
                 aria-hidden="true"
-                class="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] bg-sage opacity-0 group-[.is-active]:opacity-100 transition-opacity"
+                class="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] bg-brand opacity-0 group-[.is-active]:opacity-100 transition-opacity"
               />
               {link.text}
             </a>
@@ -84,12 +126,14 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
       <a
         href="/contatti"
         data-home-menu-link
-        class="flex-1 text-center bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-sage/90 transition-colors"
+        class="flex-1 text-center bg-brand text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-brand/90 transition-colors"
       >
         Prenota un incontro
       </a>
       <a
         href={siteContacts.areaClientiFideuram}
+        target="_blank"
+        rel="noopener"
         class="flex-1 text-center bg-charcoal text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-charcoal/90 transition-colors"
       >
         Area clienti Fideuram
@@ -163,6 +207,17 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
   }
 
   onPageLoad(initHomeMenu);
+
+  // Ombra morbida sull'header quando la pagina scorre
+  function initHeaderShadow() {
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    if (!header || header.dataset.ready) return;
+    header.dataset.ready = 'true';
+    const update = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+  onPageLoad(initHeaderShadow);
   document.addEventListener('astro:before-swap', () => {
     document.documentElement.style.overflow = '';
   });

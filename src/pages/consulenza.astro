@@ -88,44 +88,44 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
     </div>
   </section>
 
-  <!-- 3. DISPONIBILE OVUNQUE -->
-  <section>
-    <div class="relative bg-gray-300 aspect-[4/3] md:aspect-[21/8] overflow-hidden">
+  <!-- 3. DISPONIBILE OVUNQUE: impilato su mobile, diviso immagine/testo da lg -->
+  <section class="lg:grid lg:grid-cols-[5fr_7fr] bg-charcoal">
+    <div class="relative bg-gray-300 aspect-[4/3] md:aspect-[21/8] lg:aspect-auto lg:min-h-[480px] overflow-hidden">
       {
         ovunque ? (
           <Image
             src={ovunque}
             alt="Incontro di consulenza"
             widths={[640, 1280, 1920]}
-            sizes="100vw"
+            sizes="(min-width: 1024px) 42vw, 100vw"
             class="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
           <Placeholder label="foto consulenza-ovunque.jpg" class="absolute inset-x-0 top-0 h-14 border-0" />
         )
       }
-      <div class="absolute inset-0 bg-black/50"></div>
-      <div class="absolute inset-0 flex items-center">
-        <div class="max-w-6xl w-full mx-auto px-4 md:px-8">
-          <SectionTitle size="xl" align="left" tone="white" class="max-w-2xl">
+      <div class="absolute inset-0 bg-gradient-to-r from-brand-dark/70 via-brand-dark/50 to-brand-dark/20 lg:to-charcoal/80"></div>
+      <div class="absolute inset-0 flex items-center lg:items-end lg:justify-end">
+        <div class="max-w-6xl w-full mx-auto lg:mx-0 px-4 md:px-8 lg:px-10 lg:pb-12 lg:text-right">
+          <SectionTitle size="xl" align="left" tone="white" class="reveal max-w-2xl lg:ml-auto lg:text-right lg:text-4xl">
             La consulenza è disponibile ovunque.
           </SectionTitle>
         </div>
       </div>
     </div>
 
-    <div class="bg-charcoal text-white py-14 md:py-20">
-      <div class="max-w-6xl mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-        <p class="text-base md:text-lg leading-relaxed">
+    <div class="text-white py-14 md:py-20 lg:py-0 lg:flex lg:items-center">
+      <div class="max-w-6xl lg:max-w-none mx-auto px-4 md:px-8 lg:px-16 grid md:grid-cols-2 lg:grid-cols-1 gap-10 md:gap-16 lg:gap-12 items-center">
+        <p class="reveal text-base md:text-lg leading-relaxed text-white/90 lg:max-w-xl">
           I consulenti finanziari iscritti all'Albo OCF e abilitati all'offerta fuori sede possono svolgere la propria
           attività in qualsiasi luogo.
         </p>
-        <ul class="flex flex-col gap-6">
+        <ul class="reveal-stagger flex flex-col lg:flex-row gap-6 lg:gap-12">
           {
             modalita.map((m) => (
-              <li class="flex items-center gap-5">
-                <Icon name={m.icon} class="w-12 h-12 md:w-14 md:h-14 shrink-0 [&_*]:stroke-[1.25]" aria-hidden="true" />
-                <span class="uppercase tracking-[0.15em] text-sm md:text-base">{m.label}</span>
+              <li class="flex items-center lg:flex-col lg:items-start gap-5 lg:gap-4">
+                <Icon name={m.icon} class="w-12 h-12 md:w-14 md:h-14 shrink-0 text-ember-light [&_*]:stroke-[1.1]" aria-hidden="true" />
+                <span class="uppercase tracking-[0.15em] text-sm">{m.label}</span>
               </li>
             ))
           }
@@ -138,7 +138,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
   <section class="bg-linen py-16 md:py-24">
     <div class="max-w-6xl mx-auto px-4 md:px-8">
       <div class="max-w-3xl mx-auto text-center">
-        <SectionTitle tone="sage" size="lg" class="mb-8">Il mio modello di consulenza</SectionTitle>
+        <SectionTitle tone="brand" size="lg" class="mb-8">Il mio modello di consulenza</SectionTitle>
         <p class="text-base md:text-lg text-charcoal leading-relaxed">
           Il mio lavoro parte dall'ascolto. Guardo alla tua vita nel suo insieme e costruisco con te una strategia
           personalizzata, sostenuta dalla solidità del Gruppo Intesa Sanpaolo.
@@ -147,7 +147,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
       <div class="mt-14 md:mt-20">
         <PillarGrid items={pilastriModello} circleColor="ivory" />
       </div>
-      <div class="mt-16 md:mt-24 flex justify-center">
+      <div class="reveal mt-16 md:mt-24 flex justify-center">
         {
           piattaforma ? (
             <Image
@@ -155,7 +155,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
               alt="La piattaforma digitale Fideuram"
               widths={[480, 960]}
               sizes="(max-width: 768px) 90vw, 720px"
-              class="w-full max-w-3xl h-auto shadow-lg"
+              class="w-full max-w-3xl h-auto shadow-[0_30px_60px_-30px_rgba(0,40,22,0.45)]"
             />
           ) : (
             <Placeholder label="screenshot piattaforma-fideuram.png" class="w-full max-w-3xl aspect-video bg-white shadow-lg" />
@@ -175,7 +175,7 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
           alta qualità.
         </p>
       </div>
-      <ul class="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <ul class="reveal-stagger mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
         {
           caseLoghi.map((logo) => (
             <li class="bg-white h-24 md:h-28 flex items-center justify-center p-4">

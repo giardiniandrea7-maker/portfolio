@@ -15,3 +15,7 @@ export const findAssetImage = (filename: string): ImageMetadata | undefined =>
 // File in public/: restituisce l'URL pubblico solo se il file esiste.
 export const findPublicFile = (publicPath: string): string | undefined =>
   fs.existsSync(path.join(process.cwd(), 'public', publicPath)) ? `/${publicPath}` : undefined;
+
+// Come findPublicFile, ma accetta il primo formato disponibile (es. 'images/certificazioni/ocf').
+export const findPublicImage = (basePath: string, exts = ['svg', 'png', 'webp', 'jpg', 'jpeg']): string | undefined =>
+  exts.map((ext) => findPublicFile(`${basePath}.${ext}`)).find(Boolean);

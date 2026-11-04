@@ -140,6 +140,36 @@
       "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\con)",
       "count": 1,
       "lastSeen": 1793786571329
+    },
+    "f489c215": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793790032336
+    },
+    "598bfec1": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
+      "count": 1,
+      "lastSeen": 1793790122705
+    },
+    "cd352156": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; for f in src/com)",
+      "count": 1,
+      "lastSeen": 1793790160404
+    },
+    "4a23d935": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 1,
+      "lastSeen": 1793790818681
+    },
+    "4da99f00": {
+      "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
+      "count": 1,
+      "lastSeen": 1793791300357
+    },
+    "343e719d": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 1,
+      "lastSeen": 1793791309874
     }
   },
   "editErrors": {}

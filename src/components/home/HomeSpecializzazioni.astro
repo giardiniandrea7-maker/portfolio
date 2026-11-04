@@ -12,20 +12,20 @@ const aree = [
 ---
 
 <section id="specializzazioni" class="bg-linen py-16 md:py-24 scroll-mt-16 md:scroll-mt-20">
-  <div class="max-w-4xl mx-auto px-4 md:px-8">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
     <SectionTitle class="mb-12 md:mb-16">Le mie aree di specializzazione</SectionTitle>
 
-    <ul class="grid grid-cols-2 gap-x-6 gap-y-12 md:gap-y-16">
+    <ul class="reveal-stagger grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-y-16">
       {
         aree.map((a) => (
           <li>
-            <a href={a.href} class="group flex flex-col items-center text-center">
+            <a href={a.href} class="group flex flex-col items-center text-center rounded-[12px] py-6 px-2 transition-all duration-300 hover:bg-white hover:-translate-y-1 hover:shadow-[0_18px_40px_-26px_rgba(0,40,22,0.4)]">
               <Icon
                 name={a.icon}
-                class="w-16 h-16 md:w-20 md:h-20 text-charcoal group-hover:text-sage transition-colors [&_*]:stroke-[1.25]"
+                class="w-16 h-16 md:w-20 md:h-20 text-charcoal group-hover:text-brand transition-colors duration-300 [&_*]:stroke-[1.1]"
                 aria-hidden="true"
               />
-              <span class="mt-4 text-sm md:text-base text-charcoal underline-offset-4 group-hover:underline group-hover:text-sage">
+              <span class="mt-4 text-sm md:text-base text-charcoal tracking-wide group-hover:text-brand transition-colors">
                 {a.label}
               </span>
             </a>

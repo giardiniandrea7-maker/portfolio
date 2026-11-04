@@ -8,18 +8,18 @@ const photo = findAssetImage('andrea-giardini.jpg');
 const fideuram = findAssetImage('fideuram-logo.svg');
 ---
 
-<section class="grid grid-cols-2">
+<section class="grid grid-cols-2 lg:grid-cols-[5fr_7fr] lg:h-[min(76vh,620px)]">
   <!-- Sinistra: foto -->
-  <div class="bg-gray-200 aspect-[3/4] md:aspect-[4/5] lg:aspect-square overflow-hidden">
+  <div class="bg-gray-200 aspect-[3/4] md:aspect-[4/5] lg:aspect-auto lg:h-full overflow-hidden">
     {
       photo ? (
         <Image
           src={photo}
           alt="Andrea Giardini, consulente finanziario"
           widths={[400, 800, 1200]}
-          sizes="50vw"
+          sizes="(min-width: 1024px) 42vw, 50vw"
           loading="eager"
-          class="w-full h-full object-cover"
+          class="w-full h-full object-cover object-top"
         />
       ) : (
         <Placeholder label="foto Andrea" class="w-full h-full border-0" />
@@ -28,16 +28,18 @@ const fideuram = findAssetImage('fideuram-logo.svg');
   </div>
 
   <!-- Destra: logo + slogan -->
-  <div class="bg-ivory flex flex-col items-center justify-center text-center px-3 md:px-12 py-6">
-    <span aria-hidden="true" class="block w-px h-10 md:h-20 bg-sage mb-5 md:mb-10"></span>
+  <div class="relative bg-ivory flex flex-col items-center justify-center text-center px-3 md:px-12 py-6 overflow-hidden">
+    <!-- Alone morbido decorativo -->
+    <span aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 w-72 h-72 lg:w-[28rem] lg:h-[28rem] rounded-full bg-ember/10 blur-3xl"></span>
+    <span aria-hidden="true" data-hero-element class="block w-px h-10 md:h-20 bg-ember mb-5 md:mb-10"></span>
     {
       fideuram ? (
-        <img src={fideuram.src} alt="Fideuram" class="h-6 md:h-10 w-auto mb-5 md:mb-8" />
+        <img src={fideuram.src} alt="Fideuram" data-hero-element class="h-6 md:h-10 lg:h-12 w-auto mb-5 md:mb-8" />
       ) : (
         <Placeholder label="logo Fideuram" class="h-8 md:h-12 w-28 md:w-48 mb-5 md:mb-8" />
       )
     }
-    <h1 class="font-sans font-normal uppercase tracking-[0.15em] text-charcoal text-[10px] leading-relaxed md:text-sm md:leading-loose max-w-[18rem]">
+    <h1 data-hero-element class="relative font-sans font-light uppercase tracking-[0.15em] text-charcoal text-[10px] leading-relaxed md:text-sm md:leading-loose lg:text-2xl lg:leading-relaxed max-w-[18rem] lg:max-w-xl">
       Ti aiuto a trasformare i tuoi desideri in traguardi raggiungibili
     </h1>
   </div>

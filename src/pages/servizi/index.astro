@@ -77,8 +77,8 @@ const anchorOffset = 'scroll-mt-16 md:scroll-mt-20';
 
 <SiteLayout metadata={metadata}>
   <!-- 1. UNA CONSULENZA GLOBALE -->
-  <section class="bg-charcoal text-white py-16 md:py-24">
-    <div class="max-w-4xl mx-auto px-4 md:px-8">
+  <section class="bg-charcoal text-white py-16 md:py-24 lg:py-28">
+    <div class="reveal max-w-4xl mx-auto px-4 md:px-8">
       <SectionTitle as="h1" size="lg" align="left" tone="white" class="mb-8 md:mb-10">
         Una consulenza globale
       </SectionTitle>
@@ -114,38 +114,40 @@ const anchorOffset = 'scroll-mt-16 md:scroll-mt-20';
     </div>
   </section>
 
-  <!-- 3. CAMBIARE È SEMPLICE -->
-  <section class="bg-charcoal text-white py-16 md:py-24">
-    <div class="max-w-4xl mx-auto px-4 md:px-8">
-      <SectionTitle size="lg" align="left" tone="white" class="mb-8">Cambiare è semplice.</SectionTitle>
-      <p class="text-base md:text-lg leading-relaxed text-white/90 max-w-2xl">
-        Ti accompagno passo dopo passo nel trasferimento dei tuoi investimenti da un altro intermediario. Seguo io le
-        pratiche, tu resti concentrato sui tuoi progetti.
-      </p>
-      <a
-        href="/contatti"
-        class="inline-block mt-10 border border-white text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-white hover:text-charcoal transition-colors"
-      >
-        Parliamone
-      </a>
-    </div>
-  </section>
+  <!-- 3-4. CAMBIARE È SEMPLICE + FASCIA IMMAGINE: impilati su mobile, card sovrapposta all'immagine da lg -->
+  <section class="bg-linen lg:py-20">
+    <div class="lg:max-w-7xl lg:mx-auto lg:px-8 lg:grid lg:grid-cols-12 lg:items-center">
+      <div class="reveal relative z-10 bg-charcoal text-white px-4 md:px-8 py-16 md:py-20 lg:p-14 lg:col-start-1 lg:col-span-6 lg:row-start-1 lg:shadow-[0_30px_60px_-30px_rgba(0,40,22,0.6)]">
+        <span aria-hidden="true" class="hidden lg:block absolute left-0 top-14 w-[3px] h-16 bg-sand"></span>
+        <SectionTitle size="lg" align="left" tone="white" class="mb-8">Cambiare è semplice.</SectionTitle>
+        <p class="text-base md:text-lg leading-relaxed text-white/90 max-w-2xl">
+          Ti accompagno passo dopo passo nel trasferimento dei tuoi investimenti da un altro intermediario. Seguo io le
+          pratiche, tu resti concentrato sui tuoi progetti.
+        </p>
+        <a
+          href="/contatti"
+          class="inline-block mt-10 border border-white text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-white hover:text-charcoal transition-colors"
+        >
+          Parliamone
+        </a>
+      </div>
 
-  <!-- 4. FASCIA IMMAGINE -->
-  <section class="bg-gray-200 aspect-[16/9] md:aspect-[21/7] overflow-hidden">
-    {
-      fascia ? (
-        <Image
-          src={fascia}
-          alt="Una persona serena al lavoro con il proprio laptop"
-          widths={[640, 1280, 1920]}
-          sizes="100vw"
-          class="w-full h-full object-cover"
-        />
-      ) : (
-        <Placeholder label="foto persona serena con laptop (servizi-patrimonio.jpg)" class="w-full h-full border-0" />
-      )
-    }
+      <div class="relative bg-gray-200 aspect-[16/9] md:aspect-[21/7] lg:aspect-auto lg:h-[540px] lg:col-start-5 lg:col-span-8 lg:row-start-1 overflow-hidden">
+        {
+          fascia ? (
+            <Image
+              src={fascia}
+              alt="Una persona serena al lavoro con il proprio laptop"
+              widths={[640, 1280, 1920]}
+              sizes="(min-width: 1024px) 66vw, 100vw"
+              class="w-full h-full object-cover"
+            />
+          ) : (
+            <Placeholder label="foto persona serena con laptop (servizi-patrimonio.jpg)" class="w-full h-full border-0 lg:justify-end lg:pr-10" />
+          )
+        }
+      </div>
+    </div>
   </section>
 
   <!-- 5. CONSULENZA PATRIMONIALE -->

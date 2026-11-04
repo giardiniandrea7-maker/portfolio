@@ -11,12 +11,12 @@ import { getPermalink } from '~/utils/permalinks';
 
 const posts = await findLatestPosts({ count: 2 });
 
-const fideuram = findAssetImage('fideuram-logo.svg');
+const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
 
 const social = [
-  { label: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
-  { label: 'LinkedIn', icon: 'tabler:brand-linkedin', href: siteContacts.linkedin },
-  { label: 'Instagram', icon: 'tabler:brand-instagram', href: siteContacts.instagram },
+  { label: 'WhatsApp', text: 'Scrivimi su WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
+  { label: 'LinkedIn', text: 'Seguimi su LinkedIn', icon: 'tabler:brand-linkedin', href: siteContacts.linkedin },
+  { label: 'Instagram', text: 'Seguimi su Instagram', icon: 'tabler:brand-instagram', href: siteContacts.instagram },
 ];
 
 const pagineUtili = [
@@ -34,16 +34,23 @@ const blogItems = await Promise.all(
 );
 
 const colTitle = 'uppercase tracking-[0.15em] text-xs font-semibold text-charcoal mb-5';
-const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
+const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
 ---
 
 <!-- Fascia social -->
-<section class="bg-ochre">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 py-5 flex justify-end gap-5">
+<section class="bg-sand">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-5 flex justify-end gap-5 lg:gap-10">
     {
       social.map((s) => (
-        <a href={s.href} target="_blank" rel="noopener" aria-label={s.label} class="text-charcoal hover:text-white transition-colors">
-          <Icon name={s.icon} class="w-7 h-7" />
+        <a
+          href={s.href}
+          target="_blank"
+          rel="noopener"
+          aria-label={s.label}
+          class="group flex items-center gap-2 text-charcoal hover:text-brand-dark transition-colors"
+        >
+          <Icon name={s.icon} class="w-7 h-7 lg:w-5 lg:h-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
+          <span class="hidden lg:inline text-xs uppercase tracking-[0.15em] font-medium">{s.text}</span>
         </a>
       ))
     }
@@ -74,7 +81,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
         <div>
           <dt class="font-semibold mb-1">Telefono</dt>
           <dd>
-            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
+            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-brand transition-colors">
               Mostra numero di telefono
             </button>
             <a href={siteContacts.phoneHref} class={linkClass} hidden>{siteContacts.phone}</a>
@@ -83,7 +90,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
         <div>
           <dt class="font-semibold mb-1">Email</dt>
           <dd>
-            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
+            <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-brand transition-colors">
               Mostra indirizzo email
             </button>
             <a href={`mailto:${siteContacts.email}`} class={`${linkClass} break-all`} hidden>{siteContacts.email}</a>
@@ -141,7 +148,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
                     />
                   )}
                 </span>
-                <span class="text-sm text-charcoal leading-snug line-clamp-3 group-hover:text-sage transition-colors">
+                <span class="text-sm text-charcoal leading-snug line-clamp-3 group-hover:text-brand transition-colors">
                   {post.title}
                 </span>
               </a>
@@ -154,8 +161,8 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
 </footer>
 
 <!-- Disclaimer -->
-<section class="bg-ochre-dark">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-12 text-charcoal">
+<section class="bg-brand-dark">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-12 text-white/75">
     <p class="text-xs md:text-sm leading-relaxed max-w-4xl">
       Le informazioni contenute nel presente sito, curate da Andrea Giardini, hanno finalità esclusivamente informative
       e non costituiscono raccomandazioni personalizzate né ricerca in materia di investimenti. Prima di qualsiasi
@@ -164,10 +171,10 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
     </p>
     <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       {
-        fideuram ? (
-          <img src={fideuram.src} alt="Fideuram" class="h-7 w-auto self-start" />
+        fideuramWhite ? (
+          <img src={fideuramWhite.src} alt="Fideuram" class="h-7 w-auto self-start" />
         ) : (
-          <Placeholder label="logo Fideuram" class="h-9 w-36" />
+          <Placeholder label="logo Fideuram bianco" dark class="h-9 w-36" />
         )
       }
       <p class="text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
@@ -181,7 +188,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
   target="_blank"
   rel="noopener"
   aria-label="Scrivimi su WhatsApp"
-  class="fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-sage text-white shadow-lg flex items-center justify-center hover:bg-sage/90 transition-colors"
+  class="fixed bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-brand text-white shadow-lg flex items-center justify-center hover:bg-brand/90 transition-colors"
 >
   <Icon name="tabler:brand-whatsapp" class="w-7 h-7" />
 </a>

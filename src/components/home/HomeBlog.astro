@@ -32,7 +32,7 @@ const cards = await Promise.all(
       {
         cards.map(({ post, image, href }) => (
           <li class="snap-start shrink-0 w-[85%] sm:w-[calc(50%-0.75rem)] lg:w-[calc((100%-3rem)/3)]">
-            <article class="bg-white h-full flex flex-col">
+            <article class="group bg-white h-full flex flex-col transition-shadow duration-300 hover:shadow-[0_22px_45px_-28px_rgba(0,40,22,0.45)]">
               <a href={href} class="block aspect-video bg-gray-200 overflow-hidden" tabindex="-1" aria-hidden="true">
                 {image && (
                   <Image
@@ -45,13 +45,13 @@ const cards = await Promise.all(
                     layout="cover"
                     loading="lazy"
                     decoding="async"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   />
                 )}
               </a>
               <div class="flex flex-col flex-1 p-5 md:p-6">
                 <h3 class="font-sans text-base md:text-lg font-semibold tracking-normal text-charcoal leading-snug line-clamp-3">
-                  <a href={href} class="hover:text-sage transition-colors">
+                  <a href={href} class="hover:text-brand transition-colors">
                     {post.title}
                   </a>
                 </h3>
@@ -61,7 +61,7 @@ const cards = await Promise.all(
                 <div class="mt-auto pt-6 text-right">
                   <a
                     href={href}
-                    class="inline-block uppercase tracking-[0.15em] text-xs font-semibold text-charcoal border-b-[3px] border-sage pb-1 hover:text-sage transition-colors"
+                    class="inline-block uppercase tracking-[0.15em] text-xs font-semibold text-charcoal border-b-[3px] border-ember pb-1 hover:text-brand transition-colors"
                   >
                     Leggi di più
                   </a>
@@ -78,7 +78,7 @@ const cards = await Promise.all(
         type="button"
         data-carousel-prev
         aria-label="Articolo precedente"
-        class="w-11 h-11 bg-ivory text-charcoal flex items-center justify-center hover:bg-ochre/40 transition-colors"
+        class="w-11 h-11 bg-ivory text-charcoal flex items-center justify-center hover:bg-ember-light transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
       </button>
@@ -86,7 +86,7 @@ const cards = await Promise.all(
         type="button"
         data-carousel-next
         aria-label="Articolo successivo"
-        class="w-11 h-11 bg-ivory text-charcoal flex items-center justify-center hover:bg-ochre/40 transition-colors"
+        class="w-11 h-11 bg-ivory text-charcoal flex items-center justify-center hover:bg-ember-light transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
       </button>

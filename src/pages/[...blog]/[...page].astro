@@ -9,6 +9,7 @@ import FormField from '~/components/site/FormField.astro';
 import Web3Form from '~/components/site/Web3Form.astro';
 
 import { blogListRobots, fetchPosts, getStaticPathsBlogList } from '~/utils/blog';
+import { getBlogPermalink } from '~/utils/permalinks';
 
 export const prerender = true;
 
@@ -23,6 +24,14 @@ const currentPage = page.currentPage ?? 1;
 
 // Tutti gli articoli, per la ricerca client-side su ogni pagina
 const allPosts = await fetchPosts();
+
+// Numeri di pagina: prima, ultima e le vicine alla corrente, con puntini per i salti
+const blogBase = getBlogPermalink().replace(/\/$/, '');
+const pageNumbers: Array<number | null> = [];
+for (let n = 1; n <= page.lastPage; n++) {
+  if (n === 1 || n === page.lastPage || Math.abs(n - currentPage) <= 1) pageNumbers.push(n);
+  else if (pageNumbers[pageNumbers.length - 1] !== null) pageNumbers.push(null);
+}
 
 const metadata = {
   title: currentPage > 1 ? `Finanza in pillole — Pagina ${currentPage} | Andrea Giardini` : 'Finanza in pillole | Andrea Giardini',
@@ -48,7 +57,7 @@ const argomenti = [
 ];
 const modalita = ['Via email', 'Con una telefonata', 'In videochiamata', 'Di persona'];
 
-const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center hover:bg-ochre/40 transition-colors';
+const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center hover:bg-ember-light transition-colors';
 ---
 
 <SiteLayout metadata={metadata}>
@@ -60,7 +69,7 @@ const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center
         Una raccolta di approfondimenti per spiegare economia e finanza in modo semplice e aiutarti a scegliere con più
         consapevolezza.
       </p>
-      <a href="#chiedi" class="inline-block mt-8 text-white underline underline-offset-4 hover:text-ochre transition-colors">
+      <a href="#chiedi" class="inline-block mt-8 text-white underline underline-offset-4 hover:text-ember transition-colors">
         Hai una domanda? Chiedimi un approfondimento ↓
       </a>
     </div>
@@ -76,10 +85,11 @@ const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center
           type="search"
           autocomplete="off"
           placeholder="Scrivi un argomento o una parola chiave"
-          class="flex-1 min-w-0 bg-white text-charcoal placeholder:text-gray-400 px-4 md:px-5 py-4 text-base border-0 focus:outline-none focus:ring-2 focus:ring-sage"
+          class="flex-1 min-w-0 bg-white text-charcoal placeholder:text-gray-400 px-4 md:px-5 py-4 text-base border-0 focus:outline-none focus:ring-2 focus:ring-brand"
         />
-        <button type="submit" aria-label="Cerca" class="w-14 shrink-0 bg-white border-l border-gray-200 text-charcoal flex items-center justify-center hover:text-sage">
-          <Icon name="tabler:search" class="w-6 h-6" />
+        <button type="submit" aria-label="Cerca" class="w-14 lg:w-auto lg:px-8 shrink-0 bg-white border-l border-gray-200 text-charcoal flex items-center justify-center gap-2 hover:text-brand transition-colors">
+          <Icon name="tabler:search" class="w-6 h-6 lg:w-5 lg:h-5" />
+          <span class="hidden lg:inline text-xs uppercase tracking-[0.15em]">Cerca</span>
         </button>
       </form>
     </div>
@@ -88,15 +98,15 @@ const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center
   <!-- 3. ARTICOLI -->
   <section class="bg-ivory py-14 md:py-20">
     <div class="max-w-6xl mx-auto px-4 md:px-8">
-      <ul data-blog-page class="[&:not([hidden])]:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {page.data.map((post) => <PostCard post={post} />)}
+      <ul data-blog-page class="reveal-stagger [&:not([hidden])]:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {page.data.map((post, i) => <PostCard post={post} featured={i === 0 && currentPage === 1} />)}
       </ul>
 
       <ul data-blog-results class="[&:not([hidden])]:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" hidden></ul>
 
       <p data-blog-empty class="text-center text-base md:text-lg text-charcoal py-10" hidden>
         Questo argomento è perfetto per un nuovo approfondimento.
-        <a href="#chiedi" class="underline underline-offset-4 text-sage">Chiedimelo qui sotto.</a>
+        <a href="#chiedi" class="underline underline-offset-4 text-brand">Chiedimelo qui sotto.</a>
       </p>
 
       {
@@ -120,7 +130,27 @@ const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center
                 <Icon name="tabler:chevron-right" class="w-5 h-5" />
               </span>
             )}
-            <span class="ml-2 text-sm text-charcoal/70">
+            <ol class="hidden sm:flex items-center gap-2 ml-2">
+              {pageNumbers.map((n) =>
+                n === null ? (
+                  <li class="px-1 text-charcoal/50" aria-hidden="true">…</li>
+                ) : (
+                  <li>
+                    <a
+                      href={n === 1 ? blogBase : `${blogBase}/${n}`}
+                      aria-current={n === page.currentPage ? 'page' : undefined}
+                      class:list={[
+                        'w-11 h-11 rounded-full flex items-center justify-center text-sm transition-colors',
+                        n === page.currentPage ? 'bg-brand text-white' : 'bg-white text-charcoal hover:bg-ember-light',
+                      ]}
+                    >
+                      {n}
+                    </a>
+                  </li>
+                )
+              )}
+            </ol>
+            <span class="sm:hidden ml-2 text-sm text-charcoal/70">
               Pagina {page.currentPage} di {page.lastPage}
             </span>
           </nav>
@@ -165,7 +195,7 @@ const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center
         />
         <FormField as="select" name="modalita_spiegazione" label="Come preferisci la spiegazione?" options={modalita} />
         <label class="flex items-start gap-3 text-sm leading-relaxed cursor-pointer">
-          <input type="checkbox" name="consenso_articolo" value="sì" class="mt-1 w-4 h-4 accent-[#4A5D4F] shrink-0" />
+          <input type="checkbox" name="consenso_articolo" value="sì" class="mt-1 w-4 h-4 accent-[#006937] shrink-0" />
           <span>Puoi trattare l'argomento in forma anonima in un articolo del blog.</span>
         </label>
 

@@ -65,7 +65,7 @@ const metadata = merge(
     }
 
     <header class="max-w-prose mx-auto px-4 md:px-0 pt-12 md:pt-16">
-      <a href="/blog" class="text-xs uppercase tracking-[0.15em] text-sage hover:text-charcoal transition-colors">
+      <a href="/blog" class="text-xs uppercase tracking-[0.15em] text-brand hover:text-charcoal transition-colors">
         ‹ Finanza in pillole
       </a>
       <h1 class="mt-6 font-sans font-light uppercase tracking-[0.08em] text-2xl md:text-4xl leading-snug text-charcoal">
@@ -78,7 +78,7 @@ const metadata = merge(
     </header>
 
     <div
-      class="max-w-prose mx-auto px-4 md:px-0 py-10 md:py-14 prose prose-lg text-charcoal prose-headings:font-sans prose-headings:font-semibold prose-headings:tracking-normal prose-headings:text-charcoal prose-a:text-sage prose-strong:text-charcoal prose-img:rounded-[6px]"
+      class="max-w-prose mx-auto px-4 md:px-0 py-10 md:py-14 prose prose-lg text-charcoal prose-headings:font-sans prose-headings:font-semibold prose-headings:tracking-normal prose-headings:text-charcoal prose-a:text-brand prose-strong:text-charcoal prose-img:rounded-[6px]"
     >
       {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
     </div>
@@ -88,7 +88,7 @@ const metadata = merge(
         <p class="font-sans font-light text-xl md:text-2xl text-charcoal">Vuoi approfondire questo tema?</p>
         <a
           href="/blog#chiedi"
-          class="inline-block mt-6 bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-8 hover:bg-sage/90 transition-colors"
+          class="inline-block mt-6 bg-brand text-white uppercase tracking-[0.15em] text-sm py-4 px-8 hover:bg-brand/90 transition-colors"
         >
           Chiedimi una spiegazione
         </a>

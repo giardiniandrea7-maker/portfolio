@@ -32,7 +32,7 @@ const documenti = [
 
   <section class="bg-white py-12 md:py-16">
     <div
-      class="max-w-prose mx-auto px-4 md:px-0 prose text-charcoal prose-headings:font-sans prose-headings:font-medium prose-headings:uppercase prose-headings:tracking-[0.12em] prose-headings:text-charcoal prose-h2:text-base prose-h2:md:text-lg prose-h3:text-sm prose-a:text-sage prose-strong:text-charcoal prose-table:text-sm prose-th:text-left"
+      class="max-w-prose mx-auto px-4 md:px-0 prose text-charcoal prose-headings:font-sans prose-headings:font-medium prose-headings:uppercase prose-headings:tracking-[0.12em] prose-headings:text-charcoal prose-h2:text-base prose-h2:md:text-lg prose-h3:text-sm prose-a:text-brand prose-strong:text-charcoal prose-table:text-sm prose-th:text-left"
     >
       <slot />
     </div>
@@ -42,12 +42,12 @@ const documenti = [
     <div class="max-w-prose mx-auto px-4 md:px-0 flex flex-wrap gap-x-8 gap-y-3">
       {
         documenti.map((d) => (
-          <a href={d.href} class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-sage pb-1 hover:text-sage">
+          <a href={d.href} class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-brand pb-1 hover:text-brand">
             {d.text}
           </a>
         ))
       }
-      <button type="button" data-cookie-settings class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-sage pb-1 hover:text-sage">
+      <button type="button" data-cookie-settings class="text-sm uppercase tracking-[0.12em] text-charcoal border-b-2 border-brand pb-1 hover:text-brand">
         Rivedi il consenso cookie
       </button>
     </div>
