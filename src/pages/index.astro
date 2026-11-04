@@ -1,16 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-
 import SiteLayout from '~/components/site/SiteLayout.astro';
 import HomeHero from '~/components/home/HomeHero.astro';
 import HomeCertificazioni from '~/components/home/HomeCertificazioni.astro';
 import HomeSpecializzazioni from '~/components/home/HomeSpecializzazioni.astro';
 import HomeBlog from '~/components/home/HomeBlog.astro';
-import Placeholder from '~/components/site/Placeholder.astro';
 import SectionTitle from '~/components/site/SectionTitle.astro';
 
 import { findLatestPosts } from '~/utils/blog';
-import { findAssetImage } from '~/utils/home-assets';
 
 const metadata = {
   title: 'Andrea Giardini — Consulente Finanziario',
@@ -20,7 +16,6 @@ const metadata = {
 };
 
 const latestPosts = await findLatestPosts({ count: 3 });
-const fascia = findAssetImage('fascia-consulenza.jpg');
 ---
 
 <SiteLayout metadata={metadata}>
@@ -48,27 +43,10 @@ const fascia = findAssetImage('fascia-consulenza.jpg');
   <!-- 4. LE MIE CERTIFICAZIONI -->
   <HomeCertificazioni />
 
-  <!-- 5. FASCIA IMMAGINE -->
-  <section class="bg-gray-200 aspect-[16/9] md:aspect-[21/7] overflow-hidden">
-    {
-      fascia ? (
-        <Image
-          src={fascia}
-          alt="Andrea Giardini durante un incontro di consulenza con un cliente"
-          widths={[640, 1280, 1920]}
-          sizes="100vw"
-          class="w-full h-full object-cover"
-        />
-      ) : (
-        <Placeholder label="foto consulente + cliente (fascia-consulenza.jpg)" class="w-full h-full border-0" />
-      )
-    }
-  </section>
-
-  <!-- 6. LE MIE AREE DI SPECIALIZZAZIONE -->
+  <!-- 5. LE MIE AREE DI SPECIALIZZAZIONE -->
   <HomeSpecializzazioni />
 
-  <!-- 7. ULTIME NOTIZIE DAL BLOG -->
+  <!-- 6. ULTIME NOTIZIE DAL BLOG -->
   <HomeBlog posts={latestPosts} />
 </SiteLayout>
 

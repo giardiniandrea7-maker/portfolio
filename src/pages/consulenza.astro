@@ -1,7 +1,4 @@
 ---
-import fs from 'node:fs';
-import path from 'node:path';
-
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 
@@ -55,19 +52,6 @@ const modalita = [
 ];
 
 const ovunque = findAssetImage('consulenza-ovunque.jpg');
-const piattaforma = findAssetImage('piattaforma-fideuram.png');
-
-// Loghi case di gestione: tutti i file presenti in public/images/case-gestione/,
-// altrimenti 8 segnaposto.
-const caseDir = path.join(process.cwd(), 'public/images/case-gestione');
-const caseLoghi = fs.existsSync(caseDir)
-  ? fs
-      .readdirSync(caseDir)
-      .filter((f) => /\.(svg|png|jpe?g|webp)$/i.test(f))
-      .sort()
-      .map((f) => ({ src: `/images/case-gestione/${f}`, alt: path.parse(f).name.replace(/[-_]/g, ' ') }))
-  : [];
-const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
 ---
 
 <SiteLayout metadata={metadata}>
@@ -147,58 +131,9 @@ const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
       <div class="mt-14 md:mt-20">
         <PillarGrid items={pilastriModello} circleColor="ivory" />
       </div>
-      <div class="reveal mt-16 md:mt-24 flex justify-center">
-        {
-          piattaforma ? (
-            <Image
-              src={piattaforma}
-              alt="La piattaforma digitale Fideuram"
-              widths={[480, 960]}
-              sizes="(max-width: 768px) 90vw, 720px"
-              class="w-full max-w-3xl h-auto shadow-[0_30px_60px_-30px_rgba(0,40,22,0.45)]"
-            />
-          ) : (
-            <Placeholder label="screenshot piattaforma-fideuram.png" class="w-full max-w-3xl aspect-video bg-white shadow-lg" />
-          )
-        }
-      </div>
     </div>
   </section>
 
-  <!-- 5. PER TE LA PIÙ AMPIA SCELTA -->
-  <section class="bg-linen pb-16 md:pb-24">
-    <div class="max-w-6xl mx-auto px-4 md:px-8">
-      <div class="max-w-3xl mx-auto text-center">
-        <SectionTitle size="lg" class="mb-8">Per te<br />la più ampia<br />scelta.</SectionTitle>
-        <p class="text-base md:text-lg text-charcoal leading-relaxed">
-          [TODO: numero] case di gestione e [TODO: numero] soluzioni tra fondi e Sicav, con un modello di servizio di
-          alta qualità.
-        </p>
-      </div>
-      <ul class="reveal-stagger mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-        {
-          caseLoghi.map((logo) => (
-            <li class="bg-white h-24 md:h-28 flex items-center justify-center p-4">
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                loading="lazy"
-                class="max-h-full max-w-full grayscale opacity-70 hover:opacity-100 transition-opacity"
-              />
-            </li>
-          ))
-        }
-        {
-          Array.from({ length: segnapostoCase }, (_, i) => (
-            <li class="bg-white h-24 md:h-28 flex items-center justify-center p-4 opacity-70 hover:opacity-100 transition-opacity">
-              <Placeholder label={`logo casa di gestione ${i + 1}`} class="w-full h-full" />
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <!-- 6. FASCIA CTA -->
+  <!-- 5. FASCIA CTA -->
   <CtaBand />
 </SiteLayout>
