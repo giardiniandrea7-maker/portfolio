@@ -22,7 +22,7 @@ export const siteMenuLinks = [
   { text: 'Consulenza', href: '/consulenza' },
   { text: 'Servizi', href: '/servizi' },
   { text: 'Blog', href: '/blog' },
-  { text: 'Contattami', href: '/#contatti' },
+  { text: 'Contattami', href: '/contatti' },
 ];
 
 export const siteContacts = {
@@ -33,6 +33,14 @@ export const siteContacts = {
   linkedin: '#', // [TODO: URL profilo LinkedIn]
   instagram: 'https://www.instagram.com/andreagiardini.finanza/',
   areaClientiFideuram: '#', // [TODO: URL Area clienti Fideuram]
+};
+
+// Ufficio: usato da footer, mappa e blocco ufficio di /contatti.
+// mapsQuery = indirizzo completo per Google Maps (vuoto finché manca l'indirizzo).
+export const siteOffice = {
+  city: '[TODO: città]',
+  address: '[TODO: indirizzo]',
+  mapsQuery: '', // [TODO: es. "Via Roma 1, 20121 Milano"]
 };
 
 export const footerData = {

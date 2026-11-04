@@ -1,0 +1,66 @@
+---
+// Campo di form unico (input, select, textarea) per i form Web3Forms del sito.
+import type { HTMLAttributes } from 'astro/types';
+
+export interface Props {
+  name: string;
+  label: string;
+  as?: 'input' | 'select' | 'textarea';
+  type?: 'text' | 'email' | 'tel';
+  required?: boolean;
+  placeholder?: string;
+  autocomplete?: HTMLAttributes<'input'>['autocomplete'];
+  options?: Array<string>;
+  rows?: number;
+  // Etichetta chiara per i form su sfondo scuro
+  dark?: boolean;
+  class?: string;
+}
+
+const {
+  name,
+  label,
+  as = 'input',
+  type = 'text',
+  required = false,
+  placeholder,
+  autocomplete,
+  options = [],
+  rows = 5,
+  dark = false,
+  class: className = '',
+} = Astro.props;
+
+const id = `f-${name}-${Math.random().toString(36).slice(2, 7)}`;
+const field =
+  'block w-full bg-white text-charcoal border border-gray-300 rounded-[6px] px-4 py-3.5 text-base placeholder:text-gray-400 focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage transition-colors';
+---
+
+<div class={className}>
+  <label for={id} class:list={['block mb-2 text-sm', dark ? 'text-white' : 'text-charcoal']}>
+    {label}
+    {required && <span aria-hidden="true"> *</span>}
+  </label>
+  {
+    as === 'select' ? (
+      <select id={id} name={name} required={required} class:list={[field, 'appearance-auto']}>
+        <option value="">{placeholder ?? 'Seleziona'}</option>
+        {options.map((o) => (
+          <option value={o}>{o}</option>
+        ))}
+      </select>
+    ) : as === 'textarea' ? (
+      <textarea id={id} name={name} rows={rows} required={required} placeholder={placeholder} class={field} />
+    ) : (
+      <input
+        id={id}
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        autocomplete={autocomplete}
+        class={field}
+      />
+    )
+  }
+</div>

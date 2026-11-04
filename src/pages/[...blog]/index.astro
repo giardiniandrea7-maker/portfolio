@@ -3,15 +3,14 @@ import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 
 import merge from 'lodash.merge';
 import type { ImageMetadata } from 'astro';
-import Layout from '~/layouts/PageLayout.astro';
-import SinglePost from '~/components/blog/SinglePost.astro';
-import ToBlogLink from '~/components/blog/ToBlogLink.astro';
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import Image from '~/components/common/Image.astro';
 
 import { getCanonical, getPermalink } from '~/utils/permalinks';
 import { getStaticPathsBlogPost, blogPostRobots } from '~/utils/blog';
 import { findImage } from '~/utils/images';
+import { getFormattedDate } from '~/utils/utils';
 import type { MetaData } from '~/types';
-import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 
 export const prerender = true;
 
@@ -45,10 +44,55 @@ const metadata = merge(
 ) as MetaData;
 ---
 
-<Layout metadata={metadata}>
-  <SinglePost post={{ ...post, image: image }} url={url}>
-    {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
-  </SinglePost>
-  <ToBlogLink />
-  <RelatedPosts post={post} />
-</Layout>
+<SiteLayout metadata={metadata}>
+  <article class="bg-white">
+    {
+      image && (
+        <div class="bg-gray-200 aspect-[16/9] md:aspect-[21/8] overflow-hidden">
+          <Image
+            src={image}
+            alt={post.title}
+            widths={[640, 1280, 1920]}
+            sizes="100vw"
+            width={1280}
+            aspectRatio="21:8"
+            layout="cover"
+            loading="eager"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )
+    }
+
+    <header class="max-w-prose mx-auto px-4 md:px-0 pt-12 md:pt-16">
+      <a href="/blog" class="text-xs uppercase tracking-[0.15em] text-sage hover:text-charcoal transition-colors">
+        ‹ Finanza in pillole
+      </a>
+      <h1 class="mt-6 font-sans font-light uppercase tracking-[0.08em] text-2xl md:text-4xl leading-snug text-charcoal">
+        {post.title}
+      </h1>
+      <p class="mt-4 text-sm text-charcoal/60">
+        <time datetime={post.publishDate.toISOString()}>{getFormattedDate(post.publishDate)}</time>
+        {post.readingTime && <span> · {post.readingTime} min di lettura</span>}
+      </p>
+    </header>
+
+    <div
+      class="max-w-prose mx-auto px-4 md:px-0 py-10 md:py-14 prose prose-lg text-charcoal prose-headings:font-sans prose-headings:font-semibold prose-headings:tracking-normal prose-headings:text-charcoal prose-a:text-sage prose-strong:text-charcoal prose-img:rounded-[6px]"
+    >
+      {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
+    </div>
+
+    <aside class="max-w-prose mx-auto px-4 md:px-0 pb-16 md:pb-24">
+      <div class="bg-ivory px-6 py-10 md:px-10 text-center">
+        <p class="font-sans font-light text-xl md:text-2xl text-charcoal">Vuoi approfondire questo tema?</p>
+        <a
+          href="/blog#chiedi"
+          class="inline-block mt-6 bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-8 hover:bg-sage/90 transition-colors"
+        >
+          Chiedimi una spiegazione
+        </a>
+      </div>
+    </aside>
+  </article>
+</SiteLayout>

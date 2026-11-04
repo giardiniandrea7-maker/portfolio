@@ -17,7 +17,7 @@ export default {
         ochre: { DEFAULT: '#D4A574', dark: '#B98A58' },
         ivory: '#F5F1E8',
         linen: '#FAF8F3',
-        charcoal: '#2C2C2A',
+        charcoal: { DEFAULT: '#2C2C2A', light: '#3D3D3B' },
         'emerald-brand': '#00A652',
       },
       fontFamily: {

@@ -1,0 +1,95 @@
+---
+// Form inviato con Web3Forms (sito statico, nessun backend).
+// La chiave arriva da PUBLIC_WEB3FORMS_KEY (.env in locale, variabile d'ambiente su Cloudflare).
+// Comprende honeypot, checkbox privacy, stato invio, conferma inline ed errore con invito a WhatsApp.
+import { siteContacts } from '~/navigation';
+
+export interface Props {
+  id: string;
+  subject: string;
+  successMessage: string;
+  submitLabel: string;
+  submitAlign?: 'center' | 'right';
+  // Nomi dei campi di cui almeno uno va compilato (es. ['email', 'telefono'])
+  requireOneOf?: Array<string>;
+  requireOneMessage?: string;
+  dark?: boolean;
+}
+
+const {
+  id,
+  subject,
+  successMessage,
+  submitLabel,
+  submitAlign = 'center',
+  requireOneOf = [],
+  requireOneMessage = 'Lasciami almeno un recapito',
+  dark = false,
+} = Astro.props;
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const text = dark ? 'text-white' : 'text-charcoal';
+---
+
+<div data-web3form-root class={text}>
+  <form
+    id={id}
+    data-web3form
+    data-require-one={requireOneOf.join(',')}
+    data-require-one-message={requireOneMessage}
+    novalidate
+    class="space-y-5"
+  >
+    <input type="hidden" name="access_key" value={accessKey} />
+    <input type="hidden" name="subject" value={subject} />
+    <input type="hidden" name="from_name" value="giardiniconsulenza.it" />
+    <!-- Honeypot anti-spam: resta vuoto per le persone -->
+    <input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+    <slot />
+
+    <label class="flex items-start gap-3 text-sm leading-relaxed cursor-pointer">
+      <input type="checkbox" name="privacy" value="accettata" required class="mt-1 w-4 h-4 accent-[#4A5D4F] shrink-0" />
+      <span>
+        Ho letto l'<a href="/privacy" target="_blank" class="underline underline-offset-4">informativa privacy</a> e acconsento
+        al trattamento dei miei dati. *
+      </span>
+    </label>
+
+    <p data-require-one-error class="text-sm font-semibold" role="alert" hidden>{requireOneMessage}</p>
+
+    <div
+      data-form-error
+      role="alert"
+      hidden
+      class:list={['rounded-[6px] p-4 text-sm leading-relaxed border', dark ? 'border-white/40 bg-white/10' : 'border-red-200 bg-red-50 text-red-800']}
+    >
+      L'invio richiede un nuovo tentativo. Riprova tra poco oppure scrivimi su
+      <a href={siteContacts.whatsapp} target="_blank" rel="noopener" class="underline font-semibold">WhatsApp</a>: ti
+      rispondo subito.
+    </div>
+
+    <slot name="note" />
+
+    <div class:list={['pt-2', submitAlign === 'right' ? 'text-right' : 'text-center']}>
+      <button
+        type="submit"
+        data-form-submit
+        data-label={submitLabel}
+        class="inline-block bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-sage/90 disabled:opacity-60 disabled:cursor-wait transition-colors"
+      >
+        {submitLabel}
+      </button>
+    </div>
+  </form>
+
+  <div data-form-success role="status" tabindex="-1" hidden class="text-center py-10">
+    <p class="text-lg md:text-xl font-light leading-relaxed">{successMessage}</p>
+  </div>
+</div>
+
+<script>
+  import { initWeb3Forms } from '~/scripts/web3form';
+
+  document.addEventListener('astro:page-load', initWeb3Forms);
+</script>

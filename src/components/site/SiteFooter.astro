@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
-import { siteMenuLinks, siteContacts } from '~/navigation';
+import { siteMenuLinks, siteContacts, siteOffice } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
@@ -92,8 +92,8 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
         </div>
         <div>
           <dt class="font-semibold mb-1">Ufficio</dt>
-          <dd>[TODO: città]</dd>
-          <dd>[TODO: indirizzo]</dd>
+          <dd>{siteOffice.city}</dd>
+          <dd>{siteOffice.address}</dd>
         </div>
       </dl>
     </div>

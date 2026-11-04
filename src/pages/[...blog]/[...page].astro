@@ -1,13 +1,14 @@
 ---
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+import { Icon } from 'astro-icon/components';
 
-import Layout from '~/layouts/PageLayout.astro';
-import BlogList from '~/components/blog/List.astro';
-import Headline from '~/components/blog/Headline.astro';
-import Pagination from '~/components/blog/Pagination.astro';
-// import PostTags from "~/components/blog/Tags.astro";
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
+import PostCard from '~/components/site/PostCard.astro';
+import FormField from '~/components/site/FormField.astro';
+import Web3Form from '~/components/site/Web3Form.astro';
 
-import { blogListRobots, getStaticPathsBlogList } from '~/utils/blog';
+import { blogListRobots, fetchPosts, getStaticPathsBlogList } from '~/utils/blog';
 
 export const prerender = true;
 
@@ -20,11 +21,13 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { page } = Astro.props as Props;
 const currentPage = page.currentPage ?? 1;
 
-// const allCategories = await findCategories();
-// const allTags = await findTags();
+// Tutti gli articoli, per la ricerca client-side su ogni pagina
+const allPosts = await fetchPosts();
 
 const metadata = {
-  title: `Blog${currentPage > 1 ? ` — Page ${currentPage}` : ''}`,
+  title: currentPage > 1 ? `Finanza in pillole — Pagina ${currentPage} | Andrea Giardini` : 'Finanza in pillole | Andrea Giardini',
+  ignoreTitleTemplate: true,
+  description: 'Approfondimenti semplici su economia e finanza. Chiedimi di spiegarti il concetto che ti interessa.',
   robots: {
     index: blogListRobots?.index && currentPage === 1,
     follow: blogListRobots?.follow,
@@ -33,20 +36,181 @@ const metadata = {
     type: 'blog',
   },
 };
+
+const argomenti = [
+  'Previdenza e pensione',
+  'Investimenti',
+  'Risparmio e obiettivi',
+  'Fiscalità',
+  'Protezione e assicurazioni',
+  'Mercati ed economia',
+  'Altro',
+];
+const modalita = ['Via email', 'Con una telefonata', 'In videochiamata', 'Di persona'];
+
+const arrow = 'w-11 h-11 bg-white text-charcoal flex items-center justify-center hover:bg-ochre/40 transition-colors';
 ---
 
-<Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline
-      subtitle="A statically generated blog example with news, tutorials, resources and other interesting content related to AstroWind"
-    >
-      The Blog
-    </Headline>
-    <BlogList posts={page.data} />
-    <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
-    <!--
-      <PostTags tags={allCategories} class="mb-2" title="Search by Categories:" isCategory />
-      <PostTags tags={allTags}  title="Search by Tags:" />
-    -->
+<SiteLayout metadata={metadata}>
+  <!-- 1. FINANZA IN PILLOLE -->
+  <section class="bg-charcoal-light text-white py-16 md:py-24">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+      <SectionTitle as="h1" size="lg" align="left" tone="white" class="mb-8">Finanza in pillole</SectionTitle>
+      <p class="text-base md:text-lg leading-relaxed text-white/90 max-w-2xl">
+        Una raccolta di approfondimenti per spiegare economia e finanza in modo semplice e aiutarti a scegliere con più
+        consapevolezza.
+      </p>
+      <a href="#chiedi" class="inline-block mt-8 text-white underline underline-offset-4 hover:text-ochre transition-colors">
+        Hai una domanda? Chiedimi un approfondimento ↓
+      </a>
+    </div>
   </section>
-</Layout>
+
+  <!-- 2. RICERCA -->
+  <section class="bg-charcoal py-8 md:py-10">
+    <div class="max-w-4xl mx-auto px-4 md:px-8">
+      <form role="search" data-blog-search class="flex">
+        <label for="blog-search" class="sr-only">Cerca negli articoli</label>
+        <input
+          id="blog-search"
+          type="search"
+          autocomplete="off"
+          placeholder="Scrivi un argomento o una parola chiave"
+          class="flex-1 min-w-0 bg-white text-charcoal placeholder:text-gray-400 px-4 md:px-5 py-4 text-base border-0 focus:outline-none focus:ring-2 focus:ring-sage"
+        />
+        <button type="submit" aria-label="Cerca" class="w-14 shrink-0 bg-white border-l border-gray-200 text-charcoal flex items-center justify-center hover:text-sage">
+          <Icon name="tabler:search" class="w-6 h-6" />
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 3. ARTICOLI -->
+  <section class="bg-ivory py-14 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <ul data-blog-page class="[&:not([hidden])]:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {page.data.map((post) => <PostCard post={post} />)}
+      </ul>
+
+      <ul data-blog-results class="[&:not([hidden])]:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" hidden></ul>
+
+      <p data-blog-empty class="text-center text-base md:text-lg text-charcoal py-10" hidden>
+        Questo argomento è perfetto per un nuovo approfondimento.
+        <a href="#chiedi" class="underline underline-offset-4 text-sage">Chiedimelo qui sotto.</a>
+      </p>
+
+      {
+        (page.url.prev || page.url.next) && (
+          <nav data-blog-pagination aria-label="Paginazione" class="mt-10 [&:not([hidden])]:flex items-center gap-3">
+            {page.url.prev ? (
+              <a href={page.url.prev} aria-label="Pagina precedente" class={arrow}>
+                <Icon name="tabler:chevron-left" class="w-5 h-5" />
+              </a>
+            ) : (
+              <span class:list={[arrow, 'opacity-40']} aria-hidden="true">
+                <Icon name="tabler:chevron-left" class="w-5 h-5" />
+              </span>
+            )}
+            {page.url.next ? (
+              <a href={page.url.next} aria-label="Pagina successiva" class={arrow}>
+                <Icon name="tabler:chevron-right" class="w-5 h-5" />
+              </a>
+            ) : (
+              <span class:list={[arrow, 'opacity-40']} aria-hidden="true">
+                <Icon name="tabler:chevron-right" class="w-5 h-5" />
+              </span>
+            )}
+            <span class="ml-2 text-sm text-charcoal/70">
+              Pagina {page.currentPage} di {page.lastPage}
+            </span>
+          </nav>
+        )
+      }
+
+      <!-- Indice completo per la ricerca: il template resta inerte finché non serve -->
+      <template data-blog-index>
+        {allPosts.map((post) => <PostCard post={post} />)}
+      </template>
+    </div>
+  </section>
+
+  <!-- 4. CHIEDIMI UN APPROFONDIMENTO -->
+  <section id="chiedi" class="bg-linen py-16 md:py-24 scroll-mt-16 md:scroll-mt-20">
+    <div class="max-w-2xl mx-auto px-4 md:px-8">
+      <SectionTitle size="lg" class="mb-6">Hai un dubbio? Te lo spiego io.</SectionTitle>
+      <p class="text-center text-base md:text-lg text-charcoal leading-relaxed mb-10">
+        Scegli un concetto di finanza che vuoi capire meglio. Ti preparo una spiegazione chiara, su misura per te.
+      </p>
+
+      <Web3Form
+        id="form-approfondimento"
+        subject="Richiesta approfondimento — Blog"
+        successMessage="Grazie! Ho ricevuto la tua domanda, ti rispondo a breve."
+        submitLabel="Invia la domanda"
+        requireOneOf={['email', 'telefono']}
+      >
+        <FormField name="nome" label="Nome" required autocomplete="given-name" placeholder="Il tuo nome" />
+        <div class="grid sm:grid-cols-2 gap-5">
+          <FormField name="email" type="email" label="Email" autocomplete="email" placeholder="nome@esempio.it" />
+          <FormField name="telefono" type="tel" label="Telefono" autocomplete="tel" placeholder="+39 …" />
+        </div>
+        <p class="-mt-2 text-xs text-charcoal/70">Lasciami almeno un recapito tra email e telefono.</p>
+        <FormField as="select" name="argomento" label="Di cosa vuoi parlare?" options={argomenti} />
+        <FormField
+          as="textarea"
+          name="domanda"
+          label="Cosa vorresti capire meglio?"
+          required
+          placeholder="Raccontami il concetto o il dubbio che vuoi chiarire"
+        />
+        <FormField as="select" name="modalita_spiegazione" label="Come preferisci la spiegazione?" options={modalita} />
+        <label class="flex items-start gap-3 text-sm leading-relaxed cursor-pointer">
+          <input type="checkbox" name="consenso_articolo" value="sì" class="mt-1 w-4 h-4 accent-[#4A5D4F] shrink-0" />
+          <span>Puoi trattare l'argomento in forma anonima in un articolo del blog.</span>
+        </label>
+
+        <p slot="note" class="text-xs text-charcoal/70 text-center">Le spiegazioni hanno finalità informative ed educative.</p>
+      </Web3Form>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  function initBlogSearch() {
+    const form = document.querySelector<HTMLFormElement>('[data-blog-search]');
+    const input = form?.querySelector<HTMLInputElement>('input');
+    const pageGrid = document.querySelector<HTMLElement>('[data-blog-page]');
+    const results = document.querySelector<HTMLElement>('[data-blog-results]');
+    const empty = document.querySelector<HTMLElement>('[data-blog-empty]');
+    const pagination = document.querySelector<HTMLElement>('[data-blog-pagination]');
+    const index = document.querySelector<HTMLTemplateElement>('[data-blog-index]');
+    if (!form || !input || !pageGrid || !results || !empty || !index || form.dataset.ready) return;
+    form.dataset.ready = 'true';
+
+    const cards = [...index.content.querySelectorAll<HTMLElement>('[data-post-card]')];
+
+    const run = () => {
+      const terms = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const searching = terms.length > 0;
+      pageGrid.hidden = searching;
+      if (pagination) pagination.hidden = searching;
+      results.hidden = !searching;
+      results.replaceChildren();
+      if (!searching) {
+        empty.hidden = true;
+        return;
+      }
+      const matches = cards.filter((c) => terms.every((t) => (c.dataset.search ?? '').includes(t)));
+      matches.forEach((c) => results.appendChild(c.cloneNode(true)));
+      empty.hidden = matches.length > 0;
+    };
+
+    input.addEventListener('input', run);
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      run();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initBlogSearch);
+</script>

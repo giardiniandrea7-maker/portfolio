@@ -82,7 +82,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
 
     <div class="mt-10 flex flex-col sm:flex-row gap-3 max-w-xl">
       <a
-        href="/#contatti"
+        href="/contatti"
         data-home-menu-link
         class="flex-1 text-center bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-sage/90 transition-colors"
       >
@@ -124,7 +124,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
       const path = location.pathname.replace(/\/$/, '') || '/';
       let activeHref = path === '/' ? '' : path;
       if (path === '/') {
-        for (const id of ['chi-sono', 'specializzazioni', 'contatti']) {
+        for (const id of ['chi-sono']) {
           const section = document.getElementById(id);
           if (section && section.getBoundingClientRect().top <= 120) activeHref = `/#${id}`;
         }

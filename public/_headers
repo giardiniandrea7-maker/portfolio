@@ -1,2 +1,5 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+/andrea-giardini.vcf
+  Content-Type: text/vcard; charset=utf-8
+  Content-Disposition: attachment; filename="andrea-giardini.vcf"
