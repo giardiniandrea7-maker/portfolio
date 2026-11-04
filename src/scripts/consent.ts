@@ -1,6 +1,6 @@
 // Gestione del consenso ai cookie e ai contenuti di terze parti
 // (Linee guida Garante Privacy del 10/06/2021).
-// Categorie: "necessari" (sempre attivi) e "esterni" (Google Maps, Calendly), solo dopo consenso.
+// Categorie: "necessari" (sempre attivi) e "esterni" (mappa di Google Maps), solo dopo consenso.
 // La scelta resta in localStorage per 6 mesi, poi il banner viene riproposto.
 
 export type ConsentCategory = 'esterni';

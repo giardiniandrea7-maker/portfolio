@@ -16,6 +16,8 @@ export interface Props {
   // Sotto 380px le colonne si impilano
   stackOnNarrow?: boolean;
   eager?: boolean;
+  // Da lg la colonna della foto prende le proporzioni dell'immagine: la foto si vede intera
+  fitPhoto?: boolean;
   class?: string;
 }
 
@@ -27,21 +29,28 @@ const {
   size = 'hero',
   stackOnNarrow = false,
   eager = false,
+  fitPhoto = false,
   class: className = '',
 } = Astro.props;
+
+const photoRatio = fitPhoto && image ? `${image.width} / ${image.height}` : undefined;
 ---
 
 <section
   class:list={[
     'grid',
     stackOnNarrow ? 'grid-cols-1 min-[380px]:grid-cols-2' : 'grid-cols-2',
-    size === 'hero' ? 'lg:grid-cols-[5fr_7fr] lg:h-[min(76vh,620px)]' : 'lg:h-[460px]',
+    size === 'hero'
+      ? [photoRatio ? 'lg:grid-cols-[auto_1fr]' : 'lg:grid-cols-[5fr_7fr]', 'lg:h-[min(80vh,680px)]']
+      : 'lg:h-[460px]',
     className,
   ]}
 >
   <div
+    style={photoRatio ? `--photo-ratio: ${photoRatio}` : undefined}
     class:list={[
-      'bg-gray-200 overflow-hidden lg:aspect-auto lg:h-full',
+      'bg-gray-200 overflow-hidden lg:h-full',
+      photoRatio ? 'lg:aspect-[var(--photo-ratio)]' : 'lg:aspect-auto',
       size === 'hero' ? 'aspect-[3/4] md:aspect-[4/5]' : 'aspect-[4/3] min-[380px]:aspect-auto min-[380px]:min-h-[260px]',
     ]}
   >

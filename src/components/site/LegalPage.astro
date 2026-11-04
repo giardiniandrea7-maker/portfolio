@@ -15,7 +15,7 @@ const { metadata, title, lastUpdate } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '');
 
 const documenti = [
-  { text: 'Informativa privacy', href: '/privacy' },
+  { text: 'Informativa privacy', href: '/privacy-policy' },
   { text: 'Cookie policy', href: '/cookie-policy' },
   { text: 'Note legali', href: '/note-legali' },
 ].filter((d) => d.href !== path);

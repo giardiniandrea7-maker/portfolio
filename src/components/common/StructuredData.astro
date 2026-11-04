@@ -43,34 +43,14 @@ const logoUrl = `${siteUrl}/favicon.png`;
 
 // ── Breadcrumb auto da pathname ────────────────────────────────────────────
 const SEGMENT_LABEL: Record<string, string> = {
-  'chi-sono': 'Chi sono',
+  'consulenza': 'Consulenza',
   'servizi': 'Servizi',
   'imprese': 'Imprese',
-  'consulenza': 'Consulenza',
-  'diagnosi': 'Diagnosi di portafoglio',
-  'pianificazione': 'Pianificazione finanziaria',
-  'previdenza': 'Previdenza complementare',
-  'rolling-obbligazionario': 'Rolling obbligazionario',
-  'calcolatori': 'Calcolatori',
-  'interesse-composto': 'Interesse composto',
-  'semplice-vs-composto': 'Interesse semplice vs composto',
-  'mutuo': 'Rata mutuo',
-  'isee': 'ISEE',
-  'pensione-integrativa': 'Pensione integrativa',
-  'rendita': 'Rendita',
-  'rendimento-obbligazioni': 'Rendimento obbligazioni',
-  'glossario': 'Glossario',
+  'blog': 'Blog',
   'contatti': 'Contatti',
-  'richiedi-diagnosi': 'Richiedi diagnosi',
-  'come-lavoro': 'Come lavoro',
-  'perche-scegliermi': 'Perché scegliermi',
-  'area-clienti': 'Area clienti',
-  'login': 'Login',
-  'registrazione': 'Registrazione',
-  'privacy': 'Privacy policy',
+  'privacy-policy': 'Informativa privacy',
   'cookie-policy': 'Cookie policy',
   'note-legali': 'Note legali',
-  'blog': 'Blog',
 };
 
 function humanize(seg: string): string {
@@ -109,7 +89,7 @@ const personNode = {
   jobTitle: 'Consulente Finanziario',
   description:
     "Consulente Finanziario abilitato all'offerta fuori sede, iscritto OCF n. 2965 (delibera 23/04/2026).",
-  url: `${siteUrl}/chi-sono`,
+  url: `${siteUrl}/#chi-sono`,
   image: personImage,
   telephone: '+39 351 545 6845',
   email: 'agiardini@fideuram.it',

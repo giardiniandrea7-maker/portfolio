@@ -29,11 +29,6 @@ const { metadata } = Astro.props;
 </Layout>
 
 <style is:global>
-  /* Il contatto rapido è il bottone WhatsApp: nascondo il badge Calendly */
-  .calendly-badge-widget {
-    display: none !important;
-  }
-
   /* Accessibilità: contorno visibile per la navigazione da tastiera */
   :where(a, button, input, select, textarea, summary):focus-visible {
     outline: 2px solid #E04403;

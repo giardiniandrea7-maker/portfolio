@@ -20,7 +20,7 @@ const social = [
 ];
 
 const pagineUtili = [
-  { text: 'Informativa privacy', href: '/privacy' },
+  { text: 'Informativa privacy', href: '/privacy-policy' },
   { text: 'Cookie policy', href: '/cookie-policy' },
   { text: 'Note legali', href: '/note-legali' },
 ];
@@ -126,6 +126,8 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
       </ul>
     </div>
 
+    {
+      blogItems.length > 0 && (
     <div>
       <h2 class={colTitle}>Ultime dal blog</h2>
       <ul class="space-y-4">
@@ -157,6 +159,8 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
         }
       </ul>
     </div>
+      )
+    }
   </div>
 </footer>
 

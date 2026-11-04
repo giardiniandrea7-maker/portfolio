@@ -67,49 +67,5 @@ const { language, textDirection } = I18N;
     </script>
 
     <CookieConsent />
-
-    <!-- Calendly (popup + badge "Prenota una call"): caricato solo dopo il consenso
-         ai contenuti di servizi esterni. Senza consenso i link aprono calendly.com in una nuova scheda. -->
-    <script>
-      import { onConsent } from '~/scripts/consent';
-      import { onPageLoad } from '~/scripts/page-load';
-
-      declare global {
-        interface Window {
-          Calendly?: { initBadgeWidget: (o: object) => void; initPopupWidget: (o: object) => void };
-        }
-      }
-
-      const CALENDLY_URL = 'https://calendly.com/giardiniandrea';
-
-      function initBadge() {
-        if (document.querySelector('.calendly-badge-widget') || !window.Calendly) return;
-        window.Calendly.initBadgeWidget({
-          url: CALENDLY_URL,
-          text: 'Prenota una call',
-          color: '#166963',
-          textColor: '#ffffff',
-          branding: false,
-        });
-      }
-
-      function loadCalendly() {
-        if (document.querySelector('script[data-calendly]')) return;
-        const css = document.createElement('link');
-        css.rel = 'stylesheet';
-        css.href = 'https://assets.calendly.com/assets/external/widget.css';
-        document.head.appendChild(css);
-        const js = document.createElement('script');
-        js.src = 'https://assets.calendly.com/assets/external/widget.js';
-        js.async = true;
-        js.dataset.calendly = 'true';
-        js.addEventListener('load', initBadge);
-        document.head.appendChild(js);
-      }
-
-      onConsent('esterni', loadCalendly);
-      // Dopo ogni navigazione (View Transitions) il body viene sostituito: ricreo il badge
-      onPageLoad(initBadge);
-    </script>
   </body>
 </html>
