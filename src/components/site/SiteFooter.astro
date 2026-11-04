@@ -11,7 +11,7 @@ import { getPermalink } from '~/utils/permalinks';
 
 const posts = await findLatestPosts({ count: 2 });
 
-const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
+const fideuram = findAssetImage('fideuram-logo.svg');
 
 const social = [
   { label: 'WhatsApp', text: 'Scrivimi su WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
@@ -171,10 +171,13 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
     </p>
     <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       {
-        fideuramWhite ? (
-          <img src={fideuramWhite.src} alt="Fideuram" class="h-7 w-auto self-start" />
+        fideuram ? (
+          <!-- Logo a colori su riquadro bianco: leggibile anche sul fondo scuro -->
+          <span class="inline-flex self-start bg-white rounded-[6px] px-3 py-2">
+            <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-7 w-auto" />
+          </span>
         ) : (
-          <Placeholder label="logo Fideuram bianco" dark class="h-9 w-36" />
+          <Placeholder label="logo Fideuram" dark class="h-9 w-36" />
         )
       }
       <p class="text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
