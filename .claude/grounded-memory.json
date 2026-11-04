@@ -175,6 +175,26 @@
       "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; grep -n \\\"fascia)",
       "count": 1,
       "lastSeen": 1793791908131
+    },
+    "46880da1": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; git status --sho)",
+      "count": 1,
+      "lastSeen": 1793792157537
+    },
+    "51f58448": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; grep -n \\\"DOVE R)",
+      "count": 1,
+      "lastSeen": 1793792191629
+    },
+    "5bf6832e": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
+      "count": 1,
+      "lastSeen": 1793792313405
+    },
+    "69fce369": {
+      "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
+      "count": 1,
+      "lastSeen": 1793792370003
     }
   },
   "editErrors": {}

@@ -71,21 +71,21 @@ const revealBtn =
       </section>
 
       <!-- 2. DOVE RAGGIUNGERMI -->
-      <section class="relative h-[300px] bg-gray-300 overflow-hidden">
+      <section class="relative h-[340px] md:h-[400px] bg-gray-300 overflow-hidden">
         {
           ufficio ? (
             <Image
               src={ufficio}
-              alt="L'ufficio di Andrea Giardini"
-              widths={[640, 1280, 1920]}
-              sizes="100vw"
-              class="absolute inset-0 w-full h-full object-cover"
+              alt="Andrea Giardini nel suo ufficio di Faenza"
+              widths={[640, 1200]}
+              sizes="(min-width: 1024px) 58vw, 100vw"
+              class="absolute inset-0 w-full h-full object-cover object-[50%_42%]"
             />
           ) : (
             <Placeholder label="foto contatti-ufficio.jpg" class="absolute inset-x-0 top-0 h-12 border-0" />
           )
         }
-        <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 bg-black/50 py-6">
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-black/40 py-5 md:py-6">
           <SectionTitle tone="white">Dove raggiungermi</SectionTitle>
         </div>
       </section>
