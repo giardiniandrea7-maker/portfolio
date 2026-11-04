@@ -1,0 +1,213 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import Placeholder from '~/components/site/Placeholder.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
+import Pilastri from '~/components/consulenza/Pilastri.astro';
+
+import { findAssetImage } from '~/utils/home-assets';
+
+const metadata = {
+  title: 'Consulenza | Andrea Giardini — Consulente finanziario',
+  ignoreTitleTemplate: true,
+  description:
+    'Un percorso di consulenza su misura per i tuoi obiettivi di vita: ascolto, pianificazione e relazione nel tempo.',
+};
+
+const pilastriValore = [
+  { icon: 'tabler:brain', title: 'Consapevolezza', text: 'Per definire insieme i tuoi obiettivi e le tue priorità.' },
+  {
+    icon: 'tabler:binoculars',
+    title: 'Conoscenza',
+    text: 'Per leggere lo scenario e rispondere ai cambiamenti con serenità.',
+  },
+  {
+    icon: 'tabler:chart-pie',
+    title: 'Pianificazione',
+    text: 'Per scandire tempi e traguardi secondo ciò che conta per te.',
+  },
+];
+
+const pilastriModello = [
+  {
+    icon: 'tabler:circles-relation',
+    title: 'Architettura aperta',
+    text: "Un'ampia gamma di soluzioni, del Gruppo e di primarie case internazionali. [TODO: verifica]",
+  },
+  { icon: 'tabler:world', title: 'Visione globale', text: 'Strategie costruite guardando ai mercati di tutto il mondo.' },
+  {
+    icon: 'tabler:heart-handshake',
+    title: 'Relazione nel tempo',
+    text: 'Un punto di riferimento costante, al tuo fianco in ogni fase.',
+  },
+];
+
+const modalita = [
+  { icon: 'tabler:home', label: 'A domicilio' },
+  { icon: 'tabler:device-laptop', label: 'In videochiamata' },
+  { icon: 'tabler:building', label: 'In ufficio' },
+];
+
+const ovunque = findAssetImage('consulenza-ovunque.jpg');
+const piattaforma = findAssetImage('piattaforma-fideuram.png');
+
+// Loghi case di gestione: tutti i file presenti in public/images/case-gestione/,
+// altrimenti 8 segnaposto.
+const caseDir = path.join(process.cwd(), 'public/images/case-gestione');
+const caseLoghi = fs.existsSync(caseDir)
+  ? fs
+      .readdirSync(caseDir)
+      .filter((f) => /\.(svg|png|jpe?g|webp)$/i.test(f))
+      .sort()
+      .map((f) => ({ src: `/images/case-gestione/${f}`, alt: path.parse(f).name.replace(/[-_]/g, ' ') }))
+  : [];
+const segnapostoCase = caseLoghi.length === 0 ? 8 : 0;
+---
+
+<SiteLayout metadata={metadata}>
+  <!-- 1-2. IL VALORE DELLA CONSULENZA + TRE PILASTRI -->
+  <section class="bg-ivory py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle as="h1" size="lg" class="mb-8">Il valore della consulenza</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          Come consulente finanziario Fideuram ti accompagno nella costruzione di un piano su misura per i tuoi progetti
+          di vita. Insieme individuiamo le scelte giuste per oggi, perché ogni decisione del presente dà forma al tuo
+          futuro.
+        </p>
+      </div>
+      <div class="mt-14 md:mt-20">
+        <Pilastri items={pilastriValore} circle="white" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. DISPONIBILE OVUNQUE -->
+  <section>
+    <div class="relative bg-gray-300 aspect-[4/3] md:aspect-[21/8] overflow-hidden">
+      {
+        ovunque ? (
+          <Image
+            src={ovunque}
+            alt="Incontro di consulenza"
+            widths={[640, 1280, 1920]}
+            sizes="100vw"
+            class="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <Placeholder label="foto consulenza-ovunque.jpg" class="absolute inset-x-0 top-0 h-14 border-0" />
+        )
+      }
+      <div class="absolute inset-0 bg-black/50"></div>
+      <div class="absolute inset-0 flex items-center">
+        <div class="max-w-6xl w-full mx-auto px-4 md:px-8">
+          <SectionTitle size="xl" align="left" tone="white" class="max-w-2xl">
+            La consulenza è disponibile ovunque.
+          </SectionTitle>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-charcoal text-white py-14 md:py-20">
+      <div class="max-w-6xl mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+        <p class="text-base md:text-lg leading-relaxed">
+          I consulenti finanziari iscritti all'Albo OCF e abilitati all'offerta fuori sede possono svolgere la propria
+          attività in qualsiasi luogo.
+        </p>
+        <ul class="flex flex-col gap-6">
+          {
+            modalita.map((m) => (
+              <li class="flex items-center gap-5">
+                <Icon name={m.icon} class="w-12 h-12 md:w-14 md:h-14 shrink-0 [&_*]:stroke-[1.25]" aria-hidden="true" />
+                <span class="uppercase tracking-[0.15em] text-sm md:text-base">{m.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. IL MIO MODELLO DI CONSULENZA -->
+  <section class="bg-linen py-16 md:py-24">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle tone="sage" size="lg" class="mb-8">Il mio modello di consulenza</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          Il mio lavoro parte dall'ascolto. Guardo alla tua vita nel suo insieme e costruisco con te una strategia
+          personalizzata, sostenuta dalla solidità del Gruppo Intesa Sanpaolo.
+        </p>
+      </div>
+      <div class="mt-14 md:mt-20">
+        <Pilastri items={pilastriModello} circle="ivory" />
+      </div>
+      <div class="mt-16 md:mt-24 flex justify-center">
+        {
+          piattaforma ? (
+            <Image
+              src={piattaforma}
+              alt="La piattaforma digitale Fideuram"
+              widths={[480, 960]}
+              sizes="(max-width: 768px) 90vw, 720px"
+              class="w-full max-w-3xl h-auto shadow-lg"
+            />
+          ) : (
+            <Placeholder label="screenshot piattaforma-fideuram.png" class="w-full max-w-3xl aspect-video bg-white shadow-lg" />
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PER TE LA PIÙ AMPIA SCELTA -->
+  <section class="bg-linen pb-16 md:pb-24">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <SectionTitle size="lg" class="mb-8">Per te<br />la più ampia<br />scelta.</SectionTitle>
+        <p class="text-base md:text-lg text-charcoal leading-relaxed">
+          [TODO: numero] case di gestione e [TODO: numero] soluzioni tra fondi e Sicav, con un modello di servizio di
+          alta qualità.
+        </p>
+      </div>
+      <ul class="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {
+          caseLoghi.map((logo) => (
+            <li class="bg-white h-24 md:h-28 flex items-center justify-center p-4">
+              <img
+                src={logo.src}
+                alt={logo.alt}
+                loading="lazy"
+                class="max-h-full max-w-full grayscale opacity-70 hover:opacity-100 transition-opacity"
+              />
+            </li>
+          ))
+        }
+        {
+          Array.from({ length: segnapostoCase }, (_, i) => (
+            <li class="bg-white h-24 md:h-28 flex items-center justify-center p-4 opacity-70 hover:opacity-100 transition-opacity">
+              <Placeholder label={`logo casa di gestione ${i + 1}`} class="w-full h-full" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. FASCIA CTA -->
+  <section class="bg-ivory py-16 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
+      <p class="font-sans font-light text-xl md:text-3xl text-charcoal">Parliamo dei tuoi obiettivi.</p>
+      <a
+        href="/#contatti"
+        class="inline-block mt-8 bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-10 hover:bg-sage/90 transition-colors"
+      >
+        Prenota un incontro
+      </a>
+    </div>
+  </section>
+</SiteLayout>

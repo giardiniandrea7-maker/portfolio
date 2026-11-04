@@ -1,0 +1,30 @@
+---
+// Layout delle pagine a fasce: header con menu a schermo intero, social,
+// footer (#contatti), disclaimer e bottone WhatsApp flottante.
+import Layout from '~/layouts/Layout.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+
+import type { MetaData } from '~/types';
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <SiteHeader />
+  <main>
+    <slot />
+  </main>
+  <SiteFooter />
+</Layout>
+
+<style is:global>
+  /* Il contatto rapido è il bottone WhatsApp: nascondo il badge Calendly */
+  .calendly-badge-widget {
+    display: none !important;
+  }
+</style>

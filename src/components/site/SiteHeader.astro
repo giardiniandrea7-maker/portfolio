@@ -3,7 +3,7 @@ import '@fontsource/playfair-display/400.css';
 import '@fontsource/playfair-display/600.css';
 
 import Placeholder from './Placeholder.astro';
-import { homeMenuLinks, homeContacts } from '~/navigation';
+import { siteMenuLinks, siteContacts } from '~/navigation';
 import { findAssetImage } from '~/utils/home-assets';
 
 const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
@@ -62,7 +62,7 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
   <nav class="max-w-6xl w-full mx-auto px-4 md:px-8 pt-8 md:pt-12 flex-1" aria-label="Menu">
     <ul class="flex flex-col gap-1">
       {
-        homeMenuLinks.map((link) => (
+        siteMenuLinks.map((link) => (
           <li>
             <a
               href={link.href}
@@ -82,14 +82,14 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
 
     <div class="mt-10 flex flex-col sm:flex-row gap-3 max-w-xl">
       <a
-        href="#contatti"
+        href="/#contatti"
         data-home-menu-link
         class="flex-1 text-center bg-sage text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-sage/90 transition-colors"
       >
         Prenota un incontro
       </a>
       <a
-        href={homeContacts.areaClientiFideuram}
+        href={siteContacts.areaClientiFideuram}
         class="flex-1 text-center bg-charcoal text-white uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-charcoal/90 transition-colors"
       >
         Area clienti Fideuram
@@ -118,13 +118,16 @@ const fideuramWhite = findAssetImage('fideuram-logo-white.svg');
     if (!menu || !openBtn || menu.dataset.ready) return;
     menu.dataset.ready = 'true';
 
-    // La voce attiva è quella della sezione in cui si trova l'utente
+    // Voce attiva: in home la sezione in cui si trova l'utente, altrove la pagina corrente
     const markActive = () => {
       const links = menu.querySelectorAll<HTMLAnchorElement>('nav li a');
-      let activeHref = '';
-      for (const id of ['chi-sono', 'specializzazioni', 'contatti']) {
-        const section = document.getElementById(id);
-        if (section && section.getBoundingClientRect().top <= 120) activeHref = `#${id}`;
+      const path = location.pathname.replace(/\/$/, '') || '/';
+      let activeHref = path === '/' ? '' : path;
+      if (path === '/') {
+        for (const id of ['chi-sono', 'specializzazioni', 'contatti']) {
+          const section = document.getElementById(id);
+          if (section && section.getBoundingClientRect().top <= 120) activeHref = `/#${id}`;
+        }
       }
       let marked = false;
       links.forEach((a) => {

@@ -3,24 +3,20 @@ import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
-import type { Post } from '~/types';
-import { homeMenuLinks, homeContacts } from '~/navigation';
+import { siteMenuLinks, siteContacts } from '~/navigation';
+import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
 import { getPermalink } from '~/utils/permalinks';
 
-export interface Props {
-  posts: Array<Post>;
-}
-
-const { posts } = Astro.props;
+const posts = await findLatestPosts({ count: 2 });
 
 const fideuram = findAssetImage('fideuram-logo.svg');
 
 const social = [
-  { label: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: homeContacts.whatsapp },
-  { label: 'LinkedIn', icon: 'tabler:brand-linkedin', href: homeContacts.linkedin },
-  { label: 'Instagram', icon: 'tabler:brand-instagram', href: homeContacts.instagram },
+  { label: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
+  { label: 'LinkedIn', icon: 'tabler:brand-linkedin', href: siteContacts.linkedin },
+  { label: 'Instagram', icon: 'tabler:brand-instagram', href: siteContacts.instagram },
 ];
 
 const pagineUtili = [
@@ -62,7 +58,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
       <h2 class={colTitle}>Menù</h2>
       <ul class="space-y-3">
         {
-          homeMenuLinks.map((link) => (
+          siteMenuLinks.map((link) => (
             <li>
               <a href={link.href} class={`${linkClass} uppercase tracking-[0.1em]`}>
                 {link.text}
@@ -82,7 +78,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
             <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
               Mostra numero di telefono
             </button>
-            <a href={homeContacts.phoneHref} class={linkClass} hidden>{homeContacts.phone}</a>
+            <a href={siteContacts.phoneHref} class={linkClass} hidden>{siteContacts.phone}</a>
           </dd>
         </div>
         <div>
@@ -91,7 +87,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
             <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-sage transition-colors">
               Mostra indirizzo email
             </button>
-            <a href={`mailto:${homeContacts.email}`} class={`${linkClass} break-all`} hidden>{homeContacts.email}</a>
+            <a href={`mailto:${siteContacts.email}`} class={`${linkClass} break-all`} hidden>{siteContacts.email}</a>
           </dd>
         </div>
         <div>
@@ -175,7 +171,7 @@ const linkClass = 'text-sm text-charcoal hover:text-sage transition-colors';
 
 <!-- WhatsApp flottante -->
 <a
-  href={homeContacts.whatsapp}
+  href={siteContacts.whatsapp}
   target="_blank"
   rel="noopener"
   aria-label="Scrivimi su WhatsApp"

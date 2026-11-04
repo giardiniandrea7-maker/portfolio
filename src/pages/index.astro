@@ -1,15 +1,13 @@
-﻿---
+---
 import { Image } from 'astro:assets';
 
-import Layout from '~/layouts/Layout.astro';
-import HomeHeader from '~/components/home/HomeHeader.astro';
+import SiteLayout from '~/components/site/SiteLayout.astro';
 import HomeHero from '~/components/home/HomeHero.astro';
 import HomeCertificazioni from '~/components/home/HomeCertificazioni.astro';
 import HomeSpecializzazioni from '~/components/home/HomeSpecializzazioni.astro';
 import HomeBlog from '~/components/home/HomeBlog.astro';
-import HomeFooter from '~/components/home/HomeFooter.astro';
-import Placeholder from '~/components/home/Placeholder.astro';
-import SectionTitle from '~/components/home/SectionTitle.astro';
+import Placeholder from '~/components/site/Placeholder.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
 
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
@@ -25,58 +23,45 @@ const latestPosts = await findLatestPosts({ count: 3 });
 const fascia = findAssetImage('fascia-consulenza.jpg');
 ---
 
-<Layout metadata={metadata}>
-  <HomeHeader />
+<SiteLayout metadata={metadata}>
+  <!-- 2. HERO -->
+  <HomeHero />
 
-  <main>
-    <!-- 2. HERO -->
-    <HomeHero />
+  <!-- 3. TI RACCONTO QUALCOSA DI ME -->
+  <section id="chi-sono" class="bg-white py-16 md:py-28 scroll-mt-16 md:scroll-mt-20">
+    <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
+      <SectionTitle size="lg" class="mb-8 md:mb-10">Ti racconto qualcosa di me.</SectionTitle>
+      <p class="text-base md:text-lg text-charcoal leading-relaxed">
+        Ti accompagno nella costruzione di un percorso su misura per i tuoi obiettivi di vita. Ascolto i tuoi progetti,
+        li trasformo in un piano chiaro e resto al tuo fianco in ogni fase, con attenzione, metodo e continuità.
+      </p>
+    </div>
+  </section>
 
-    <!-- 3. TI RACCONTO QUALCOSA DI ME -->
-    <section id="chi-sono" class="bg-white py-16 md:py-28 scroll-mt-16 md:scroll-mt-20">
-      <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
-        <SectionTitle size="lg" class="mb-8 md:mb-10">Ti racconto qualcosa di me.</SectionTitle>
-        <p class="text-base md:text-lg text-charcoal leading-relaxed">
-          Ti accompagno nella costruzione di un percorso su misura per i tuoi obiettivi di vita. Ascolto i tuoi progetti,
-          li trasformo in un piano chiaro e resto al tuo fianco in ogni fase, con attenzione, metodo e continuità.
-        </p>
-      </div>
-    </section>
+  <!-- 4. LE MIE CERTIFICAZIONI -->
+  <HomeCertificazioni />
 
-    <!-- 4. LE MIE CERTIFICAZIONI -->
-    <HomeCertificazioni />
+  <!-- 5. FASCIA IMMAGINE -->
+  <section class="bg-gray-200 aspect-[16/9] md:aspect-[21/7] overflow-hidden">
+    {
+      fascia ? (
+        <Image
+          src={fascia}
+          alt="Andrea Giardini durante un incontro di consulenza con un cliente"
+          widths={[640, 1280, 1920]}
+          sizes="100vw"
+          class="w-full h-full object-cover"
+        />
+      ) : (
+        <Placeholder label="foto consulente + cliente (fascia-consulenza.jpg)" class="w-full h-full border-0" />
+      )
+    }
+  </section>
 
-    <!-- 5. FASCIA IMMAGINE -->
-    <section class="bg-gray-200 aspect-[16/9] md:aspect-[21/7] overflow-hidden">
-      {
-        fascia ? (
-          <Image
-            src={fascia}
-            alt="Andrea Giardini durante un incontro di consulenza con un cliente"
-            widths={[640, 1280, 1920]}
-            sizes="100vw"
-            class="w-full h-full object-cover"
-          />
-        ) : (
-          <Placeholder label="foto consulente + cliente (fascia-consulenza.jpg)" class="w-full h-full border-0" />
-        )
-      }
-    </section>
+  <!-- 6. LE MIE AREE DI SPECIALIZZAZIONE -->
+  <HomeSpecializzazioni />
 
-    <!-- 6. LE MIE AREE DI SPECIALIZZAZIONE -->
-    <HomeSpecializzazioni />
+  <!-- 7. ULTIME NOTIZIE DAL BLOG -->
+  <HomeBlog posts={latestPosts} />
+</SiteLayout>
 
-    <!-- 7. ULTIME NOTIZIE DAL BLOG -->
-    <HomeBlog posts={latestPosts} />
-  </main>
-
-  <!-- 8-11. SOCIAL, FOOTER (#contatti), DISCLAIMER, WHATSAPP -->
-  <HomeFooter posts={latestPosts.slice(0, 2)} />
-</Layout>
-
-<style is:global>
-  /* In home il contatto rapido è il bottone WhatsApp: nascondo il badge Calendly */
-  .calendly-badge-widget {
-    display: none !important;
-  }
-</style>

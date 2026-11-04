@@ -15,16 +15,17 @@ export const headerData = {
   ],
 };
  
-// Menu della home a fasce (header a schermo intero + footer della home)
-export const homeMenuLinks = [
-  { text: 'Chi sono', href: '#chi-sono' },
-  { text: 'Consulenza', href: '#specializzazioni' },
-  { text: 'Servizi', href: '#specializzazioni' },
+// Menu delle pagine a fasce (header a schermo intero + footer condivisi).
+// Ancore assolute: funzionano da qualsiasi pagina.
+export const siteMenuLinks = [
+  { text: 'Chi sono', href: '/#chi-sono' },
+  { text: 'Consulenza', href: '/consulenza' },
+  { text: 'Servizi', href: '/#specializzazioni' },
   { text: 'Blog', href: '/blog' },
-  { text: 'Contattami', href: '#contatti' },
+  { text: 'Contattami', href: '/#contatti' },
 ];
 
-export const homeContacts = {
+export const siteContacts = {
   whatsapp: 'https://wa.me/393515456845',
   phone: '+39 351 545 6845',
   phoneHref: 'tel:+393515456845',
