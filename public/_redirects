@@ -1,0 +1,87 @@
+# Redirect 301 dalla versione vecchia del sito (Cloudflare Pages).
+# Ogni URL è presente con e senza barra finale; le sezioni intere usano /* .
+
+
+# Chi sono e pagine di presentazione
+/chi-sono /#chi-sono 301
+/chi-sono/ /#chi-sono 301
+/come-lavoro /consulenza 301
+/come-lavoro/ /consulenza 301
+/perche-scegliermi /consulenza 301
+/perche-scegliermi/ /consulenza 301
+/about /#chi-sono 301
+/about/ /#chi-sono 301
+
+# Vecchie pagine servizi
+/servizi/diagnosi /servizi#investimenti 301
+/servizi/diagnosi/ /servizi#investimenti 301
+/servizi/pianificazione /servizi 301
+/servizi/pianificazione/ /servizi 301
+/servizi/previdenza /servizi#previdenza 301
+/servizi/previdenza/ /servizi#previdenza 301
+/servizi/rolling-obbligazionario /servizi#investimenti 301
+/servizi/rolling-obbligazionario/ /servizi#investimenti 301
+/services /servizi 301
+/services/ /servizi 301
+/pricing /servizi 301
+/pricing/ /servizi 301
+
+# Contatto, prenotazione, analisi
+/richiedi-diagnosi /contatti 301
+/richiedi-diagnosi/ /contatti 301
+/contact /contatti 301
+/contact/ /contatti 301
+
+# Area clienti di prova (sostituita dall'Area clienti Fideuram)
+/area-clienti / 301
+/area-clienti/ / 301
+/login / 301
+/login/ / 301
+/registrazione / 301
+/registrazione/ / 301
+/registrazione-inviata / 301
+/registrazione-inviata/ / 301
+/email-confermata / 301
+/email-confermata/ / 301
+
+# Pagine legali
+/privacy /privacy-policy 301
+/privacy/ /privacy-policy 301
+/terms /note-legali 301
+/terms/ /note-legali 301
+
+# Risorse, strumenti e guide → blog
+/calcolatori /blog 301
+/calcolatori/ /blog 301
+/calcolatori/* /blog 301
+/glossario /blog 301
+/glossario/ /blog 301
+/glossario/* /blog 301
+
+# Articoli demo del vecchio blog e pagine di categoria/tag
+/blog/astrowind-template-in-depth /blog 301
+/blog/astrowind-template-in-depth/ /blog 301
+/blog/get-started-website-with-astro-tailwind-css /blog 301
+/blog/get-started-website-with-astro-tailwind-css/ /blog 301
+/blog/how-to-customize-astrowind-to-your-brand /blog 301
+/blog/how-to-customize-astrowind-to-your-brand/ /blog 301
+/blog/landing /blog 301
+/blog/landing/ /blog 301
+/blog/markdown-elements-demo-post /blog 301
+/blog/markdown-elements-demo-post/ /blog 301
+/blog/useful-resources-to-create-websites /blog 301
+/blog/useful-resources-to-create-websites/ /blog 301
+/categoria /blog 301
+/categoria/ /blog 301
+/categoria/* /blog 301
+/tag /blog 301
+/tag/ /blog 301
+/tag/* /blog 301
+
+# Vecchie landing del template
+/homes / 301
+/homes/ / 301
+/homes/* / 301
+/landing / 301
+/landing/ / 301
+/landing/* / 301

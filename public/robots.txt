@@ -1,8 +1,4 @@
 User-agent: *
-Disallow: /area-clienti
-Disallow: /login
-Disallow: /registrazione
-Disallow: /registrazione-inviata
-Disallow: /email-confermata
+Allow: /
 
 Sitemap: https://giardiniconsulenza.it/sitemap-index.xml

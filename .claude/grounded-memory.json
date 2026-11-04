@@ -250,6 +250,11 @@
       "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
       "count": 1,
       "lastSeen": 1793803677021
+    },
+    "fc00ce2a": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
+      "count": 1,
+      "lastSeen": 1793807973299
     }
   },
   "editErrors": {}
