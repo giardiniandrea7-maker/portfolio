@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
-import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl } from '~/navigation';
+import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
@@ -167,7 +167,7 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
       Le informazioni contenute nel presente sito, curate da Andrea Giardini, hanno finalità esclusivamente informative
       e non costituiscono raccomandazioni personalizzate né ricerca in materia di investimenti. Prima di qualsiasi
       operazione è necessario sottoscrivere l'apposito contratto e consultare la documentazione d'offerta disponibile
-      presso [TODO: società mandante] e presso i consulenti finanziari abilitati all'offerta fuori sede.
+      presso {siteMandante.name} e presso i consulenti finanziari abilitati all'offerta fuori sede.
     </p>
     <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       {

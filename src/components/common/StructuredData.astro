@@ -115,8 +115,12 @@ const personNode = {
     value: '2965',
   },
   vatID: 'IT13494670014',
-  // TODO worksFor: aggiungere Organization (rete bancaria mandante) quando
-  // si conosce il nome esatto. Vincolo legale: NON "indipendente"/"fee-only".
+  worksFor: {
+    '@type': 'FinancialService',
+    name: 'Fideuram - Intesa Sanpaolo Private Banking S.p.A.',
+    url: 'https://www.fideuram.it',
+  },
+  // Vincolo legale: NON "indipendente"/"fee-only".
   sameAs,
 };
 

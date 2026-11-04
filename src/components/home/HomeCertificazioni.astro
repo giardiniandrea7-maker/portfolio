@@ -2,6 +2,7 @@
 import SectionTitle from '~/components/site/SectionTitle.astro';
 import Placeholder from '~/components/site/Placeholder.astro';
 import { findPublicImage } from '~/utils/home-assets';
+import { siteMandante, siteRui } from '~/navigation';
 
 const certificazioni = [
   {
@@ -9,9 +10,9 @@ const certificazioni = [
     logo: findPublicImage('images/certificazioni/ocf'),
     logoClass: 'h-full w-auto',
     bullets: [
-      "Consulente finanziario abilitato all'offerta fuori sede, incaricato da [TODO: società mandante S.p.A.].",
+      `Consulente finanziario abilitato all'offerta fuori sede, incaricato da ${siteMandante.name}`,
       "Iscrizione all'Albo unico dei consulenti finanziari n. 2965.",
-      'In possesso dei requisiti di onorabilità e professionalità previsti dalla normativa.',
+      'In possesso dei requisiti di onorabilità e professionalità previsti dalla normativa (D.M. 472 dell’11/11/1998).',
     ],
     link: {
       text: 'Verifica le credenziali',
@@ -24,9 +25,10 @@ const certificazioni = [
     // Il file IVASS ha ampi margini bianchi: lo ingrandisco per compensare
     logoClass: 'h-[180%] w-auto -ml-[6%]',
     bullets: [
-      'Intermediario iscritto al RUI con numero [TODO].',
-      'Sede legale: [TODO].',
-      'Per eventuali reclami: [TODO: URL reclami].',
+      `Collaboratore di intermediario iscritto al RUI, sezione ${siteRui.section}, con numero ${siteRui.number} dal ${siteRui.since}.`,
+      `Opera per ${siteMandante.name}, iscritta in sezione ${siteMandante.ruiSection} con numero ${siteMandante.ruiNumber}.`,
+      `Sede legale: ${siteMandante.sedeLegale}.`,
+      `Per eventuali reclami: <a href="${siteMandante.reclamiUrl}" target="_blank" rel="noopener" class="underline underline-offset-4 decoration-ember">pagina reclami di Fideuram</a>.`,
     ],
     link: { text: 'Consulta il registro', href: 'https://ruipubblico.ivass.it/rui-pubblica/ng/' },
   },
@@ -65,7 +67,7 @@ const certificazioni = [
               <div class="hidden lg:flex flex-col flex-1">
                 <ul class="list-disc pl-5 space-y-3 text-[15px] text-charcoal leading-relaxed marker:text-ember">
                   {c.bullets.map((b) => (
-                    <li>{b}</li>
+                    <li set:html={b} />
                   ))}
                 </ul>
                 <div class="mt-auto pt-2">{linkEl}</div>
@@ -74,7 +76,7 @@ const certificazioni = [
               <!-- Mobile: primo punto + tendina -->
               <div class="lg:hidden">
                 <ul class="list-disc pl-5 text-sm md:text-base text-charcoal leading-relaxed marker:text-ember">
-                  <li>{first}</li>
+                  <li set:html={first} />
                 </ul>
 
                 <details class="group mt-4">
@@ -88,7 +90,7 @@ const certificazioni = [
                   </summary>
                   <ul class="list-disc pl-5 mt-4 space-y-2 text-sm md:text-base text-charcoal leading-relaxed marker:text-ember">
                     {rest.map((b) => (
-                      <li>{b}</li>
+                      <li set:html={b} />
                     ))}
                   </ul>
                   {linkEl}

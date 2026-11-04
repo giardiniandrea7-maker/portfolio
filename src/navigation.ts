@@ -36,6 +36,22 @@ export const siteContacts = {
   vatId: '13494670014',
 };
 
+// Società mandante e iscrizioni (fonte: Registro unico degli intermediari IVASS e albo OCF)
+export const siteMandante = {
+  name: 'Fideuram - Intesa Sanpaolo Private Banking S.p.A.',
+  sedeLegale: 'Piazza San Carlo 156, 10121 Torino',
+  ruiSection: 'D',
+  ruiNumber: 'D000060672',
+  reclamiUrl: 'https://www.fideuram.it/reclami-e-risoluzione-controversie/',
+};
+
+export const siteRui = {
+  number: 'E000832010',
+  section: 'E',
+  sectionLabel: 'collaboratori degli intermediari iscritti nelle sezioni A, B o D',
+  since: '01/09/2026',
+};
+
 // Ufficio: usato da footer, mappa e blocco ufficio di /contatti.
 // mapsQuery = indirizzo completo per Google Maps (vuoto finché manca l'indirizzo).
 export const siteOffice = {

@@ -1,6 +1,6 @@
 ﻿---
 import LegalPage from '~/components/site/LegalPage.astro';
-import { siteContacts, siteOffice } from '~/navigation';
+import { siteContacts, siteOffice, siteMandante } from '~/navigation';
 
 const metadata = {
   title: 'Informativa privacy | Andrea Giardini — Consulente finanziario',
@@ -29,7 +29,7 @@ const lastUpdate = '4 novembre 2026';
   </p>
   <p>
     Per i servizi di investimento, i contratti e la documentazione d'offerta, il titolare del trattamento è la società
-    mandante [TODO: ragione sociale della società mandante], che fornisce una propria informativa al momento della
+    mandante {siteMandante.name}, che fornisce una propria informativa al momento della
     sottoscrizione. Questa informativa riguarda esclusivamente i dati raccolti tramite il sito.
   </p>
 

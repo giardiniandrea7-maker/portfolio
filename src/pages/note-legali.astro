@@ -1,6 +1,6 @@
 ﻿---
 import LegalPage from '~/components/site/LegalPage.astro';
-import { siteContacts, siteOffice } from '~/navigation';
+import { siteContacts, siteOffice, siteMandante, siteRui } from '~/navigation';
 
 const metadata = {
   title: 'Note legali | Andrea Giardini — Consulente finanziario',
@@ -29,12 +29,14 @@ const lastUpdate = '4 novembre 2026';
     con delibera n. 2965 del 23 aprile 2026.
   </p>
   <p>
-    Opera su incarico di [TODO: ragione sociale della società mandante], intermediario autorizzato ai sensi del
+    Opera su incarico di {siteMandante.name}, con sede legale in {siteMandante.sedeLegale}, intermediario autorizzato ai sensi del
     D.Lgs. 58/1998 (TUF). L'iscrizione è verificabile sul
     <a href="https://www.organismocf.it/portal/web/portale-ocf/ricerca-nelle-sezioni-dell-albo" target="_blank" rel="noopener">portale OCF</a>.
   </p>
   <p>
-    Iscrizione al Registro unico degli intermediari assicurativi (RUI): [TODO: sezione e numero di iscrizione], verificabile
+    Iscrizione al Registro unico degli intermediari assicurativi (RUI): sezione {siteRui.section} ({siteRui.sectionLabel}), numero
+    {siteRui.number} dal {siteRui.since}, come collaboratore di {siteMandante.name}, iscritta in sezione
+    {siteMandante.ruiSection} con numero {siteMandante.ruiNumber}. Iscrizione verificabile
     sul <a href="https://ruipubblico.ivass.it/rui-pubblica/ng/" target="_blank" rel="noopener">registro pubblico IVASS</a>.
   </p>
 
@@ -70,7 +72,8 @@ const lastUpdate = '4 novembre 2026';
 
   <h2>7. Legge applicabile</h2>
   <p>
-    Le presenti note legali sono regolate dalla legge italiana. Per le controversie con i consumatori è competente il foro
+    Le presenti note legali sono regolate dalla legge italiana. Per reclami relativi ai servizi di investimento e assicurativi puoi rivolgerti a
+    <a href={siteMandante.reclamiUrl} target="_blank" rel="noopener">{siteMandante.name}</a>. Per le controversie con i consumatori è competente il foro
     del luogo di residenza o domicilio del consumatore, come previsto dal Codice del consumo.
   </p>
 
