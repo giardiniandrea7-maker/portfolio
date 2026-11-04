@@ -1,0 +1,32 @@
+---
+// Fascia per gli imprenditori: rimanda alla pagina /imprese.
+import SplitHero from '~/components/site/SplitHero.astro';
+import { findAssetImage } from '~/utils/home-assets';
+
+const foto = findAssetImage('imprese-home.jpg');
+---
+
+<SplitHero
+  image={foto}
+  alt="Un imprenditore nella sua azienda"
+  placeholder="foto imprenditore in azienda (imprese-home.jpg)"
+  tone="brand"
+  size="band"
+  stackOnNarrow
+>
+  <div class="reveal max-w-md lg:max-w-lg">
+    <span aria-hidden="true" class="block w-10 h-[3px] bg-ember mb-5 md:mb-8"></span>
+    <h2 class="font-sans font-light uppercase tracking-[0.15em] text-white text-lg md:text-2xl lg:text-3xl leading-snug">
+      Sei un imprenditore?
+    </h2>
+    <p class="mt-4 md:mt-6 text-sm md:text-base lg:text-lg leading-relaxed text-white/90">
+      Impresa e famiglia, in un'unica visione. Ti affianco con metodo nelle scelte che contano per la tua azienda.
+    </p>
+    <a
+      href="/imprese"
+      class="inline-block mt-6 md:mt-8 text-white uppercase tracking-[0.15em] text-xs md:text-sm border-b-2 border-white pb-1 hover:border-ember transition-colors"
+    >
+      Scopri come lavoro con le imprese
+    </a>
+  </div>
+</SplitHero>

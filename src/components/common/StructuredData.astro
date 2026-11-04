@@ -42,6 +42,8 @@ const logoUrl = `${siteUrl}/favicon.png`;
 const SEGMENT_LABEL: Record<string, string> = {
   'chi-sono': 'Chi sono',
   'servizi': 'Servizi',
+  'imprese': 'Imprese',
+  'consulenza': 'Consulenza',
   'diagnosi': 'Diagnosi di portafoglio',
   'pianificazione': 'Pianificazione finanziaria',
   'previdenza': 'Previdenza complementare',
@@ -194,7 +196,23 @@ const breadcrumbNode =
       }
     : null;
 
-const graph = [personNode, serviceNode, websiteNode, breadcrumbNode].filter(Boolean);
+// Servizio dedicato a imprenditori e aziende, solo sulla pagina /imprese
+const impreseNode = pathname.replace(/\/$/, '') === '/imprese'
+  ? {
+      '@type': 'Service',
+      '@id': `${siteUrl}/imprese#servizio`,
+      name: 'Consulenza per imprenditori e aziende',
+      serviceType: 'Consulenza finanziaria per imprese',
+      description:
+        'Affiancamento di imprenditori e aziende con una visione d’insieme: liquidità aziendale, protezione dell’impresa, passaggio generazionale, TFM e TFR, welfare aziendale, patrimonio personale e aziendale.',
+      url: `${siteUrl}/imprese`,
+      provider: { '@id': idPerson },
+      areaServed: { '@type': 'Country', name: 'Italia' },
+      audience: { '@type': 'BusinessAudience', name: 'Imprenditori e aziende' },
+    }
+  : null;
+
+const graph = [personNode, serviceNode, impreseNode, websiteNode, breadcrumbNode].filter(Boolean);
 
 const jsonLd = {
   '@context': 'https://schema.org',

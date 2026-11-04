@@ -195,6 +195,11 @@
       "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
       "count": 1,
       "lastSeen": 1793792370003
+    },
+    "8b62dacb": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; git switch -q ma)",
+      "count": 1,
+      "lastSeen": 1793797038927
     }
   },
   "editErrors": {}

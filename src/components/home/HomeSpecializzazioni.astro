@@ -1,6 +1,5 @@
 ---
-import { Icon } from 'astro-icon/components';
-
+import IconGrid from '~/components/site/IconGrid.astro';
 import SectionTitle from '~/components/site/SectionTitle.astro';
 
 const aree = [
@@ -15,23 +14,6 @@ const aree = [
   <div class="max-w-6xl mx-auto px-4 md:px-8">
     <SectionTitle class="mb-12 md:mb-16">Le mie aree di specializzazione</SectionTitle>
 
-    <ul class="reveal-stagger grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 md:gap-y-16">
-      {
-        aree.map((a) => (
-          <li>
-            <a href={a.href} class="group flex flex-col items-center text-center rounded-[12px] py-6 px-2 transition-all duration-300 hover:bg-white hover:-translate-y-1 hover:shadow-[0_18px_40px_-26px_rgba(0,40,22,0.4)]">
-              <Icon
-                name={a.icon}
-                class="w-16 h-16 md:w-20 md:h-20 text-charcoal group-hover:text-brand transition-colors duration-300 [&_*]:stroke-[1.1]"
-                aria-hidden="true"
-              />
-              <span class="mt-4 text-sm md:text-base text-charcoal tracking-wide group-hover:text-brand transition-colors">
-                {a.label}
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <IconGrid items={aree} />
   </div>
 </section>
