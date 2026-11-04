@@ -1,0 +1,15 @@
+﻿{
+    "permissions":  {
+                        "allow":  [
+                                      "Edit(/.claude/memories/**)",
+                                      "Write(/.claude/memories/**)",
+                                      "Edit(/.claude/tasks/**)",
+                                      "Write(/.claude/tasks/**)",
+                                      "Edit(/.claude/rules/**)",
+                                      "Write(/.claude/rules/**)",
+                                      "Edit(/.claude/plans/**)",
+                                      "Write(/.claude/plans/**)",
+                                      "WebSearch"
+                                  ]
+                    }
+}

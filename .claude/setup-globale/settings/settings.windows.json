@@ -1,0 +1,127 @@
+﻿{
+    "hooks":  {
+                  "UserPromptSubmit":  [
+                                           {
+                                               "hooks":  [
+                                                             {
+                                                                 "type":  "command",
+                                                                 "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\prompt-inject.js\""
+                                                             }
+                                                         ]
+                                           },
+                                           {
+                                               "hooks":  [
+                                                             {
+                                                                 "type":  "command",
+                                                                 "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\pre-flight.js\""
+                                                             }
+                                                         ]
+                                           }
+                                       ],
+                  "PostToolUse":  [
+                                      {
+                                          "matcher":  "Read|Grep|Glob",
+                                          "hooks":  [
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\read-tracker.js\""
+                                                        }
+                                                    ]
+                                      },
+                                      {
+                                          "matcher":  "Grep",
+                                          "hooks":  [
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\truth-layer.js\""
+                                                        }
+                                                    ]
+                                      },
+                                      {
+                                          "matcher":  ".*",
+                                          "hooks":  [
+                                                        {
+                                                            "type":  "command",
+                                                            "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\loop-detector.js\""
+                                                        }
+                                                    ]
+                                      }
+                                  ],
+                  "PreToolUse":  [
+                                     {
+                                         "matcher":  ".*",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\anti-bypass.js\""
+                                                       }
+                                                   ]
+                                     },
+                                     {
+                                         "matcher":  "Edit|Write|MultiEdit",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\edit-guard.js\""
+                                                       }
+                                                   ]
+                                     },
+                                     {
+                                         "matcher":  "Edit|Write|MultiEdit",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\freshness-check.js\""
+                                                       }
+                                                   ]
+                                     },
+                                     {
+                                         "matcher":  "Edit|Write|MultiEdit",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\policy-guard.js\""
+                                                       }
+                                                   ]
+                                     },
+                                     {
+                                         "matcher":  "ExitPlanMode",
+                                         "hooks":  [
+                                                       {
+                                                           "type":  "command",
+                                                           "command":  "powershell -ExecutionPolicy Bypass -Command \"$data = [Console]::In.ReadToEnd() | ConvertFrom-Json; $src = Join-Path $env:USERPROFILE \u0027.claude\\plans\u0027; $dest = Join-Path $data.cwd \u0027.claude\\plans\u0027; if (Test-Path $src) { $md = Get-ChildItem $src -Filter *.md -EA 0; if ($md) { if (-not (Test-Path $dest)) { New-Item -ItemType Directory $dest -Force | Out-Null }; $md | ForEach-Object { Copy-Item $_.FullName $dest -Force } } }; (New-Object Media.SoundPlayer \u0027C:\\Windows\\Media\\Windows Ding.wav\u0027).PlaySync()\""
+                                                       }
+                                                   ]
+                                     }
+                                 ],
+                  "Notification":  [
+                                       {
+                                           "hooks":  [
+                                                         {
+                                                             "type":  "command",
+                                                             "command":  "powershell -Command \"(New-Object Media.SoundPlayer \u0027C:\\Windows\\Media\\Windows Ding.wav\u0027).PlaySync()\""
+                                                         }
+                                                     ]
+                                       }
+                                   ],
+                  "Stop":  [
+                               {
+                                   "hooks":  [
+                                                 {
+                                                     "type":  "command",
+                                                     "command":  "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\confidence-check.js\""
+                                                 }
+                                             ]
+                               },
+                               {
+                                   "hooks":  [
+                                                 {
+                                                     "type":  "command",
+                                                     "command":  "powershell -Command \"(New-Object Media.SoundPlayer \u0027C:\\Windows\\Media\\Windows Ding.wav\u0027).PlaySync()\""
+                                                 }
+                                             ]
+                               }
+                           ]
+              },
+    "effortLevel":  "high"
+}

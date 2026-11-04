@@ -1,0 +1,155 @@
+{
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Edit(/.claude/memories/**)",
+      "Write(/.claude/memories/**)",
+      "Edit(/.claude/tasks/**)",
+      "Write(/.claude/tasks/**)",
+      "Edit(/.claude/rules/**)",
+      "Write(/.claude/rules/**)",
+      "Edit(/.claude/plans/**)",
+      "Write(/.claude/plans/**)",
+      "WebSearch"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\prompt-inject.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\pre-flight.js\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\read-tracker.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\truth-layer.js\""
+          }
+        ]
+      },
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\loop-detector.js\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\anti-bypass.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\edit-guard.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\freshness-check.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\policy-guard.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\scope-guard.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -Command \"$data = [Console]::In.ReadToEnd() | ConvertFrom-Json; $src = Join-Path $env:USERPROFILE '.claude\\plans'; $dest = Join-Path $data.cwd '.claude\\plans'; if (Test-Path $src) { $md = Get-ChildItem $src -Filter *.md -EA 0; if ($md) { if (-not (Test-Path $dest)) { New-Item -ItemType Directory $dest -Force | Out-Null }; $md | ForEach-Object { Copy-Item $_.FullName $dest -Force } } }; (New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Windows Ding.wav').PlaySync()\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Windows Ding.wav').PlaySync()\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:\\Users\\giard\\AppData\\Roaming\\npm\\node_modules\\@pinperepette\\grounded\\dist\\hooks\\confidence-check.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -Command \"(New-Object Media.SoundPlayer 'C:\\Windows\\Media\\Windows Ding.wav').PlaySync()\""
+          }
+        ]
+      }
+    ]
+  },
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "theme": "dark-daltonized"
+}

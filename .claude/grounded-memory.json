@@ -1,0 +1,126 @@
+{
+  "version": 2,
+  "loopPatterns": {
+    "9f66d53d": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1781164525854
+    },
+    "3bcdc3d1": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\are)",
+      "count": 1,
+      "lastSeen": 1781165034394
+    },
+    "728e265a": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\ser)",
+      "count": 1,
+      "lastSeen": 1781422628008
+    },
+    "201d2e53": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\layouts\\\\L)",
+      "count": 1,
+      "lastSeen": 1781423529193
+    },
+    "d00e1702": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; ls src/layouts s)",
+      "count": 1,
+      "lastSeen": 1793779754238
+    },
+    "885749a8": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\tailwind.config)",
+      "count": 1,
+      "lastSeen": 1793779946922
+    },
+    "bf0dbc25": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\tailwind.config)",
+      "count": 1,
+      "lastSeen": 1793780002172
+    },
+    "ccaf7e67": {
+      "preview": "Write({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793780067118
+    },
+    "2fcef3a": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 1,
+      "lastSeen": 1793780469203
+    },
+    "3f53c53c": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\.claude\\\\memori)",
+      "count": 1,
+      "lastSeen": 1793780765291
+    },
+    "4021ae57": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793781406592
+    },
+    "86ea1c0b": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793781425363
+    },
+    "38405b10": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; npm run build 2>)",
+      "count": 1,
+      "lastSeen": 1793781637576
+    },
+    "3038416d": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; git commit -q -F)",
+      "count": 1,
+      "lastSeen": 1793781849611
+    },
+    "6c2c4bf": {
+      "preview": "TaskStop({\"task_id\":\"bx302fqli\"})",
+      "count": 1,
+      "lastSeen": 1793781851258
+    },
+    "831c6b0d": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; npm run dev -- -)",
+      "count": 1,
+      "lastSeen": 1793782720642
+    },
+    "4f139973": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 1,
+      "lastSeen": 1793782817350
+    },
+    "47542d82": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\ser)",
+      "count": 1,
+      "lastSeen": 1793782831867
+    },
+    "b729b4fd": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\.claude\\\\memori)",
+      "count": 1,
+      "lastSeen": 1793783000108
+    },
+    "3bd5fc4e": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; f=src/components)",
+      "count": 1,
+      "lastSeen": 1793783754455
+    },
+    "b5e4de32": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793783800163
+    },
+    "8e3a31a7": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; grep -n \\\"^impor)",
+      "count": 1,
+      "lastSeen": 1793783919960
+    },
+    "ba4ef9e0": {
+      "preview": "Write({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\con)",
+      "count": 1,
+      "lastSeen": 1793783996243
+    },
+    "6d8f611a": {
+      "preview": "Edit({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\components)",
+      "count": 1,
+      "lastSeen": 1793784028885
+    }
+  },
+  "editErrors": {}
+}

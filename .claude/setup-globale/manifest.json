@@ -1,0 +1,17 @@
+{
+  "schema-version": 1,
+  "alignment-rules-updated": "2026-08-13 12:58",
+  "skills-custom": [
+    "allineamento",
+    "pptx-validation",
+    "llm-wiki-setup",
+    "sync"
+  ],
+  "skills-plugin": [
+    "frontend-design@claude-plugins-official"
+  ],
+  "skills-external": [],
+  "os-profiles": [
+    "windows"
+  ]
+}
