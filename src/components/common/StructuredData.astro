@@ -1,0 +1,194 @@
+---
+/**
+ * Schema.org JSON-LD — grafo coerente per il sito.
+ *
+ * Inietta un singolo blocco @graph con: Person (Andrea), FinancialService
+ * (l'attività di consulenza), WebSite (il sito), più — quando applicabile —
+ * BreadcrumbList derivato dal pathname.
+ *
+ * Vincolo legale: NON usare mai "indipendente" / "fee-only". Andrea opera
+ * con mandato bancario, iscritto OCF n. 2965.
+ */
+
+import { SITE } from 'astrowind:config';
+
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export interface Props {
+  /** Breadcrumb espliciti. Se omessi, vengono derivati da Astro.url.pathname. */
+  breadcrumbs?: BreadcrumbItem[];
+  /** Forza la disattivazione dei breadcrumb (es. home). */
+  disableBreadcrumb?: boolean;
+}
+
+const { breadcrumbs: explicitBreadcrumbs, disableBreadcrumb = false } = Astro.props;
+
+const siteUrl = String(SITE?.site || 'https://giardiniconsulenza.it').replace(/\/$/, '');
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '';
+
+// ── @id stabili per referenziare i nodi nel grafo ──────────────────────────
+const idPerson = `${siteUrl}/#andrea-giardini`;
+const idService = `${siteUrl}/#giardini-consulenza`;
+const idWebsite = `${siteUrl}/#website`;
+// TODO: foto profilo definitiva di Andrea (oggi placeholder su og-image).
+const personImage = `${siteUrl}/og-image.jpg`;
+const logoUrl = `${siteUrl}/favicon.png`;
+
+// ── Breadcrumb auto da pathname ────────────────────────────────────────────
+const SEGMENT_LABEL: Record<string, string> = {
+  'chi-sono': 'Chi sono',
+  'servizi': 'Servizi',
+  'diagnosi': 'Diagnosi di portafoglio',
+  'pianificazione': 'Pianificazione finanziaria',
+  'previdenza': 'Previdenza complementare',
+  'rolling-obbligazionario': 'Rolling obbligazionario',
+  'calcolatori': 'Calcolatori',
+  'interesse-composto': 'Interesse composto',
+  'semplice-vs-composto': 'Interesse semplice vs composto',
+  'mutuo': 'Rata mutuo',
+  'isee': 'ISEE',
+  'pensione-integrativa': 'Pensione integrativa',
+  'rendita': 'Rendita',
+  'rendimento-obbligazioni': 'Rendimento obbligazioni',
+  'glossario': 'Glossario',
+  'contatti': 'Contatti',
+  'richiedi-diagnosi': 'Richiedi diagnosi',
+  'come-lavoro': 'Come lavoro',
+  'perche-scegliermi': 'Perché scegliermi',
+  'area-clienti': 'Area clienti',
+  'login': 'Login',
+  'registrazione': 'Registrazione',
+  'privacy': 'Privacy policy',
+  'cookie-policy': 'Cookie policy',
+  'note-legali': 'Note legali',
+  'blog': 'Blog',
+};
+
+function humanize(seg: string): string {
+  if (SEGMENT_LABEL[seg]) return SEGMENT_LABEL[seg];
+  // Fallback: capitalizza prima lettera, sostituisci - con spazio.
+  return seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
+}
+
+function autoBreadcrumbs(path: string): BreadcrumbItem[] {
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length === 0) return [];
+  const crumbs: BreadcrumbItem[] = [{ name: 'Home', url: `${siteUrl}/` }];
+  let acc = '';
+  for (const seg of segments) {
+    acc += `/${seg}`;
+    crumbs.push({ name: humanize(seg), url: `${siteUrl}${acc}` });
+  }
+  return crumbs;
+}
+
+const breadcrumbsResolved =
+  !disableBreadcrumb && !isHome ? explicitBreadcrumbs ?? autoBreadcrumbs(pathname) : [];
+
+// ── Nodi del grafo ─────────────────────────────────────────────────────────
+const sameAs = [
+  'https://www.linkedin.com/in/andrea-giardini-58923a268/',
+  'https://www.instagram.com/andreagiardini.finanza/',
+  'https://www.youtube.com/@AlphaGiardini',
+  'https://linktr.ee/giardiniandrea',
+];
+
+const personNode = {
+  '@type': 'Person',
+  '@id': idPerson,
+  name: 'Andrea Giardini',
+  jobTitle: 'Consulente Finanziario',
+  description:
+    "Consulente finanziario abilitato all'offerta fuori sede, iscritto OCF n. 2965 (delibera 23/04/2026).",
+  url: `${siteUrl}/chi-sono`,
+  image: personImage,
+  telephone: '+39 351 545 6845',
+  email: 'andrea@giardiniconsulenza.it',
+  identifier: {
+    '@type': 'PropertyValue',
+    propertyID: 'OCF',
+    name: 'Iscrizione Organismo Consulenti Finanziari',
+    value: '2965',
+  },
+  // TODO worksFor: aggiungere Organization (rete bancaria mandante) quando
+  // si conosce il nome esatto. Vincolo legale: NON "indipendente"/"fee-only".
+  sameAs,
+};
+
+const serviceNode = {
+  '@type': 'FinancialService',
+  '@id': idService,
+  name: 'Giardini Consulenza',
+  alternateName: 'Andrea Giardini — Consulente Finanziario',
+  description:
+    'Consulenza finanziaria su misura: diagnosi di portafoglio, pianificazione patrimoniale, previdenza complementare. Servizio rivolto a privati e famiglie in Italia.',
+  url: siteUrl,
+  image: logoUrl,
+  logo: logoUrl,
+  telephone: '+39 351 545 6845',
+  email: 'andrea@giardiniconsulenza.it',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer service',
+    telephone: '+39 351 545 6845',
+    email: 'andrea@giardiniconsulenza.it',
+    url: `${siteUrl}/contatti`,
+    areaServed: 'IT',
+    availableLanguage: ['Italian'],
+  },
+  areaServed: {
+    '@type': 'Country',
+    name: 'Italia',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'IT',
+  },
+  provider: { '@id': idPerson },
+  founder: { '@id': idPerson },
+  sameAs,
+};
+
+const websiteNode = {
+  '@type': 'WebSite',
+  '@id': idWebsite,
+  url: `${siteUrl}/`,
+  name: 'Andrea Giardini — Consulente Finanziario',
+  inLanguage: 'it-IT',
+  publisher: { '@id': idService },
+  // potentialAction commentato: non c'è search interna attiva al momento.
+  // Riattivare quando esisterà /?s={search_term_string}.
+  // potentialAction: {
+  //   '@type': 'SearchAction',
+  //   target: { '@type': 'EntryPoint', urlTemplate: `${siteUrl}/?s={search_term_string}` },
+  //   'query-input': 'required name=search_term_string',
+  // },
+};
+
+const breadcrumbNode =
+  breadcrumbsResolved.length > 0
+    ? {
+        '@type': 'BreadcrumbList',
+        '@id': `${siteUrl}${pathname}#breadcrumb`,
+        itemListElement: breadcrumbsResolved.map((b, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: b.name,
+          item: b.url,
+        })),
+      }
+    : null;
+
+const graph = [personNode, serviceNode, websiteNode, breadcrumbNode].filter(Boolean);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': graph,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />

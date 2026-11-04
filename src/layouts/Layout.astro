@@ -12,6 +12,7 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
+import StructuredData from '~/components/common/StructuredData.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -23,6 +24,8 @@ export interface Props {
 }
 
 const { metadata = {} } = Astro.props;
+// pass-through props for StructuredData
+const { breadcrumbs, disableBreadcrumb } = Astro.props as { breadcrumbs?: Array<{ name: string; url: string }>; disableBreadcrumb?: boolean };
 const { language, textDirection } = I18N;
 ---
 
@@ -44,7 +47,8 @@ const { language, textDirection } = I18N;
     <!-- Comment the line below to disable View Transitions -->
     <ClientRouter fallback="swap" />
 
-    <!-- Structured Data per Google -->
+    <StructuredData breadcrumbs={breadcrumbs} disableBreadcrumb={disableBreadcrumb} />
+    <!-- LEGACY (disabilitato, sostituito da <StructuredData/>): -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Person",
