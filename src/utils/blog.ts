@@ -42,7 +42,7 @@ const generatePermalink = async ({
 
 const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> => {
   const { id, data } = post;
-  const { Content, remarkPluginFrontmatter } = await render(post);
+  const { Content, remarkPluginFrontmatter, headings } = await render(post);
 
   const {
     publishDate: rawPublishDate = new Date(),
@@ -57,7 +57,8 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     metadata = {},
   } = data;
 
-  const slug = cleanSlug(id); // cleanSlug(rawSlug.split('/').pop());
+  // I file creati da Pages CMS iniziano con la data (2026-11-04-titolo.md): la data resta fuori dall'URL
+  const slug = cleanSlug(id.replace(/^\d{4}-\d{2}-\d{2}-/, ''));
   const publishDate = new Date(rawPublishDate);
   const updateDate = rawUpdateDate ? new Date(rawUpdateDate) : undefined;
 
@@ -97,6 +98,8 @@ const getNormalizedPost = async (post: CollectionEntry<'post'>): Promise<Post> =
     // or 'content' in case you consume from API
 
     readingTime: remarkPluginFrontmatter?.readingTime,
+    // Titoli interni (h2/h3) per il sommario dell'articolo
+    headings: headings.filter((h) => h.depth === 2 || h.depth === 3),
   };
 };
 

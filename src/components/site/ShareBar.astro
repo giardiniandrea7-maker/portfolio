@@ -1,0 +1,96 @@
+---
+// Condivisione di un articolo: link diretti ai canali (nessuno script di terze parti, nessun cookie),
+// copia del link e condivisione nativa del telefono quando disponibile.
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  url: string;
+  title: string;
+  // rail: colonna verticale fissa (desktop) · inline: riga orizzontale
+  variant?: 'rail' | 'inline';
+  class?: string;
+}
+
+const { url, title, variant = 'inline', class: className = '' } = Astro.props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+
+const channels = [
+  { label: 'WhatsApp', icon: 'tabler:brand-whatsapp', href: `https://wa.me/?text=${t}%20${u}` },
+  { label: 'LinkedIn', icon: 'tabler:brand-linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { label: 'Facebook', icon: 'tabler:brand-facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+  { label: 'X', icon: 'tabler:brand-x', href: `https://x.com/intent/post?url=${u}&text=${t}` },
+  { label: 'Email', icon: 'tabler:mail', href: `mailto:?subject=${t}&body=${t}%0A%0A${u}` },
+];
+
+const btn =
+  'w-10 h-10 rounded-full border border-charcoal/15 bg-white text-charcoal flex items-center justify-center transition-all duration-200 hover:border-brand hover:text-brand hover:-translate-y-0.5';
+---
+
+<div
+  data-share
+  data-url={url}
+  data-title={title}
+  class:list={[
+    'flex items-center gap-2',
+    variant === 'rail' ? 'flex-col' : 'flex-wrap',
+    className,
+  ]}
+>
+  <span class:list={['text-[11px] uppercase tracking-[0.15em] text-charcoal/60', variant === 'rail' ? 'mb-1' : 'mr-2']}>
+    Condividi
+  </span>
+  <button type="button" data-share-native aria-label="Condividi con le app del telefono" class:list={[btn, 'hidden']}>
+    <Icon name="tabler:share" class="w-5 h-5" />
+  </button>
+  {
+    channels.map((c) => (
+      <a href={c.href} target="_blank" rel="noopener" aria-label={`Condividi su ${c.label}`} title={c.label} class={btn}>
+        <Icon name={c.icon} class="w-5 h-5" />
+      </a>
+    ))
+  }
+  <button type="button" data-share-copy aria-label="Copia il link dell'articolo" title="Copia link" class={btn}>
+    <Icon name="tabler:link" class="w-5 h-5" data-share-copy-icon />
+    <Icon name="tabler:check" class="w-5 h-5 hidden text-brand" data-share-copy-done />
+  </button>
+  <span data-share-status role="status" class="sr-only"></span>
+</div>
+
+<script>
+  import { onPageLoad } from '~/scripts/page-load';
+
+  function initShare() {
+    document.querySelectorAll<HTMLElement>('[data-share]').forEach((root) => {
+      if (root.dataset.ready) return;
+      root.dataset.ready = 'true';
+      const url = root.dataset.url ?? location.href;
+      const title = root.dataset.title ?? document.title;
+      const status = root.querySelector<HTMLElement>('[data-share-status]');
+
+      const native = root.querySelector<HTMLButtonElement>('[data-share-native]');
+      if (native && typeof navigator.share === 'function') {
+        native.classList.remove('hidden');
+        native.addEventListener('click', () => navigator.share({ title, url }).catch(() => {}));
+      }
+
+      const copy = root.querySelector<HTMLButtonElement>('[data-share-copy]');
+      copy?.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+          copy.querySelector('[data-share-copy-icon]')?.classList.add('hidden');
+          copy.querySelector('[data-share-copy-done]')?.classList.remove('hidden');
+          if (status) status.textContent = 'Link copiato';
+          setTimeout(() => {
+            copy.querySelector('[data-share-copy-icon]')?.classList.remove('hidden');
+            copy.querySelector('[data-share-copy-done]')?.classList.add('hidden');
+          }, 2000);
+        } catch {
+          if (status) status.textContent = 'Copia il link dalla barra degli indirizzi';
+        }
+      });
+    });
+  }
+
+  onPageLoad(initShare);
+</script>

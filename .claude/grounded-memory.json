@@ -210,6 +210,46 @@
       "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
       "count": 1,
       "lastSeen": 1793800758117
+    },
+    "78c4d91": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; git switch -q -c)",
+      "count": 1,
+      "lastSeen": 1793802616815
+    },
+    "54dfa40e": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; ls src/data/post)",
+      "count": 1,
+      "lastSeen": 1793802747116
+    },
+    "a0ee8ebe": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; sed -n 1,22p \\\"s)",
+      "count": 1,
+      "lastSeen": 1793803157876
+    },
+    "636285b1": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; npm run preview )",
+      "count": 1,
+      "lastSeen": 1793803421742
+    },
+    "21fdf0b0": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
+      "count": 1,
+      "lastSeen": 1793803507540
+    },
+    "e27bf80c": {
+      "preview": "Write({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\docs\\\\come-scri)",
+      "count": 1,
+      "lastSeen": 1793803518128
+    },
+    "647eeccc": {
+      "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
+      "count": 1,
+      "lastSeen": 1793803665609
+    },
+    "d1766a45": {
+      "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
+      "count": 1,
+      "lastSeen": 1793803677021
     }
   },
   "editErrors": {}

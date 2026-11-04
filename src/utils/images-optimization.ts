@@ -241,6 +241,16 @@ export const isUnpicCompatible = (image: string) => {
 };
 
 /* ** */
+// File serviti così come sono da public/ (es. /images/blog/... caricate da Pages CMS):
+// un'unica sorgente, senza ridimensionamento né download a build-time.
+export const publicFileOptimizer: ImagesOptimizer = async (image, _breakpoints, width, height) => {
+  if (!image || typeof image !== 'string') {
+    return [];
+  }
+  return [{ src: image, width: width ?? 1200, height }];
+};
+
+/* ** */
 export const unpicOptimizer: ImagesOptimizer = async (image, breakpoints, width, height, format = undefined) => {
   if (!image || typeof image !== 'string') {
     return [];

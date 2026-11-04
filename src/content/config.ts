@@ -49,8 +49,9 @@ const metadataDefinition = () =>
 const postCollection = defineCollection({
   loader: glob({ pattern: ['*.md', '*.mdx'], base: 'src/data/post' }),
   schema: z.object({
-    publishDate: z.date().optional(),
-    updateDate: z.date().optional(),
+    // coerce: Pages CMS può salvare la data come testo ('2026-11-04') o come data YAML
+    publishDate: z.coerce.date().optional(),
+    updateDate: z.coerce.date().optional(),
     draft: z.boolean().optional(),
 
     title: z.string(),

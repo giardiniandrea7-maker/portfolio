@@ -1,6 +1,6 @@
 ---
 import { getHomePermalink } from '~/utils/permalinks';
-import logoSrc from '~/assets/images/logo.png';
+import logoSrc from '~/assets/images/logo-ag.png';
 import { Image } from 'astro:assets';
 ---
 
@@ -9,14 +9,7 @@ import { Image } from 'astro:assets';
   href={getHomePermalink()}
   aria-label="Andrea Giardini — Home"
 >
-  <div class="h-14 md:h-16 w-14 md:w-16 rounded-full bg-white flex items-center justify-center overflow-hidden">
-    <Image
-      src={logoSrc}
-      alt="Logo Giardini Consulenza"
-      height={64}
-      class="h-full w-full object-cover"
-    />
-  </div>
+  <Image src={logoSrc} alt="Monogramma AG — Andrea Giardini" height={48} class="h-10 md:h-12 w-auto" />
 
   <span class="hidden sm:block w-px h-8 bg-gray-300"></span>
 

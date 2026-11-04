@@ -1,0 +1,69 @@
+# Configurazione di Pages CMS (https://pagescms.org) per scrivere gli articoli del blog.
+# Ogni salvataggio nell'editor crea un commit su GitHub: Cloudflare Pages ripubblica il sito.
+
+media:
+  input: public/images/blog
+  output: /images/blog
+
+content:
+  - name: articoli
+    label: Articoli
+    type: collection
+    path: src/data/post
+    format: yaml-frontmatter
+    filename: '{year}-{month}-{day}-{primary}.md'
+    view:
+      fields: [title, publishDate, draft]
+      primary: title
+      sort: [publishDate, title]
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - name: title
+        label: Titolo
+        type: string
+        required: true
+      - name: excerpt
+        label: Estratto
+        type: text
+        required: true
+        description: 1–2 frasi, max 155 caratteri. Appare nelle card e su Google.
+      - name: image
+        label: Immagine di copertina
+        type: image
+        required: true
+        description: JPG orizzontale 1200x675, max 300 KB
+      - name: publishDate
+        label: Data di pubblicazione
+        type: date
+        required: true
+      - name: category
+        label: Categoria
+        type: select
+        options:
+          values:
+            - Previdenza e pensione
+            - Investimenti
+            - Risparmio e obiettivi
+            - Fiscalità
+            - Protezione e assicurazioni
+            - Mercati ed economia
+            - Imprese
+      - name: tags
+        label: Tag
+        type: string
+        list: true
+      - name: author
+        label: Autore
+        type: string
+        default: Andrea Giardini
+        hidden: true
+      - name: draft
+        label: Bozza
+        type: boolean
+        default: true
+        description: Lascia attivo finché l'articolo non è pronto. Disattiva per pubblicarlo.
+      - name: body
+        label: Testo
+        type: rich-text

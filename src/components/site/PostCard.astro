@@ -26,6 +26,7 @@ const searchText = [post.title, post.excerpt ?? '', ...(post.tags ?? []).map((t)
       class:list={['block aspect-video bg-gray-200 overflow-hidden', featured && 'lg:aspect-auto lg:flex-1 lg:min-h-[340px]']}
       tabindex="-1"
       aria-hidden="true"
+      transition:name={`cover-${post.slug}`}
     >
       {
         image && (

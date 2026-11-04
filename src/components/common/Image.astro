@@ -4,6 +4,7 @@ import { findImage } from '~/utils/images';
 import {
   getImagesOptimized,
   astroAssetsOptimizer,
+  publicFileOptimizer,
   unpicOptimizer,
   isUnpicCompatible,
   type ImageProps,
@@ -41,7 +42,10 @@ const _image = await findImage(props.src);
 
 let image: ImageType | undefined = undefined;
 
-if (
+if (typeof _image === 'string' && _image.startsWith('/') && !_image.startsWith('/src/')) {
+  // Immagine in public/ (es. copertine caricate da Pages CMS)
+  image = await getImagesOptimized(_image, props, publicFileOptimizer);
+} else if (
   typeof _image === 'string' &&
   (_image.startsWith('http://') || _image.startsWith('https://')) &&
   isUnpicCompatible(_image)
