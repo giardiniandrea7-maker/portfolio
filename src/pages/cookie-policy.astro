@@ -1,6 +1,6 @@
 ﻿---
 import LegalPage from '~/components/site/LegalPage.astro';
-import { siteContacts } from '~/navigation';
+import EmailLink from '~/components/site/EmailLink.astro';
 
 const metadata = {
   title: 'Cookie policy | Andrea Giardini — Consulente Finanziario',
@@ -97,6 +97,6 @@ const lastUpdate = '4 novembre 2026';
 
   <h2>6. Contatti</h2>
   <p>
-    Per domande sui cookie o sui tuoi dati scrivi a <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a>.
+    Per domande sui cookie o sui tuoi dati scrivi a <EmailLink />.
   </p>
 </LegalPage>

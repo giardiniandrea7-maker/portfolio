@@ -1,5 +1,6 @@
 ﻿---
 import LegalPage from '~/components/site/LegalPage.astro';
+import EmailLink from '~/components/site/EmailLink.astro';
 import { siteContacts, siteOffice, siteMandante } from '~/navigation';
 
 const metadata = {
@@ -24,7 +25,7 @@ const lastUpdate = '4 novembre 2026';
     <strong>Andrea Giardini</strong>, Consulente Finanziario abilitato all'offerta fuori sede<br />
     P.IVA {siteContacts.vatId}<br />
     {siteOffice.address}<br />
-    Email: <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a><br />
+    Email: <EmailLink /><br />
     Telefono: <a href={siteContacts.phoneHref}>{siteContacts.phone}</a>
   </p>
   <p>
@@ -139,7 +140,7 @@ const lastUpdate = '4 novembre 2026';
     <li>di revocare il consenso prestato, senza effetti sui trattamenti svolti prima della revoca.</li>
   </ul>
   <p>
-    Per esercitarli scrivi a <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a>: ti rispondo entro un mese
+    Per esercitarli scrivi a <EmailLink />: ti rispondo entro un mese
     dalla richiesta. Hai anche il diritto di proporre reclamo al Garante per la protezione dei dati personali
     (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">www.garanteprivacy.it</a>).
   </p>

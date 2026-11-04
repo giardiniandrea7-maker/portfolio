@@ -3,6 +3,7 @@ import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
+import EmailLink from './EmailLink.astro';
 import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
@@ -93,7 +94,7 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
             <button type="button" data-reveal-contact class="underline underline-offset-4 hover:text-brand transition-colors">
               Mostra indirizzo email
             </button>
-            <a href={`mailto:${siteContacts.email}`} class={`${linkClass} break-all`} hidden>{siteContacts.email}</a>
+            <EmailLink class={`${linkClass} break-all`} hidden />
           </dd>
         </div>
         <div>

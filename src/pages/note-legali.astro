@@ -1,5 +1,6 @@
 ﻿---
 import LegalPage from '~/components/site/LegalPage.astro';
+import EmailLink from '~/components/site/EmailLink.astro';
 import { siteContacts, siteOffice, siteMandante, siteRui } from '~/navigation';
 
 const metadata = {
@@ -18,7 +19,7 @@ const lastUpdate = '4 novembre 2026';
     <strong>Andrea Giardini</strong>, Consulente Finanziario abilitato all'offerta fuori sede<br />
     P.IVA {siteContacts.vatId}<br />
     {siteOffice.address}<br />
-    Email: <a href={`mailto:${siteContacts.email}`}>{siteContacts.email}</a><br />
+    Email: <EmailLink /><br />
     Telefono: <a href={siteContacts.phoneHref}>{siteContacts.phone}</a>
   </p>
 

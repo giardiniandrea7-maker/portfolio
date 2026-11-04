@@ -255,6 +255,26 @@
       "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'EOF')",
       "count": 1,
       "lastSeen": 1793807973299
+    },
+    "de0a1217": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; grep -n \\\"^expor)",
+      "count": 1,
+      "lastSeen": 1793808561715
+    },
+    "66acf2d9": {
+      "preview": "Bash({\"command\":\"S=\\\"C:/Users/giard/AppData/Local/Temp/claude/c--)",
+      "count": 1,
+      "lastSeen": 1793808653910
+    },
+    "3234fb96": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; npx --yes wrangl)",
+      "count": 1,
+      "lastSeen": 1793817797721
+    },
+    "a81321d1": {
+      "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; python - <<'PYEO)",
+      "count": 1,
+      "lastSeen": 1793818100844
     }
   },
   "editErrors": {}

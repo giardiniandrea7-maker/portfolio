@@ -1,0 +1,28 @@
+---
+// Link email che non scrive l'indirizzo nell'HTML: lo compone il browser.
+// Così l'"email obfuscation" di Cloudflare non lo sostituisce con "[email protected]"
+// (il suo script di decodifica non riparte dopo le navigazioni con View Transitions).
+import { siteContacts } from '~/navigation';
+
+export interface Props {
+  class?: string;
+  hidden?: boolean;
+}
+
+const { class: className, hidden } = Astro.props;
+const [user, domain] = siteContacts.email.split('@');
+---
+
+<a data-email data-u={user} data-d={domain} class={className} hidden={hidden}>{user} (chiocciola) {domain}</a>
+
+<script>
+  import { onPageLoad } from '~/scripts/page-load';
+
+  onPageLoad(() => {
+    document.querySelectorAll<HTMLAnchorElement>('a[data-email]').forEach((a) => {
+      const email = `${a.dataset.u}@${a.dataset.d}`;
+      a.href = `mailto:${email}`;
+      a.textContent = email;
+    });
+  });
+</script>

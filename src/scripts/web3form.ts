@@ -62,23 +62,32 @@ function initForm(form: HTMLFormElement) {
     for (const [key, value] of data.entries()) {
       if (typeof value === 'string' && key !== 'botcheck') body[key] = value;
     }
+    // Honeypot per Web3Forms: vuoto per le persone
+    body.botcheck = '';
 
     btn.disabled = true;
     btn.textContent = 'Invio in corso…';
 
     try {
+      if (!body.access_key) throw new Error('PUBLIC_WEB3FORMS_KEY mancante: chiave vuota nel form');
+
       const res = await fetch(WEB3FORMS_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(body),
       });
-      const json = await res.json();
-      if (!json.success) throw new Error(json.message);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) {
+        console.error('[web3forms] invio non riuscito', { status: res.status, message: json.message });
+        throw new Error(json.message);
+      }
 
       form.hidden = true;
       success.hidden = false;
       success.focus();
-    } catch {
+    } catch (err) {
+      if (err instanceof TypeError) console.error('[web3forms] errore di rete', err.message);
+      else if (err instanceof Error && err.message.startsWith('PUBLIC_')) console.error('[web3forms]', err.message);
       errorBox.hidden = false;
     } finally {
       btn.disabled = false;
