@@ -285,6 +285,11 @@
       "preview": "Bash({\"command\":\"cd /c/Progetti/andrea-giardini; cat > src/compon)",
       "count": 1,
       "lastSeen": 1793893014875
+    },
+    "9d4de146": {
+      "preview": "Bash({\"command\":\"cat \\\"C:/Users/giard/AppData/Local/Temp/claude/f)",
+      "count": 1,
+      "lastSeen": 1793893198715
     }
   },
   "editErrors": {}
