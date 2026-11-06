@@ -1,16 +1,12 @@
 ---
 import SectionTitle from '~/components/site/SectionTitle.astro';
-import Placeholder from '~/components/site/Placeholder.astro';
-import { findPublicImage } from '~/utils/home-assets';
-import { siteMandante, siteRui } from '~/navigation';
+import { siteMandante, siteRui, siteQualifica } from '~/navigation';
 
 const certificazioni = [
   {
-    name: 'OCF',
-    logo: findPublicImage('images/certificazioni/ocf'),
-    logoClass: 'h-full w-auto',
+    name: 'Albo unico dei consulenti finanziari (OCF)',
     bullets: [
-      `Consulente Finanziario abilitato all'offerta fuori sede, incaricato da ${siteMandante.name}`,
+      `${siteQualifica.estesa} S.p.A.`,
       "Iscrizione all'Albo unico dei consulenti finanziari n. 2965.",
       'In possesso dei requisiti di onorabilità e professionalità previsti dalla normativa (D.M. 472 dell’11/11/1998).',
     ],
@@ -20,10 +16,7 @@ const certificazioni = [
     },
   },
   {
-    name: 'IVASS',
-    logo: findPublicImage('images/certificazioni/ivass'),
-    // Il file IVASS ha ampi margini bianchi: lo ingrandisco per compensare
-    logoClass: 'h-[180%] w-auto -ml-[6%]',
+    name: 'Registro unico degli intermediari (IVASS)',
     bullets: [
       `Collaboratore di intermediario iscritto al RUI, sezione ${siteRui.section}, con numero ${siteRui.number} dal ${siteRui.since}.`,
       `Opera per ${siteMandante.name}, iscritta in sezione ${siteMandante.ruiSection} con numero ${siteMandante.ruiNumber}.`,
@@ -55,13 +48,9 @@ const certificazioni = [
           );
           return (
             <article class="bg-white p-6 md:p-10 flex flex-col transition-shadow duration-300 hover:shadow-[0_18px_40px_-24px_rgba(0,40,22,0.35)]">
-              <div class="h-12 md:h-14 mb-6 flex items-center">
-                {c.logo ? (
-                  <img src={c.logo} alt={`Logo ${c.name}`} class={c.logoClass} />
-                ) : (
-                  <Placeholder label={`logo ${c.name}`} class="h-full w-32" />
-                )}
-              </div>
+              <h3 class="mb-6 font-sans font-medium uppercase tracking-[0.12em] text-sm md:text-base text-brand leading-snug">
+                {c.name}
+              </h3>
 
               <!-- Desktop: tutti i punti visibili -->
               <div class="hidden lg:flex flex-col flex-1">

@@ -2,17 +2,14 @@
 import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
-import Placeholder from './Placeholder.astro';
 import EmailLink from './EmailLink.astro';
-import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante } from '~/navigation';
+import LogoFirma from '~/components/LogoFirma.astro';
+import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante, siteQualifica } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
-import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
 import { getPermalink } from '~/utils/permalinks';
 
 const posts = await findLatestPosts({ count: 2 });
-
-const fideuram = findAssetImage('fideuram-logo.svg');
 
 const social = [
   { label: 'WhatsApp', text: 'Scrivimi su WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
@@ -60,7 +57,12 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
 
 <!-- Footer / contatti -->
 <footer id="contatti" class="bg-ivory scroll-mt-16 md:scroll-mt-20">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 py-14 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 pt-12 md:pt-16">
+    <a href="/" aria-label="Andrea Giardini, Consulente Finanziario di Fideuram — Home" class="inline-flex">
+      <LogoFirma />
+    </a>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 md:px-8 pt-10 pb-14 md:pb-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
     <nav aria-label="Menu del footer">
       <h2 class={colTitle}>Menù</h2>
       <ul class="space-y-3">
@@ -168,25 +170,18 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
 <!-- Disclaimer -->
 <section class="bg-brand-dark">
   <div class="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-12 text-white/75">
+    <!-- Paternità del sito (Vademecum Fideuram, pag. 16 e 22) -->
+    <p class="text-xs md:text-sm leading-relaxed max-w-4xl text-white mb-4">
+      Sito personale di Andrea Giardini, {siteQualifica.estesa} S.p.A. I contenuti esprimono opinioni personali e non
+      sono espressi in nome e per conto della Società.
+    </p>
     <p class="text-xs md:text-sm leading-relaxed max-w-4xl">
       Le informazioni contenute nel presente sito, curate da Andrea Giardini, hanno finalità esclusivamente informative
       e non costituiscono raccomandazioni personalizzate né ricerca in materia di investimenti. Prima di qualsiasi
       operazione è necessario sottoscrivere l'apposito contratto e consultare la documentazione d'offerta disponibile
       presso {siteMandante.name} e presso i consulenti finanziari abilitati all'offerta fuori sede.
     </p>
-    <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      {
-        fideuram ? (
-          <!-- Logo a colori su riquadro bianco: leggibile anche sul fondo scuro -->
-          <span class="inline-flex self-start bg-white rounded-[6px] px-3 py-2">
-            <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-7 w-auto" />
-          </span>
-        ) : (
-          <Placeholder label="logo Fideuram" dark class="h-9 w-36" />
-        )
-      }
-      <p class="text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
-    </div>
+    <p class="mt-8 text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
   </div>
 </section>
 

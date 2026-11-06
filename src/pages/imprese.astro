@@ -10,6 +10,7 @@ import FormField from '~/components/site/FormField.astro';
 import Web3Form from '~/components/site/Web3Form.astro';
 
 import { findAssetImage } from '~/utils/home-assets';
+import { siteQualifica } from '~/navigation';
 
 const metadata = {
   title: 'Consulenza per imprenditori e aziende | Andrea Giardini',
@@ -20,7 +21,6 @@ const metadata = {
 
 const hero = findAssetImage('imprese-hero.jpg');
 const fascia = findAssetImage('imprese-fascia.jpg');
-const fideuram = findAssetImage('fideuram-logo.svg');
 
 const ambiti = [
   { icon: 'tabler:building-bank', label: 'Liquidità aziendale' },
@@ -116,18 +116,12 @@ const interessi = [...ambiti.map((a) => a.label), 'Una visione d’insieme'];
     </div>
   </section>
 
-  <!-- 6. LA FORZA DI UN GRUPPO -->
+  <!-- 6. QUALIFICA -->
   <section class="bg-ivory py-16 md:py-20">
     <div class="reveal max-w-2xl mx-auto px-4 md:px-8 text-center flex flex-col items-center">
-      {
-        fideuram ? (
-          <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-8 md:h-10 w-auto" />
-        ) : (
-          <Placeholder label="logo Fideuram" class="h-10 w-40" />
-        )
-      }
-      <p class="mt-8 text-base md:text-lg text-charcoal leading-relaxed">
-        Accanto a te, la solidità del Gruppo Intesa Sanpaolo e competenze dedicate al mondo delle imprese.
+      <p class="text-xs md:text-sm uppercase tracking-[0.15em] text-brand leading-relaxed">{siteQualifica.estesa}</p>
+      <p class="mt-6 text-base md:text-lg text-charcoal leading-relaxed">
+        Al tuo fianco come professionista, con attenzione alle esigenze dell’impresa e della famiglia.
       </p>
     </div>
   </section>

@@ -4,7 +4,7 @@ import EmailLink from '~/components/site/EmailLink.astro';
 import { siteContacts, siteOffice, siteMandante, siteRui } from '~/navigation';
 
 const metadata = {
-  title: 'Note legali | Andrea Giardini — Consulente Finanziario',
+  title: 'Note legali | Andrea Giardini — Consulente Finanziario di Fideuram',
   ignoreTitleTemplate: true,
   description:
     "Note legali del sito giardiniconsulenza.it: dati del titolare, abilitazione professionale, natura dei contenuti e avvertenze.",
@@ -16,7 +16,7 @@ const lastUpdate = '4 novembre 2026';
 <LegalPage metadata={metadata} title="Note legali" lastUpdate={lastUpdate}>
   <h2>1. Titolare del sito</h2>
   <p>
-    <strong>Andrea Giardini</strong>, Consulente Finanziario abilitato all'offerta fuori sede<br />
+    <strong>Andrea Giardini</strong>, Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking<br />
     P.IVA {siteContacts.vatId}<br />
     {siteOffice.address}<br />
     Email: <EmailLink /><br />

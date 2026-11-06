@@ -1,9 +1,9 @@
 // Genera l'immagine di anteprima per i social (WhatsApp, Facebook, LinkedIn, Google).
-// Uso: npm run og  →  public/og/og-home-v3.jpg (1200x630, JPEG q85, max 300 KB)
+// Uso: npm run og  →  public/og/og-home-v4.jpg (1200x630, JPEG q85, max 300 KB)
 //
+// Solo testo, nessun logo (Vademecum Fideuram, pag. 11 e 22): nome, qualifica breve e indirizzo del sito.
 // Tutto il contenuto resta nell'area centrale 1000x500: WhatsApp e LinkedIn tagliano i bordi.
-// Se esiste src/assets/images/logo-nuovo.svg viene usato come logo, altrimenti un monogramma "AG".
-// Il nome file contiene la versione (v3): cambiarla forza i social a riscaricare l'anteprima.
+// Il nome file contiene la versione (v4): cambiarla forza i social a riscaricare l'anteprima.
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -12,11 +12,7 @@ import zlib from 'node:zlib';
 import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
-const out = path.join(root, 'public/og/og-home-v3.jpg');
-// Logo: logo-nuovo.svg se presente, altrimenti il monogramma generato da npm run brand
-const logoPath = ['src/assets/images/logo-nuovo.svg', 'src/assets/images/logo-ag.png']
-  .map((f) => path.join(root, f))
-  .find((f) => fs.existsSync(f)) ?? '';
+const out = path.join(root, 'public/og/og-home-v4.jpg');
 
 // Palette del sito (tailwind.config.js)
 const C = { ivory: '#F6F3ED', brand: '#006937', charcoal: '#1E2421', ember: '#E04403', muted: '#5C635F' };
@@ -95,55 +91,47 @@ const text = (value, { font, family, size, color, weight = '' }) =>
     .png()
     .toBuffer({ resolveWithObject: true });
 
-const centerX = SAFE.x + SAFE.w / 2; // 600: linea verticale
+const centerX = SAFE.x + SAFE.w / 2; // 600
 const midY = SAFE.y + SAFE.h / 2; // 315
 
-// Colonna sinistra: logo o monogramma
-const leftCx = SAFE.x + (centerX - SAFE.x) / 2; // 350
-let logoLayer;
-if (logoPath) {
-  const logo = await sharp(logoPath, { density: 300 }).resize({ width: 330, height: 260, fit: 'inside' }).png().toBuffer({ resolveWithObject: true });
-  logoLayer = { input: logo.data, left: Math.round(leftCx - logo.info.width / 2), top: Math.round(midY - logo.info.height / 2) };
-} else {
-  const mono = await text('AG', { font: fonts.playfair, family: 'Playfair Display', size: 120, color: C.brand });
-  logoLayer = { input: mono.data, left: Math.round(leftCx - mono.info.width / 2), top: Math.round(midY - mono.info.height / 2) };
+// Blocco centrato: nome, qualifica breve, indirizzo del sito
+const name = await text('Andrea Giardini', { font: fonts.playfair, family: 'Playfair Display', size: 76, color: C.charcoal });
+const role = await text('Consulente Finanziario di Fideuram', { font: fonts.manrope, family: 'Manrope', size: 34, color: C.brand, weight: 'Medium' });
+const site = await text('giardiniconsulenza.it', { font: fonts.manropeRegular, family: 'Manrope', size: 24, color: C.muted });
+
+for (const [label, t] of [['nome', name], ['qualifica', role], ['dominio', site]]) {
+  if (t.info.width > SAFE.w) throw new Error(`Il testo "${label}" esce dall'area sicura`);
 }
 
-// Colonna destra: nome, qualifica, dominio
-const name = await text('Andrea Giardini', { font: fonts.playfair, family: 'Playfair Display', size: 54, color: C.charcoal });
-const role = await text('Consulente Finanziario', { font: fonts.manrope, family: 'Manrope', size: 30, color: C.brand, weight: 'Medium' });
-const site = await text('giardiniconsulenza.it', { font: fonts.manropeRegular, family: 'Manrope', size: 22, color: C.muted });
-
-const rightX = centerX + 56;
-const gap1 = 18;
-const gap2 = 34;
-const blockH = name.info.height + gap1 + role.info.height + gap2 + site.info.height;
+const accentH = 4;
+const gap0 = 34; // accento → nome
+const gap1 = 22; // nome → qualifica
+const gap2 = 48; // qualifica → dominio
+const blockH = accentH + gap0 + name.info.height + gap1 + role.info.height + gap2 + site.info.height;
 let y = Math.round(midY - blockH / 2);
+const accentTop = y;
+y += accentH + gap0;
 const nameTop = y;
 y += name.info.height + gap1;
 const roleTop = y;
 y += role.info.height + gap2;
 const siteTop = y;
+const cx = (t) => Math.round(centerX - t.info.width / 2);
 
-for (const [label, t] of [['nome', name], ['qualifica', role], ['dominio', site]]) {
-  if (rightX + t.info.width > SAFE.x + SAFE.w) throw new Error(`Il testo "${label}" esce dall'area sicura`);
-}
-
-// Fondo, cornice dell'area sicura (invisibile: solo guida), linea centrale e accento
+// Fondo avorio, alone morbido e accento arancio sopra il nome
 const base = Buffer.from(`
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
   <rect width="100%" height="100%" fill="${C.ivory}"/>
   <circle cx="${W + 40}" cy="${H + 40}" r="250" fill="${C.ember}" fill-opacity="0.07"/>
-  ${logoPath ? '' : `<circle cx="${leftCx}" cy="${midY}" r="128" fill="none" stroke="${C.brand}" stroke-width="2"/>`}
-  <rect x="${centerX - 1}" y="${midY - 130}" width="2" height="260" fill="${C.brand}"/>
-  <rect x="${rightX}" y="${nameTop - 26}" width="44" height="4" fill="${C.ember}"/>
+  <circle cx="-60" cy="-60" r="220" fill="${C.brand}" fill-opacity="0.05"/>
+  <rect x="${centerX - 28}" y="${accentTop}" width="56" height="${accentH}" fill="${C.ember}"/>
+  <rect x="${centerX - 160}" y="${siteTop - gap2 / 2}" width="320" height="1" fill="${C.brand}" fill-opacity="0.35"/>
 </svg>`);
 
 const img = sharp(base).composite([
-  logoLayer,
-  { input: name.data, left: rightX, top: nameTop },
-  { input: role.data, left: rightX, top: roleTop },
-  { input: site.data, left: rightX, top: siteTop },
+  { input: name.data, left: cx(name), top: nameTop },
+  { input: role.data, left: cx(role), top: roleTop },
+  { input: site.data, left: cx(site), top: siteTop },
 ]);
 
 fs.mkdirSync(path.dirname(out), { recursive: true });
@@ -153,4 +141,4 @@ fs.rmSync(tmp, { recursive: true, force: true });
 
 const kb = fs.statSync(out).size / 1024;
 if (kb > 300) throw new Error(`Immagine troppo pesante: ${kb.toFixed(0)} KB`);
-console.log(`OK ${path.relative(root, out)} — ${W}x${H}, ${kb.toFixed(0)} KB, logo: ${logoPath ? path.basename(logoPath) : 'monogramma AG'}`);
+console.log(`OK ${path.relative(root, out)} — ${W}x${H}, ${kb.toFixed(0)} KB, solo testo`);

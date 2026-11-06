@@ -29,6 +29,12 @@ export const siteMandante = {
   reclamiUrl: 'https://www.fideuram.it/reclami-e-risoluzione-controversie/',
 };
 
+// Qualifica professionale (Vademecum Fideuram, pag. 5 e 19): va esplicitata ovunque con il riferimento alla Società.
+export const siteQualifica = {
+  estesa: "Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking",
+  breve: 'Consulente Finanziario di Fideuram',
+};
+
 export const siteRui = {
   number: 'E000832010',
   section: 'E',

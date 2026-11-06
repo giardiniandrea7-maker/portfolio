@@ -39,7 +39,6 @@ const idWebsite = `${siteUrl}/#website`;
 // Foto profilo: versione ottimizzata di src/assets/images/andrea-giardini.jpg
 const personPhoto = await getImage({ src: fotoAndrea, width: 800, format: 'jpg' });
 const personImage = String(new URL(personPhoto.src, `${siteUrl}/`));
-const logoUrl = `${siteUrl}/icon-512-v2.png`;
 
 // ── Breadcrumb auto da pathname ────────────────────────────────────────────
 const SEGMENT_LABEL: Record<string, string> = {
@@ -86,9 +85,9 @@ const personNode = {
   '@type': 'Person',
   '@id': idPerson,
   name: 'Andrea Giardini',
-  jobTitle: 'Consulente Finanziario',
+  jobTitle: "Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking",
   description:
-    "Consulente Finanziario abilitato all'offerta fuori sede, iscritto OCF n. 2965 (delibera 23/04/2026).",
+    "Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking S.p.A., iscritto all'Albo OCF n. 2965 (delibera 23/04/2026). Sito personale: i contenuti esprimono opinioni personali e non sono espressi in nome e per conto della Società.",
   url: `${siteUrl}/#chi-sono`,
   image: personImage,
   telephone: '+39 351 545 6845',
@@ -113,12 +112,10 @@ const serviceNode = {
   '@type': 'FinancialService',
   '@id': idService,
   name: 'Giardini Consulenza',
-  alternateName: 'Andrea Giardini — Consulente Finanziario',
+  alternateName: 'Andrea Giardini — Consulente Finanziario di Fideuram',
   description:
-    'Consulenza finanziaria su misura: diagnosi di portafoglio, pianificazione patrimoniale, previdenza complementare. Servizio rivolto a privati e famiglie in Italia.',
+    "Attività di Andrea Giardini, Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking S.p.A.: ascolto, pianificazione degli obiettivi di vita e relazione nel tempo, per privati, famiglie e imprese.",
   url: siteUrl,
-  image: logoUrl,
-  logo: logoUrl,
   telephone: '+39 351 545 6845',
   email: 'agiardini@fideuram.it',
   contactPoint: {
@@ -153,7 +150,7 @@ const websiteNode = {
   '@type': 'WebSite',
   '@id': idWebsite,
   url: `${siteUrl}/`,
-  name: 'Andrea Giardini — Consulente Finanziario',
+  name: 'Andrea Giardini — Consulente Finanziario di Fideuram',
   inLanguage: 'it-IT',
   publisher: { '@id': idService },
   // potentialAction commentato: non c'è search interna attiva al momento.
