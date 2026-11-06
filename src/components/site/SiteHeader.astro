@@ -2,12 +2,9 @@
 import '@fontsource/playfair-display/400.css';
 import '@fontsource/playfair-display/600.css';
 
-import Placeholder from './Placeholder.astro';
 import LogoFirma from '~/components/LogoFirma.astro';
-import { siteMenuLinks, siteContacts } from '~/navigation';
-import { findAssetImage } from '~/utils/home-assets';
+import { siteMenuLinks, siteContacts, siteQualifica } from '~/navigation';
 
-const fideuram = findAssetImage('fideuram-logo.svg');
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
@@ -139,18 +136,9 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   </nav>
 
   <div class="bg-charcoal mt-12 shrink-0">
-    <div class="max-w-6xl mx-auto px-4 md:px-8 py-8 flex items-center justify-between gap-6">
-      <span class="text-white uppercase tracking-[0.15em] text-sm">Andrea Giardini</span>
-      {
-        fideuram ? (
-          <!-- Logo a colori su riquadro bianco: leggibile anche sul fondo scuro -->
-          <span class="inline-flex bg-white rounded-[6px] px-3 py-2">
-            <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-8 w-auto" />
-          </span>
-        ) : (
-          <Placeholder label="logo Fideuram" dark class="h-10 w-36" />
-        )
-      }
+    <div class="max-w-6xl mx-auto px-4 md:px-8 py-8">
+      <p class="text-white uppercase tracking-[0.15em] text-sm">Andrea Giardini</p>
+      <p class="mt-2 text-white/80 text-xs md:text-sm leading-relaxed">{siteQualifica.estesa}</p>
     </div>
   </div>
 </div>

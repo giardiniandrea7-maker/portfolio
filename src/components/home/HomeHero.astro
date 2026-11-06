@@ -1,23 +1,18 @@
 ---
-import Placeholder from '~/components/site/Placeholder.astro';
 import SplitHero from '~/components/site/SplitHero.astro';
+import { siteQualifica } from '~/navigation';
 import { findAssetImage } from '~/utils/home-assets';
 
 const photo = findAssetImage('andrea-giardini.jpg');
-const fideuram = findAssetImage('fideuram-logo.svg');
 ---
 
 <SplitHero image={photo} alt="Andrea Giardini, Consulente Finanziario" placeholder="foto Andrea" eager fitPhoto>
   <!-- Alone morbido decorativo -->
   <span aria-hidden="true" class="pointer-events-none absolute -right-24 -top-24 w-72 h-72 lg:w-[28rem] lg:h-[28rem] rounded-full bg-ember/10 blur-3xl"></span>
   <span aria-hidden="true" data-hero-element class="block w-px h-10 md:h-20 bg-ember mb-5 md:mb-10"></span>
-  {
-    fideuram ? (
-      <img src={fideuram.src} alt="Fideuram" data-hero-element class="h-6 md:h-10 lg:h-12 w-auto mb-5 md:mb-8" />
-    ) : (
-      <Placeholder label="logo Fideuram" class="h-8 md:h-12 w-28 md:w-48 mb-5 md:mb-8" />
-    )
-  }
+  <p data-hero-element class="relative mb-4 md:mb-6 text-[11px] md:text-sm font-medium uppercase tracking-[0.15em] text-brand">
+    {siteQualifica.breve}
+  </p>
   <h1 data-hero-element class="relative font-sans font-light uppercase tracking-[0.15em] text-charcoal text-[10px] leading-relaxed md:text-sm md:leading-loose lg:text-2xl lg:leading-relaxed max-w-[18rem] lg:max-w-xl">
     Ti aiuto a trasformare i tuoi desideri in traguardi raggiungibili
   </h1>

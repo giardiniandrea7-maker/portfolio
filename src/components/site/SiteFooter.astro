@@ -2,18 +2,14 @@
 import { Icon } from 'astro-icon/components';
 
 import Image from '~/components/common/Image.astro';
-import Placeholder from './Placeholder.astro';
 import EmailLink from './EmailLink.astro';
 import LogoFirma from '~/components/LogoFirma.astro';
-import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante } from '~/navigation';
+import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante, siteQualifica } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
-import { findAssetImage } from '~/utils/home-assets';
 import { findImage } from '~/utils/images';
 import { getPermalink } from '~/utils/permalinks';
 
 const posts = await findLatestPosts({ count: 2 });
-
-const fideuram = findAssetImage('fideuram-logo.svg');
 
 const social = [
   { label: 'WhatsApp', text: 'Scrivimi su WhatsApp', icon: 'tabler:brand-whatsapp', href: siteContacts.whatsapp },
@@ -181,17 +177,8 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
       presso {siteMandante.name} e presso i consulenti finanziari abilitati all'offerta fuori sede.
     </p>
     <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      {
-        fideuram ? (
-          <!-- Logo a colori su riquadro bianco: leggibile anche sul fondo scuro -->
-          <span class="inline-flex self-start bg-white rounded-[6px] px-3 py-2">
-            <img src={fideuram.src} alt="Fideuram - Intesa Sanpaolo Private Banking" class="h-7 w-auto" />
-          </span>
-        ) : (
-          <Placeholder label="logo Fideuram" dark class="h-9 w-36" />
-        )
-      }
-      <p class="text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
+      <p class="text-xs md:text-sm text-white">Andrea Giardini — {siteQualifica.estesa}</p>
+      <p class="text-xs shrink-0">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
     </div>
   </div>
 </section>
