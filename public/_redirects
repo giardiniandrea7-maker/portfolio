@@ -104,3 +104,7 @@
 /icon-maskable-512-v2.png /icon-maskable-512-v3.png 301
 /mask-icon-v2.svg /mask-icon-v3.svg 301
 /site-v2.webmanifest /site-v3.webmanifest 301
+
+# Anteprima social v3 (con logo AG) → v4 solo testo
+/og/og-home-v3.jpg /og/og-home-v4.jpg 301
+/og/og-home-v2.jpg /og/og-home-v4.jpg 301
