@@ -10,6 +10,23 @@
 
 ---
 
+## 2026-11-06
+**Tasks**:
+**Keywords**: vademecum-fideuram, compliance, logo-firma, qualifica, paternita, og-v4, icone-v3
+**Riassunto**: Sito reso conforme al Vademecum comunicazione Fideuram (branch `compliance-vademecum`, 10 commit, unito in main `b10454c`). Tolti logo AG, logo Fideuram e loghi OCF/IVASS; qualifica uniforme; dicitura di paternità; testi riformulati in chiave di metodo.
+
+### Dettaglio
+
+#### (senza task)
+- Regole Vademecum R1–R9 (qualifica, loghi, paternità, contenuti vietati, prodotti, fonti, nomi nei domini/URL, contatti, foto) valgono per ogni modifica futura ai testi.
+- `src/components/LogoFirma.astro`: se esiste `public/logo-firma.svg|png` lo mostra, altrimenti fallback testuale (Playfair + "Consulente Finanziario di Fideuram"). Usato in header, menu mobile, footer.
+- Formule qualifica centralizzate in `siteQualifica` (`navigation.ts`): `estesa` / `breve`. Titoli pagina "— Consulente Finanziario di Fideuram".
+- Icone v3 provvisorie (cerchio verde #006837) da `npm run icons`; v2 → 301 alle v3. Eliminati `logo.png`, `logo-ag.png`, `fideuram-logo.svg`, `public/images/certificazioni/`, `scripts/brand-assets.mjs` e lo script npm `brand`.
+- Anteprima social `og-home-v4.jpg` solo testo (`npm run og`); v2/v3 → 301.
+- Restano aperti: logo firma ufficiale, icone social (dubbio), form ed email verso casella aziendale, foto ufficio con documenti sulla scrivania da verificare.
+
+---
+
 ## 2026-11-04
 **Tasks**:
 **Keywords**: restyle-home, home-a-fasce, branch-restyle-home, palette-sage-ochre, playfair
