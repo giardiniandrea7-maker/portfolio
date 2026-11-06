@@ -23,7 +23,9 @@
 - Formule qualifica centralizzate in `siteQualifica` (`navigation.ts`): `estesa` / `breve`. Titoli pagina "— Consulente Finanziario di Fideuram".
 - Icone v3 provvisorie (cerchio verde #006837) da `npm run icons`; v2 → 301 alle v3. Eliminati `logo.png`, `logo-ag.png`, `fideuram-logo.svg`, `public/images/certificazioni/`, `scripts/brand-assets.mjs` e lo script npm `brand`.
 - Anteprima social `og-home-v4.jpg` solo testo (`npm run og`); v2/v3 → 301.
-- Restano aperti: logo firma ufficiale, icone social (dubbio), form ed email verso casella aziendale, foto ufficio con documenti sulla scrivania da verificare.
+- Restano aperti: icone social (dubbio), form ed email verso casella aziendale, foto ufficio con documenti sulla scrivania da verificare.
+- Correzioni dell'utente nello stesso giorno: loghi OCF e IVASS ripristinati (scelta dell'utente); formula breve = "Consulente Finanziario" (senza "di Fideuram"), la formula estesa resta in meta description, footer, schema e pagine legali.
+- Logo firma ufficiale fornito: `public/logo-firma.jpeg` ("Fideuram Private Banker", fondo bianco → `mix-blend-multiply`). LogoFirma mostra logo + nome/qualifica (nome nascosto tra lg e xl in header). Icone v4 dal simbolo quadrato ritagliato dal logo firma (`npm run icons`); anteprima social `og-home-v5.jpg`.
 
 ---
 
