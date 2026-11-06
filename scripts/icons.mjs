@@ -1,7 +1,10 @@
-// Genera favicon e icone del sito dal monogramma AG dell'header (src/assets/images/logo-ag.png).
-// Uso: npm run icons   (prima, se cambia logo.png: npm run brand)
+// Genera favicon e icone del sito.
+// Uso: npm run icons
 //
-// I nomi contengono la versione (-v2): cambiarla obbliga browser, iPhone e Google a riscaricare le icone.
+// PROVVISORIO: un cerchio pieno verde, senza lettere né segni grafici personali (Vademecum Fideuram, pag. 11 e 22).
+// Quando arriverà il logo firma ufficiale si sostituirà il disegno qui sotto e si alzerà la versione.
+//
+// I nomi contengono la versione (-v3): cambiarla obbliga browser, iPhone e Google a riscaricare le icone.
 // /favicon.ico resta anche alla radice, perché molti servizi lo cercano lì.
 
 import fs from 'node:fs';
@@ -10,37 +13,34 @@ import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 const pub = (f) => path.join(root, 'public', f);
-const V = 'v2';
+const V = 'v3';
 
+const GREEN = '#006837';
 const IVORY = '#F5F1E8';
-const ivory = { r: 0xf5, g: 0xf1, b: 0xe8, alpha: 1 };
 
-// Monogramma su fondo trasparente, già nel colore del logo dell'header
-const mark = await sharp(path.join(root, 'src/assets/images/logo-ag.png')).trim({ threshold: 1 }).png().toBuffer();
-
-// Icona quadrata: monogramma centrato su avorio con margine interno (padding = frazione per lato)
-const square = async (size, padding) => {
-  const inner = Math.round(size * (1 - padding * 2));
-  const logo = await sharp(mark).resize({ width: inner, height: inner, fit: 'inside' }).png().toBuffer();
-  return sharp({ create: { width: size, height: size, channels: 4, background: ivory } })
-    .composite([{ input: logo, gravity: 'center' }])
-    .flatten({ background: ivory })
-    .png({ compressionLevel: 9 })
-    .toBuffer();
+// Cerchio verde su fondo trasparente (favicon) o avorio (icone che devono essere piene)
+const circleSvg = (size, { padding, background }) => {
+  const r = (size / 2) * (1 - padding * 2);
+  return Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+      (background ? `<rect width="${size}" height="${size}" fill="${background}"/>` : '') +
+      `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="${GREEN}"/></svg>`
+  );
 };
+const png = (size, opts) => sharp(circleSvg(size, opts)).png({ compressionLevel: 9 }).toBuffer();
 
 const files = {};
 
-files[`favicon-32-${V}.png`] = await square(32, 0.06);
-files[`apple-touch-icon-${V}.png`] = await square(180, 0.12);
-files[`icon-192-${V}.png`] = await square(192, 0.12);
-files[`icon-512-${V}.png`] = await square(512, 0.12);
+files[`favicon-32-${V}.png`] = await png(32, { padding: 0.04 });
+files[`apple-touch-icon-${V}.png`] = await png(180, { padding: 0.16, background: IVORY });
+files[`icon-192-${V}.png`] = await png(192, { padding: 0.12, background: IVORY });
+files[`icon-512-${V}.png`] = await png(512, { padding: 0.12, background: IVORY });
 // Maskable: Android ritaglia fino al cerchio dell'area sicura (80%), quindi margine più ampio
-files[`icon-maskable-512-${V}.png`] = await square(512, 0.22);
+files[`icon-maskable-512-${V}.png`] = await png(512, { padding: 0.24, background: IVORY });
 
 // favicon.ico con PNG incorporati 16/32/48
 const icoSizes = [16, 32, 48];
-const icoPngs = await Promise.all(icoSizes.map((s) => square(s, 0.04)));
+const icoPngs = await Promise.all(icoSizes.map((s) => png(s, { padding: 0.03 })));
 const header = Buffer.alloc(6 + 16 * icoSizes.length);
 header.writeUInt16LE(0, 0);
 header.writeUInt16LE(1, 2);
@@ -60,37 +60,12 @@ const ico = Buffer.concat([header, ...icoPngs]);
 files[`favicon-${V}.ico`] = ico;
 files['favicon.ico'] = ico;
 
-// favicon.svg: fondo avorio arrotondato + monogramma (PNG incorporato, bordi morbidi a ogni scala)
-const svgMark = (await sharp(mark).resize({ width: 224, height: 224, fit: 'inside' }).png({ compressionLevel: 9 }).toBuffer({ resolveWithObject: true }));
-const mw = svgMark.info.width;
-const mh = svgMark.info.height;
 files[`favicon-${V}.svg`] = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256">` +
-    `<rect width="256" height="256" rx="40" fill="${IVORY}"/>` +
-    `<image x="${(256 - mw) / 2}" y="${(256 - mh) / 2}" width="${mw}" height="${mh}" xlink:href="data:image/png;base64,${svgMark.data.toString('base64')}"/>` +
-    `</svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="${GREEN}"/></svg>`
 );
-
-// mask-icon (Safari, schede fissate): forma vettoriale monocromatica ricavata dal monogramma
-const G = 160;
-const { data: alpha, info } = await sharp(mark)
-  .resize({ width: G, height: G, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-  .extractChannel('alpha')
-  .raw()
-  .toBuffer({ resolveWithObject: true });
-let d = '';
-for (let y = 0; y < info.height; y++) {
-  let x = 0;
-  while (x < info.width) {
-    if (alpha[y * info.width + x] > 110) {
-      const start = x;
-      while (x < info.width && alpha[y * info.width + x] > 110) x++;
-      d += `M${start} ${y}h${x - start}v1h-${x - start}z`;
-    } else x++;
-  }
-}
+// mask-icon (Safari, schede fissate): forma monocromatica
 files[`mask-icon-${V}.svg`] = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${G} ${G}"><path fill="#000" d="${d}"/></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#000"/></svg>`
 );
 
 // Manifest

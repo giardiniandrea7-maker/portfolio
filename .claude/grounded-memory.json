@@ -295,6 +295,16 @@
       "preview": "Bash({\"command\":\"file src/components/site/SiteHeader.astro src/co)",
       "count": 1,
       "lastSeen": 1793984129135
+    },
+    "103ff939": {
+      "preview": "Bash({\"command\":\"npm run -s icons && git rm -q public/*-v2.* src/)",
+      "count": 1,
+      "lastSeen": 1793984197552
+    },
+    "569c4b65": {
+      "preview": "Bash({\"command\":\"sed -i '/\\\"brand\\\": \\\"node scripts\\\\/brand-asset)",
+      "count": 1,
+      "lastSeen": 1793984203248
     }
   },
   "editErrors": {}

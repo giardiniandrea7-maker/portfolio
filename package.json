@@ -12,7 +12,6 @@
     "build": "astro build",
     "preview": "astro preview",
     "og": "node scripts/og-image.mjs",
-    "brand": "node scripts/brand-assets.mjs",
     "icons": "node scripts/icons.mjs",
     "astro": "astro",
     "check": "npm run check:astro && npm run check:eslint && npm run check:prettier",
