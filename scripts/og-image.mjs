@@ -1,9 +1,9 @@
 // Genera l'immagine di anteprima per i social (WhatsApp, Facebook, LinkedIn, Google).
-// Uso: npm run og  →  public/og/og-home-v4.jpg (1200x630, JPEG q85, max 300 KB)
+// Uso: npm run og  →  public/og/og-home-v5.jpg (1200x630, JPEG q85, max 300 KB)
 //
 // Solo testo, nessun logo (Vademecum Fideuram, pag. 11 e 22): nome, qualifica breve e indirizzo del sito.
 // Tutto il contenuto resta nell'area centrale 1000x500: WhatsApp e LinkedIn tagliano i bordi.
-// Il nome file contiene la versione (v4): cambiarla forza i social a riscaricare l'anteprima.
+// Il nome file contiene la versione (v5): cambiarla forza i social a riscaricare l'anteprima.
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -12,7 +12,7 @@ import zlib from 'node:zlib';
 import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
-const out = path.join(root, 'public/og/og-home-v4.jpg');
+const out = path.join(root, 'public/og/og-home-v5.jpg');
 
 // Palette del sito (tailwind.config.js)
 const C = { ivory: '#F6F3ED', brand: '#006937', charcoal: '#1E2421', ember: '#E04403', muted: '#5C635F' };
@@ -96,7 +96,7 @@ const midY = SAFE.y + SAFE.h / 2; // 315
 
 // Blocco centrato: nome, qualifica breve, indirizzo del sito
 const name = await text('Andrea Giardini', { font: fonts.playfair, family: 'Playfair Display', size: 76, color: C.charcoal });
-const role = await text('Consulente Finanziario di Fideuram', { font: fonts.manrope, family: 'Manrope', size: 34, color: C.brand, weight: 'Medium' });
+const role = await text('Consulente Finanziario', { font: fonts.manrope, family: 'Manrope', size: 34, color: C.brand, weight: 'Medium' });
 const site = await text('giardiniconsulenza.it', { font: fonts.manropeRegular, family: 'Manrope', size: 24, color: C.muted });
 
 for (const [label, t] of [['nome', name], ['qualifica', role], ['dominio', site]]) {
