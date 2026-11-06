@@ -32,7 +32,7 @@ export const siteMandante = {
 // Qualifica professionale (Vademecum Fideuram, pag. 5 e 19): va esplicitata ovunque con il riferimento alla Società.
 export const siteQualifica = {
   estesa: "Consulente Finanziario abilitato all'offerta fuori sede di Fideuram – Intesa Sanpaolo Private Banking",
-  breve: 'Consulente Finanziario di Fideuram',
+  breve: 'Consulente Finanziario',
 };
 
 export const siteRui = {
