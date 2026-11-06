@@ -48,7 +48,7 @@ content:
             - Risparmio e obiettivi
             - Fiscalità
             - Protezione e assicurazioni
-            - Mercati ed economia
+            - Concetti di economia
             - Imprese
       - name: tags
         label: Tag
@@ -67,3 +67,4 @@ content:
       - name: body
         label: Testo
         type: rich-text
+        description: Educazione finanziaria e metodo, niente consigli su prodotti o mercati. Se citi dati o testi di terzi indica sempre la fonte (solo fonti attendibili, non forum, blog o social).
