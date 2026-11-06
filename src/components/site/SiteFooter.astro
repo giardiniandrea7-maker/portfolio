@@ -170,16 +170,18 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
 <!-- Disclaimer -->
 <section class="bg-brand-dark">
   <div class="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-12 text-white/75">
+    <!-- Paternità del sito (Vademecum Fideuram, pag. 16 e 22) -->
+    <p class="text-xs md:text-sm leading-relaxed max-w-4xl text-white mb-4">
+      Sito personale di Andrea Giardini, {siteQualifica.estesa} S.p.A. I contenuti esprimono opinioni personali e non
+      sono espressi in nome e per conto della Società.
+    </p>
     <p class="text-xs md:text-sm leading-relaxed max-w-4xl">
       Le informazioni contenute nel presente sito, curate da Andrea Giardini, hanno finalità esclusivamente informative
       e non costituiscono raccomandazioni personalizzate né ricerca in materia di investimenti. Prima di qualsiasi
       operazione è necessario sottoscrivere l'apposito contratto e consultare la documentazione d'offerta disponibile
       presso {siteMandante.name} e presso i consulenti finanziari abilitati all'offerta fuori sede.
     </p>
-    <div class="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <p class="text-xs md:text-sm text-white">Andrea Giardini — {siteQualifica.estesa}</p>
-      <p class="text-xs shrink-0">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
-    </div>
+    <p class="mt-8 text-xs">© 2026 Andrea Giardini · P.IVA {siteContacts.vatId}</p>
   </div>
 </section>
 
