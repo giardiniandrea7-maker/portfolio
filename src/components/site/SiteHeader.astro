@@ -2,10 +2,8 @@
 import '@fontsource/playfair-display/400.css';
 import '@fontsource/playfair-display/600.css';
 
-import { Image } from 'astro:assets';
-
 import Placeholder from './Placeholder.astro';
-import logoAg from '~/assets/images/logo-ag.png';
+import LogoFirma from '~/components/LogoFirma.astro';
 import { siteMenuLinks, siteContacts } from '~/navigation';
 import { findAssetImage } from '~/utils/home-assets';
 
@@ -18,13 +16,8 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-charcoal/10 transition-shadow duration-300 [&.is-scrolled]:shadow-[0_6px_24px_-12px_rgba(0,40,22,0.25)]"
 >
   <div class="max-w-7xl mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between gap-6">
-    <a href="/" class="flex items-center gap-3 shrink-0" aria-label="Andrea Giardini — Home">
-      <Image src={logoAg} alt="" height={40} class="h-8 md:h-10 w-auto" />
-      <span aria-hidden="true" class="w-px h-8 bg-charcoal/15 lg:hidden xl:block"></span>
-      <span class="flex flex-col leading-tight lg:hidden xl:flex">
-        <span class="font-playfair uppercase tracking-[0.08em] text-brand text-base md:text-xl">Andrea Giardini</span>
-        <span class="font-sans text-[11px] md:text-sm text-charcoal">Consulente Finanziario</span>
-      </span>
+    <a href="/" class="flex items-center shrink-0" aria-label="Andrea Giardini, Consulente Finanziario di Fideuram — Home">
+      <LogoFirma />
     </a>
 
     <!-- Navigazione desktop -->
@@ -92,14 +85,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
   hidden
 >
   <div class="max-w-6xl w-full mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between shrink-0">
-    <span class="flex items-center gap-3">
-      <Image src={logoAg} alt="" height={40} class="h-8 md:h-10 w-auto" />
-      <span aria-hidden="true" class="w-px h-8 bg-charcoal/15"></span>
-      <span class="flex flex-col leading-tight">
-        <span class="font-playfair uppercase tracking-[0.08em] text-brand text-base md:text-xl">Andrea Giardini</span>
-        <span class="font-sans text-[11px] md:text-sm text-charcoal">Consulente Finanziario</span>
-      </span>
-    </span>
+    <LogoFirma />
     <button
       type="button"
       data-home-menu-close

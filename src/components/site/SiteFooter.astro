@@ -4,6 +4,7 @@ import { Icon } from 'astro-icon/components';
 import Image from '~/components/common/Image.astro';
 import Placeholder from './Placeholder.astro';
 import EmailLink from './EmailLink.astro';
+import LogoFirma from '~/components/LogoFirma.astro';
 import { siteMenuLinks, siteContacts, siteOffice, officeMapsUrl, siteMandante } from '~/navigation';
 import { findLatestPosts } from '~/utils/blog';
 import { findAssetImage } from '~/utils/home-assets';
@@ -60,7 +61,12 @@ const linkClass = 'text-sm text-charcoal hover:text-brand transition-colors';
 
 <!-- Footer / contatti -->
 <footer id="contatti" class="bg-ivory scroll-mt-16 md:scroll-mt-20">
-  <div class="max-w-6xl mx-auto px-4 md:px-8 py-14 md:py-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 pt-12 md:pt-16">
+    <a href="/" aria-label="Andrea Giardini, Consulente Finanziario di Fideuram — Home" class="inline-flex">
+      <LogoFirma />
+    </a>
+  </div>
+  <div class="max-w-6xl mx-auto px-4 md:px-8 pt-10 pb-14 md:pb-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
     <nav aria-label="Menu del footer">
       <h2 class={colTitle}>Menù</h2>
       <ul class="space-y-3">

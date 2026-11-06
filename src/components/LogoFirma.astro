@@ -1,0 +1,52 @@
+---
+// Logo firma ufficiale del Consulente Finanziario (Vademecum Fideuram, pag. 11 e 22).
+// Quando arriva il file ufficiale basta copiarlo in public/logo-firma.svg (o .png):
+// il componente lo mostra in automatico. Finché manca, fallback testuale.
+import '@fontsource/playfair-display/400.css';
+
+import { findPublicImage } from '~/utils/home-assets';
+
+export interface Props {
+  /** 'light' su fondo chiaro, 'dark' su fondo scuro */
+  tone?: 'light' | 'dark';
+  /** 'md' per header e menu, 'sm' per spazi stretti */
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { tone = 'light', size = 'md', class: className = '' } = Astro.props;
+
+const firma = findPublicImage('logo-firma', ['svg', 'png']);
+const alt = 'Andrea Giardini — Consulente Finanziario di Fideuram';
+---
+
+{
+  firma ? (
+    <img
+      src={firma}
+      alt={alt}
+      class:list={[size === 'md' ? 'h-10 md:h-12' : 'h-9', 'w-auto', className]}
+    />
+  ) : (
+    <span class:list={['flex flex-col leading-tight', className]}>
+      <span
+        class:list={[
+          'font-playfair tracking-[0.02em]',
+          size === 'md' ? 'text-lg md:text-2xl' : 'text-lg',
+          tone === 'dark' ? 'text-white' : 'text-brand',
+        ]}
+      >
+        Andrea Giardini
+      </span>
+      <span
+        class:list={[
+          'font-sans',
+          size === 'md' ? 'text-[11px] md:text-[13px]' : 'text-[11px]',
+          tone === 'dark' ? 'text-white/80' : 'text-charcoal',
+        ]}
+      >
+        Consulente Finanziario di Fideuram
+      </span>
+    </span>
+  )
+}

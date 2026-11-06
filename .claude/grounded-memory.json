@@ -290,6 +290,11 @@
       "preview": "Bash({\"command\":\"cat \\\"C:/Users/giard/AppData/Local/Temp/claude/f)",
       "count": 1,
       "lastSeen": 1793893198715
+    },
+    "ade68d76": {
+      "preview": "Bash({\"command\":\"file src/components/site/SiteHeader.astro src/co)",
+      "count": 1,
+      "lastSeen": 1793984129135
     }
   },
   "editErrors": {}
