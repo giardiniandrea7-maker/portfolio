@@ -1,10 +1,7 @@
-// Genera favicon e icone del sito.
+// Genera favicon e icone del sito dal simbolo quadrato del logo firma ufficiale (public/logo-firma.*).
 // Uso: npm run icons
 //
-// PROVVISORIO: un cerchio pieno verde, senza lettere né segni grafici personali (Vademecum Fideuram, pag. 11 e 22).
-// Quando arriverà il logo firma ufficiale si sostituirà il disegno qui sotto e si alzerà la versione.
-//
-// I nomi contengono la versione (-v3): cambiarla obbliga browser, iPhone e Google a riscaricare le icone.
+// I nomi contengono la versione (-v4): cambiarla obbliga browser, iPhone e Google a riscaricare le icone.
 // /favicon.ico resta anche alla radice, perché molti servizi lo cercano lì.
 
 import fs from 'node:fs';
@@ -13,34 +10,44 @@ import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 const pub = (f) => path.join(root, 'public', f);
-const V = 'v3';
+const V = 'v4';
 
-const GREEN = '#006837';
 const IVORY = '#F5F1E8';
+const white = { r: 255, g: 255, b: 255, alpha: 1 };
 
-// Cerchio verde su fondo trasparente (favicon) o avorio (icone che devono essere piene)
-const circleSvg = (size, { padding, background }) => {
-  const r = (size / 2) * (1 - padding * 2);
-  return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
-      (background ? `<rect width="${size}" height="${size}" fill="${background}"/>` : '') +
-      `<circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="${GREEN}"/></svg>`
-  );
+// Simbolo: il quadrato a sinistra del logo firma, ritagliato dal bianco intorno
+const source = ['svg', 'png', 'webp', 'jpg', 'jpeg'].map((e) => pub(`logo-firma.${e}`)).find((f) => fs.existsSync(f));
+if (!source) throw new Error('Manca public/logo-firma.* (svg, png, webp, jpg o jpeg)');
+const meta = await sharp(source).metadata();
+const leftPart = await sharp(source)
+  .extract({ left: 0, top: 0, width: Math.round(meta.height * 0.55), height: meta.height })
+  .png()
+  .toBuffer();
+const mark = await sharp(leftPart).trim({ threshold: 40 }).png().toBuffer();
+
+// Icona quadrata: simbolo centrato su bianco con margine interno (padding = frazione per lato)
+const square = async (size, padding) => {
+  const inner = Math.max(1, Math.round(size * (1 - padding * 2)));
+  const logo = await sharp(mark).resize({ width: inner, height: inner, fit: 'fill', kernel: 'lanczos3' }).png().toBuffer();
+  return sharp({ create: { width: size, height: size, channels: 4, background: white } })
+    .composite([{ input: logo, gravity: 'center' }])
+    .flatten({ background: white })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
 };
-const png = (size, opts) => sharp(circleSvg(size, opts)).png({ compressionLevel: 9 }).toBuffer();
 
 const files = {};
 
-files[`favicon-32-${V}.png`] = await png(32, { padding: 0.04 });
-files[`apple-touch-icon-${V}.png`] = await png(180, { padding: 0.16, background: IVORY });
-files[`icon-192-${V}.png`] = await png(192, { padding: 0.12, background: IVORY });
-files[`icon-512-${V}.png`] = await png(512, { padding: 0.12, background: IVORY });
+files[`favicon-32-${V}.png`] = await square(32, 0);
+files[`apple-touch-icon-${V}.png`] = await square(180, 0.12);
+files[`icon-192-${V}.png`] = await square(192, 0.12);
+files[`icon-512-${V}.png`] = await square(512, 0.12);
 // Maskable: Android ritaglia fino al cerchio dell'area sicura (80%), quindi margine più ampio
-files[`icon-maskable-512-${V}.png`] = await png(512, { padding: 0.24, background: IVORY });
+files[`icon-maskable-512-${V}.png`] = await square(512, 0.22);
 
 // favicon.ico con PNG incorporati 16/32/48
 const icoSizes = [16, 32, 48];
-const icoPngs = await Promise.all(icoSizes.map((s) => png(s, { padding: 0.03 })));
+const icoPngs = await Promise.all(icoSizes.map((s) => square(s, 0)));
 const header = Buffer.alloc(6 + 16 * icoSizes.length);
 header.writeUInt16LE(0, 0);
 header.writeUInt16LE(1, 2);
@@ -60,12 +67,15 @@ const ico = Buffer.concat([header, ...icoPngs]);
 files[`favicon-${V}.ico`] = ico;
 files['favicon.ico'] = ico;
 
+// favicon.svg: simbolo come PNG incorporato
+const svgPng = await sharp(mark).resize(128, 128, { fit: 'fill' }).png({ compressionLevel: 9 }).toBuffer();
 files[`favicon-${V}.svg`] = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="${GREEN}"/></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">` +
+    `<image width="128" height="128" xlink:href="data:image/png;base64,${svgPng.toString('base64')}"/></svg>`
 );
-// mask-icon (Safari, schede fissate): forma monocromatica
+// mask-icon (Safari, schede fissate): forma monocromatica quadrata
 files[`mask-icon-${V}.svg`] = Buffer.from(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#000"/></svg>`
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect width="16" height="16" fill="#000"/></svg>`
 );
 
 // Manifest

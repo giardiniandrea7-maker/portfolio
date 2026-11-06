@@ -86,25 +86,37 @@
 /landing/ / 301
 /landing/* / 301
 
-# Vecchi nomi delle icone → icone -v3
-/favicon.png /favicon-32-v3.png 301
-/apple-touch-icon.png /apple-touch-icon-v3.png 301
-/apple-touch-icon-precomposed.png /apple-touch-icon-v3.png 301
-/icon-192.png /icon-192-v3.png 301
-/icon-512.png /icon-512-v3.png 301
-/site.webmanifest /site-v3.webmanifest 301
+# Vecchi nomi delle icone → icone -v4
+/favicon.png /favicon-32-v4.png 301
+/apple-touch-icon.png /apple-touch-icon-v4.png 301
+/apple-touch-icon-precomposed.png /apple-touch-icon-v4.png 301
+/icon-192.png /icon-192-v4.png 301
+/icon-512.png /icon-512-v4.png 301
+/site.webmanifest /site-v4.webmanifest 301
 
-# Icone v2 (logo AG, rimosso) → icone v3
-/favicon-v2.svg /favicon-v3.svg 301
-/favicon-v2.ico /favicon-v3.ico 301
-/favicon-32-v2.png /favicon-32-v3.png 301
-/apple-touch-icon-v2.png /apple-touch-icon-v3.png 301
-/icon-192-v2.png /icon-192-v3.png 301
-/icon-512-v2.png /icon-512-v3.png 301
-/icon-maskable-512-v2.png /icon-maskable-512-v3.png 301
-/mask-icon-v2.svg /mask-icon-v3.svg 301
-/site-v2.webmanifest /site-v3.webmanifest 301
+# Icone v2 (logo AG, rimosso) → icone v4
+/favicon-v2.svg /favicon-v4.svg 301
+/favicon-v2.ico /favicon-v4.ico 301
+/favicon-32-v2.png /favicon-32-v4.png 301
+/apple-touch-icon-v2.png /apple-touch-icon-v4.png 301
+/icon-192-v2.png /icon-192-v4.png 301
+/icon-512-v2.png /icon-512-v4.png 301
+/icon-maskable-512-v2.png /icon-maskable-512-v4.png 301
+/mask-icon-v2.svg /mask-icon-v4.svg 301
+/site-v2.webmanifest /site-v4.webmanifest 301
 
-# Anteprima social v3 (con logo AG) → v4 solo testo
-/og/og-home-v3.jpg /og/og-home-v4.jpg 301
-/og/og-home-v2.jpg /og/og-home-v4.jpg 301
+# Vecchie anteprime social → v5
+/og/og-home-v3.jpg /og/og-home-v5.jpg 301
+/og/og-home-v4.jpg /og/og-home-v5.jpg 301
+/og/og-home-v2.jpg /og/og-home-v5.jpg 301
+
+# Icone v3 (cerchio verde provvisorio) → icone v4 dal logo firma
+/favicon-v3.svg /favicon-v4.svg 301
+/favicon-v3.ico /favicon-v4.ico 301
+/favicon-32-v3.png /favicon-32-v4.png 301
+/apple-touch-icon-v3.png /apple-touch-icon-v4.png 301
+/icon-192-v3.png /icon-192-v4.png 301
+/icon-512-v3.png /icon-512-v4.png 301
+/icon-maskable-512-v3.png /icon-maskable-512-v4.png 301
+/mask-icon-v3.svg /mask-icon-v4.svg 301
+/site-v3.webmanifest /site-v4.webmanifest 301

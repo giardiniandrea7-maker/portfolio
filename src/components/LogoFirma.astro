@@ -1,52 +1,45 @@
 ---
-// Logo firma ufficiale del Consulente Finanziario (Vademecum Fideuram, pag. 11 e 22).
-// Quando arriva il file ufficiale basta copiarlo in public/logo-firma.svg (o .png):
-// il componente lo mostra in automatico. Finché manca, fallback testuale.
+// Logo firma ufficiale del Consulente Finanziario (Vademecum Fideuram, pag. 11 e 22): public/logo-firma.*
+// Accanto, nome e qualifica in testo. Se il file manca resta solo il testo.
 import '@fontsource/playfair-display/400.css';
 
+import { siteQualifica } from '~/navigation';
 import { findPublicImage } from '~/utils/home-assets';
 
 export interface Props {
   /** 'light' su fondo chiaro, 'dark' su fondo scuro */
   tone?: 'light' | 'dark';
-  /** 'md' per header e menu, 'sm' per spazi stretti */
-  size?: 'sm' | 'md';
+  /** Classi per il blocco nome + qualifica (es. per nasconderlo dove manca spazio) */
+  nameClass?: string;
   class?: string;
 }
 
-const { tone = 'light', size = 'md', class: className = '' } = Astro.props;
+const { tone = 'light', nameClass = '', class: className = '' } = Astro.props;
 
-const firma = findPublicImage('logo-firma', ['svg', 'png']);
-const alt = 'Andrea Giardini — Consulente Finanziario di Fideuram';
+const firma = findPublicImage('logo-firma', ['svg', 'png', 'webp', 'jpg', 'jpeg']);
 ---
 
-{
-  firma ? (
-    <img
-      src={firma}
-      alt={alt}
-      class:list={[size === 'md' ? 'h-10 md:h-12' : 'h-9', 'w-auto', className]}
-    />
-  ) : (
-    <span class:list={['flex flex-col leading-tight', className]}>
-      <span
-        class:list={[
-          'font-playfair tracking-[0.02em]',
-          size === 'md' ? 'text-lg md:text-2xl' : 'text-lg',
-          tone === 'dark' ? 'text-white' : 'text-brand',
-        ]}
-      >
-        Andrea Giardini
-      </span>
-      <span
-        class:list={[
-          'font-sans',
-          size === 'md' ? 'text-[11px] md:text-[13px]' : 'text-[11px]',
-          tone === 'dark' ? 'text-white/80' : 'text-charcoal',
-        ]}
-      >
-        Consulente Finanziario di Fideuram
-      </span>
+<span class:list={['flex items-center gap-3 md:gap-4', className]}>
+  {
+    firma && (
+      <>
+        <img
+          src={firma}
+          alt="Fideuram Private Banker"
+          width="958"
+          height="366"
+          class:list={['h-9 md:h-11 w-auto', tone === 'light' && 'mix-blend-multiply']}
+        />
+        <span aria-hidden="true" class:list={['w-px h-8 md:h-10 bg-charcoal/15', nameClass]} />
+      </>
+    )
+  }
+  <span class:list={['flex flex-col leading-tight', nameClass]}>
+    <span class:list={['font-playfair tracking-[0.02em] text-base md:text-xl', tone === 'dark' ? 'text-white' : 'text-brand']}>
+      Andrea Giardini
     </span>
-  )
-}
+    <span class:list={['font-sans text-[11px] md:text-[13px]', tone === 'dark' ? 'text-white/80' : 'text-charcoal']}>
+      {siteQualifica.breve}
+    </span>
+  </span>
+</span>
