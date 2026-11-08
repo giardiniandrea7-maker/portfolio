@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
 
 import SiteLayout from '~/components/site/SiteLayout.astro';
 import Placeholder from '~/components/site/Placeholder.astro';
@@ -176,6 +177,25 @@ const anchorOffset = 'scroll-mt-16 md:scroll-mt-20';
       </div>
       <div class="mt-14 md:mt-20">
         <PillarGrid items={previdenza} circleColor="white" />
+      </div>
+      <div class="reveal mt-14 md:mt-20 bg-ivory border border-brand/40 rounded-[12px] p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+        <span class="w-16 h-16 shrink-0 rounded-full bg-white flex items-center justify-center">
+          <Icon name="tabler:stairs-up" class="w-9 h-9 text-brand [&_*]:stroke-[1.25]" aria-hidden="true" />
+        </span>
+        <div class="flex-1">
+          <h3 class="font-sans font-medium uppercase tracking-[0.15em] text-base md:text-lg text-charcoal">
+            Costruisci la tua pensione, un mattone alla volta
+          </h3>
+          <p class="mt-2 text-sm md:text-base text-charcoal/80 leading-relaxed">
+            Scopri in pochi passi quanto potrebbe servirti e quali motori possono lavorare per te.
+          </p>
+        </div>
+        <a
+          href="/la-tua-pensione"
+          class="inline-block self-start md:self-auto shrink-0 bg-brand text-white uppercase tracking-[0.15em] text-sm py-4 px-8 hover:bg-brand/90 transition-colors"
+        >
+          Inizia il percorso
+        </a>
       </div>
     </div>
   </section>

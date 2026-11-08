@@ -236,4 +236,32 @@ const revealBtn =
   }
 
   onPageLoad(initMap);
+
+  // Arrivo dal percorso "La tua pensione" (/contatti?da=pensione&copertura=..&integrazione=..&divario=..&versamento=..):
+  // precompilo il campo esigenze con un riepilogo leggibile, se è ancora vuoto.
+  function initDaPensione() {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get('da') !== 'pensione') return;
+    const campo = document.querySelector<HTMLTextAreaElement>('#form-contatti textarea[name="esigenze"]');
+    if (!campo || campo.value.trim()) return;
+    const migliaia = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const num = (k: string) => {
+      const v = q.get(k);
+      const n = Number(v);
+      return v !== null && v !== '' && Number.isFinite(n) ? Math.max(0, n) : null;
+    };
+    const copertura = num('copertura');
+    const integrazione = num('integrazione');
+    const divario = num('divario');
+    const versamento = num('versamento');
+    const righe = ['Ho fatto il percorso "La tua pensione" sul sito.'];
+    if (divario !== null) righe.push(`Tassello da costruire: circa ${migliaia(divario)} € al mese.`);
+    if (versamento !== null) righe.push(`Potrei mettere da parte circa ${migliaia(versamento)} € al mese.`);
+    if (integrazione !== null) righe.push(`Con la previdenza complementare: circa ${migliaia(integrazione)} € al mese in più.`);
+    if (copertura !== null) righe.push(`Copertura del mio obiettivo: ${Math.min(100, copertura)}%.`);
+    righe.push('Vorrei parlarne insieme per costruire il mio percorso.');
+    campo.value = righe.join('\n');
+  }
+
+  onPageLoad(initDaPensione);
 </script>
