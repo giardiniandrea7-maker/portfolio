@@ -1,0 +1,1212 @@
+---
+import { Icon } from 'astro-icon/components';
+import QRCode from 'qrcode';
+import '@fontsource/playfair-display/400.css';
+
+import SiteLayout from '~/components/site/SiteLayout.astro';
+import SectionTitle from '~/components/site/SectionTitle.astro';
+import InfoTip from '~/components/site/InfoTip.astro';
+
+import { siteContacts, siteQualifica } from '~/navigation';
+import { DEDUCIBILITA_MAX, FASCE_IRPEF, FONTI, RENDIMENTI, TENORI } from '~/data/previdenza';
+import { LIMITI } from '~/lib/previdenza';
+import { COLORI } from '~/lib/grafici-previdenza';
+
+const metadata = {
+  title: 'La tua pensione, passo dopo passo | Andrea Giardini',
+  ignoreTitleTemplate: true,
+  description:
+    'Scopri quanto potrebbe servirti in pensione e come la previdenza complementare ti aiuta a costruirlo: motore fiscale, datore di lavoro e tempo.',
+};
+
+// QR-code del PDF generato a build-time (indirizzo fisso)
+const qrDataUrl = await QRCode.toDataURL('https://giardiniconsulenza.it/contatti', {
+  margin: 1,
+  width: 320,
+  color: { dark: '#1E2421', light: '#FFFFFF' },
+});
+
+const lavori = [
+  { value: 'privato', icon: 'tabler:briefcase', title: 'Dipendente privato', text: 'Lavori per un’azienda o uno studio.' },
+  { value: 'pubblico', icon: 'tabler:building-bank', title: 'Dipendente pubblico', text: 'Lavori per un ente o un’amministrazione.' },
+  { value: 'autonomo', icon: 'tabler:user-star', title: 'Autonomo o professionista', text: 'Lavori in proprio, con partita IVA.' },
+];
+
+const tenori = [
+  { value: TENORI.essenziale, icon: 'tabler:home-heart', title: 'Essenziale', text: 'Le spese di casa e qualche piccolo piacere.' },
+  { value: TENORI.comeOggi, icon: 'tabler:coffee', title: 'Come oggi', text: 'Le tue abitudini di sempre, con serenità.' },
+  { value: TENORI.senzaRinunce, icon: 'tabler:plane', title: 'Senza rinunce', text: 'Viaggi, passioni e tempo per chi ami.' },
+];
+
+const versamenti = [50, 100, 150, 200, 300];
+
+const datoreOpzioni = [
+  { value: 'si', icon: 'tabler:check', title: 'Sì' },
+  { value: 'no', icon: 'tabler:minus', title: 'No' },
+  { value: 'nonso', icon: 'tabler:help', title: 'Non lo so' },
+];
+
+const ipotesi = [
+  { value: 'prudente', label: 'Prudente' },
+  { value: 'equilibrato', label: 'Equilibrato' },
+  { value: 'dinamico', label: 'Dinamico' },
+];
+
+const faq = [
+  {
+    q: 'Cos’è la previdenza complementare?',
+    a: 'È un risparmio dedicato alla pensione, che si affianca a quella pubblica. Ci versi tu, a volte anche il tuo datore di lavoro, e lo Stato ti riconosce un vantaggio fiscale. Lo ritrovi quando vai in pensione, come capitale o come cifra mensile.',
+  },
+  {
+    q: 'Perché lo Stato mi restituisce dei soldi?',
+    a: `Quello che versi per la pensione complementare si può togliere dal reddito su cui paghi le tasse, fino a ${DEDUCIBILITA_MAX.toLocaleString('it-IT')} € l’anno. Così paghi meno tasse e, con la dichiarazione dei redditi, ti torna una parte di quanto hai versato.`,
+  },
+  {
+    q: 'Questa è una consulenza?',
+    a: 'No. È una simulazione a scopo informativo ed educativo, con ipotesi semplificate. Serve a farti un’idea e a orientarti. Per un percorso costruito sulla tua situazione possiamo parlarne insieme.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'La tua pensione, passo dopo passo',
+    url: 'https://giardiniconsulenza.it/la-tua-pensione',
+    description: metadata.description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    browserRequirements: 'Richiede JavaScript',
+    inLanguage: 'it-IT',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    author: { '@type': 'Person', name: 'Andrea Giardini', jobTitle: siteQualifica.estesa },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+
+// Stili ricorrenti
+const card =
+  'flex h-full items-center gap-4 rounded-[12px] border-2 border-transparent bg-white p-5 md:p-6 text-left shadow-[0_10px_30px_-20px_rgba(0,40,22,0.35)] transition-all cursor-pointer hover:border-brand/40 peer-checked:border-brand peer-checked:bg-brand/[0.04] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ember';
+const chip =
+  'inline-flex items-center justify-center min-w-[4.5rem] rounded-full border border-brand px-5 py-3 text-base text-brand cursor-pointer transition-colors hover:bg-brand/10 peer-checked:bg-brand peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ember';
+const domanda = 'font-playfair text-3xl md:text-4xl text-charcoal leading-tight focus:outline-none';
+const eyebrow = 'text-xs uppercase tracking-[0.2em] font-semibold text-brand';
+const capTitle = 'mt-3 font-playfair text-3xl md:text-4xl text-charcoal leading-tight';
+const btnPrimary =
+  'inline-flex items-center justify-center gap-2 bg-brand text-white uppercase tracking-[0.15em] text-sm py-4 px-8 hover:bg-brand/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors';
+const btnGhost =
+  'inline-flex items-center justify-center gap-2 border border-brand text-brand uppercase tracking-[0.15em] text-sm py-4 px-6 hover:bg-brand hover:text-white transition-colors';
+const sw = 'w-3 h-3 rounded-sm shrink-0';
+---
+
+<SiteLayout metadata={metadata}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+
+  <div
+    data-pensione
+    data-qr={qrDataUrl}
+    data-telefono={siteContacts.phone}
+    data-email={siteContacts.email}
+    data-qualifica={siteQualifica.estesa}
+  >
+    <!-- INTRO -->
+    <section data-intro class="bg-ivory py-16 md:py-24">
+      <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
+        <h1 class="font-playfair text-4xl md:text-6xl leading-tight text-charcoal text-balance">Come vuoi vivere domani?</h1>
+        <p class="mt-6 text-lg md:text-xl text-charcoal/80 leading-relaxed text-balance">
+          In pochi passi scopri quanto potrebbe servirti in pensione e come costruirlo, un mattone alla volta.
+        </p>
+        <button type="button" data-inizia class:list={[btnPrimary, 'mt-10 px-12']}>
+          Iniziamo <Icon name="tabler:arrow-right" class="w-5 h-5" aria-hidden="true" />
+        </button>
+        <p class="mt-6 flex items-center justify-center gap-2 text-xs text-charcoal/70">
+          <Icon name="tabler:lock" class="w-4 h-4 text-brand" aria-hidden="true" />
+          Tutto viene calcolato nel tuo browser: nessun dato viene salvato o inviato.
+        </p>
+        <noscript>
+          <p class="mt-6 text-sm text-charcoal">Per usare il percorso attiva JavaScript nel browser.</p>
+        </noscript>
+      </div>
+    </section>
+
+    <!-- PERCORSO A DOMANDE -->
+    <section data-percorso hidden class="bg-linen py-12 md:py-20 scroll-mt-16 md:scroll-mt-20" aria-label="Percorso a domande">
+      <div class="max-w-3xl mx-auto px-4 md:px-8">
+        <div class="flex items-center justify-between text-xs uppercase tracking-[0.15em] text-charcoal/70">
+          <span data-passo-testo>Passo 1 di 6</span>
+        </div>
+        <div
+          class="mt-3 h-1.5 w-full rounded-full bg-sand overflow-hidden"
+          role="progressbar"
+          aria-label="Avanzamento del percorso"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="0"
+          data-progresso
+        >
+          <span data-progresso-barra class="block h-full bg-brand transition-[width] duration-500" style="width:0%"></span>
+        </div>
+
+        <form data-form novalidate class="mt-10 md:mt-14">
+          <!-- 1. Età -->
+          <fieldset data-step="eta" class="text-center">
+            <legend class="sr-only">Quanti anni hai?</legend>
+            <h2 class={domanda} tabindex="-1" data-step-title>Quanti anni hai?</h2>
+            <p class="mt-8">
+              <output for="q-eta" data-out="eta" class="font-playfair text-7xl md:text-8xl text-brand">35</output>
+              <span class="block mt-1 text-charcoal/70">anni</span>
+            </p>
+            <label for="q-eta" class="sr-only">La tua età</label>
+            <input id="q-eta" name="eta" type="range" min={LIMITI.etaMin} max={LIMITI.etaMax} step="1" value="35" class="pp-range mt-8 w-full max-w-md" />
+          </fieldset>
+
+          <!-- 2. Lavoro -->
+          <fieldset data-step="lavoro" hidden>
+            <legend class="sr-only">Che lavoro fai?</legend>
+            <h2 class:list={[domanda, 'text-center']} tabindex="-1" data-step-title>Che lavoro fai?</h2>
+            <div class="mt-10 grid gap-4">
+              {
+                lavori.map((l) => (
+                  <label class="block">
+                    <input type="radio" name="tipo" value={l.value} class="peer sr-only" />
+                    <span class={card}>
+                      <span class="w-14 h-14 shrink-0 rounded-full bg-ivory flex items-center justify-center">
+                        <Icon name={l.icon} class="w-7 h-7 text-brand [&_*]:stroke-[1.4]" aria-hidden="true" />
+                      </span>
+                      <span>
+                        <span class="block text-lg font-semibold text-charcoal">{l.title}</span>
+                        <span class="block text-sm text-charcoal/70">{l.text}</span>
+                      </span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <!-- 3. Reddito -->
+          <fieldset data-step="reddito" hidden class="text-center">
+            <legend class="sr-only">Quanto ti entra al mese?</legend>
+            <h2 class={domanda} tabindex="-1" data-step-title>Quanto ti entra al mese?</h2>
+            <p class="mt-3 text-charcoal/70">Lo stipendio o il guadagno netto, quello che arriva sul conto.</p>
+            <div class="mt-8 inline-flex items-baseline gap-3 border-b-2 border-brand px-2">
+              <label for="q-netto" class="sr-only">Entrate nette al mese, in euro</label>
+              <input
+                id="q-netto"
+                name="netto"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                value="2.200"
+                aria-describedby="e-netto"
+                class="w-[7ch] bg-transparent text-center font-playfair text-6xl md:text-7xl text-brand focus:outline-none"
+              />
+              <span class="font-playfair text-4xl text-brand" aria-hidden="true">€</span>
+            </div>
+            <p id="e-netto" data-errore="nettoMese" class="mt-3 text-sm text-ember-dark" hidden></p>
+
+            <div class="mt-10">
+              <p class="text-sm text-charcoal">
+                Il tuo reddito lordo annuo è circa…
+                <InfoTip
+                  term="reddito lordo e aliquota"
+                  text="Ci serve per calcolare quanto ti restituisce lo Stato. Il lordo è il reddito prima di tasse e contributi; la fascia indica la tua aliquota, cioè la percentuale di tasse sull’ultima parte del reddito."
+                />
+              </p>
+              <div class="mt-4 flex flex-wrap justify-center gap-3" role="radiogroup" aria-label="Fascia di reddito lordo annuo">
+                {
+                  FASCE_IRPEF.map((f) => (
+                    <label>
+                      <input type="radio" name="fascia" value={f.id} class="peer sr-only" />
+                      <span class={chip}>{f.etichetta}</span>
+                    </label>
+                  ))
+                }
+              </div>
+              <p class="mt-3 text-xs text-charcoal/60">L’abbiamo stimata dal netto: puoi cambiarla.</p>
+            </div>
+          </fieldset>
+
+          <!-- 4. Tenore -->
+          <fieldset data-step="tenore" hidden>
+            <legend class="sr-only">Come vorresti vivere in pensione?</legend>
+            <h2 class:list={[domanda, 'text-center']} tabindex="-1" data-step-title>Come vorresti vivere in pensione?</h2>
+            <div class="mt-10 grid md:grid-cols-3 gap-4">
+              {
+                tenori.map((t) => (
+                  <label class="block">
+                    <input type="radio" name="tenore" value={t.value} class="peer sr-only" />
+                    <span class:list={[card, 'md:flex-col md:text-center md:py-8']}>
+                      <span class="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full bg-ivory flex items-center justify-center">
+                        <Icon name={t.icon} class="w-7 h-7 md:w-8 md:h-8 text-brand [&_*]:stroke-[1.4]" aria-hidden="true" />
+                      </span>
+                      <span class="flex-1">
+                        <span class="block text-lg font-semibold text-charcoal">{t.title}</span>
+                        <span class="block mt-1 text-sm text-charcoal/70">{t.text}</span>
+                      </span>
+                      <span class="shrink-0 text-right md:text-center">
+                        <span class="block font-playfair text-2xl text-brand">{t.value}%</span>
+                        <span class="block text-[11px] leading-tight text-charcoal/60 max-w-[5.5rem] md:max-w-none">di quanto ti entra oggi</span>
+                      </span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <!-- 5. Versamento -->
+          <fieldset data-step="versamento" hidden class="text-center">
+            <legend class="sr-only">Quanto potresti mettere da parte ogni mese?</legend>
+            <h2 class={domanda} tabindex="-1" data-step-title>Quanto potresti mettere da parte ogni mese?</h2>
+            <p class="mt-3 text-charcoal/70">Anche una cifra piccola fa la differenza, se è costante.</p>
+            <div class="mt-10 flex flex-wrap justify-center gap-3">
+              {
+                versamenti.map((v) => (
+                  <label>
+                    <input type="radio" name="versamento" value={v} class="peer sr-only" />
+                    <span class={chip}>{v} €</span>
+                  </label>
+                ))
+              }
+              <label>
+                <input type="radio" name="versamento" value="altro" class="peer sr-only" />
+                <span class={chip}>Altro</span>
+              </label>
+            </div>
+            <div data-altro hidden class="mt-6">
+              <label for="q-altro" class="block text-sm text-charcoal">La tua cifra al mese, in euro</label>
+              <input
+                id="q-altro"
+                name="altro"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="80"
+                aria-describedby="e-versamento"
+                class="mt-2 w-40 text-center bg-white border border-gray-300 rounded-[8px] px-4 py-3 text-xl text-charcoal focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+              />
+            </div>
+            <p id="e-versamento" data-errore="versamentoMese" class="mt-3 text-sm text-ember-dark" hidden></p>
+          </fieldset>
+
+          <!-- 6. Datore (solo dipendenti privati) -->
+          <fieldset data-step="datore" hidden>
+            <legend class="sr-only">Il tuo contratto prevede che il datore versi in un fondo pensione?</legend>
+            <h2 class:list={[domanda, 'text-center']} tabindex="-1" data-step-title>
+              Il tuo contratto prevede che il datore versi in un fondo pensione?
+            </h2>
+            <p class="mt-3 text-center text-charcoal/70">
+              Fondo pensione
+              <InfoTip
+                term="fondo pensione"
+                text="È lo strumento della previdenza complementare legato al tuo lavoro o al tuo contratto: ci versi tu, spesso anche il datore."
+              />
+            </p>
+            <div class="mt-10 grid sm:grid-cols-3 gap-4">
+              {
+                datoreOpzioni.map((o) => (
+                  <label class="block">
+                    <input type="radio" name="datore" value={o.value} class="peer sr-only" />
+                    <span class:list={[card, 'justify-center']}>
+                      <Icon name={o.icon} class="w-6 h-6 text-brand" aria-hidden="true" />
+                      <span class="text-lg font-semibold text-charcoal">{o.title}</span>
+                    </span>
+                  </label>
+                ))
+              }
+            </div>
+            <p data-nota-nonso hidden class="mt-6 text-center text-sm text-charcoal/80">
+              Ne parliamo insieme: spesso è un contributo che si lascia sul tavolo. Per ora non lo contiamo.
+            </p>
+          </fieldset>
+
+          <div class="mt-12 flex items-center justify-between gap-4">
+            <button type="button" data-indietro class="inline-flex items-center gap-2 text-sm uppercase tracking-[0.15em] text-charcoal hover:text-brand py-3 disabled:invisible">
+              <Icon name="tabler:arrow-left" class="w-5 h-5" aria-hidden="true" /> Indietro
+            </button>
+            <button type="button" data-avanti class={btnPrimary}>
+              <span data-avanti-label>Avanti</span>
+              <Icon name="tabler:arrow-right" class="w-5 h-5" aria-hidden="true" />
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- RISULTATI -->
+    <div data-risultati hidden>
+      <p data-annuncio class="sr-only" aria-live="polite"></p>
+
+      <!-- Riepilogo risposte + età pensione -->
+      <section class="bg-white border-b border-charcoal/10 scroll-mt-16 md:scroll-mt-20" data-risultati-top>
+        <div class="max-w-6xl mx-auto px-4 md:px-8 py-6 md:py-8 md:flex md:items-center md:justify-between md:gap-10">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.2em] font-semibold text-charcoal/70 focus:outline-none" tabindex="-1" data-risultati-titolo>
+              Le tue risposte
+            </h2>
+            <p data-out="riepilogo" class="mt-2 text-sm md:text-base text-charcoal"></p>
+            <button type="button" data-modifica class="mt-2 text-sm text-brand underline underline-offset-4">Modifica le risposte</button>
+          </div>
+          <div class="mt-6 md:mt-0 md:w-80 shrink-0">
+            <div class="flex items-baseline justify-between text-sm">
+              <label for="r-pensione" class="font-semibold text-charcoal">In pensione a</label>
+              <output for="r-pensione" data-out="etaPensione" class="font-playfair text-xl text-brand">67 anni</output>
+            </div>
+            <input id="r-pensione" type="range" min={LIMITI.etaPensioneMin} max={LIMITI.etaPensioneMax} step="1" value="67" class="pp-range mt-2 w-full" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Capitolo 1 -->
+      <section class="bg-linen py-14 md:py-20">
+        <div class="max-w-4xl mx-auto px-4 md:px-8">
+          <p class={eyebrow}>Capitolo 1</p>
+          <h2 class={capTitle}>Il tuo punto di partenza</h2>
+          <p data-out="frase1" class="mt-5 text-lg md:text-xl text-charcoal leading-relaxed"></p>
+          <figure class="mt-8 bg-white rounded-[12px] p-4 md:p-6">
+            <div data-gradino class="[&_svg]:w-full [&_svg]:h-auto"></div>
+            <figcaption>
+              <ul class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-charcoal">
+                <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.reddito}`}></span>Reddito di oggi</li>
+                <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.pensione}`}></span>Pensione pubblica stimata</li>
+                <li class="flex items-center gap-2">
+                  <span class={sw} style={`background:repeating-linear-gradient(45deg,#FBF1E4 0 2px,${COLORI.divario} 2px 4px);outline:1px dashed ${COLORI.divario}`}></span>Da costruire
+                </li>
+                <li class="flex items-center gap-2"><span class="w-4 border-t-2 border-dashed" style={`border-color:${COLORI.divario}`}></span>Come vorresti vivere</li>
+              </ul>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Capitolo 2 -->
+      <section class="bg-ivory py-14 md:py-20">
+        <div class="max-w-6xl mx-auto px-4 md:px-8">
+          <div class="max-w-3xl">
+            <p class={eyebrow}>Capitolo 2</p>
+            <h2 class={capTitle}>I motori che lavorano per te</h2>
+            <p class="mt-5 text-lg text-charcoal leading-relaxed">
+              Con la previdenza complementare<InfoTip
+                term="previdenza complementare"
+                text="Un risparmio dedicato alla pensione che si affianca a quella pubblica, con vantaggi fiscali e, per molti dipendenti, il contributo del datore."
+              />
+              il tuo impegno non lavora da solo: altri motori si aggiungono, anno dopo anno.
+            </p>
+          </div>
+
+          <div class="mt-10 lg:grid lg:grid-cols-12 lg:gap-10 lg:items-start">
+            <!-- Torre -->
+            <figure class="lg:col-span-5 bg-white rounded-[12px] p-5 md:p-6 lg:sticky lg:top-24">
+              <div data-torre class="mx-auto max-w-[320px] [&_svg]:w-full [&_svg]:h-auto"></div>
+              <div class="mt-4">
+                <div class="flex items-baseline justify-between text-sm">
+                  <label for="r-anno" class="font-semibold text-charcoal">Guarda la torre crescere</label>
+                  <output for="r-anno" data-out="annoTorre" class="font-playfair text-lg text-brand">A 67 anni</output>
+                </div>
+                <input id="r-anno" type="range" min="0" max="32" step="1" value="32" class="pp-range mt-2 w-full" />
+              </div>
+              <figcaption>
+                <p class="mt-3 text-xs text-charcoal/70">Capitale accumulato, prima delle tasse in uscita.</p>
+                <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-charcoal">
+                  <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.tuo}`}></span>Il tuo versamento</li>
+                  <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.fiscale}`}></span>Motore fiscale</li>
+                  <li class="[&:not([hidden])]:flex items-center gap-2" data-solo-datore><span class={sw} style={`background:${COLORI.datore}`}></span>Datore di lavoro</li>
+                  <li class="[&:not([hidden])]:flex items-center gap-2" data-solo-tfr><span class={sw} style={`background:${COLORI.tfr}`}></span>TFR</li>
+                  <li class="flex items-center gap-2">
+                    <span class={sw} style={`background:radial-gradient(${COLORI.crescitaPunti} 1px, ${COLORI.crescita} 1.2px) 0 0/4px 4px`}></span>Crescita nel tempo
+                  </li>
+                  <li class="flex items-center gap-2"><span class="w-4 border-t-2 border-dashed" style={`border-color:${COLORI.divario}`}></span>Il tuo obiettivo</li>
+                </ul>
+              </figcaption>
+            </figure>
+
+            <!-- Motori -->
+            <div class="mt-8 lg:mt-0 lg:col-span-7 space-y-4">
+              <article class="bg-white rounded-[12px] p-5 md:p-6 border-l-4" style={`border-color:${COLORI.tuo}`}>
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="flex items-center gap-2 font-semibold text-charcoal"><Icon name="tabler:pig-money" class="w-5 h-5 text-brand" aria-hidden="true" />Il tuo impegno</h3>
+                  <p class="font-playfair text-2xl text-charcoal" data-conta="mTuo">—</p>
+                </div>
+                <p class="mt-2 text-sm text-charcoal/80">Metti da parte <span data-out="versamento"></span> al mese.</p>
+              </article>
+
+              <article class="bg-white rounded-[12px] p-5 md:p-6 border-l-4" style={`border-color:${COLORI.fiscale}`}>
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="flex items-center gap-2 font-semibold text-charcoal"><Icon name="tabler:receipt-tax" class="w-5 h-5 text-brand" aria-hidden="true" />Il motore fiscale</h3>
+                  <p class="font-playfair text-2xl text-charcoal" data-conta="mFiscale">—</p>
+                </div>
+                <p class="mt-2 text-sm text-charcoal/80">
+                  Lo Stato ti restituisce circa <strong data-out="rimborsoAnnuo"></strong> ogni anno, con la dichiarazione dei redditi.
+                  <InfoTip
+                    term="deduzione"
+                    text={`Quello che versi si toglie dal reddito su cui paghi le tasse (si dice "dedurre"), fino a ${DEDUCIBILITA_MAX.toLocaleString('it-IT')} € l’anno: per questo ti torna una parte di ciò che hai versato.`}
+                  />
+                </p>
+                <label class="mt-4 flex items-center justify-between gap-4 cursor-pointer">
+                  <span class="text-sm text-charcoal">
+                    <span class="font-semibold">Reinvesti il rimborso</span>
+                    <span class="block text-xs text-charcoal/70" data-out="notaRimborso"></span>
+                  </span>
+                  <input type="checkbox" role="switch" data-reinvesti checked class="pp-switch" />
+                </label>
+              </article>
+
+              <article class="bg-white rounded-[12px] p-5 md:p-6 border-l-4" style={`border-color:${COLORI.datore}`}>
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="flex items-center gap-2 font-semibold text-charcoal"><Icon name="tabler:building-factory-2" class="w-5 h-5 text-brand" aria-hidden="true" />Il tuo datore</h3>
+                  <p class="font-playfair text-2xl text-charcoal" data-conta="mDatore">—</p>
+                </div>
+                <p class="mt-2 text-sm text-charcoal/80" data-out="testoDatore"></p>
+                <div data-blocco-tfr class="mt-4 pt-4 border-t border-charcoal/10">
+                  <label class="flex items-center justify-between gap-4 cursor-pointer">
+                    <span class="text-sm text-charcoal">
+                      <span class="font-semibold">Aggiungi il TFR</span>
+                      <span class="block text-xs text-charcoal/70" data-out="notaTfr"></span>
+                    </span>
+                    <input type="checkbox" role="switch" data-tfr class="pp-switch" />
+                  </label>
+                  <p class="mt-1 text-xs text-charcoal/70">
+                    Trattamento di fine rapporto
+                    <InfoTip
+                      term="TFR"
+                      text="È la liquidazione: una parte del tuo stipendio che il datore accantona ogni anno e ti dà quando il lavoro finisce. Puoi scegliere di farla crescere nel fondo pensione."
+                    />
+                  </p>
+                </div>
+              </article>
+
+              <article class="bg-white rounded-[12px] p-5 md:p-6 border-l-4" style={`border-color:${COLORI.crescitaPunti}`}>
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="flex items-center gap-2 font-semibold text-charcoal"><Icon name="tabler:seeding" class="w-5 h-5 text-brand" aria-hidden="true" />Il tempo</h3>
+                  <p class="font-playfair text-2xl text-charcoal" data-conta="mCrescita">—</p>
+                </div>
+                <p class="mt-2 text-sm text-charcoal/80">
+                  Anno dopo anno, quello che hai messo da parte può crescere.
+                  <InfoTip
+                    term="ipotesi di crescita"
+                    text={`Una stima di quanto il capitale potrebbe crescere ogni anno, oltre l’inflazione: Prudente ${RENDIMENTI.prudente * 100}%, Equilibrato ${RENDIMENTI.equilibrato * 100}%, Dinamico ${RENDIMENTI.dinamico * 100}%. Sono ipotesi, non garanzie.`}
+                  />
+                </p>
+                <fieldset class="mt-4">
+                  <legend class="text-xs text-charcoal/70">Ipotesi di crescita</legend>
+                  <div class="mt-2 grid grid-cols-3 rounded-[8px] border border-brand overflow-hidden">
+                    {
+                      ipotesi.map((o, n) => (
+                        <label class:list={['relative cursor-pointer', n > 0 && 'border-l border-brand']}>
+                          <input type="radio" name="ipotesi" value={o.value} checked={o.value === 'prudente'} class="peer sr-only" data-ipotesi />
+                          <span class="block text-center py-2.5 text-sm text-brand peer-checked:bg-brand peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-ember peer-focus-visible:-outline-offset-4 transition-colors">
+                            {o.label}
+                          </span>
+                        </label>
+                      ))
+                    }
+                  </div>
+                  <p class="mt-2 text-xs text-charcoal/70">Ipotesi, non garanzia.</p>
+                </fieldset>
+              </article>
+
+              <article class="bg-white rounded-[12px] p-5 md:p-6 border-l-4 border-charcoal/20">
+                <div class="flex items-start justify-between gap-4">
+                  <h3 class="flex items-center gap-2 font-semibold text-charcoal"><Icon name="tabler:door-exit" class="w-5 h-5 text-brand" aria-hidden="true" />L’uscita</h3>
+                  <p class="font-playfair text-2xl text-charcoal" data-out="aliquotaUscita">—</p>
+                </div>
+                <p class="mt-2 text-sm text-charcoal/80">
+                  Al momento della pensione paghi tra il 15% e il 9% di tasse, meno di quanto pagheresti altrove.
+                  <InfoTip
+                    term="aliquota in uscita"
+                    text="È la percentuale di tasse su quanto ricevi dal fondo: parte dal 15% e scende un po’ per ogni anno di partecipazione oltre il quindicesimo, fino al 9%."
+                  />
+                </p>
+                <p class="mt-1 text-xs text-charcoal/70" data-out="notaUscita"></p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Capitolo 3 -->
+      <section class="bg-linen py-14 md:py-20">
+        <div class="max-w-5xl mx-auto px-4 md:px-8">
+          <p class={eyebrow}>Capitolo 3</p>
+          <h2 class={capTitle}>Lo stesso impegno, due risultati</h2>
+          <p class="mt-5 text-lg text-charcoal leading-relaxed">
+            Stessa cifra ogni mese, <span data-out="versamento"></span>. Cambia solo quanti motori lavorano per te.
+          </p>
+
+          <div class="mt-10 grid md:grid-cols-2 gap-5">
+            <article class="bg-white rounded-[12px] p-6 md:p-8 border border-charcoal/10">
+              <h3 class="text-xs uppercase tracking-[0.2em] font-semibold text-charcoal/70">Da solo</h3>
+              <p class="mt-4 font-playfair text-4xl md:text-5xl text-charcoal" data-conta="capSolo">—</p>
+              <p class="text-xs text-charcoal/70">alla pensione</p>
+              <div class="mt-4 h-3 rounded-full bg-sand overflow-hidden"><span data-barra="solo" class="block h-full transition-[width] duration-700" style={`background:${COLORI.pensione};width:0%`}></span></div>
+              <dl class="mt-6 grid grid-cols-2 gap-4 text-sm">
+                <div><dt class="text-charcoal/70">Al mese in più</dt><dd class="mt-1 font-playfair text-2xl text-charcoal" data-conta="intSolo">—</dd></div>
+                <div><dt class="text-charcoal/70">Il tuo obiettivo</dt><dd class="mt-1 font-playfair text-2xl text-charcoal" data-out="copSolo">—</dd></div>
+              </dl>
+            </article>
+            <article class="bg-white rounded-[12px] p-6 md:p-8 border-2 border-brand">
+              <h3 class="text-xs uppercase tracking-[0.2em] font-semibold text-brand">Con la previdenza complementare</h3>
+              <p class="mt-4 font-playfair text-4xl md:text-5xl text-brand" data-conta="capComp">—</p>
+              <p class="text-xs text-charcoal/70">alla pensione, già al netto delle tasse in uscita</p>
+              <div class="mt-4 h-3 rounded-full bg-sand overflow-hidden"><span data-barra="comp" class="block h-full transition-[width] duration-700" style={`background:${COLORI.tuo};width:0%`}></span></div>
+              <dl class="mt-6 grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <dt class="text-charcoal/70">
+                    Al mese in più<InfoTip term="rendita" text="È la cifra che ricevi ogni mese in pensione: qui dividiamo il capitale per i mesi fino ai 90 anni." />
+                  </dt>
+                  <dd class="mt-1 font-playfair text-2xl text-charcoal" data-conta="intComp">—</dd>
+                </div>
+                <div><dt class="text-charcoal/70">Il tuo obiettivo</dt><dd class="mt-1 font-playfair text-2xl text-charcoal" data-out="copComp">—</dd></div>
+              </dl>
+            </article>
+          </div>
+
+          <p data-out="frase3" class="mt-8 text-lg md:text-xl text-charcoal leading-relaxed"></p>
+
+          <!-- Meter copertura -->
+          <div class="mt-8 bg-white rounded-[12px] p-6 md:p-8">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+              <h3 class="text-xs uppercase tracking-[0.2em] font-semibold text-charcoal/70">Quanto copri del tuo obiettivo</h3>
+              <p class="font-playfair text-5xl text-brand leading-none" data-out="copComp">—</p>
+            </div>
+            <div class="mt-5 flex h-4 rounded-full overflow-hidden bg-sand" role="img" data-meter aria-label="Copertura del tuo obiettivo">
+              <span data-quota="pensione" class="h-full transition-[width] duration-700" style={`background:${COLORI.pensione}`}></span>
+              <span data-quota="integrazione" class="h-full transition-[width] duration-700" style={`background:${COLORI.tuo}`}></span>
+            </div>
+            <ul class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-charcoal">
+              <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.pensione}`}></span>Pensione pubblica <strong data-out="qPensione"></strong></li>
+              <li class="flex items-center gap-2"><span class={sw} style={`background:${COLORI.tuo}`}></span>Previdenza complementare <strong data-out="qIntegrazione"></strong></li>
+              <li class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-sand border border-charcoal/15"></span>Ancora da costruire <strong data-out="qResto"></strong></li>
+            </ul>
+          </div>
+
+          <!-- Leve -->
+          <div class="mt-10">
+            <h3 class="font-sans font-medium uppercase tracking-[0.15em] text-base text-charcoal">Prova a muovere una leva</h3>
+            <div class="mt-5 grid sm:grid-cols-3 gap-3">
+              <button type="button" data-leva="piu50" class={btnGhost}><Icon name="tabler:plus" class="w-5 h-5" aria-hidden="true" />50 € al mese</button>
+              <button type="button" data-leva="dopo2" class={btnGhost}><Icon name="tabler:calendar-plus" class="w-5 h-5" aria-hidden="true" />In pensione 2 anni dopo</button>
+              <button type="button" data-leva="oggi" class={btnGhost}><Icon name="tabler:player-play" class="w-5 h-5" aria-hidden="true" />Inizia oggi, non tra 5 anni</button>
+            </div>
+            <p data-leva-esito class="mt-4 min-h-[1.5rem] text-base text-charcoal" role="status"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Azioni -->
+      <section class="bg-ivory py-14 md:py-16">
+        <div class="max-w-3xl mx-auto px-4 md:px-8 text-center">
+          <SectionTitle class="mb-8">Il prossimo passo</SectionTitle>
+          <div class="flex flex-col sm:flex-row sm:justify-center items-stretch sm:items-center gap-4">
+            <button type="button" data-pdf class={btnPrimary}>
+              <Icon name="tabler:download" class="w-5 h-5" aria-hidden="true" />
+              <span data-pdf-label>Scarica il tuo report PDF</span>
+            </button>
+            <a href="/contatti?da=pensione" data-parliamone class={btnGhost}>
+              <Icon name="tabler:message-circle" class="w-5 h-5" aria-hidden="true" />Ne parliamo insieme
+            </a>
+          </div>
+          <p data-pdf-stato class="mt-3 text-sm text-charcoal/80" role="status"></p>
+          <p class="mt-6 text-sm text-charcoal">
+            Per la stima ufficiale della tua pensione pubblica:
+            <!-- TODO: URL diretto al servizio "La mia pensione futura" -->
+            <a href="https://www.inps.it" target="_blank" rel="noopener" class="underline decoration-brand decoration-2 underline-offset-4 hover:text-brand"
+              >La mia pensione futura (INPS)<span class="sr-only"> (si apre in una nuova scheda)</span><Icon
+                name="tabler:external-link"
+                class="inline w-4 h-4 ml-1 -mt-0.5"
+                aria-hidden="true"
+              /></a
+            >
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Metodo, FAQ, disclaimer (sempre visibili) -->
+    <section class="bg-linen py-14 md:py-20">
+      <div class="max-w-3xl mx-auto px-4 md:px-8 space-y-4">
+        <details class="group bg-white rounded-[12px] border border-brand/20">
+          <summary class="flex items-center justify-between gap-4 cursor-pointer list-none p-5 md:p-6 font-semibold text-charcoal [&::-webkit-details-marker]:hidden">
+            <span class="flex items-center gap-3"><Icon name="tabler:info-circle" class="w-5 h-5 text-brand" aria-hidden="true" />Come funziona questo calcolo</span>
+            <Icon name="tabler:chevron-down" class="w-5 h-5 text-brand transition-transform group-open:rotate-180" aria-hidden="true" />
+          </summary>
+          <ul class="px-5 md:px-6 pb-6 space-y-3 text-sm md:text-base text-charcoal/85 leading-relaxed list-disc pl-10 md:pl-11">
+            <li>
+              <strong>Pensione pubblica:</strong> usiamo il rapporto tra prima pensione e ultimo stipendio stimato dalla {FONTI.rgs},
+              per chi ha 38 anni di contributi, e lo applichiamo al tuo netto di oggi. Per gli autonomi la stima è riproporzionata.
+            </li>
+            <li>
+              <strong>Motore fiscale:</strong> i versamenti si deducono fino a {DEDUCIBILITA_MAX.toLocaleString('it-IT')} € l’anno
+              ({FONTI.bilancio}); il rimborso dipende dalla tua fascia di reddito.
+            </li>
+            <li><strong>Datore e TFR:</strong> per i dipendenti privati il datore versa in media l’1,5% del lordo; il TFR è il 6,91% del lordo.</li>
+            <li>
+              <strong>Crescita:</strong> ipotesi illustrative oltre l’inflazione, già tassate al 20% nella previdenza complementare e al
+              26% nel risparmio da solo. Ipotesi, non garanzie.
+            </li>
+            <li><strong>Uscita:</strong> tasse tra il 15% e il 9% su quanto hai dedotto, sul contributo del datore e sul TFR ({FONTI.dlgs252}).</li>
+            <li>Tutti i valori sono in euro di oggi e arrotondati alle decine. Il capitale è distribuito fino ai 90 anni.</li>
+            <li>È una semplificazione: non considera carriera, interruzioni, costi dei singoli strumenti e regole particolari.</li>
+          </ul>
+        </details>
+
+        <h2 class="pt-8 pb-2 font-sans font-light uppercase tracking-[0.12em] text-lg md:text-2xl text-charcoal text-center">Domande frequenti</h2>
+        {
+          faq.map((f) => (
+            <details class="group bg-white rounded-[12px]">
+              <summary class="flex items-center justify-between gap-4 cursor-pointer list-none p-5 md:p-6 font-semibold text-charcoal [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <Icon name="tabler:chevron-down" class="w-5 h-5 shrink-0 text-brand transition-transform group-open:rotate-180" aria-hidden="true" />
+              </summary>
+              <p class="px-5 md:px-6 pb-6 text-sm md:text-base text-charcoal/85 leading-relaxed">{f.a}</p>
+            </details>
+          ))
+        }
+
+        <p class="pt-8 text-xs md:text-sm text-charcoal/70 leading-relaxed text-center">
+          Simulazione a scopo informativo ed educativo, basata su dati pubblici e ipotesi semplificate. Le ipotesi di crescita sono
+          illustrative e non garantite. Non costituisce consulenza né raccomandazione personalizzata.
+        </p>
+      </div>
+    </section>
+  </div>
+</SiteLayout>
+
+<style is:global>
+  .pp-range {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 32px;
+    background: transparent;
+    accent-color: #006937;
+    --p: 50%;
+  }
+  .pp-range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(to right, #006937 var(--p), #ece3d4 var(--p));
+  }
+  .pp-range::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #ece3d4;
+  }
+  .pp-range::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: #006937;
+  }
+  .pp-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    margin-top: -11px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #006937;
+    box-shadow: 0 2px 6px rgba(0, 40, 22, 0.2);
+  }
+  .pp-range::-moz-range-thumb {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #006937;
+  }
+  .pp-switch {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    width: 48px;
+    height: 28px;
+    border-radius: 999px;
+    background: #d8d2c6;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .pp-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+  }
+  .pp-switch:checked {
+    background: #006937;
+  }
+  .pp-switch:checked::after {
+    transform: translateX(20px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pp-switch,
+    .pp-switch::after,
+    [data-pensione] * {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  import { onPageLoad } from '~/scripts/page-load';
+  import {
+    calcola,
+    fasciaDaLordo,
+    stimaLordoAnnuo,
+    valoreDiIniziareOggi,
+    LIMITI,
+    type FasciaId,
+    type InputPensione,
+    type Ipotesi,
+    type RisultatoPensione,
+    type TipoLavoro,
+  } from '~/lib/previdenza';
+  import { gradinoSvg, torreSvg } from '~/lib/grafici-previdenza';
+  import { euro, percento, intero, leggiNumero } from '~/lib/formato';
+
+  const eur = (v: number) => euro(v, 10);
+  const ETICHETTE_TIPO: Record<TipoLavoro, string> = {
+    privato: 'Dipendente privato',
+    pubblico: 'Dipendente pubblico',
+    autonomo: 'Autonomo o professionista',
+  };
+  const ETICHETTE_TENORE: Record<number, string> = { 70: 'Essenziale', 85: 'Come oggi', 100: 'Senza rinunce' };
+  const ETICHETTE_IPOTESI: Record<Ipotesi, string> = { prudente: 'Prudente', equilibrato: 'Equilibrato', dinamico: 'Dinamico' };
+
+  function init() {
+    const root = document.querySelector<HTMLElement>('[data-pensione]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+
+    const q = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const qa = <T extends Element = HTMLElement>(s: string) => Array.from(root.querySelectorAll<T>(s));
+    const ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const form = q<HTMLFormElement>('[data-form]');
+    const percorso = q('[data-percorso]');
+    const risultati = q('[data-risultati]');
+    const avanti = q<HTMLButtonElement>('[data-avanti]');
+    const avantiLabel = q('[data-avanti-label]');
+    const indietro = q<HTMLButtonElement>('[data-indietro]');
+    const qEta = q<HTMLInputElement>('#q-eta');
+    const qNetto = q<HTMLInputElement>('#q-netto');
+    const qAltro = q<HTMLInputElement>('#q-altro');
+    const rPensione = q<HTMLInputElement>('#r-pensione');
+    const rAnno = q<HTMLInputElement>('#r-anno');
+    const reinvesti = q<HTMLInputElement>('[data-reinvesti]');
+    const tfr = q<HTMLInputElement>('[data-tfr]');
+
+    const stato = {
+      etaPensione: 67,
+      fasciaToccata: false,
+      annoToccato: false,
+      versamentoExtra: 0,
+    };
+    let passo = 0;
+    let ultimoPointer = 0;
+    let ultimo: { input: InputPensione; r: RisultatoPensione } | null = null;
+
+    // ——— Utilità
+    const radio = (name: string) => (form.elements.namedItem(name) as RadioNodeList | null)?.value ?? '';
+    const setRadio = (name: string, value: string) => {
+      const el = form.querySelector<HTMLInputElement>(`input[name="${name}"][value="${value}"]`);
+      if (el) el.checked = true;
+    };
+    const set = (k: string, v: string) => qa(`[data-out="${k}"]`).forEach((el) => (el.textContent = v));
+    const progresso = (r: HTMLInputElement) =>
+      r.style.setProperty('--p', `${((Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min) || 1)) * 100}%`);
+
+    function conta(k: string, valore: number, fmt = eur) {
+      qa(`[data-conta="${k}"]`).forEach((el) => {
+        const da = Number(el.dataset.v ?? 0);
+        el.dataset.v = String(valore);
+        if (ridotto || da === valore) {
+          el.textContent = fmt(valore);
+          return;
+        }
+        const t0 = performance.now();
+        const durata = 600;
+        const step = (t: number) => {
+          const p = Math.min(1, (t - t0) / durata);
+          const e = 1 - Math.pow(1 - p, 3);
+          el.textContent = fmt(da + (valore - da) * e);
+          if (p < 1 && el.dataset.v === String(valore)) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }
+
+    // ——— Percorso a domande
+    const tipo = () => radio('tipo') as TipoLavoro | '';
+    // Finché il lavoro non è scelto contiamo anche la domanda sul datore (solo dipendenti privati)
+    const passi = () => ['eta', 'lavoro', 'reddito', 'tenore', 'versamento', ...(tipo() === '' || tipo() === 'privato' ? ['datore'] : [])];
+
+    const versamentoMese = () => {
+      const v = radio('versamento');
+      if (v === 'altro') return leggiNumero(qAltro.value);
+      return v === '' ? Number.NaN : Number(v);
+    };
+
+    function rispostaValida(id: string): boolean {
+      switch (id) {
+        case 'eta':
+          return true;
+        case 'lavoro':
+          return tipo() !== '';
+        case 'reddito':
+          return leggiNumero(qNetto.value) >= LIMITI.nettoMin;
+        case 'tenore':
+          return radio('tenore') !== '';
+        case 'versamento': {
+          const v = versamentoMese();
+          return Number.isFinite(v) && v >= 0 && radio('versamento') !== '';
+        }
+        case 'datore':
+          return radio('datore') !== '';
+      }
+      return false;
+    }
+
+    function mostraPasso(n: number, focus = true) {
+      const lista = passi();
+      passo = Math.max(0, Math.min(lista.length - 1, n));
+      qa<HTMLFieldSetElement>('[data-step]').forEach((fs) => (fs.hidden = fs.dataset.step !== lista[passo]));
+      q('[data-passo-testo]').textContent = `Passo ${passo + 1} di ${lista.length}`;
+      const pct = Math.round((passo / lista.length) * 100);
+      q('[data-progresso-barra]').style.width = `${pct}%`;
+      q('[data-progresso]').setAttribute('aria-valuenow', String(pct));
+      indietro.disabled = passo === 0;
+      avantiLabel.textContent = passo === lista.length - 1 ? 'Vedi il tuo percorso' : 'Avanti';
+      aggiornaAvanti();
+      if (focus) q(`[data-step="${lista[passo]}"] [data-step-title]`).focus({ preventScroll: false });
+    }
+
+    function aggiornaAvanti() {
+      avanti.disabled = !rispostaValida(passi()[passo]);
+    }
+
+    function vaiAvanti() {
+      const lista = passi();
+      if (!rispostaValida(lista[passo])) return;
+      if (passo < lista.length - 1) mostraPasso(passo + 1);
+      else mostraRisultati();
+    }
+
+    function aggiornaFascia() {
+      if (stato.fasciaToccata) return;
+      const n = leggiNumero(qNetto.value);
+      if (Number.isFinite(n) && n >= LIMITI.nettoMin) setRadio('fascia', fasciaDaLordo(stimaLordoAnnuo(n)));
+    }
+
+    q('[data-inizia]').addEventListener('click', () => {
+      percorso.hidden = false;
+      q('[data-intro]').classList.add('pb-10', 'md:pb-12');
+      mostraPasso(0, false);
+      percorso.scrollIntoView({ behavior: ridotto ? 'auto' : 'smooth', block: 'start' });
+      q('[data-step="eta"] [data-step-title]').focus({ preventScroll: true });
+    });
+    avanti.addEventListener('click', vaiAvanti);
+    indietro.addEventListener('click', () => mostraPasso(passo - 1));
+
+    form.addEventListener('pointerdown', () => (ultimoPointer = Date.now()));
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      vaiAvanti();
+    });
+    form.addEventListener('input', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t === qEta) {
+        set('eta', qEta.value);
+        progresso(qEta);
+      }
+      if (t === qNetto) {
+        qNetto.value = qNetto.value.replace(/[^\d.\s]/g, '');
+        aggiornaFascia();
+        const n = leggiNumero(qNetto.value);
+        const err = q('[data-errore="nettoMese"]');
+        err.hidden = !(qNetto.value.trim() !== '' && Number.isFinite(n) && n < LIMITI.nettoMin);
+        err.textContent = `Inserisci almeno ${LIMITI.nettoMin} € al mese.`;
+      }
+      if (t.name === 'fascia') stato.fasciaToccata = true;
+      if (t.name === 'versamento') {
+        const altro = t.value === 'altro';
+        q('[data-altro]').hidden = !altro;
+        if (altro) qAltro.focus();
+      }
+      if (t.name === 'datore') q('[data-nota-nonso]').hidden = t.value !== 'nonso';
+      aggiornaAvanti();
+      // Card e chip: un tocco seleziona e porta alla domanda successiva
+      const automatico = ['tipo', 'tenore', 'datore'].includes(t.name) || (t.name === 'versamento' && t.value !== 'altro');
+      if (automatico && Date.now() - ultimoPointer < 800) {
+        window.setTimeout(vaiAvanti, ridotto ? 0 : 280);
+      }
+    });
+    qNetto.addEventListener('blur', () => {
+      const n = leggiNumero(qNetto.value);
+      if (Number.isFinite(n) && n > 0) qNetto.value = intero(n);
+    });
+    qNetto.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        vaiAvanti();
+      }
+    });
+
+    // ——— Risultati
+    function leggiInput(): InputPensione {
+      const t = (tipo() || 'privato') as TipoLavoro;
+      return {
+        eta: Number(qEta.value),
+        tipo: t,
+        nettoMese: leggiNumero(qNetto.value),
+        fascia: (radio('fascia') || undefined) as FasciaId | undefined,
+        tenorePct: Number(radio('tenore') || 85),
+        versamentoMese: Math.max(0, (versamentoMese() || 0) + stato.versamentoExtra),
+        datore: t === 'privato' && radio('datore') === 'si',
+        etaPensione: stato.etaPensione,
+        ipotesi: (root.querySelector<HTMLInputElement>('input[name="ipotesi"]:checked')?.value || 'prudente') as Ipotesi,
+        reinvestiRimborso: reinvesti.checked,
+        tfr: t === 'privato' && tfr.checked,
+      };
+    }
+
+    function mostraRisultati() {
+      percorso.hidden = true;
+      risultati.hidden = false;
+      stato.versamentoExtra = 0;
+      stato.annoToccato = false;
+      q('[data-leva-esito]').textContent = '';
+      const eta = Number(qEta.value);
+      if (stato.etaPensione <= eta) stato.etaPensione = Math.min(LIMITI.etaPensioneMax, Math.max(67, eta + 1));
+      rPensione.min = String(Math.max(LIMITI.etaPensioneMin, eta + 1));
+      rPensione.value = String(stato.etaPensione);
+      aggiorna();
+      q('[data-risultati-top]').scrollIntoView({ behavior: ridotto ? 'auto' : 'smooth', block: 'start' });
+      q('[data-risultati-titolo]').focus({ preventScroll: true });
+    }
+
+    q('[data-modifica]').addEventListener('click', () => {
+      risultati.hidden = true;
+      percorso.hidden = false;
+      mostraPasso(0);
+      percorso.scrollIntoView({ behavior: ridotto ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    let timerAnnuncio: number | undefined;
+
+    function aggiorna() {
+      const input = leggiInput();
+      const esito = calcola(input);
+      if (!esito.ok) return;
+      const r = esito.risultato;
+      ultimo = { input, r };
+      const c = r.complementare;
+      const privato = input.tipo === 'privato';
+
+      // Riepilogo
+      set(
+        'riepilogo',
+        `${input.eta} anni · ${ETICHETTE_TIPO[input.tipo]} · ${eur(input.nettoMese)} netti al mese · ${ETICHETTE_TENORE[input.tenorePct] ?? ''} (${input.tenorePct}%) · ${eur(input.versamentoMese)} al mese`
+      );
+      set('etaPensione', `${input.etaPensione} anni`);
+      progresso(rPensione);
+
+      // Capitolo 1
+      set(
+        'frase1',
+        r.divario > 5
+          ? `Oggi vivi con circa ${eur(input.nettoMese)} al mese. In pensione la stima pubblica è di circa ${eur(r.pensione)}. Per vivere come desideri, il tassello da costruire è di circa ${eur(r.divario)} al mese.`
+          : `Oggi vivi con circa ${eur(input.nettoMese)} al mese. In pensione la stima pubblica è di circa ${eur(r.pensione)}: copre già lo stile di vita che desideri. I motori possono darti un margine in più.`
+      );
+      const gradino = q('[data-gradino]');
+      const stretto = gradino.clientWidth < 500;
+      gradino.innerHTML = gradinoSvg(input, r, stretto ? { larghezza: 340, altezza: 230, id: 'g1' } : { id: 'g1' });
+
+      // Capitolo 2: torre
+      rAnno.max = String(r.anni);
+      if (!stato.annoToccato || Number(rAnno.value) > r.anni) rAnno.value = String(r.anni);
+      disegnaTorre();
+
+      conta('mTuo', c.motori.tuo);
+      conta('mFiscale', c.motori.rimborso + c.rimborsoInTasca);
+      conta('mDatore', c.motori.datore + c.motori.tfr);
+      conta('mCrescita', c.motori.crescita);
+      set('versamento', eur(input.versamentoMese));
+      set('rimborsoAnnuo', eur(c.rimborsoAnnuo));
+      set(
+        'notaRimborso',
+        input.reinvestiRimborso
+          ? 'Il rimborso si aggiunge al versamento dell’anno dopo e cresce con il resto.'
+          : `Soldi che ti tornano in tasca: circa ${eur(c.rimborsoInTasca)} in tutto.`
+      );
+
+      let testoDatore = '';
+      if (input.tipo === 'autonomo') testoDatore = 'Da autonomo questo motore non c’è: gli altri lavorano comunque per te.';
+      else if (input.tipo === 'pubblico')
+        testoDatore = 'Per i dipendenti pubblici dipende dal fondo del tuo comparto: lo guardiamo insieme. Qui non lo contiamo.';
+      else if (radio('datore') === 'si') testoDatore = `Aggiunge circa ${eur(c.datoreAnnuo)} l’anno.`;
+      else if (radio('datore') === 'nonso')
+        testoDatore = 'Ne parliamo insieme: spesso è un contributo che si lascia sul tavolo. Per ora non lo contiamo.';
+      else testoDatore = 'Il tuo contratto non lo prevede: gli altri motori lavorano comunque per te.';
+      set('testoDatore', testoDatore);
+      q('[data-blocco-tfr]').hidden = !privato;
+      set('notaTfr', c.tfrAnnuo > 0 ? `Circa ${eur(c.tfrAnnuo)} l’anno crescono nel fondo.` : 'La tua liquidazione può crescere nel fondo.');
+      qa('[data-solo-datore]').forEach((el) => (el.hidden = c.datoreAnnuo <= 0));
+      qa('[data-solo-tfr]').forEach((el) => (el.hidden = c.tfrAnnuo <= 0));
+      const uscita = `${String(Math.round(c.aliquotaUscita * 1000) / 10).replace('.', ',')}%`;
+      set('aliquotaUscita', uscita);
+      set('notaUscita', `Per te, dopo ${r.anni} anni di partecipazione: ${uscita}.`);
+
+      // Capitolo 3
+      const maxCap = Math.max(r.solo.capitale, c.capitale) || 1;
+      conta('capSolo', r.solo.capitale);
+      conta('capComp', c.capitale);
+      conta('intSolo', r.solo.integrazione);
+      conta('intComp', c.integrazione);
+      set('copSolo', percento(r.solo.copertura));
+      set('copComp', percento(c.copertura));
+      q('[data-barra="solo"]').style.width = `${(r.solo.capitale / maxCap) * 100}%`;
+      q('[data-barra="comp"]').style.width = `${(c.capitale / maxCap) * 100}%`;
+      const inPiu = r.complementareSenzaTfr.capitale - r.solo.capitale;
+      let frase3 = `Con lo stesso sforzo mensile, i motori in più ti portano circa ${eur(inPiu)} in più.`;
+      if (c.rimborsoInTasca > 5 && !input.reinvestiRimborso) frase3 += ` E ti tornano in tasca circa ${eur(c.rimborsoInTasca)} di rimborsi.`;
+      if (c.tfrAnnuo > 0) frase3 += ` Il TFR aggiunge altri ${eur(c.capitale - r.complementareSenzaTfr.capitale)}.`;
+      set('frase3', frase3);
+
+      const des = r.desiderato || 1;
+      const qP = Math.min(100, (r.pensione / des) * 100);
+      const qI = Math.min(100 - qP, (c.integrazione / des) * 100);
+      q('[data-quota="pensione"]').style.width = `${qP}%`;
+      q('[data-quota="integrazione"]').style.width = `${qI}%`;
+      set('qPensione', percento(qP));
+      set('qIntegrazione', percento(qI));
+      set('qResto', percento(Math.max(0, 100 - qP - qI)));
+      q('[data-meter]').setAttribute(
+        'aria-label',
+        `Pensione pubblica ${percento(qP)}, previdenza complementare ${percento(qI)}, ancora da costruire ${percento(Math.max(0, 100 - qP - qI))}`
+      );
+
+      // Contatti: riepilogo leggibile
+      const params = new URLSearchParams({
+        da: 'pensione',
+        copertura: String(Math.round(c.copertura)),
+        integrazione: String(Math.round(c.integrazione / 10) * 10),
+        divario: String(Math.round(r.divario / 10) * 10),
+        versamento: String(Math.round(input.versamentoMese)),
+      });
+      q<HTMLAnchorElement>('[data-parliamone]').href = `/contatti?${params}`;
+
+      window.clearTimeout(timerAnnuncio);
+      timerAnnuncio = window.setTimeout(() => {
+        q('[data-annuncio]').textContent = `Con la previdenza complementare copri il ${percento(c.copertura)} del tuo obiettivo: circa ${eur(c.integrazione)} al mese in più. Da solo, ${eur(r.solo.integrazione)}.`;
+      }, 800);
+    }
+
+    function disegnaTorre() {
+      if (!ultimo) return;
+      const { r } = ultimo;
+      const idx = Number(rAnno.value);
+      const torre = q('[data-torre]');
+      torre.innerHTML = torreSvg(r.complementare.serie, idx, r.obiettivo, { id: 'tr' });
+      set('annoTorre', `A ${r.complementare.serie[idx]?.eta ?? ''} anni`);
+      progresso(rAnno);
+    }
+
+    rPensione.addEventListener('input', () => {
+      stato.etaPensione = Number(rPensione.value);
+      aggiorna();
+    });
+    rAnno.addEventListener('input', () => {
+      stato.annoToccato = true;
+      disegnaTorre();
+    });
+    [reinvesti, tfr].forEach((el) => el.addEventListener('change', aggiorna));
+    qa<HTMLInputElement>('[data-ipotesi]').forEach((el) => el.addEventListener('change', aggiorna));
+
+    // Leve
+    qa<HTMLButtonElement>('[data-leva]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        if (!ultimo) return;
+        const esito = q('[data-leva-esito]');
+        const prima = ultimo.r.complementare;
+        if (btn.dataset.leva === 'piu50') {
+          stato.versamentoExtra += 50;
+          aggiorna();
+          const dopo = ultimo!.r.complementare;
+          esito.textContent = `Con ${eur(ultimo!.input.versamentoMese)} al mese il tuo capitale arriva a circa ${eur(dopo.capitale)}: ${eur(dopo.capitale - prima.capitale)} in più.`;
+        } else if (btn.dataset.leva === 'dopo2') {
+          if (stato.etaPensione >= LIMITI.etaPensioneMax) {
+            esito.textContent = `Sei già all’età di pensione più lontana che simuliamo (${LIMITI.etaPensioneMax} anni).`;
+            return;
+          }
+          stato.etaPensione = Math.min(LIMITI.etaPensioneMax, stato.etaPensione + 2);
+          rPensione.value = String(stato.etaPensione);
+          aggiorna();
+          esito.textContent = `In pensione a ${stato.etaPensione} anni copri il ${percento(ultimo!.r.complementare.copertura)} del tuo obiettivo.`;
+        } else {
+          const v = valoreDiIniziareOggi(ultimo.input);
+          esito.textContent =
+            v === null
+              ? 'Ogni anno conta: iniziare oggi ti dà il massimo del tempo a disposizione.'
+              : `Iniziare oggi invece che tra 5 anni vale circa ${eur(v)} in più alla pensione, con lo stesso impegno mensile.`;
+        }
+      })
+    );
+
+    // PDF
+    const pdfBtn = q<HTMLButtonElement>('[data-pdf]');
+    const pdfLabel = q('[data-pdf-label]');
+    const pdfStato = q('[data-pdf-stato]');
+    pdfBtn.addEventListener('click', async () => {
+      if (!ultimo) return;
+      pdfBtn.disabled = true;
+      pdfLabel.textContent = 'Preparo il report…';
+      pdfStato.textContent = '';
+      try {
+        const { creaReport, scaricaPdf } = await import('~/lib/report-previdenza');
+        const { input, r } = ultimo;
+        const { blob, nomeFile } = await creaReport({
+          input,
+          risultato: r,
+          svgGradino: gradinoSvg(input, r, { larghezza: 520, altezza: 260, id: 'pg' }),
+          svgTorre: torreSvg(r.complementare.serie, r.anni, r.obiettivo, { larghezza: 300, altezza: 340, id: 'pt' }),
+          qrDataUrl: root.dataset.qr ?? '',
+          logoUrl: '/logo-firma.jpeg',
+          contatti: { telefono: root.dataset.telefono ?? '', email: root.dataset.email ?? '' },
+          qualifica: root.dataset.qualifica ?? '',
+          etichette: {
+            tipo: ETICHETTE_TIPO[input.tipo],
+            tenore: ETICHETTE_TENORE[input.tenorePct] ?? `${input.tenorePct}%`,
+            ipotesi: ETICHETTE_IPOTESI[input.ipotesi],
+          },
+        });
+        scaricaPdf(blob, nomeFile);
+        pdfStato.textContent = 'Il tuo report è pronto.';
+      } catch (err) {
+        console.error(err);
+        pdfStato.textContent = 'Il report richiede un nuovo tentativo: riprova tra poco.';
+      } finally {
+        pdfBtn.disabled = false;
+        pdfLabel.textContent = 'Scarica il tuo report PDF';
+      }
+    });
+
+    // Stato iniziale
+    set('eta', qEta.value);
+    progresso(qEta);
+    aggiornaFascia();
+  }
+
+  onPageLoad(init);
+</script>

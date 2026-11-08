@@ -1,0 +1,50 @@
+---
+// "i" di spiegazione accanto a un termine tecnico: un tocco apre una riga di testo semplice sotto.
+export interface Props {
+  // Termine spiegato (letto dagli screen reader: "Cos'è il TFR?")
+  term: string;
+  text: string;
+  class?: string;
+}
+
+const { term, text, class: className = '' } = Astro.props;
+const id = `tip-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<span class:list={['info-tip', className]}>
+  <button
+    type="button"
+    data-info-tip
+    aria-expanded="false"
+    aria-controls={id}
+    class="inline-flex items-center justify-center align-[-0.15em] ml-1 w-[1.15em] h-[1.15em] rounded-full border border-current text-[0.75em] font-semibold leading-none text-brand hover:bg-brand hover:text-white transition-colors"
+  >
+    <span aria-hidden="true">i</span><span class="sr-only">Cosa significa {term}?</span>
+  </button>
+  <span
+    id={id}
+    hidden
+    class="[&:not([hidden])]:block mt-2 mb-1 text-sm font-normal normal-case tracking-normal text-left text-charcoal bg-white border-l-2 border-brand rounded-r-[6px] px-3 py-2 leading-snug"
+    >{text}</span
+  >
+</span>
+
+<script>
+  import { onPageLoad } from '~/scripts/page-load';
+
+  onPageLoad(() => {
+    document.querySelectorAll<HTMLButtonElement>('[data-info-tip]').forEach((btn) => {
+      if (btn.dataset.ready) return;
+      btn.dataset.ready = 'true';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const box = document.getElementById(btn.getAttribute('aria-controls') ?? '');
+        if (!box) return;
+        const apri = box.hidden;
+        box.hidden = !apri;
+        btn.setAttribute('aria-expanded', String(apri));
+      });
+    });
+  });
+</script>
