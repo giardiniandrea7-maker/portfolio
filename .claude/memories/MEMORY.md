@@ -10,6 +10,22 @@
 
 ---
 
+## 2026-11-08
+**Tasks**:
+**Keywords**: la-tua-pensione, previdenza-complementare, percorso-guidato, report-pdf, jspdf, vitest
+**Riassunto**: Nuova pagina /la-tua-pensione (percorso a domande + 3 capitoli + PDF firmato 2 pagine), collegata da /servizi#previdenza e dal footer. Sviluppata sul branch `calcolatore-pensione`, unita su main (`77516b8`) su richiesta dell'utente.
+
+### Dettaglio
+
+#### (senza task)
+- Un primo calcolatore (/calcolatore-pensione) è stato sostituito integralmente prima di essere committato: nessun redirect necessario.
+- Parametri con fonte in `src/data/previdenza.ts`, logica pura in `src/lib/previdenza.ts` (test vitest, `npm run test`), grafici SVG condivisi pagina/PDF, PDF con jsPDF caricato solo al clic. QR del PDF generato a build-time.
+- /contatti precompila "esigenze" da `?da=pensione&...`.
+- Valori ancora da verificare (TODO nel codice): curva autonomi, aliquote IRPEF, contributo datore 1,5%, rendimenti vs COVIP, coefficienti netto→lordo, link INPS diretto. Testi/ipotesi/PDF da far approvare alla compliance.
+- Insidia: gli heredoc del Bash tool alterano i backslash (`\\n` diventa a capo): per file con backslash usare Write/Edit.
+
+---
+
 ## 2026-11-06
 **Tasks**:
 **Keywords**: vademecum-fideuram, compliance, logo-firma, qualifica, paternita, og-v4, icone-v3
