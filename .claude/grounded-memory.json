@@ -325,6 +325,51 @@
       "preview": "Bash({\"command\":\"for u in / /logo-firma.jpeg /favicon-v4.svg /fav)",
       "count": 1,
       "lastSeen": 1793985520614
+    },
+    "7d2e84e8": {
+      "preview": "Bash({\"command\":\"cat \\\"C:/Users/giard/AppData/Local/Temp/claude/f)",
+      "count": 1,
+      "lastSeen": 1793985953185
+    },
+    "215460d3": {
+      "preview": "Bash({\"command\":\"cat src/navigation.ts; grep -n \\\"previdenza\\\" -r)",
+      "count": 1,
+      "lastSeen": 1794127734221
+    },
+    "93dcb067": {
+      "preview": "Bash({\"command\":\"sleep 6; cat \\\"C:/Users/giard/AppData/Local/Temp)",
+      "count": 1,
+      "lastSeen": 1794128246481
+    },
+    "d79c4963": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 1,
+      "lastSeen": 1794128357244
+    },
+    "ecfc5f80": {
+      "preview": "Read({\"file_path\":\"C:\\\\Users\\\\giard\\\\AppData\\\\Local\\\\Temp\\\\claude)",
+      "count": 2,
+      "lastSeen": 1794128485429
+    },
+    "b20facc": {
+      "preview": "Write({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\data\\\\prev)",
+      "count": 1,
+      "lastSeen": 1794129180302
+    },
+    "8dc08a51": {
+      "preview": "Bash({\"command\":\"ls src/lib; cat > src/lib/_tmp.test.ts <<'EOF'\\n)",
+      "count": 1,
+      "lastSeen": 1794129409477
+    },
+    "ba3ab731": {
+      "preview": "Bash({\"command\":\"python - <<'PYEOF'\\np='src/pages/contatti.astro')",
+      "count": 1,
+      "lastSeen": 1794129794392
+    },
+    "f6c43a04": {
+      "preview": "Bash({\"command\":\"grep -n \\\"ipotesi: (\\\" src/pages/la-tua-pensione)",
+      "count": 1,
+      "lastSeen": 1794130049235
     }
   },
   "editErrors": {}
