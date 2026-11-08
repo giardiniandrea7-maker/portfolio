@@ -370,6 +370,16 @@
       "preview": "Bash({\"command\":\"grep -n \\\"ipotesi: (\\\" src/pages/la-tua-pensione)",
       "count": 1,
       "lastSeen": 1794130049235
+    },
+    "a3d821f4": {
+      "preview": "Bash({\"command\":\"python - <<'PYEOF'\\nimport re\\ndef load(p):\\n   )",
+      "count": 1,
+      "lastSeen": 1794131673999
+    },
+    "9e690b7d": {
+      "preview": "Read({\"file_path\":\"C:\\\\Progetti\\\\andrea-giardini\\\\src\\\\pages\\\\la-)",
+      "count": 1,
+      "lastSeen": 1794131808660
     }
   },
   "editErrors": {}

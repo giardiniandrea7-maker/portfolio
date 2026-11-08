@@ -237,7 +237,7 @@ const revealBtn =
 
   onPageLoad(initMap);
 
-  // Arrivo dal percorso "La tua pensione" (/contatti?da=pensione&copertura=..&integrazione=..&divario=..&versamento=..):
+  // Arrivo dal calcolatore (/contatti?da=pensione&eta=..&fascia=..&mensile=..&rimborso=..):
   // precompilo il campo esigenze con un riepilogo leggibile, se è ancora vuoto.
   function initDaPensione() {
     const q = new URLSearchParams(window.location.search);
@@ -250,17 +250,18 @@ const revealBtn =
       const n = Number(v);
       return v !== null && v !== '' && Number.isFinite(n) ? Math.max(0, n) : null;
     };
-    const copertura = num('copertura');
-    const integrazione = num('integrazione');
-    const divario = num('divario');
-    const versamento = num('versamento');
-    const righe = ['Ho fatto il percorso "La tua pensione" sul sito.'];
-    if (divario !== null) righe.push(`Tassello da costruire: circa ${migliaia(divario)} € al mese.`);
-    if (versamento !== null) righe.push(`Potrei mettere da parte circa ${migliaia(versamento)} € al mese.`);
-    if (integrazione !== null) righe.push(`Con la previdenza complementare: circa ${migliaia(integrazione)} € al mese in più.`);
-    if (copertura !== null) righe.push(`Copertura del mio obiettivo: ${Math.min(100, copertura)}%.`);
-    righe.push('Vorrei parlarne insieme per costruire il mio percorso.');
-    campo.value = righe.join('\n');
+    const eta = num('eta');
+    const mensile = num('mensile');
+    const rimborso = num('rimborso');
+    // Fascia: solo testo breve con cifre, lettere, punti e trattini
+    const fascia = (q.get('fascia') ?? '').replace(/[^\p{L}\d .–€-]/gu, '').slice(0, 30).trim();
+    const parti = [
+      eta !== null ? `${eta} anni` : '',
+      fascia ? `fascia ${fascia}` : '',
+      mensile !== null ? `${migliaia(mensile)} € al mese` : '',
+      rimborso !== null ? `rimborso stimato ${migliaia(rimborso)} € l'anno` : '',
+    ].filter(Boolean);
+    campo.value = `Ho usato il calcolatore: ${parti.join(', ')}.`;
   }
 
   onPageLoad(initDaPensione);
